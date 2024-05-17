@@ -4,8 +4,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import Home from "../screens/Home";
 import Search from "../screens/Search";
-import { COLORS } from "../constants/theme";
 import Profile from "../screens/Profile";
+import Login from "../screens/Login";
+import { COLORS } from "../constants/theme";
 
 const Tab = createBottomTabNavigator();
 
@@ -18,14 +19,14 @@ const tabBarStyle = {
 
 const BottomTab = () => {
   // const {count, isCartLoading, error, refetch} =fetchCartCount();
-  
+
   // const { cartCount, setCartCount } = useContext(CartCountContext);
   // const {login, setLogin} = useContext(LoginContext)
 
   // if(isCartLoading){
   //   setCartCount(count)
   // }
-  
+
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -70,7 +71,7 @@ const BottomTab = () => {
 
       <Tab.Screen
         name="Profile"
-        component={Profile }
+        component={Profile}
         options={{
           tabBarStyle: tabBarStyle,
           tabBarShowLabel: false,
@@ -84,6 +85,25 @@ const BottomTab = () => {
           ),
         }}
       />
+
+      <Tab.Screen
+        name="Login"
+        component={Login}
+        options={{
+          tabBarStyle: tabBarStyle,
+          tabBarShowLabel: false,
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name={focused ? "person" : "person-outline"}
+              color={focused ? COLORS.secondary : COLORS.secondary1}
+              size={26}
+            />
+          ),
+        }}
+      />
+
+
     </Tab.Navigator>
   );
 };
