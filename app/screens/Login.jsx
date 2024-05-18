@@ -59,7 +59,7 @@ const Login = ({ navigation }) => {
     // //   try {
     // //     await firebase
     // //       .auth()
-    // //       .signInWithphoneAndPassword(values.email, values.password).then(() => navigation.navigate('home')).catch((error) => {
+    // //       .signInWithphoneAndPassword(values.phone, values.password).then(() => navigation.navigate('home')).catch((error) => {
     // //         Alert.alert("Error Login", error.message, [
     // //           {
     // //             text: "Back",
@@ -165,7 +165,7 @@ const Login = ({ navigation }) => {
                 <Text style={styles.titleLogin}>ĐĂNG NHẬP</Text>
 
                 <Formik
-                    initialValues={{ email: "", password: "" }}
+                    initialValues={{ phone: "", password: "" }}
                     validationSchema={validationSchema}
                     onSubmit={(values) => loginFunc(values)}
                 >
@@ -183,7 +183,7 @@ const Login = ({ navigation }) => {
                             <View style={styles.wrapper}>
                                 <View
                                     style={styles.inputWrapper(
-                                        touched.email ? COLORS.secondary : COLORS.offwhite
+                                        touched.phone ? COLORS.secondary : COLORS.offwhite
                                     )}
                                 >
                                     <MaterialCommunityIcons
@@ -328,7 +328,7 @@ const Login = ({ navigation }) => {
                                 {" "}Bạn chưa có tài khoản ? {" "}
                                 <Text
                                     style={{ color: COLORS.primary, fontWeight: "bold" }}
-                                    onPress={() => navigation.navigate("")}
+                                    onPress={() => navigation.navigate("register-navigation")}
                                 >
                                     Đăng ký
                                 </Text>
