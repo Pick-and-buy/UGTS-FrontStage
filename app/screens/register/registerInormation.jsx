@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, Text, Button, TextInput, Input, Dimensions } from 'react-native';
+import { View, Text, Button, TextInput, Input  } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { AntDesign, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
-import { COLORS } from "../../constants/theme";
 import Register from './register';
+import styles from "../css/registerInformation.style";
 
 const RegisterInformation = () => {
 
@@ -60,55 +60,3 @@ const RegisterInformation = () => {
 }
 
 export default RegisterInformation;
-
-const styles = StyleSheet.create({
-    view_1: {
-        flex: 1,
-        marginTop: 100,
-        marginLeft: 20,
-    },
-    view_2: {
-        borderWidth: 2,
-        borderRadius: 20,
-        width: '20%',
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        backgroundColor: '#F8D4DC',
-        borderColor: '#F8D4DC'
-    },
-    textHeader: {
-        marginTop: 20,
-        width: '80%',
-        height: 100,
-        fontSize: 35,
-        fontWeight: '800'
-    },
-    textHeader_1: {
-        marginTop: 20,
-        width: '80%',
-        height: 100,
-        fontSize: 20,
-    },
-    view_3: {
-        flexDirection: 'row',
-        borderWidth: 2,
-        borderRadius: 20,
-        width: '95%',
-        paddingHorizontal: 20,
-        paddingVertical: 20,
-        backgroundColor: 'white',
-        borderColor: COLORS.lightWhite
-    },
-    button: {
-        backgroundColor: COLORS.primary,
-        borderRadius: 20,
-        width: 200,
-        height: 50,
-        alignSelf: "center",
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 50,
-
-    },
-
-})

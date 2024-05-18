@@ -1,9 +1,11 @@
 import React, { useRef, useState } from "react";
-import { StyleSheet, View, Text, Button, TextInput, Input, Dimensions } from 'react-native';
+import { Image, View, Text, Button, TextInput, Input, Dimensions } from 'react-native';
 import { NavigationContaine, useNavigation } from '@react-navigation/native';
 import Profile from "../Profile";
-import { COLORS } from "../../constants/theme";
+import { COLORS, SIZES } from "../../constants/theme";
 import { MaterialCommunityIcons, Foundation, MaterialIcons } from '@expo/vector-icons';
+import styles from "../css/register.style";
+
 
 
 const Register = () => {
@@ -24,14 +26,22 @@ const Register = () => {
     return (
 
         <View>
-            <View style={styles.view_0}>
-                <Text style={styles.text}>
-                    GIÁ TỐT
-                </Text>
+            <View style={{ marginHorizontal: 20, marginTop: 50 }}>
+                <View style={{ width: SIZES.width, height: SIZES.height / 3 }}>
+                    <Image
+                        style={{ position: "absolute", top: -25, right: -25, transform: [{ scale: 0.8 }] }}
+                        source={require('../../../assets/images/sky.png')}
+                    />
+                    <Image
+                        style={{ width: 380, height: 380 }}
+                        source={require('../../../assets/images/GiaTot_Logo.png')}
+                    />
+                </View>
+
             </View>
             <View style={styles.view_1}>
                 <View>
-                    <Text style={styles.textHeader}>
+                    <Text style={styles.titleRegister}>
                         Đăng ký
                     </Text>
                 </View>
@@ -83,7 +93,7 @@ const Register = () => {
                         Đăng ký
                     </Text>
                 </View>
-                <Text style={styles.footer}>Bạn đã có tài khoản ? 
+                <Text style={styles.footer}>Bạn đã có tài khoản ?
                     <Text
                         style={{ color: 'red' }}
                         onPress={() => navigation.navigate(Profile)}
@@ -97,61 +107,4 @@ const Register = () => {
 }
 
 export default Register;
-
-const styles = StyleSheet.create({
-    view_0: {
-        backgroundColor: COLORS.primary,
-        borderBottomLeftRadius: 15,
-        borderBottomRightRadius: 15,
-        width: "100%",
-        height: Dimensions.get('window').height * 0.30,
-        alignItems: "center",
-        paddingTop: 100
-    },
-    view_1: {
-        marginTop: 10,
-        marginLeft: 20,
-    },
-    textHeader: {
-        width: '80%',
-        height: 100,
-        fontSize: 35,
-        fontWeight: '800',
-        textAlign: 'center',
-    },
-    view_2: {
-        flexDirection: 'row',
-        borderWidth: 2,
-        borderRadius: 20,
-        width: '95%',
-        paddingHorizontal: 20,
-        paddingVertical: 20,
-        backgroundColor: 'white',
-        borderColor: COLORS.lightWhite
-    },
-    button: {
-        backgroundColor: COLORS.primary,
-        borderRadius: 20,
-        width: 150,
-        height: 50,
-        alignSelf: "center",
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 50,
-
-    },
-    footer: {
-        color: COLORS.black,
-        fontSize: 14,
-        textAlign: 'center',
-        marginTop: 50
-    },
-    text: {
-        color: COLORS.black,
-        fontSize: 31,
-        fontWeight: "bold",
-        textAlign: 'center',
-    }
-})
-
 
