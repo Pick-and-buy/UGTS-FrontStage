@@ -4,10 +4,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons, FontAwesome, AntDesign } from "@expo/vector-icons";
 import Home from "../screens/Home";
 import Search from "../screens/Search";
-import { COLORS } from "../constants/theme";
 import Profile from "../screens/Profile";
-import Register from "../screens/register/register.jsx";
-import RegisterInformation from "../screens/register/registerInormation.jsx";
+import Login from "../screens/Login";
+import { COLORS } from "../constants/theme";
+import Register from "../screens/register/register";
 
 const Tab = createBottomTabNavigator();
 
@@ -88,6 +88,22 @@ const BottomTab = () => {
       />
 
       <Tab.Screen
+        name="Login"
+        component={Login}
+        options={{
+          tabBarStyle: tabBarStyle,
+          tabBarShowLabel: false,
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name={focused ? "person" : "person-outline"}
+              color={focused ? COLORS.secondary : COLORS.secondary1}
+              size={26}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
         name="Register"
         component={Register}
         options={{
@@ -103,6 +119,8 @@ const BottomTab = () => {
           ),
         }}
       />
+
+
     </Tab.Navigator>
   );
 };

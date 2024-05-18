@@ -12,9 +12,9 @@ const Button = ({ title, onPress, isValid, loader }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={styles.btnStyle(!isValid ?  COLORS.gray: COLORS.primary)}
+      style={styles.btnStyle(!isValid ? COLORS.gray : COLORS.primary)}
     >
-      {!loader  ? (
+      {!loader ? (
         <Text style={styles.btnTxt}>{title}</Text>
       ) : (
         <ActivityIndicator />
@@ -30,14 +30,17 @@ const styles = StyleSheet.create({
     fontFamily: "bold",
     color: COLORS.white,
     fontSize: 18,
+    justifyContent: "center",
+    alignItems: "center",
   },
   btnStyle: (backgroundColor) => ({
     height: 50,
-    width: "100%",
+    width: "50%",
     marginVertical: 20,
     backgroundColor: backgroundColor,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 12,
+    marginLeft: "26%",
   }),
 });
