@@ -1,8 +1,14 @@
 import { StyleSheet } from "react-native";
-import { COLORS } from "../../constants/theme";
+import { COLORS, SHADOWS } from "../../constants/theme";
 
 
 const styles = StyleSheet.create({
+    wrapper: {
+        width: '100%',
+        height: '100%',
+        flex: 1,
+        backgroundColor: COLORS.white
+    },
     view_1: {
         flex: 1,
         marginTop: 100,
@@ -18,7 +24,7 @@ const styles = StyleSheet.create({
         borderColor: '#F8D4DC'
     },
     textHeader: {
-        marginTop: 20,
+        marginTop: 30,
         width: '80%',
         height: 100,
         fontSize: 35,
@@ -38,18 +44,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 20,
         backgroundColor: 'white',
-        borderColor: COLORS.lightWhite
-    },
-    button: {
-        backgroundColor: COLORS.primary,
-        borderRadius: 20,
-        width: 200,
-        height: 50,
-        alignSelf: "center",
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 50,
-
+        borderColor: COLORS.lightWhite,
+        ...SHADOWS.medium,
     },
 })
 

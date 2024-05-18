@@ -34,13 +34,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   btnStyle: (backgroundColor) => ({
-    height: 50,
+    height: 60,
     width: "50%",
     marginVertical: 20,
     backgroundColor: backgroundColor,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 12,
-    marginLeft: "26%",
+    marginLeft: "25%",
   }),
 });

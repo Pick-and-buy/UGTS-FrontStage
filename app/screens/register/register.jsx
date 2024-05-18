@@ -213,8 +213,7 @@ const Register = ({ navigation }) => {
                             <Button
                                 loader={loader}
                                 title={"ĐĂNG KÝ"}
-                                onPress={isValid ? handleSubmit : inValidForm}
-                                isValid={isValid}
+                                onPress={() => navigation.navigate("register-infor-navigation")}
                             />
 
 
