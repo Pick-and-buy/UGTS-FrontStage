@@ -7,7 +7,7 @@ import Search from "../screens/Search";
 import Profile from "../screens/Profile";
 import Login from "../screens/Login";
 import { COLORS } from "../constants/theme";
-import Register from "../screens/register/register";
+import Register from "../screens/register/Register";
 
 const Tab = createBottomTabNavigator();
 
@@ -119,7 +119,7 @@ const BottomTab = () => {
           ),
         }}
       />
-
+      
 
     </Tab.Navigator>
   );

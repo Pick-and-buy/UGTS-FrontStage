@@ -1,11 +1,12 @@
 import React, { useRef, useState } from "react";
-import { Image, View, Text, Button, TextInput, Input, ScrollView } from 'react-native';
+import { Image, View, Text, TextInput, Input, ScrollView } from 'react-native';
 import { NavigationContaine, useNavigation } from '@react-navigation/native';
 import { COLORS, SIZES } from "../../constants/theme";
 import { MaterialCommunityIcons, Foundation, MaterialIcons } from '@expo/vector-icons';
 import styles from "../css/register.style";
 import Login from "../Login";
-import RegisterInformation from "./registerInormation";
+import RegisterInformation from "./RegisterInformation.jsx";
+import Button from "../../components/Button.jsx";
 
 
 const Register = () => {
@@ -53,7 +54,7 @@ const Register = () => {
                         placeholderTextColor='gray'
                     />
                 </View>
-                <View style={styles.view_2}>
+                <View style={[styles.view_2, {marginTop: 20}]}>
                     <MaterialIcons name="lock" size={24} color="#FA7494" />
                     <TextInput
                         style={{ marginLeft: 20 }}
@@ -69,7 +70,7 @@ const Register = () => {
                         onPress={toggleShowPassword}
                     />
                 </View>
-                <View style={styles.view_2}>
+                <View style={[styles.view_2, {marginTop: 20}]}>
                     <MaterialIcons name="lock" size={24} color="#FA7494" />
                     <TextInput
                         style={{ marginLeft: 20 }}
@@ -85,13 +86,11 @@ const Register = () => {
                         onPress={toggleShowPassword}
                     />
                 </View>
-                <View style={styles.button}>
-                    <Text
-                        style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}
+                <View>
+                    <Button
+                        title={"ĐĂNG KÝ"}
                         onPress={() => navigation.navigate(RegisterInformation)}
-                    >
-                        Đăng ký
-                    </Text>
+                    />
                 </View>
                 <Text style={styles.footer}>Bạn đã có tài khoản ?
                     <Text
