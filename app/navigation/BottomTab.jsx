@@ -1,11 +1,13 @@
 import { View, Text } from "react-native";
 import React, { useContext } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons, FontAwesome } from "@expo/vector-icons";
+import { Ionicons, FontAwesome, AntDesign } from "@expo/vector-icons";
 import Home from "../screens/Home";
 import Search from "../screens/Search";
 import { COLORS } from "../constants/theme";
 import Profile from "../screens/Profile";
+import Register from "../screens/register/register.jsx";
+import RegisterInformation from "../screens/register/registerInormation.jsx";
 
 const Tab = createBottomTabNavigator();
 
@@ -18,14 +20,14 @@ const tabBarStyle = {
 
 const BottomTab = () => {
   // const {count, isCartLoading, error, refetch} =fetchCartCount();
-  
+
   // const { cartCount, setCartCount } = useContext(CartCountContext);
   // const {login, setLogin} = useContext(LoginContext)
 
   // if(isCartLoading){
   //   setCartCount(count)
   // }
-  
+
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -70,7 +72,7 @@ const BottomTab = () => {
 
       <Tab.Screen
         name="Profile"
-        component={Profile }
+        component={Profile}
         options={{
           tabBarStyle: tabBarStyle,
           tabBarShowLabel: false,
@@ -78,6 +80,23 @@ const BottomTab = () => {
           tabBarIcon: ({ focused }) => (
             <Ionicons
               name={focused ? "person" : "person-outline"}
+              color={focused ? COLORS.secondary : COLORS.secondary1}
+              size={26}
+            />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Register"
+        component={Register}
+        options={{
+          tabBarStyle: tabBarStyle,
+          tabBarShowLabel: false,
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <AntDesign
+              name={focused ? "closecircle" : "closecircleo"}
               color={focused ? COLORS.secondary : COLORS.secondary1}
               size={26}
             />

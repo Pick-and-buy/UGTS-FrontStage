@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from "expo-splash-screen";
 import BottomTab from './app/navigation/BottomTab';
+import RegisterInformation from './app/screens/register/registerInormation';
 const Stack = createNativeStackNavigator();
 export default function App() {
   
@@ -36,6 +37,11 @@ export default function App() {
         <Stack.Screen
           name='bottom-navigation'
           component={BottomTab}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='register-navigation'
+          component={RegisterInformation}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
