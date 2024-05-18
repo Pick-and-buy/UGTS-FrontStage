@@ -2,8 +2,8 @@ import React from 'react';
 import { View, Text, Button, TextInput, Input  } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { AntDesign, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
-import Register from './register';
-import styles from "../css/registerInformation.style";
+import Register from './register.jsx';
+import styles from "../css/registerInformation.style.js";
 
 const RegisterInformation = () => {
 

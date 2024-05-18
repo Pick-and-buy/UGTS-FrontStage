@@ -1,11 +1,11 @@
 import React, { useRef, useState } from "react";
-import { Image, View, Text, Button, TextInput, Input, Dimensions } from 'react-native';
+import { Image, View, Text, Button, TextInput, Input, ScrollView } from 'react-native';
 import { NavigationContaine, useNavigation } from '@react-navigation/native';
-import Profile from "../Profile";
 import { COLORS, SIZES } from "../../constants/theme";
 import { MaterialCommunityIcons, Foundation, MaterialIcons } from '@expo/vector-icons';
 import styles from "../css/register.style";
-
+import Login from "../Login";
+import RegisterInformation from "./registerInormation";
 
 
 const Register = () => {
@@ -25,7 +25,7 @@ const Register = () => {
 
     return (
 
-        <View>
+        <ScrollView>
             <View style={{ marginHorizontal: 20, marginTop: 50 }}>
                 <View style={{ width: SIZES.width, height: SIZES.height / 3 }}>
                     <Image
@@ -53,7 +53,7 @@ const Register = () => {
                         placeholderTextColor='gray'
                     />
                 </View>
-                <View style={[styles.view_2, { marginTop: 25 }]}>
+                <View style={styles.view_2}>
                     <MaterialIcons name="lock" size={24} color="#FA7494" />
                     <TextInput
                         style={{ marginLeft: 20 }}
@@ -69,7 +69,7 @@ const Register = () => {
                         onPress={toggleShowPassword}
                     />
                 </View>
-                <View style={[styles.view_2, { marginTop: 25 }]}>
+                <View style={styles.view_2}>
                     <MaterialIcons name="lock" size={24} color="#FA7494" />
                     <TextInput
                         style={{ marginLeft: 20 }}
@@ -88,7 +88,7 @@ const Register = () => {
                 <View style={styles.button}>
                     <Text
                         style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}
-                        onPress={() => navigation.navigate('register-navigation')}
+                        onPress={() => navigation.navigate(RegisterInformation)}
                     >
                         Đăng ký
                     </Text>
@@ -96,13 +96,13 @@ const Register = () => {
                 <Text style={styles.footer}>Bạn đã có tài khoản ?
                     <Text
                         style={{ color: 'red' }}
-                        onPress={() => navigation.navigate(Profile)}
+                        onPress={() => navigation.navigate(Login)}
                     >
                         &nbsp;Đăng Nhập
                     </Text>
                 </Text>
             </View>
-        </View>
+        </ScrollView>
     );
 }
 

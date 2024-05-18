@@ -5,7 +5,6 @@ import { COLORS } from "../../constants/theme";
 
 const styles = StyleSheet.create({
     view_1: {
-        marginTop: 10,
         marginHorizontal: 10,
         alignItems: 'center'
     },
@@ -40,7 +39,7 @@ const styles = StyleSheet.create({
         color: COLORS.black,
         fontSize: 14,
         textAlign: 'center',
-        marginTop: 50
+        marginTop: 30
     },
     
     titleRegister: {
