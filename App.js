@@ -10,6 +10,7 @@ import RegisterInformation from './app/screens/register/RegisterInformation';
 import Login from './app/screens/Login';
 import Register from './app/screens/register/Register';
 import PaymentMethod from './app/screens/PaymentMethod';
+import UploadPhoto from './app/screens/UploadPhoto';
 const Stack = createNativeStackNavigator();
 export default function App() {
 
@@ -52,7 +53,11 @@ export default function App() {
           component={RegisterInformation}
           options={{ headerShown: false }}
         />
-
+        <Stack.Screen
+          name='upload-photo-navigation'
+          component={UploadPhoto}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name='payment-method-navigation'
           component={PaymentMethod}

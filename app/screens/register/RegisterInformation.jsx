@@ -48,7 +48,7 @@ const RegisterInformation = ({ navigation }) => {
                 <View>
                     <Button
                         title={"TIẾP TỤC"}
-                        onPress={() => navigation.navigate("payment-method-navigation")}
+                        onPress={() => navigation.navigate("upload-photo-navigation")}
                         isValid={true}
                     />
                 </View>
