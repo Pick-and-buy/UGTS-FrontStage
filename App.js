@@ -9,6 +9,7 @@ import BottomTab from './app/navigation/BottomTab';
 import RegisterInformation from './app/screens/register/RegisterInformation';
 import Login from './app/screens/Login';
 import Register from './app/screens/register/Register';
+import PaymentMethod from './app/screens/PaymentMethod';
 const Stack = createNativeStackNavigator();
 export default function App() {
 
@@ -49,6 +50,12 @@ export default function App() {
         <Stack.Screen
           name='register-infor-navigation'
           component={RegisterInformation}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='payment-method-navigation'
+          component={PaymentMethod}
           options={{ headerShown: false }}
         />
         <Stack.Screen

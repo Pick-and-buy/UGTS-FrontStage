@@ -8,14 +8,11 @@ import Button from '../../components/Button.jsx';
 import BackBtn from '../../components/BackBtn.jsx';
 import { COLORS } from '../../constants/theme.js';
 
-const RegisterInformation = () => {
-
-    const navigation = useNavigation();
-
+const RegisterInformation = ({ navigation }) => {
     return (
         <View style={styles.wrapper}>
             <View style={styles.view_1}>
-                <BackBtn />
+                {/* <BackBtn /> */}
                 <View>
                     <Text style={styles.textHeader}>
                         Điền thông tin của bạn để bắt đầu
@@ -40,7 +37,7 @@ const RegisterInformation = () => {
                         placeholderTextColor='gray'
                     />
                 </View>
-                <View style={[styles.view_3, { marginTop: 25,marginBottom: 25 }]}>
+                <View style={[styles.view_3, { marginTop: 25, marginBottom: 25 }]}>
                     <MaterialCommunityIcons name="email-outline" size={30} color={COLORS.primary} />
                     <TextInput
                         style={{ marginLeft: 10, flex: 1 }}
@@ -51,7 +48,7 @@ const RegisterInformation = () => {
                 <View>
                     <Button
                         title={"TIẾP TỤC"}
-                        onPress={navigation.navigate("payment-method-navigation")}
+                        onPress={() => navigation.navigate("payment-method-navigation")}
                         isValid={true}
                     />
                 </View>
