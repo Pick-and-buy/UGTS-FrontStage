@@ -12,14 +12,17 @@ const PaymentMethod = ({ navigation }) => {
         <View style={styles.wrapper}>
             <View style={styles.view_1}>
                 <View>
-                    <BackBtn onPress={() => navigation.navigate('register-infor-navigation')}/>
+                    <BackBtn onPress={() => navigation.navigate('set-location-navigation')} />
                     <TouchableOpacity style={{
-                            position: "absolute",
-                            zIndex: 999,
-                            top: SIZES.large - 45,
-                            right: 25,
-                        }}>
-                        <Text style={{fontSize: 24,color:"#2566AF",}}>Bỏ qua</Text>
+                        position: "absolute",
+                        zIndex: 999,
+                        top: SIZES.large - 45,
+                        right: 25,
+                    }}>
+                        <Text
+                            style={{ fontSize: 24, color: "#2566AF", }}
+                            onPress={() => navigation.navigate('congrats-navigation')}
+                        >Bỏ qua</Text>
                     </TouchableOpacity>
                 </View>
                 <View>
@@ -50,7 +53,7 @@ const PaymentMethod = ({ navigation }) => {
                 <View>
                     <Button
                         title={"TIẾP TỤC"}
-                        onPress={() => navigation.navigate("payment-method-navigation")}
+                        onPress={() => navigation.navigate("")}
                         isValid={true}
                     />
                 </View>

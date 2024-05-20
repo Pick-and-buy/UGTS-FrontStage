@@ -56,73 +56,74 @@ const UploadPhoto = ({navigation}) => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <View style={styles.wrapper}>
-                <View style={styles.view_1}>
-                    <View>
-                        <BackBtn onPress={() => navigation.navigate('register-infor-navigation')} />
-                        <TouchableOpacity style={{
-                            position: "absolute",
-                            zIndex: 999,
-                            top: SIZES.large - 45,
-                            right: 25,
-                        }}>
-                            <Text style={{ fontSize: 24, color: "#2566AF", }}>Bỏ qua</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View>
-                        <Text style={styles.textHeader}>
-                            Cập nhật ảnh hồ sơ của bạn
-                        </Text>
-                        <Text style={styles.textHeader_1}>
-                            Dữ liệu này sẽ được hiển thị trong phần hồ sơ của bạn
-                        </Text>
-                    </View>
-
-                    {image &&
-
-                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', position: 'relative', top: -30 }}>
-                            <Image
-                                source={{ uri: image }}
-                                style={{ height: 150, width: 150, borderRadius: 15 }}
-                            />
-                        </View>
-
-                    }
-
-                    <TouchableOpacity
-                        style={styles.view_3}
-                        onPress={() => uploadImage()}
-                    >
-                        <Image
-                            style={styles.image}
-                            source={require('../../assets/images/camera.png')}
-                        />
-                        <Text style={{ fontSize: 16 }}>Chụp ảnh</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={styles.view_3}
-                        onPress={() => uploadImage("gallery")}
-                    >
-                        <Image
-                            style={styles.image}
-                            source={require('../../assets/images/gallery.png')}
-                        />
-                        <Text style={{ fontSize: 16 }}>Thư viện</Text>
-                    </TouchableOpacity>
-
-                    <View>
-                        <Button
-                            title={"TIẾP TỤC"}
-                            onPress={() => navigation.navigate("payment-method-navigation")}
-                            isValid={true}
-                        />
-                    </View>
-
-                </View>
+        <View style={styles.wrapper}>
+        <View style={styles.view_1}>
+            <View>
+                <BackBtn onPress={() => navigation.navigate('register-infor-navigation')} />
+                <TouchableOpacity style={{
+                    position: "absolute",
+                    zIndex: 999,
+                    top: SIZES.large - 45,
+                    right: 25,
+                }}>
+                    <Text 
+                        style={{ fontSize: 24, color: "#2566AF", }}
+                        onPress={() => navigation.navigate('set-location-navigation')}    
+                    >Bỏ qua</Text>
+                </TouchableOpacity>
             </View>
-        </SafeAreaView>
+            <View>
+                <Text style={styles.textHeader}>
+                    Cập nhật ảnh hồ sơ của bạn
+                </Text>
+                <Text style={styles.textHeader_1}>
+                    Dữ liệu này sẽ được hiển thị trong phần hồ sơ của bạn
+                </Text>
+            </View>
+
+            {image &&
+
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', position: 'relative', top: -30 }}>
+                    <Image
+                        source={{ uri: image }}
+                        style={{ height: 150, width: 150, borderRadius: 15 }}
+                    />
+                </View>
+
+            }
+
+            <TouchableOpacity
+                style={styles.view_3}
+                onPress={() => uploadImage()}
+            >
+                <Image
+                    style={styles.image}
+                    source={require('../../assets/images/camera.png')}
+                />
+                <Text style={{ fontSize: 16 }}>Chụp ảnh</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+                style={styles.view_3}
+                onPress={() => uploadImage("gallery")}
+            >
+                <Image
+                    style={styles.image}
+                    source={require('../../assets/images/gallery.png')}
+                />
+                <Text style={{ fontSize: 16 }}>Thư viện</Text>
+            </TouchableOpacity>
+
+            <View>
+                <Button
+                    title={"TIẾP TỤC"}
+                    onPress={() => navigation.navigate("set-location-navigation")}
+                    isValid={true}
+                />
+            </View>
+
+        </View>
+    </View>
     )
 }
 
