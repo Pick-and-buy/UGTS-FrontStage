@@ -13,6 +13,7 @@ import PaymentMethod from './app/screens/PaymentMethod';
 import UploadPhoto from './app/screens/UploadPhoto';
 import SetLocation from './app/screens/SetLocation';
 import Congratulations from './app/screens/Congratulations';
+import Home from './app/screens/Home';
 const Stack = createNativeStackNavigator();
 export default function App() {
 
@@ -82,6 +83,12 @@ export default function App() {
         <Stack.Screen
           name='login-navigation'
           component={Login}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='home-navigation'
+          component={Home}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

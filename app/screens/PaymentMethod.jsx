@@ -53,7 +53,7 @@ const PaymentMethod = ({ navigation }) => {
                 <View>
                     <Button
                         title={"TIẾP TỤC"}
-                        onPress={() => navigation.navigate("")}
+                        onPress={() => navigation.navigate("congrats-navigation")}
                         isValid={true}
                     />
                 </View>
