@@ -6,9 +6,17 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from "expo-splash-screen";
 import BottomTab from './app/navigation/BottomTab';
+import RegisterInformation from './app/screens/register/RegisterInformation';
+import Login from './app/screens/Login';
+import Register from './app/screens/register/Register';
+import PaymentMethod from './app/screens/PaymentMethod';
+import UploadPhoto from './app/screens/UploadPhoto';
+import SetLocation from './app/screens/SetLocation';
+import Congratulations from './app/screens/Congratulations';
+import Home from './app/screens/Home';
 const Stack = createNativeStackNavigator();
 export default function App() {
-  
+
   const [fontsLoaded] = useFonts({
     regular: require('./assets/fonts/Poppins-Regular.ttf'),
     light: require('./assets/fonts/Poppins-Light.ttf'),
@@ -36,6 +44,51 @@ export default function App() {
         <Stack.Screen
           name='bottom-navigation'
           component={BottomTab}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='register-navigation'
+          component={Register}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='register-infor-navigation'
+          component={RegisterInformation}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='upload-photo-navigation'
+          component={UploadPhoto}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='set-location-navigation'
+          component={SetLocation}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='payment-method-navigation'
+          component={PaymentMethod}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='congrats-navigation'
+          component={Congratulations}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='login-navigation'
+          component={Login}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='home-navigation'
+          component={Home}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
