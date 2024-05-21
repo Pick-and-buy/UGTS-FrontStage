@@ -18,6 +18,7 @@ import ViaMethodForgotPassword from './app/screens/forgot password/ViaMethodForg
 import ForgotPasswordInformation from './app/screens/forgot password/ForgotPasswordInformation';
 import OTPVerification from './app/screens/forgot password/OTPVerification';
 import ResetPassword from './app/screens/forgot password/ResetPassword';
+import ResetPasswordSuccessfully from './app/screens/forgot password/ResetPasswordSuccessfully';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -112,6 +113,12 @@ export default function App() {
         <Stack.Screen
           name='reset-password-navigation'
           component={ResetPassword}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='reset-password-successfully-navigation'
+          component={ResetPasswordSuccessfully}
           options={{ headerShown: false }}
         />
 

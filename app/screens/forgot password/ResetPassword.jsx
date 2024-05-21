@@ -160,7 +160,7 @@ const ResetPassword = ({ navigation }) => {
                 <View>
                     <Button
                         title={"CẬP NHẬT"}
-                        onPress={() => navigation.navigate("upload-photo-navigation")}
+                        onPress={() => navigation.navigate("reset-password-successfully-navigation")}
                         isValid={true}
                     />
                 </View>
