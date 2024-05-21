@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Input, TouchableOpacity, Image } from 'react-native';
 import { AntDesign, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
-import styles from "../screens/css/ViaMethodForgotPassword.style.js";
-import Button from '../components/Button.jsx';
-import BackBtn from '../components/BackBtn.jsx';
-import { COLORS, SIZES } from '../constants/theme.js';
+import styles from "../css/ViaMethodForgotPassword.style.js";
+import Button from '../../components/Button.jsx';
+import BackBtn from '../../components/BackBtn.jsx';
+import { COLORS, SIZES } from '../../constants/theme.js';
 
 const ForgotPasswordInformation = ({ navigation, route }) => {
     const type = route.params;
@@ -59,7 +59,7 @@ const ForgotPasswordInformation = ({ navigation, route }) => {
                 <View style={{ marginTop: "10%" }}>
                     <Button
                         title={"TIẾP TỤC"}
-                        onPress={() => navigation.navigate("otp-navigation",value)}
+                        onPress={() => navigation.navigate("otp-navigation", value)}
                         isValid={true}
                     />
                 </View>

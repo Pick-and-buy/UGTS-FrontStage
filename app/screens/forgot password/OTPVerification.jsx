@@ -1,12 +1,12 @@
 import React from "react"
-import { COLORS, SIZES } from "../constants/theme";
+import { COLORS, SIZES } from "../../constants/theme.js";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { OtpInput } from "react-native-otp-entry";
-import Button from '../components/Button.jsx';
-import BackBtn from '../components/BackBtn.jsx';
-import styles from "../screens/css/OTPVerification.style.js";
+import Button from '../../components/Button.jsx';
+import BackBtn from '../../components/BackBtn.jsx';
+import styles from "../css/OTPVerification.style.js";
 
 const OTPVerification = ({ navigation, route }) => {
     const type = route.params;
@@ -16,7 +16,7 @@ const OTPVerification = ({ navigation, route }) => {
             <View style={styles.wrapper}>
                 <View style={styles.view_1}>
                     <View>
-                        <BackBtn onPress={() => navigation.navigate('info-method-navigation',type)} />
+                        <BackBtn onPress={() => navigation.navigate('info-method-navigation', type)} />
                         <TouchableOpacity style={{
                             position: "absolute",
                             zIndex: 999,
@@ -69,7 +69,7 @@ const OTPVerification = ({ navigation, route }) => {
                     <View style={{ marginTop: "10%" }}>
                         <Button
                             title={"TIẾP TỤC"}
-                            onPress={() => navigation.navigate("otp-navigation")}
+                            onPress={() => navigation.navigate("reset-password-navigation")}
                             isValid={true}
                         />
                     </View>

@@ -14,9 +14,10 @@ import UploadPhoto from './app/screens/UploadPhoto';
 import SetLocation from './app/screens/SetLocation';
 import Congratulations from './app/screens/Congratulations';
 import Home from './app/screens/Home';
-import ViaMethodForgotPassword from './app/screens/ViaMethodForgotPassword';
-import ForgotPasswordInformation from './app/screens/ForgotPasswordInformation';
-import OTPVerification from './app/screens/OTPVerification';
+import ViaMethodForgotPassword from './app/screens/forgot password/ViaMethodForgotPassword';
+import ForgotPasswordInformation from './app/screens/forgot password/ForgotPasswordInformation';
+import OTPVerification from './app/screens/forgot password/OTPVerification';
+import ResetPassword from './app/screens/forgot password/ResetPassword';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -105,6 +106,12 @@ export default function App() {
         <Stack.Screen
           name='otp-navigation'
           component={OTPVerification}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='reset-password-navigation'
+          component={ResetPassword}
           options={{ headerShown: false }}
         />
 
