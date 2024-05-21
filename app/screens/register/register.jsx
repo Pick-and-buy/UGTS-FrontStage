@@ -13,9 +13,9 @@ import Button from "../../components/Button.jsx";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { COLORS, SIZES } from "../../constants/theme";
-import styles from "../css/register.style";
-import RegisterInformation from "./RegisterInformation";
+import { COLORS, SIZES } from "../../constants/theme.js";
+import styles from "../css/register.style.js";
+import RegisterInformation from "./RegisterInformation.jsx";
 
 const validationSchema = Yup.object().shape({
     phone: Yup.number()
@@ -59,7 +59,7 @@ const Register = ({ navigation }) => {
                 {/* <BackBtn onPress={() => navigation.goBack()} /> */}
                 <View style={{ width: SIZES.width, height: SIZES.height / 3 }}>
                     <Image
-                        style={{ position: "absolute", top: -25, right: -25, transform: [{ scale: 0.8 }] }}
+                        style={{ position: "absolute", top: -30, right: -30, transform: [{ scale: 0.75 }] }}
                         source={require('../../../assets/images/sky.png')}
                     />
                     <Image

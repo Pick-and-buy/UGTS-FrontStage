@@ -14,6 +14,7 @@ import UploadPhoto from './app/screens/UploadPhoto';
 import SetLocation from './app/screens/SetLocation';
 import Congratulations from './app/screens/Congratulations';
 import Home from './app/screens/Home';
+import ViaMethodForgotPassword from './app/screens/ViaMethodForgotPassword';
 const Stack = createNativeStackNavigator();
 export default function App() {
 
@@ -83,6 +84,12 @@ export default function App() {
         <Stack.Screen
           name='login-navigation'
           component={Login}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='forgot-password-navigation'
+          component={ViaMethodForgotPassword}
           options={{ headerShown: false }}
         />
 

@@ -1,8 +1,6 @@
 import React from 'react';
 import { View, Text, TextInput, Input } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { AntDesign, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
-import Register from './Register.jsx';
 import styles from "../css/registerInformation.style.js";
 import Button from '../../components/Button.jsx';
 import BackBtn from '../../components/BackBtn.jsx';
