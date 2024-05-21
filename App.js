@@ -16,6 +16,8 @@ import Congratulations from './app/screens/Congratulations';
 import Home from './app/screens/Home';
 import ViaMethodForgotPassword from './app/screens/ViaMethodForgotPassword';
 import ForgotPasswordInformation from './app/screens/ForgotPasswordInformation';
+import OTPVerification from './app/screens/OTPVerification';
+
 const Stack = createNativeStackNavigator();
 export default function App() {
 
@@ -97,6 +99,12 @@ export default function App() {
         <Stack.Screen
           name='info-method-navigation'
           component={ForgotPasswordInformation}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='otp-navigation'
+          component={OTPVerification}
           options={{ headerShown: false }}
         />
 

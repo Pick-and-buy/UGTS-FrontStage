@@ -39,13 +39,13 @@ const ViaMethodForgotPassword = ({ navigation }) => {
                     <Text style={styles.text}>Địa chỉ email</Text>
                 </TouchableOpacity>
 
-                <View style={{ marginTop: "10%" }}>
+                {/* <View style={{ marginTop: "10%" }}>
                     <Button
                         title={"TIẾP TỤC"}
                         onPress={() => navigation.navigate("congrats-navigation")}
                         isValid={true}
                     />
-                </View>
+                </View> */}
 
             </View>
         </View>

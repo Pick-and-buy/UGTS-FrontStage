@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, Input, TouchableOpacity, Image } from 'react-native';
 import { AntDesign, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import styles from "../screens/css/ViaMethodForgotPassword.style.js";
@@ -8,11 +8,12 @@ import { COLORS, SIZES } from '../constants/theme.js';
 
 const ForgotPasswordInformation = ({ navigation, route }) => {
     const type = route.params;
+    const [value, setValue] = useState('');
     return (
         <View style={styles.wrapper}>
             <View style={styles.view_1}>
                 <View>
-                    <BackBtn onPress={() => navigation.navigate('login-navigation')} />
+                    <BackBtn onPress={() => navigation.navigate('forgot-password-navigation')} />
                     <TouchableOpacity style={{
                         position: "absolute",
                         zIndex: 999,
@@ -37,6 +38,8 @@ const ForgotPasswordInformation = ({ navigation, route }) => {
                         placeholder='Số điện thoại'
                         placeholderTextColor='gray'
                         keyboardType='numeric'
+                        onChangeText={newValue => setValue(newValue)}
+                        defaultValue={value}
                     />
                 </View>
                 }
@@ -46,6 +49,8 @@ const ForgotPasswordInformation = ({ navigation, route }) => {
                         style={{ marginLeft: 10, flex: 1 }}
                         placeholder='Email'
                         placeholderTextColor='gray'
+                        onChangeText={newValue => setValue(newValue)}
+                        defaultValue={value}
                     />
                 </View>
 
@@ -54,7 +59,7 @@ const ForgotPasswordInformation = ({ navigation, route }) => {
                 <View style={{ marginTop: "10%" }}>
                     <Button
                         title={"TIẾP TỤC"}
-                        onPress={() => navigation.navigate("otp-navigation")}
+                        onPress={() => navigation.navigate("otp-navigation",value)}
                         isValid={true}
                     />
                 </View>
