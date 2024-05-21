@@ -10,7 +10,6 @@ const RegisterInformation = ({ navigation }) => {
     return (
         <View style={styles.wrapper}>
             <View style={styles.view_1}>
-                {/* <BackBtn /> */}
                 <View>
                     <Text style={styles.textHeader}>
                         Điền thông tin của bạn để bắt đầu

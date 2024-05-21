@@ -6,8 +6,8 @@ import Button from '../components/Button.jsx';
 import BackBtn from '../components/BackBtn.jsx';
 import { COLORS, SIZES } from '../constants/theme.js';
 
-const ViaMethodForgotPassword = ({ navigation }) => {
-
+const ForgotPasswordInformation = ({ navigation, route }) => {
+    const type = route.params;
     return (
         <View style={styles.wrapper}>
             <View style={styles.view_1}>
@@ -26,23 +26,35 @@ const ViaMethodForgotPassword = ({ navigation }) => {
                         Quên mật khẩu
                     </Text>
                     <Text style={styles.textHeader_1}>
-                        Chọn phương thức dùng nhận mã xác minh để đặt lại mật khẩu của bạn
+                        Nhâp thông tin dùng nhận mã xác minh để đặt lại mật khẩu của bạn
                     </Text>
                 </View>
-                <TouchableOpacity style={styles.view_3} onPress={() => navigation.navigate("info-method-navigation","phone")}>
-                    <MaterialCommunityIcons name="phone-message" size={35} color={COLORS.primary} />
-                    <Text style={styles.text}>Số điện thoại</Text>
-                </TouchableOpacity>
 
-                <TouchableOpacity style={styles.view_3} onPress={() => navigation.navigate("info-method-navigation","email")}>
-                    <MaterialCommunityIcons name="email-outline" size={35} color={COLORS.primary} />
-                    <Text style={styles.text}>Địa chỉ email</Text>
-                </TouchableOpacity>
+                {type === "phone" && <View style={[styles.view_3, { marginTop: 25, marginBottom: 25 }]}>
+                    <MaterialCommunityIcons name="phone-message" size={30} color={COLORS.primary} />
+                    <TextInput
+                        style={{ marginLeft: 10, flex: 1 }}
+                        placeholder='Số điện thoại'
+                        placeholderTextColor='gray'
+                        keyboardType='numeric'
+                    />
+                </View>
+                }
+                {type === "email" && <View style={[styles.view_3, { marginTop: 25, marginBottom: 25 }]}>
+                    <MaterialCommunityIcons name="email-outline" size={30} color={COLORS.primary} />
+                    <TextInput
+                        style={{ marginLeft: 10, flex: 1 }}
+                        placeholder='Email'
+                        placeholderTextColor='gray'
+                    />
+                </View>
+
+                }
 
                 <View style={{ marginTop: "10%" }}>
                     <Button
                         title={"TIẾP TỤC"}
-                        onPress={() => navigation.navigate("congrats-navigation")}
+                        onPress={() => navigation.navigate("otp-navigation")}
                         isValid={true}
                     />
                 </View>
@@ -52,4 +64,4 @@ const ViaMethodForgotPassword = ({ navigation }) => {
     );
 }
 
-export default ViaMethodForgotPassword; 
+export default ForgotPasswordInformation; 
