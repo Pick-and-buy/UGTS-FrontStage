@@ -8,22 +8,16 @@ import {
     Alert,
 } from "react-native";
 import React, { useState, useRef, useContext } from "react";
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import Button from "../../components/Button.jsx";
+import { AntDesign, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
+import styles from "../css/resetPassword.style.js";
+import Button from '../../components/Button.jsx';
+import BackBtn from '../../components/BackBtn.jsx';
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { COLORS, SIZES } from "../../constants/theme.js";
-import styles from "../css/register.style.js";
-import RegisterInformation from "./RegisterInformation.jsx";
+
 
 const validationSchema = Yup.object().shape({
-    phone: Yup.number()
-        .typeError("Có vẻ như đó không phải là số điện thoại")
-        .positive("Số điện thoại không thể bắt đầu bằng dấu trừ")
-        .integer("Số điện thoại không được bao gồm dấu thập phân")
-        .min(8, "Điện thoại phải có ít nhất 8 ký tự")
-        .required('Vui lòng nhập số điện thoại'),
     password: Yup.string()
         .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
         .required("Vui lòng nhập mật khẩu"),
@@ -33,46 +27,26 @@ const validationSchema = Yup.object().shape({
         })
 });
 
-const Register = ({ navigation }) => {
+
+const ResetPassword = ({ navigation }) => {
     const [loader, setLoader] = useState(false);
     const [obsecureText, setObsecureText] = useState(false);
     const [obsecureText2, setObsecureText2] = useState(false);
 
-    const inValidForm = () => {
-        Alert.alert("Invalid Form", "Please provide all required fields", [
-            {
-                text: "Cancel",
-                onPress: () => { },
-            },
-            {
-                text: "Continue",
-                onPress: () => { },
-            },
-            { defaultIndex: 1 },
-        ]);
-    };
-
     return (
-
-        <ScrollView style={{ backgroundColor: COLORS.white }}>
-            <View style={{ marginHorizontal: 20, marginTop: 50 }}>
-                {/* <BackBtn onPress={() => navigation.goBack()} /> */}
-                <View style={{ width: SIZES.width, height: SIZES.height / 3 }}>
-                    <Image
-                        style={{ position: "absolute", top: -30, right: -30, transform: [{ scale: 0.75 }] }}
-                        source={require('../../../assets/images/sky.png')}
-                    />
-                    <Image
-                        style={{ width: 380, height: 380 }}
-                        source={require('../../../assets/images/GiaTot_Logo.png')}
-                    />
+        <View style={styles.wrapper}>
+            <View style={styles.view_1}>
+                <View style={{ marginBottom: "10%" }}>
+                    <Text style={styles.textHeader}>
+                        Thiết lập lại mật khẩu của bạn
+                    </Text>
+                    <Text style={styles.textHeader_1}>
+                        Dữ liệu này sẽ được cập nhật cho tài khoản của bạn
+                    </Text>
                 </View>
 
-
-                <Text style={styles.titleLogin}>ĐĂNG KÝ</Text>
-
                 <Formik
-                    initialValues={{ phone: "", password: "", passwordConfirmation: "" }}
+                    initialValues={{ password: "", passwordConfirmation: "" }}
                     validationSchema={validationSchema}
                     onSubmit={(values) => loginFunc(values)}
                 >
@@ -86,41 +60,8 @@ const Register = ({ navigation }) => {
                         isValid,
                         setFieldTouched,
                     }) => (
-                        <View>
-                            <View style={styles.wrapper}>
-                                <View
-                                    style={styles.inputWrapper(
-                                        touched.phone ? COLORS.secondary : COLORS.offwhite
-                                    )}
-                                >
-                                    <MaterialCommunityIcons
-                                        name="phone"
-                                        size={20}
-                                        color={COLORS.primary}
-                                        style={styles.iconStyle}
-                                    />
-
-                                    <TextInput
-                                        keyboardType='numeric'
-                                        placeholder="Số điện thoại"
-                                        onFocus={() => {
-                                            setFieldTouched("phone");
-                                        }}
-                                        onBlur={() => {
-                                            setFieldTouched("phone", "");
-                                        }}
-                                        value={values.phone}
-                                        onChangeText={handleChange("phone")}
-                                        autoCorrect={false}
-                                        style={{ flex: 1 }}
-                                    />
-                                </View>
-                                {touched.phone && errors.phone && (
-                                    <Text style={styles.errorMessage}>{errors.phone}</Text>
-                                )}
-                            </View>
-
-                            <View style={styles.wrapper}>
+                        <View style={styles.wrapper2}>
+                            <View style={styles.wrapper2}>
                                 <View
                                     style={styles.inputWrapper(
                                         touched.password ? COLORS.secondary : COLORS.offwhite
@@ -165,7 +106,7 @@ const Register = ({ navigation }) => {
                                 )}
                             </View>
 
-                            <View style={styles.wrapper}>
+                            <View style={styles.wrapper2}>
                                 <View
                                     style={styles.inputWrapper(
                                         touched.passwordConfirmation ? COLORS.secondary : COLORS.offwhite
@@ -209,32 +150,24 @@ const Register = ({ navigation }) => {
                                     <Text style={styles.errorMessage}>{errors.passwordConfirmation}</Text>
                                 )}
                             </View>
-
-                            <Button
-                                loader={loader}
-                                title={"ĐĂNG KÝ"}
-                                onPress={() => navigation.navigate("register-infor-navigation")}
-                            />
-
-
-                            <Text style={{ textAlign: "center" }}>
-                                {" "}Bạn đã có tài khoản ? {" "}
-                                <Text
-                                    style={{ color: COLORS.primary, fontWeight: "bold" }}
-                                    onPress={() => navigation.navigate("login-navigation")}
-                                >
-                                    Đăng nhập
-                                </Text>
-                            </Text>
                         </View>
-
 
                     )}
                 </Formik>
+
+
+
+                <View>
+                    <Button
+                        title={"CẬP NHẬT"}
+                        onPress={() => navigation.navigate("reset-password-successfully-navigation")}
+                        isValid={true}
+                    />
+                </View>
+
             </View>
-        </ScrollView>
+        </View>
     );
 }
 
-export default Register;
-
+export default ResetPassword; 

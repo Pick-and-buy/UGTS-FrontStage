@@ -14,6 +14,12 @@ import UploadPhoto from './app/screens/UploadPhoto';
 import SetLocation from './app/screens/SetLocation';
 import Congratulations from './app/screens/Congratulations';
 import Home from './app/screens/Home';
+import ViaMethodForgotPassword from './app/screens/forgot password/ViaMethodForgotPassword';
+import ForgotPasswordInformation from './app/screens/forgot password/ForgotPasswordInformation';
+import OTPVerification from './app/screens/forgot password/OTPVerification';
+import ResetPassword from './app/screens/forgot password/ResetPassword';
+import ResetPasswordSuccessfully from './app/screens/forgot password/ResetPasswordSuccessfully';
+
 const Stack = createNativeStackNavigator();
 export default function App() {
 
@@ -83,6 +89,36 @@ export default function App() {
         <Stack.Screen
           name='login-navigation'
           component={Login}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='forgot-password-navigation'
+          component={ViaMethodForgotPassword}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='info-method-navigation'
+          component={ForgotPasswordInformation}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='otp-navigation'
+          component={OTPVerification}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='reset-password-navigation'
+          component={ResetPassword}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='reset-password-successfully-navigation'
+          component={ResetPasswordSuccessfully}
           options={{ headerShown: false }}
         />
 

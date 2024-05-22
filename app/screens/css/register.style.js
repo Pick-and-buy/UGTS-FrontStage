@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 
     titleLogin: {
         marginVertical: 20,
-        marginHorizontal: 80,
+        marginHorizontal: "auto",
         fontFamily: "bold",
         fontSize: 35,
         color: COLORS.primary,
