@@ -8,6 +8,7 @@ import Profile from "../screens/Profile";
 import Login from "../screens/Login";
 import { COLORS } from "../constants/theme";
 import Register from "../screens/register/Register";
+import Onboarding from "../components/Onboarding";
 
 const Tab = createBottomTabNavigator();
 
@@ -104,8 +105,8 @@ const BottomTab = () => {
         }}
       />
       <Tab.Screen
-        name="Register"
-        component={Register}
+        name="Onboarding"
+        component={Onboarding}
         options={{
           tabBarStyle: tabBarStyle,
           tabBarShowLabel: false,
