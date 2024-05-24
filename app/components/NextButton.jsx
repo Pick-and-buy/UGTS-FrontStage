@@ -36,12 +36,13 @@ import {
     btnStyle: (backgroundColor) => ({
       height: 60,
       width: "50%",
-      marginVertical: "auto",
+      // marginVertical: "10%",
       marginHorizontal:"auto",
       backgroundColor: backgroundColor,
       justifyContent: "center",
       alignItems: "center",
       borderRadius: 12,
+      marginBottom:"10%"
     }),
   });
   

@@ -5,7 +5,9 @@ import OnboardingItem from './OnboardingItem'
 import Paginator from './Paginator'
 import NextButton from './NextButton'
 import { COLORS, SIZES } from "../constants/theme";
-const Onboarding = () => {
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const Onboarding = ({ navigation }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
@@ -18,10 +20,14 @@ const Onboarding = () => {
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
 
   const scrollTo = () => {
-    if(currentIndex < slides.length - 1){
-      slidesRef.current.scrollToIndex({index: currentIndex + 1});
-    }else {
-      console.log("Last item");
+    if (currentIndex < slides.length - 1) {
+      slidesRef.current.scrollToIndex({ index: currentIndex + 1 });
+    } else {
+      try {
+        navigation.navigate('bottom-navigation')
+      } catch (error) {
+        console.log('Error @setItem', error);
+      }
     }
   }
 
@@ -48,7 +54,7 @@ const Onboarding = () => {
       </View>
 
       <Paginator data={slides} scrollX={scrollX} />
-      <NextButton scrollTo={scrollTo} title={"TIẾP TỤC"}/>
+      <NextButton scrollTo={scrollTo} title={"TIẾP TỤC"} />
     </View>
   )
 }
