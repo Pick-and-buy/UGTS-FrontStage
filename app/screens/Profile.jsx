@@ -1,14 +1,14 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from "react-native";
 import React, { useContext, useState } from "react";
 import { COLORS, SIZES } from "../constants/theme";
 
 import { AntDesign } from "@expo/vector-icons";
-
+import { FontAwesome } from '@expo/vector-icons';
 import NetworkImage from "../components/NetworkImage";
 import ProfileTile from "../components/ProfileTile";
 import RegistrationTile from "../components/RegistrationTile";
-
-const Profile = () => {
+import styles from "./css/profile.style";
+const Profile = ({ navigation }) => {
   const [user, setUser] = useState(null)
 
   // const { user, isProfileLoading, error, refetch } = fetchProfile();
@@ -20,14 +20,14 @@ const Profile = () => {
   //   return <LoadingScreen />;
   // }
   return (
-    <View>
-      <View style={{ backgroundColor: COLORS.primary, height: SIZES.height }}>
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <View style={{ backgroundColor: COLORS.white, height: SIZES.height }}>
         <View
           style={{
             backgroundColor: COLORS.offwhite,
-            height: SIZES.height - 80,
-            borderBottomEndRadius: 30,
-            borderBottomStartRadius: 30,
+            height: SIZES.height,
+            // borderBottomEndRadius: 30,
+            // borderBottomStartRadius: 30,
           }}
         >
           <Image
@@ -51,28 +51,61 @@ const Profile = () => {
                 height={45}
                 radius={99}
               />
-              <View style={{ marginLeft: 10, marginTop: 3 }}>
+              <View style={{ marginLeft: 10, marginTop: 10 }}>
                 <Text style={styles.text}>
-                  {user === null ? "username" : user.username}
+                  {user === null ? "Bạn chưa đăng nhập" : user.username}
                 </Text>
-                <Text style={styles.email}>
-                  {user === null ? "email" : user.email}
-                </Text>
+                {/* <Text style={styles.email}>
+                  {user === null ? "" : user.email}
+                </Text> */}
               </View>
             </View>
 
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
               <AntDesign name="logout" size={24} color="red" />
+            </TouchableOpacity> */}
+            <TouchableOpacity
+              style={styles.loginbtn}
+              onPress={() => navigation.navigate("login-navigation")}
+            >
+              <Text style={styles.textbtn}>Đăng nhập</Text>
             </TouchableOpacity>
-            
+
+
+
           </View>
 
-          <RegistrationTile
-            heading={"Register a seller"}
-            desc={
-              "Join our community"
-            }
-          />
+          <View style={styles.options}>
+            <TouchableOpacity style={styles.option}>
+              <FontAwesome name="camera" size={24} color="gray" />
+              <Text>Đã đăng</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.option}>
+              <FontAwesome name="shopping-bag" size={24} color="gray" />
+              <Text>Đã mua</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.option}>
+              <FontAwesome name="heart" size={24} color="gray" />
+              <Text>Yêu thích</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.option}>
+              <FontAwesome name="hashtag" size={24} color="gray" />
+              <Text>Theo dõi</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View
+            style={{
+              backgroundColor: COLORS.lightWhite,
+              margin: 10,
+              borderRadius: 12,
+            }}
+          >
+            <ProfileTile title={"Lịch sử mặt hàng đã xem"} icon={"history"} font={3} />
+          </View>
 
           <View
             style={{
@@ -82,30 +115,10 @@ const Profile = () => {
               borderRadius: 12,
             }}
           >
-            <ProfileTile title={"Orders"} icon={"fast-food-outline"} font={1} />
-            <ProfileTile title={"Places"} icon={"heart"} font={2} />
-            <ProfileTile title={"Payment History"} icon={"creditcard"} />
+            <ProfileTile title={"Thông báo"} icon={"notifications-circle"} font={1} isDivider={true} />
+            <ProfileTile title={"Trợ giúp / Yêu cầu"} icon={"message1"} isDivider={true} />
+            <ProfileTile title={"Hướng dẫn"} icon={"questioncircleo"} isDivider={false} />
           </View>
-
-          <View
-            style={{
-              height: 140,
-              backgroundColor: COLORS.lightWhite,
-              margin: 10,
-              borderRadius: 12,
-            }}
-          >
-            <ProfileTile title={"Coupons"} icon={"tago"} />
-            <ProfileTile title={"My Store"} icon={"bag"} font={2} />
-            <ProfileTile title={"History"} icon={"globe-outline"} font={1} />
-          </View>
-
-          <RegistrationTile
-            heading={"Join the courier team"}
-            desc={
-              "Embark on a journey, deliver joy, and earn on your own schedule."
-            }
-          />
 
           <View
             style={{
@@ -116,37 +129,20 @@ const Profile = () => {
             }}
           >
             <ProfileTile
-              title={"Shipping Address"}
-              icon={"location-outline"}
-              font={1}
+              title={"Hướng dẫn về phương thức vận chuyển"}
+              icon={"local-shipping"}
+              font={4}
+              isDivider={true}
             />
-            <ProfileTile title={"Services Center"} icon={"customerservice"} />
-            <ProfileTile title={"Settings"} icon={"setting"} />
+            <ProfileTile title={"Tổng đài hỗ trợ"} icon={"customerservice"} isDivider={true} />
+            <ProfileTile title={"Điều khoản sử dụng"} icon={"file-document-multiple"} font={5} />
           </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 export default Profile;
 
-const styles = StyleSheet.create({
-  text: {
-    marginLeft: 10,
-    fontFamily: "medium",
-    color: COLORS.black,
-  },
-  email: {
-    marginLeft: 10,
-    fontFamily: "regular",
-    color: COLORS.gray,
-  },
-  profile: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginHorizontal: 20,
-    marginTop: 60,
-  },
-});
+
