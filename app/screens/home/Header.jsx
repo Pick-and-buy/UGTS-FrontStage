@@ -47,6 +47,26 @@ const Header = () => {
                     </View>
                 </View>
             </View>
+
+            {/* Điều Hướng */}
+            <View style={styles.nav}>
+                <View>
+                    <Text style={{color: 'red', fontSize: 18, fontFamily: 'bold'}}>
+                        Theo Dõi
+                    </Text>
+                    <View style={[styles.shadow, {borderColor: 'red'}]}>
+
+                    </View>
+                </View>
+                <View>
+                    <Text style={{fontSize: 18, fontFamily: 'bold'}}>
+                        Khám Phá
+                    </Text>
+                    <View style={styles.shadow}>
+
+                    </View>
+                </View>
+            </View>
         </View>
     );
 }
@@ -61,6 +81,7 @@ const styles = StyleSheet.create({
         height: 150,
         backgroundColor: COLORS.lightWhite
     },
+    //Search
     searchContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -78,8 +99,21 @@ const styles = StyleSheet.create({
         backgroundColor: '#E2E2E2',
         borderColor: '#E2E2E2'
     },
-
-
+    //Điều hướng
+    nav: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginTop: 40,
+        width: '60%',
+        marginHorizontal: '20%',
+        gap: 80
+    },
+    shadow: {
+        borderWidth: 1,
+        borderColor: 'black',
+        marginTop: 2
+    }
 
     
 })
