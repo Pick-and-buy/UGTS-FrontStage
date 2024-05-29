@@ -6,40 +6,43 @@ import {
     Image,
     TextInput,
     Alert,
+    StyleSheet,
 } from "react-native";
 import React, { useState, useRef, useContext } from "react";
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 import Button from "../components/Button";
 import BackBtn from "../components/BackBtn";
-import { Form, Formik } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { COLORS, SIZES } from "../constants/theme";
 import styles from "./css/login.style";
-import LottieView from "lottie-react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { LoginContext } from "../context/LoginContext";
-
-const validationSchema = Yup.object().shape({
-    password: Yup.string()
-        .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
-        .required("Vui lòng nhập mật khẩu"),
-    phone: Yup.number()
-        .typeError("Có vẻ như đó không phải là số điện thoại")
-        .positive("Số điện thoại không thể bắt đầu bằng dấu trừ")
-        .integer("Số điện thoại không được bao gồm dấu thập phân")
-        .min(8, "Điện thoại phải có ít nhất 8 ký tự")
-        .required('Vui lòng nhập số điện thoại')
-});
 
 const Login = ({ navigation }) => {
-    const animation = useRef(null);
     const [loader, setLoader] = useState(false);
-    const [obsecureText, setObsecureText] = useState(false);
-    const [isSelected, setSelection] = useState(false);
-    // const { login, setLogin } = useContext(LoginContext)
+    const [obsecureText, setObsecureText] = useState(true);
+
+    const handleLogin = async (values) => {
+        try {
+            const response = await axios.post('http://10.0.2.2:8080/api/v1/auth/login', {
+                phoneNumber: values.phoneNumber,
+                password: values.password,
+            });
+
+            if (response.status === 200) {
+                alert('Login successful');
+                // handle successful login
+                navigation.navigate("bottom-navigation")
+            } else {
+                alert('Login failed');
+            }
+        } catch (error) {
+            alert('An error occurred');
+        }
+    };
 
     const inValidForm = () => {
         Alert.alert("Invalid Form", "Please provide all required fields", [
@@ -55,102 +58,15 @@ const Login = ({ navigation }) => {
         ]);
     };
 
-    // //   setLoader(true);
-    // //   try {
-    // //     await firebase
-    // //       .auth()
-    // //       .signInWithphoneAndPassword(values.phone, values.password).then(() => navigation.navigate('home')).catch((error) => {
-    // //         Alert.alert("Error Login", error.message, [
-    // //           {
-    // //             text: "Back",
-    // //             onPress: () => {
-    // //               setLoader(false);
-    // //             },
-    // //           },
-    // //           {
-    // //             text: "Continue",
-    // //             onPress: () => {},
-    // //           },
-    // //           { defaultIndex: 1 },
-    // //         ]);
-    // //       });
-    // //   } catch (error) {
-    // //     Alert.alert("Error Login", error.message, [
-    // //       {
-    // //         text: "Back",
-    // //         onPress: () => {
-    // //           setLoader(false);
-    // //         },
-    // //       },
-    // //       {
-    // //         text: "Continue",
-    // //         onPress: () => {},
-    // //       },
-    // //       { defaultIndex: 1 },
-    // //     ]);
-    // //   }
-    // // };
+    const validationSchema = Yup.object().shape({
+        phoneNumber: Yup.string().matches(/^\d{10}$/, 'Số điện thoại phải có ít nhất 10 số').required('Vui lòng nhập số điện thoại').typeError("Có vẻ như đó không phải là số điện thoại"),
+        password: Yup.string().min(8, 'Mật khẩu phải có ít nhất 8 ký tự').required('Vui lòng nhập mật khẩu'),
+    });
 
-    // const loginFunc = async (values) => {
-    //     setLoader(true);
-
-    //     try {
-    //         const endpoint = "http://localhost:6002/login";
-    //         const data = values;
-
-    //         console.log(data);
-
-    //         const response = await axios.post(endpoint, data);
-    //         if (response.status === 200) {
-    //             setLoader(false);
-    //             setLogin(true);
-
-    //             console.log(response.data);
-
-    //             await AsyncStorage.setItem("id", JSON.stringify(response.data._id));
-    //             await AsyncStorage.setItem("token", JSON.stringify(response.data.userToken));
-
-    //         } else {
-    //             setLogin(false);
-
-    //             Alert.alert("Error Logging in ", "Please provide valid credentials ", [
-    //                 {
-    //                     text: "Cancel",
-    //                     onPress: () => { },
-    //                 },
-    //                 {
-    //                     text: "Continue",
-    //                     onPress: () => { },
-    //                 },
-    //                 { defaultIndex: 1 },
-    //             ]);
-    //         }
-    //     } catch (error) {
-    //         setLogin(false);
-    //         Alert.alert(
-    //             "Error ",
-    //             "Oops, Error logging in try again with correct credentials",
-    //             [
-    //                 {
-    //                     text: "Cancel",
-    //                     onPress: () => { },
-    //                 },
-    //                 {
-    //                     text: "Continue",
-    //                     onPress: () => { },
-    //                 },
-    //                 { defaultIndex: 1 },
-    //             ]
-    //         );
-    //     } finally {
-    //         setLoader(false);
-    //     }
-    // };
     return (
         <ScrollView style={{ backgroundColor: COLORS.white }}>
             <View style={{ marginHorizontal: 20, marginTop: 50 }}>
-                {/* <BackBtn onPress={() => navigation.goBack()} /> */}
-                <View style={{ width: SIZES.width, height: SIZES.height / 3}}>
+                <View style={{ width: SIZES.width, height: SIZES.height / 3 }}>
                     <Image
                         style={{ position: "absolute", top: -30, right: -30, transform: [{ scale: 0.75 }] }}
                         source={require('../../assets/images/sky.png')}
@@ -160,30 +76,26 @@ const Login = ({ navigation }) => {
                         source={require('../../assets/images/GiaTot_Logo.png')}
                     />
                 </View>
-
-
                 <Text style={styles.titleLogin}>ĐĂNG NHẬP</Text>
 
                 <Formik
-                    initialValues={{ phone: "", password: "" }}
+                    initialValues={{ phoneNumber: '', password: '' }}
+                    onSubmit={handleLogin}
                     validationSchema={validationSchema}
-                    onSubmit={(values) => loginFunc(values)}
                 >
-                    {({
-                        handleChange,
+                    {({ handleChange,
                         handleBlur,
                         touched,
                         handleSubmit,
                         values,
                         errors,
                         isValid,
-                        setFieldTouched,
-                    }) => (
-                        <View>
+                        setFieldTouched, }) => (
+                        <View style={styles.container}>
                             <View style={styles.wrapper}>
                                 <View
                                     style={styles.inputWrapper(
-                                        touched.phone ? COLORS.secondary : COLORS.offwhite
+                                        touched.phoneNumber ? COLORS.secondary : COLORS.offwhite
                                     )}
                                 >
                                     <MaterialCommunityIcons
@@ -192,26 +104,24 @@ const Login = ({ navigation }) => {
                                         color={COLORS.primary}
                                         style={styles.iconStyle}
                                     />
-
                                     <TextInput
-                                        keyboardType='numeric'
+                                        style={{ flex: 1 }}
+                                        keyboardType='phone-pad'
                                         placeholder="Số điện thoại"
+                                        value={values.phoneNumber}
                                         onFocus={() => {
-                                            setFieldTouched("phone");
+                                            setFieldTouched("phoneNumber");
                                         }}
                                         onBlur={() => {
-                                            setFieldTouched("phone", "");
+                                            setFieldTouched("phoneNumber", "");
                                         }}
-                                        value={values.phone}
-                                        onChangeText={handleChange("phone")}
+                                        onChangeText={handleChange("phoneNumber")}
                                         autoCorrect={false}
-                                        style={{ flex: 1 }}
                                     />
                                 </View>
-                                {touched.phone && errors.phone && (
-                                    <Text style={styles.errorMessage}>{errors.phone}</Text>
-                                )}
+                                {touched.phoneNumber && errors.phoneNumber && <Text style={styles.errorMessage}>{errors.phoneNumber}</Text>}
                             </View>
+
 
                             <View style={styles.wrapper}>
                                 <View
@@ -227,6 +137,7 @@ const Login = ({ navigation }) => {
                                     />
 
                                     <TextInput
+                                        style={{ flex: 1 }}
                                         secureTextEntry={obsecureText}
                                         placeholder="Mật khẩu"
                                         onFocus={() => {
@@ -239,9 +150,7 @@ const Login = ({ navigation }) => {
                                         onChangeText={handleChange("password")}
                                         autoCapitalize="none"
                                         autoCorrect={false}
-                                        style={{ flex: 1 }}
                                     />
-
                                     <TouchableOpacity
                                         onPress={() => {
                                             setObsecureText(!obsecureText);
@@ -257,6 +166,8 @@ const Login = ({ navigation }) => {
                                     <Text style={styles.errorMessage}>{errors.password}</Text>
                                 )}
                             </View>
+
+                            {touched.password && errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
 
                             <View style={{ flex: 1, marginLeft: 8, marginBottom: 20 }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -282,7 +193,6 @@ const Login = ({ navigation }) => {
                                         }}
                                     >Quên mật khẩu ?</Text>
                                 </View>
-
 
                             </View>
 
@@ -334,13 +244,12 @@ const Login = ({ navigation }) => {
                                 </Text>
                             </Text>
                         </View>
-
-
                     )}
                 </Formik>
             </View>
         </ScrollView>
     );
 };
+
 
 export default Login;
