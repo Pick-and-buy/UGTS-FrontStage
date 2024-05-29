@@ -7,11 +7,24 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from "expo-splash-screen";
 import BottomTab from './app/navigation/BottomTab';
 import RegisterInformation from './app/screens/register/RegisterInformation';
-import ProductDetail from './app/screens/product/ProductDetail';
+import ProductDetail from './app/screens/brand/ProductDetail';
 import BrandDetail from './app/screens/brand/BrandDetail';
+import Login from './app/screens/Login';
+import Register from './app/screens/register/Register';
+import PaymentMethod from './app/screens/PaymentMethod';
+import UploadPhoto from './app/screens/UploadPhoto';
+import SetLocation from './app/screens/SetLocation';
+import Congratulations from './app/screens/Congratulations';
+import Home from './app/screens/Home';
+import ViaMethodForgotPassword from './app/screens/forgot password/ViaMethodForgotPassword';
+import ForgotPasswordInformation from './app/screens/forgot password/ForgotPasswordInformation';
+import OTPVerification from './app/screens/forgot password/OTPVerification';
+import ResetPassword from './app/screens/forgot password/ResetPassword';
+import ResetPasswordSuccessfully from './app/screens/forgot password/ResetPasswordSuccessfully';
+
 const Stack = createNativeStackNavigator();
 export default function App() {
-  
+
   const [fontsLoaded] = useFonts({
     regular: require('./assets/fonts/Poppins-Regular.ttf'),
     light: require('./assets/fonts/Poppins-Light.ttf'),
@@ -43,6 +56,11 @@ export default function App() {
         />
         <Stack.Screen
           name='register-navigation'
+          component={Register}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='register-infor-navigation'
           component={RegisterInformation}
           options={{ headerShown: false }}
         />
@@ -54,6 +72,72 @@ export default function App() {
         <Stack.Screen
           name='brand-detail'
           component={BrandDetail}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='upload-photo-navigation'
+          component={UploadPhoto}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='set-location-navigation'
+          component={SetLocation}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='payment-method-navigation'
+          component={PaymentMethod}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='congrats-navigation'
+          component={Congratulations}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='login-navigation'
+          component={Login}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='forgot-password-navigation'
+          component={ViaMethodForgotPassword}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='info-method-navigation'
+          component={ForgotPasswordInformation}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='otp-navigation'
+          component={OTPVerification}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='reset-password-navigation'
+          component={ResetPassword}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='reset-password-successfully-navigation'
+          component={ResetPasswordSuccessfully}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name='home-navigation'
+          component={Home}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

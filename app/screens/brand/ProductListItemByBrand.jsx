@@ -15,6 +15,8 @@ import { COLORS, SIZES } from "../../constants/theme";
 
 const ProductListItemByBrand = ({ listItem }) => {
 
+    const navigation = useNavigation();
+
     useEffect(() => {
         console.log("List product By Brand <ProductListItemByBrand>: ", listItem);
         // brand && getProductByBrand();
@@ -30,16 +32,25 @@ const ProductListItemByBrand = ({ listItem }) => {
                     />
                     <Text style={styles.textPrice}>
                         ${listItem.price}
-                        </Text>
+                    </Text>
                 </View>
-                <View style={styles.subContainer}>
-                    <Text style={{ color: 'gray' }}>{listItem.contactPerson}</Text>
-                    <Text style={{ fontFamily: 'bold' }}>{listItem.name}</Text>
-                    <Text style={{ color: 'gray'}}>
+                <View>
+                    <TouchableOpacity
+                        onPress={() =>
+                            navigation.navigate('product-detail', { itemDetail: listItem })
+                        }
+                        style={styles.subContainer}>
+                        <Text style={{ color: 'gray' }}>{listItem.contactPerson}</Text>
+                        <Text style={{ fontFamily: 'bold' }}>{listItem.name}</Text>
+                    </TouchableOpacity>
+                    <View style={styles.address}>
+                        <Text style={{ color: 'gray' }}>
                         <Ionicons name="location-sharp" size={20} color='black' />
                         {listItem.address}
                     </Text>
+                    </View>
                 </View>
+
             </View>
 
         </ScrollView>
@@ -67,11 +78,15 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     subContainer: {
-        gap: 15,
+        gap: 10,
         paddingLeft: 10,
         paddingTop: 10,
-        width: '70%',
-
+        width: '80%',
+        height: '70%',
+    },
+    address: {
+        marginTop: 10,
+        width: '80%',
     }
 })
 

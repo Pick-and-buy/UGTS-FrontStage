@@ -19,7 +19,7 @@ import { EvilIcons } from '@expo/vector-icons';
 import Header from "./home/Header";
 import Slider from "./home/Slider";
 import Brands from "./home/Brands";
-import BusinessList from "./home/BusinessList";
+import ProductList from "./home/ProductList";
 // import filter from "lodash.filter";
 
 const Home = () => {
@@ -124,10 +124,10 @@ const Home = () => {
     // </SafeAreaView>
     <ScrollView>
       <Header />
-      <View style={{padding: 20}}>
-        <Slider />
+      <Slider />
+      <View style={{paddingHorizontal: 20}}>
         <Brands />
-        <BusinessList />
+        <ProductList />
       </View>
     </ScrollView>
   );

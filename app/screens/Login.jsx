@@ -59,7 +59,7 @@ const Login = ({ navigation }) => {
     // //   try {
     // //     await firebase
     // //       .auth()
-    // //       .signInWithphoneAndPassword(values.email, values.password).then(() => navigation.navigate('home')).catch((error) => {
+    // //       .signInWithphoneAndPassword(values.phone, values.password).then(() => navigation.navigate('home')).catch((error) => {
     // //         Alert.alert("Error Login", error.message, [
     // //           {
     // //             text: "Back",
@@ -150,9 +150,9 @@ const Login = ({ navigation }) => {
         <ScrollView style={{ backgroundColor: COLORS.white }}>
             <View style={{ marginHorizontal: 20, marginTop: 50 }}>
                 {/* <BackBtn onPress={() => navigation.goBack()} /> */}
-                <View style={{ width: SIZES.width, height: SIZES.height / 3 }}>
+                <View style={{ width: SIZES.width, height: SIZES.height / 3}}>
                     <Image
-                        style={{ position: "absolute", top: -25, right: -25, transform: [{ scale: 0.8 }] }}
+                        style={{ position: "absolute", top: -30, right: -30, transform: [{ scale: 0.75 }] }}
                         source={require('../../assets/images/sky.png')}
                     />
                     <Image
@@ -165,7 +165,7 @@ const Login = ({ navigation }) => {
                 <Text style={styles.titleLogin}>ĐĂNG NHẬP</Text>
 
                 <Formik
-                    initialValues={{ email: "", password: "" }}
+                    initialValues={{ phone: "", password: "" }}
                     validationSchema={validationSchema}
                     onSubmit={(values) => loginFunc(values)}
                 >
@@ -183,7 +183,7 @@ const Login = ({ navigation }) => {
                             <View style={styles.wrapper}>
                                 <View
                                     style={styles.inputWrapper(
-                                        touched.email ? COLORS.secondary : COLORS.offwhite
+                                        touched.phone ? COLORS.secondary : COLORS.offwhite
                                     )}
                                 >
                                     <MaterialCommunityIcons
@@ -278,7 +278,7 @@ const Login = ({ navigation }) => {
                                     <Text
                                         style={{ fontSize: 16, textDecorationLine: "underline", color: COLORS.primary }}
                                         onPress={() => {
-                                            navigation.navigate("");
+                                            navigation.navigate("forgot-password-navigation");
                                         }}
                                     >Quên mật khẩu ?</Text>
                                 </View>
@@ -328,7 +328,7 @@ const Login = ({ navigation }) => {
                                 {" "}Bạn chưa có tài khoản ? {" "}
                                 <Text
                                     style={{ color: COLORS.primary, fontWeight: "bold" }}
-                                    onPress={() => navigation.navigate("")}
+                                    onPress={() => navigation.navigate("register-navigation")}
                                 >
                                     Đăng ký
                                 </Text>

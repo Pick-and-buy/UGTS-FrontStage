@@ -25,28 +25,35 @@ const styles = StyleSheet.create({
     },
     textHeader: {
         marginTop: 30,
-        width: '80%',
+        width: '85%',
         height: 100,
         fontSize: 35,
         fontWeight: '800'
     },
     textHeader_1: {
-        marginTop: 20,
-        width: '80%',
+        marginTop: 10,
+        width: '95%',
         height: 100,
         fontSize: 20,
     },
     view_3: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         borderWidth: 2,
         borderRadius: 20,
         width: '95%',
+        height: '25%',
         paddingHorizontal: 20,
         paddingVertical: 20,
         backgroundColor: 'white',
         borderColor: COLORS.lightWhite,
         ...SHADOWS.medium,
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: 100
     },
+    image: {
+        marginVertical: 10
+    }
 })
 
 export default styles;

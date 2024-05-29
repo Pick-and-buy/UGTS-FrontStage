@@ -13,7 +13,7 @@ import React, { useState, useEffect } from "react";
 import { NavigationContaine, useNavigation } from '@react-navigation/native';
 import { COLORS, SIZES } from "../../constants/theme";
 
-const BusinessList = () => {
+const ProductList = () => {
 
     const [businessList, setBusinessList] = useState([]);
 
@@ -43,9 +43,9 @@ const BusinessList = () => {
             thumbnail: 'https://tse1.mm.bing.net/th?id=OIP.n6NRfD8qNXn_9u_LxO8N-wHaE8&pid=Api&P=0&h=180',
             phone: '0986888888',
             address: 'Hà Nội',
-            category: 'Túi xách',
+            category: 'Hermes',
             title: 'Túi Hermes Birkin 25',
-            description: 'Sản phẩm túi LV đang là mẫu hot trên thị trường 2024',
+            description: 'Sản phẩm túi Hermes đang là mẫu hot trên thị trường 2024',
             like: 68,
             comment: 10
         },
@@ -57,39 +57,39 @@ const BusinessList = () => {
             thumbnail: 'https://gostyle.vn/wp-content/uploads/2020/10/tui-xach-nu-chinh-hang-louisvuitton-M45165-gostyle4.jpg',
             phone: '0968999999',
             address: 'TP Hồ Chí Minh',
-            category: 'Túi xách',
-            title: 'Ba lô Louis Vuitton: Excursion PM',
-            description: 'Sản phẩm ba lô LV đang là mẫu hot trên thị trường 2024',
-            like: 99,
-            comment: 10
+            category: 'Louis Vuitton',
+            title: 'Túi Louis Vuitton: Excursion PM',
+            description: 'Sản phẩm Túi Louis Vuitton đang là mẫu hot trên thị trường 2024',
+            like: 50,
+            comment: 20
         },
         {
             id: '3',
             name: 'Naruto',
             email: 'naruto@gmail.com',
             avatar: 'https://www.pontodopainel.com.br/imagem/index/27506094/G/naruto_1.jpg',
-            thumbnail: 'https://tse2.mm.bing.net/th?id=OIP.1boTFpolrZQV5x5c-DjDxgHaHa&pid=Api&P=0&h=180',
+            thumbnail: 'https://p-vn.ipricegroup.com/f7854e3fb2a3ce7a31020ae326cd9d62fcb1e143_0.jpg',
             phone: '0968999999',
-            address: 'TP Hồ Chí Minh',
-            category: 'Túi xách',
-            title: 'Ba lô Louis Vuitton: Excursion PM',
-            description: 'Sản phẩm ba lô LV đang là mẫu hot trên thị trường 2024',
-            like: 99,
-            comment: 10
+            address: 'Hải Phòng',
+            category: 'Chanel',
+            title: 'Chanel Vanity Caviar',
+            description: 'Sản phẩm Túi Chanel đang là mẫu hot trên thị trường 2024',
+            like: 80,
+            comment: 46
         },
         {
             id: '4',
             name: 'Naruto',
             email: 'naruto@gmail.com',
             avatar: 'https://symbols.vn/wp-content/uploads/2022/02/Anh-Co-Hai-Tac-Mu-Rom-dep-nhat.jpg',
-            thumbnail: 'https://shopnhatviet.com/apppic/images/tui-xach-lv-mau-01.jpg',
+            thumbnail: 'https://product.hstatic.net/200000456445/product/6077881gf0j9207_9b3af2378dd245d3b9012edb42e319d7_grande.png',
             phone: '0968999999',
-            address: 'TP Hồ Chí Minh',
-            category: 'Túi xách',
-            title: 'Ba lô Louis Vuitton: Excursion PM',
-            description: 'Sản phẩm ba lô LV đang là mẫu hot trên thị trường 2024',
-            like: 99,
-            comment: 10
+            address: 'Phú Quốc',
+            category: 'Saint Laurent',
+            title: 'Saint Laurent Card Holder Grained Calfskin',
+            description: 'Sản phẩm Túi Saint Laurent đang là mẫu hot trên thị trường 2024',
+            like: 60,
+            comment: 15
         }
     ]
 
@@ -108,13 +108,13 @@ const BusinessList = () => {
                     <View style={styles.view}>
                         <View style={{ height: 145 }}>
                             <TouchableOpacity
-                                onPress={() => navigation.push('product-detail')}
+                                // onPress={() => navigation.navigate('product-detail', { product:item })}
                             >
                                 <Image
                                     style={styles.thumbnail}
                                     source={{ uri: item?.thumbnail }}
                                 />
-                                <View style={{ alignItems: 'center' }}>
+                                <View style={{ paddingHorizontal: 10 }}>
                                     <Text>
                                         {item?.title}
                                     </Text>
@@ -164,7 +164,7 @@ const BusinessList = () => {
 }
 
 
-export default BusinessList;
+export default ProductList;
 
 
 const styles = StyleSheet.create({

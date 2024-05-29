@@ -25,28 +25,37 @@ const styles = StyleSheet.create({
     },
     textHeader: {
         marginTop: 30,
-        width: '80%',
+        width: '95%',
         height: 100,
         fontSize: 35,
         fontWeight: '800'
     },
     textHeader_1: {
-        marginTop: 20,
-        width: '80%',
-        height: 100,
-        fontSize: 20,
+        marginTop: 0,
+        width: '95%',
+        height: 40,
+        fontSize: 16,
     },
     view_3: {
         flexDirection: 'row',
         borderWidth: 2,
         borderRadius: 20,
         width: '95%',
+        height: 'auto',
         paddingHorizontal: 20,
         paddingVertical: 20,
         backgroundColor: 'white',
         borderColor: COLORS.lightWhite,
         ...SHADOWS.medium,
+        justifyContent:"center",
+        alignItems:"center",
+        marginBottom: 20
     },
+    text:{
+        fontSize:20,
+        fontWeight: 'bold',
+        marginHorizontal:"auto",
+    }
 })
 
 export default styles;

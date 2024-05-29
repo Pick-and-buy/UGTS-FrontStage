@@ -1,54 +1,56 @@
 import { StyleSheet } from "react-native";
-import { COLORS } from "../../constants/theme";
+import { COLORS, SIZES } from "../../constants/theme";
+
 
 
 
 const styles = StyleSheet.create({
-    view_1: {
-        marginHorizontal: 10,
-        alignItems: 'center'
+    cover: {
+        height: SIZES.height / 2.4,
+        width: SIZES.width,
+        marginBottom: SIZES.xxLarge
+
     },
-    textHeader: {
-        width: '80%',
-        height: 100,
-        fontSize: 35,
-        fontWeight: '800',
-        textAlign: 'center',
-    },
-    view_2: {
-        flexDirection: 'row',
-        borderWidth: 2,
-        borderRadius: 20,
-        width: '95%',
-        paddingHorizontal: 20,
-        paddingVertical: 20,
-        backgroundColor: 'white',
-        borderColor: COLORS.lightWhite
-    },
-    button: {
-        backgroundColor: COLORS.primary,
-        borderRadius: 10,
-        width: 150,
-        height: 50,
-        alignSelf: "center",
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 50,
-    },
-    footer: {
-        color: COLORS.black,
-        fontSize: 14,
-        textAlign: 'center',
-        marginTop: 30
-    },
-    
-    titleRegister: {
+
+    titleLogin: {
         marginVertical: 20,
-        marginHorizontal: 80,
+        marginHorizontal: "auto",
         fontFamily: "bold",
         fontSize: 35,
         color: COLORS.primary,
     },
-})
+
+    wrapper: {
+        marginBottom: 20,
+    },
+    label: {
+        fontFamily: "regular",
+        fontSize: SIZES.xSmall,
+        marginBottom: 5,
+        marginEnd: 5,
+        textAlign: "right"
+    },
+    inputWrapper: (borderColor) => ({
+        borderColor: borderColor,
+        backgroundColor: COLORS.lightWhite,
+        borderWidth: 1,
+        height: 50,
+        borderRadius: 12,
+        flexDirection: 'row',
+        paddingHorizontal: 15,
+        alignItems: "center"
+
+    }),
+    iconStyle: {
+        marginRight: 10
+    },
+    errorMessage: {
+        color: COLORS.red,
+        fontFamily: "regular",
+        marginTop: 5,
+        marginLeft: 5,
+        fontSize: SIZES.xSmall
+    },
+});
 
 export default styles;
