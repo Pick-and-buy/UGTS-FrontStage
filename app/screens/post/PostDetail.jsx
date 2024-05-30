@@ -10,7 +10,7 @@ import {
     Dimensions,
     Pressable,
 } from "react-native";
-import { FontAwesome, Ionicons, AntDesign, Feather, MaterialIcons } from '@expo/vector-icons';
+import { Octicons, Ionicons, Feather  } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
 import { NavigationContaine, useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
@@ -151,13 +151,36 @@ const PostDetail = () => {
                             Bình Luận
                         </Text>
                     </View>
-                    <View style={styles.commentBox}>
-                        <TextInput
-                            style={{ paddingHorizontal: 15 }}
-                            numberOfLines={4}
-                            multiline={true}
-                            placeholder="Hãy Nhập Bình Luận Vào Đây"
-                        />
+
+                    <View style={styles.commentContainer}>
+                        <View style={styles.commentBox}>
+                            <TextInput
+                                style={{ paddingHorizontal: 15 }}
+                                numberOfLines={2}
+                                multiline={true}
+                                placeholder="Hãy Nhập Bình Luận Vào Đây"
+                            />
+                        </View>
+                        <View style={styles.icon}>
+                            <View style={styles.iconHeart}>
+                                <Feather 
+                                    name="heart"
+                                    size={26}
+                                    color="black" />
+                                <Text style={{ fontSize: 12 }}>
+                                    68
+                                </Text>
+                            </View>
+                            <View style={styles.iconHeart}>
+                                <Octicons
+                                    name="comment"
+                                    size={26}
+                                    color="black" />
+                                <Text style={{ fontSize: 12 }}>
+                                    10
+                                </Text>
+                            </View>
+                        </View>
                     </View>
                 </View>
             </View>
@@ -231,13 +254,27 @@ const styles = StyleSheet.create({
     },
 
     // Comment
+    commentContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: 25
+    },
     commentBox: {
         borderWidth: 1,
         width: '70%',
         borderRadius: 5,
-        borderColor:'#E2E2E2',
-        backgroundColor: '#E2E2E2'
+        borderColor: '#E2E2E2',
+        backgroundColor: '#E2E2E2',
     },
+    icon: {
+        flexDirection: 'row',
+        gap: 10,
+    },
+    iconHeart: {
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+        gap: 4,
+    }
 
 })
 
