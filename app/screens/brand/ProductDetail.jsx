@@ -55,6 +55,7 @@ const ProductDetail = () => {
     return (
         <ScrollView>
             <View style={styles.container}>
+                {/* Header */}
                 <View style={styles.header}>
                     <Ionicons
                         onPress={() => navigation.goBack()}
@@ -450,11 +451,7 @@ const styles = StyleSheet.create({
         height: 30,
         borderRadius: 99,
     },
-    bottomSheet: {
-        flex: 1,
-        padding: 120,
-        backgroundColor: 'grey',
-    },
+    
     // Description
     description: {
         display: 'flex',

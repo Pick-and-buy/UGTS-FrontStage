@@ -21,6 +21,7 @@ import ForgotPasswordInformation from './app/screens/forgot password/ForgotPassw
 import OTPVerification from './app/screens/forgot password/OTPVerification';
 import ResetPassword from './app/screens/forgot password/ResetPassword';
 import ResetPasswordSuccessfully from './app/screens/forgot password/ResetPasswordSuccessfully';
+import PostDetail from './app/screens/post/PostDetail';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -72,6 +73,13 @@ export default function App() {
         <Stack.Screen
           name='brand-detail'
           component={BrandDetail}
+          options={{ headerShown: false }}
+        />
+
+        {/* Post Detail */}
+        <Stack.Screen
+          name='post-detail'
+          component={PostDetail}
           options={{ headerShown: false }}
         />
 

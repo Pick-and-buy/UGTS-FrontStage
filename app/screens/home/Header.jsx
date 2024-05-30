@@ -26,7 +26,7 @@ const Header = () => {
                         size={24}
                         color="#656565" />
                     <TextInput
-                        keyboardType='default'
+                        style={{ paddingRight: 15 }}
                         placeholder="Nhập sản phẩm bạn muốn tìm kiếm"
                     />
                 </View>
@@ -51,15 +51,15 @@ const Header = () => {
             {/* Điều Hướng */}
             <View style={styles.nav}>
                 <View>
-                    <Text style={{color: 'red', fontSize: 18, fontFamily: 'bold'}}>
+                    <Text style={{ color: 'red', fontSize: 18, fontFamily: 'bold' }}>
                         Theo Dõi
                     </Text>
-                    <View style={[styles.shadow, {borderColor: 'red'}]}>
+                    <View style={[styles.shadow, { borderColor: 'red' }]}>
 
                     </View>
                 </View>
                 <View>
-                    <Text style={{fontSize: 18, fontFamily: 'bold'}}>
+                    <Text style={{ fontSize: 18, fontFamily: 'bold' }}>
                         Khám Phá
                     </Text>
                     <View style={styles.shadow}>
@@ -115,6 +115,6 @@ const styles = StyleSheet.create({
         marginTop: 2
     }
 
-    
+
 })
 

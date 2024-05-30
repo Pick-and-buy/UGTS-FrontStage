@@ -47,7 +47,7 @@ const ProductList = () => {
             title: 'Túi Hermes Birkin 25',
             description: 'Sản phẩm túi Hermes đang là mẫu hot trên thị trường 2024',
             like: 68,
-            comment: 10
+            comment: 10,
         },
         {
             id: '2',
@@ -108,7 +108,7 @@ const ProductList = () => {
                     <View style={styles.view}>
                         <View style={{ height: 145 }}>
                             <TouchableOpacity
-                                // onPress={() => navigation.navigate('product-detail', { product:item })}
+                                onPress={() => navigation.navigate('post-detail', { post:item })}
                             >
                                 <Image
                                     style={styles.thumbnail}
@@ -122,6 +122,7 @@ const ProductList = () => {
                             </TouchableOpacity>
                         </View>
 
+                        {/* Avatar & Comment */}
                         <View style={styles.profileMainContainer}>
                             <View style={styles.profileContainer}>
                                 <Image
@@ -195,6 +196,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginBottom: 10,
     },
+
+    //Avatar & Comment
     profileMainContainer: {
         display: 'flex',
         flexDirection: 'row',
