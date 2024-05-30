@@ -22,6 +22,7 @@ import ResetPasswordSuccessfully from './app/screens/forgot password/ResetPasswo
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Onboarding from './app/components/Onboarding';
 import { LoginContext } from './app/context/LoginContext';
+import Profile from './app/screens/Profile';
 
 
 const Stack = createNativeStackNavigator();
@@ -68,7 +69,6 @@ export default function App() {
 
   return (
     isAppFirstLaunched !== null && (
-      <LoginContext.Provider value={{ login, setLogin }}>
         <NavigationContainer>
           <Stack.Navigator>
             {isAppFirstLaunched && <Stack.Screen
@@ -157,9 +157,13 @@ export default function App() {
               component={Home}
               options={{ headerShown: false }}
             />
+            <Stack.Screen
+              name='profile-navigation'
+              component={Profile}
+              options={{ headerShown: false }}
+            />
           </Stack.Navigator>
         </NavigationContainer>
-      </LoginContext.Provider>
     )
 
 

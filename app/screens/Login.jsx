@@ -6,41 +6,31 @@ import {
     Image,
     TextInput,
     Alert,
-    StyleSheet,
 } from "react-native";
-import React, { useState, useRef, useContext } from "react";
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-
 import Button from "../components/Button";
-import BackBtn from "../components/BackBtn";
-import { Formik } from "formik";
-import * as Yup from "yup";
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { COLORS, SIZES } from "../constants/theme";
 import styles from "./css/login.style";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { login } from '../api/auth';
+import { useState } from "react";
 
 const Login = ({ navigation }) => {
     const [loader, setLoader] = useState(false);
     const [obsecureText, setObsecureText] = useState(true);
 
-    const handleLogin = async (values) => {
+    const handleLogin = async (values, actions) => {
         try {
-            const response = await axios.post('http://10.0.2.2:8080/api/v1/auth/login', {
-                phoneNumber: values.phoneNumber,
-                password: values.password,
+            await login(values.phoneNumber, values.password);
+            // navigation.navigate('bottom-navigation'); // Navigate to your home screen or main app screen
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'bottom-navigation' }],
             });
-
-            if (response.status === 200) {
-                alert('Login successful');
-                // handle successful login
-                navigation.navigate("bottom-navigation")
-            } else {
-                alert('Login failed');
-            }
-        } catch (error) {
-            alert('An error occurred');
+        } catch (err) {
+            actions.setFieldError('general', 'Login failed. Please check your credentials and try again.');
         }
     };
 
@@ -57,12 +47,10 @@ const Login = ({ navigation }) => {
             { defaultIndex: 1 },
         ]);
     };
-
     const validationSchema = Yup.object().shape({
         phoneNumber: Yup.string().matches(/^\d{10}$/, 'Số điện thoại phải có ít nhất 10 số').required('Vui lòng nhập số điện thoại').typeError("Có vẻ như đó không phải là số điện thoại"),
         password: Yup.string().min(8, 'Mật khẩu phải có ít nhất 8 ký tự').required('Vui lòng nhập mật khẩu'),
     });
-
     return (
         <ScrollView style={{ backgroundColor: COLORS.white }}>
             <View style={{ marginHorizontal: 20, marginTop: 50 }}>
@@ -167,7 +155,6 @@ const Login = ({ navigation }) => {
                                 )}
                             </View>
 
-                            {touched.password && errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
 
                             <View style={{ flex: 1, marginLeft: 8, marginBottom: 20 }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -250,6 +237,5 @@ const Login = ({ navigation }) => {
         </ScrollView>
     );
 };
-
 
 export default Login;
