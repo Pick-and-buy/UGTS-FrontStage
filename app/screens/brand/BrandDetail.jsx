@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
         fontFamily: 'bold',
         color: COLORS.black,
         textAlign: 'center',
-        paddingLeft: 85
+        paddingLeft: 40
     },
 })
 

@@ -54,7 +54,7 @@ const Header = () => {
                     <Text style={{ color: 'red', fontSize: 18, fontFamily: 'bold' }}>
                         Theo Dõi
                     </Text>
-                    <View style={[styles.shadow, { borderColor: 'red' }]}>
+                    <View style={[styles.shadowNav, { borderColor: 'red' }]}>
 
                     </View>
                 </View>
@@ -62,7 +62,7 @@ const Header = () => {
                     <Text style={{ fontSize: 18, fontFamily: 'bold' }}>
                         Khám Phá
                     </Text>
-                    <View style={styles.shadow}>
+                    <View style={styles.shadowNav}>
 
                     </View>
                 </View>
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
         marginHorizontal: '20%',
         gap: 80
     },
-    shadow: {
+    shadowNav: {
         borderWidth: 1,
         borderColor: 'black',
         marginTop: 2

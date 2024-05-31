@@ -10,7 +10,7 @@ import {
     Dimensions,
     Pressable,
 } from "react-native";
-import { Octicons, Ionicons, Feather  } from '@expo/vector-icons';
+import { Octicons, Ionicons, Feather } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
 import { NavigationContaine, useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
@@ -58,7 +58,10 @@ const PostDetail = () => {
                         name="chevron-back-outline"
                         size={35}
                         color={COLORS.primary} />
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('poster-information', { posterDetail: item })}
+                        style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}
+                    >
                         <Image
                             style={styles.avatar}
                             source={{ uri: item?.avatar }}
@@ -66,7 +69,7 @@ const PostDetail = () => {
                         <Text style={{ fontSize: 24 }}>
                             {item?.name}
                         </Text>
-                    </View>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.shadow}>
                     {/* Tạo Khoảng Trống */}
@@ -163,7 +166,7 @@ const PostDetail = () => {
                         </View>
                         <View style={styles.icon}>
                             <View style={styles.iconHeart}>
-                                <Feather 
+                                <Feather
                                     name="heart"
                                     size={26}
                                     color="black" />
