@@ -8,35 +8,54 @@ import NetworkImage from "../components/NetworkImage";
 import ProfileTile from "../components/ProfileTile";
 import styles from "./css/profile.style";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { logout } from "../api/auth";
+import { fetchUserInfo, logout } from "../api/auth";
+import { getUserByToken } from "../api/user";
 
 const Profile = ({ navigation }) => {
   const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const profile =
-    "https://d326fntlu7tb1e.cloudfront.net/uploads/b5065bb8-4c6b-4eac-a0ce-86ab0f597b1e-vinci_04.jpg";
+    "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
   const bkImg =
     "https://d326fntlu7tb1e.cloudfront.net/uploads/ab6356de-429c-45a1-b403-d16f7c20a0bc-bkImg-min.png";
 
-  const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  console.log("is authenticated", isAuthenticated);
+  const fetchUserData = async () => {
+    try {
+      const userData = await getUserByToken();
+      setUser(userData);
+    } catch (error) {
+      console.error('Fetching user data failed:', error);
+    }
+  };
+
+  // Function to check token presence
+  const checkToken = async () => {
+    const token = await AsyncStorage.getItem('token');
+    setIsAuthenticated(!!token);
+    setLoading(false);
+  };
+
+  // useEffect to call both functions
   useEffect(() => {
-    const checkToken = async () => {
-      const token = await AsyncStorage.getItem('token');
-      setIsAuthenticated(!!token);
-      setLoading(false);
+    const initialize = async () => {
+      await checkToken();
+      if (isAuthenticated) {
+        await fetchUserData();
+      }
     };
-    checkToken();
-  }, []);
+    initialize();
+  }, [isAuthenticated]);
+
 
   if (loading) {
     return null; // or a loading spinner
   }
-
+  console.log(user);
   const handleLogout = async () => {
     await logout();
-    // navigation.navigate('bottom-navigation');
+    setUser(null);
     navigation.reset({
       index: 0,
       routes: [{ name: 'bottom-navigation' }],
@@ -82,7 +101,7 @@ const Profile = ({ navigation }) => {
                 />
                 <View style={{ marginLeft: 10, marginTop: 10 }}>
                   <Text style={styles.text}>
-                    {user === null ? "Bạn chưa đăng nhập" : user.username}
+                    {user === null ? "Bạn chưa đăng nhập" : user.result.username}
                   </Text>
                 </View>
               </View>

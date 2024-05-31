@@ -24,7 +24,7 @@ const Login = ({ navigation }) => {
     const handleLogin = async (values, actions) => {
         try {
             await login(values.phoneNumber, values.password);
-            // navigation.navigate('bottom-navigation'); // Navigate to your home screen or main app screen
+            
             navigation.reset({
                 index: 0,
                 routes: [{ name: 'bottom-navigation' }],
