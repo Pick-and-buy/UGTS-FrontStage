@@ -6,7 +6,6 @@ import {
     TouchableOpacity,
     Image,
     TextInput,
-    FlatList,
     Dimensions,
 } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
@@ -38,8 +37,14 @@ const Slider = () => {
     ]
 
     return (
-        <View>
-            <Carousel
+        <TouchableOpacity
+            onPress={() => console.warn('Click to open Event')}
+            style={{ marginVertical: 5 }}>
+            <Image
+                style={styles.image}
+                source={{ uri: 'https://bantersa.com/wp-content/uploads/2015/05/5-Beautiful-Websites.jpg' }}
+            />
+            {/* <Carousel
                 style={styles.carouselContainer}
                 showsControl={false}
                 showsDots={true}
@@ -53,8 +58,8 @@ const Slider = () => {
                         />
                     </View>
                 ))}
-            </Carousel>
-        </View>
+            </Carousel> */}
+        </TouchableOpacity>
     );
 }
 
@@ -66,6 +71,10 @@ const styles = StyleSheet.create({
         height: 200,
     },
     carouselImage: {
+        height: 150,
+        borderRadius: 10,
+    },
+    image: {
         height: 150,
         borderRadius: 10,
     },

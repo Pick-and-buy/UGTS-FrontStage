@@ -124,11 +124,6 @@ const Home = () => {
     // </SafeAreaView>
     <ScrollView>
       <Header />
-      <Slider />
-      <View style={{paddingHorizontal: 20}}>
-        <Brands />
-        <ProductList />
-      </View>
     </ScrollView>
   );
 };

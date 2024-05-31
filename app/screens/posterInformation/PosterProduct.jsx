@@ -17,9 +17,9 @@ import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
 
 const PosterProduct = () => {
     return (
-        <ScrollView style={styles.container}>
+        <View style={styles.container}>
             <Text style={{textAlign: 'center'}}>Product</Text>
-        </ScrollView>
+        </View>
     );
 }
 

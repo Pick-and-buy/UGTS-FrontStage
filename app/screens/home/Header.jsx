@@ -6,18 +6,22 @@ import {
     TouchableOpacity,
     Image,
     TextInput,
-
+    Dimensions,
 } from "react-native";
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { COLORS, SIZES } from "../../constants/theme";
+import HomeFollow from "./HomeFollow";
+import HomeExplore from "./HomeExplore";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+const Tab = createMaterialTopTabNavigator();
 
 const Header = () => {
 
     const [listUser, setListUser] = useState([]);
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             {/* Search */}
             <View style={styles.searchContainer}>
                 <View style={[styles.search, { backgroundColor: '#EFEFEF', borderRadius: 5, width: '75%' }]}>
@@ -48,26 +52,51 @@ const Header = () => {
                 </View>
             </View>
 
-            {/* Điều Hướng */}
-            <View style={styles.nav}>
-                <View>
-                    <Text style={{ color: 'red', fontSize: 18, fontFamily: 'bold' }}>
-                        Theo Dõi
-                    </Text>
-                    <View style={[styles.shadowNav, { borderColor: 'red' }]}>
-
-                    </View>
-                </View>
-                <View>
-                    <Text style={{ fontSize: 18, fontFamily: 'bold' }}>
-                        Khám Phá
-                    </Text>
-                    <View style={styles.shadowNav}>
-
-                    </View>
-                </View>
+            {/* Navigate */}
+            <View style={styles.navContainer}>
+                <Tab.Navigator
+                    initialRouteName="follow"
+                    activeColor={COLORS.primary}
+                    tabBarHideKeyBoard={true}
+                    headerShown={false}
+                    inactiveColor={COLORS.secondary}
+                >
+                    <Tab.Screen
+                        name="follow"
+                        component={HomeFollow}
+                        options={{
+                            tabBarStyle: styles.tabBarStyle,
+                            tabBarShowLabel: false,
+                            headerShown: false,
+                            tabBarIcon: ({ focused }) => (
+                                <View style={{ width: 100, marginLeft: -30 }}>
+                                    <Text style={focused ? styles.tabActive : styles.tab}>
+                                        Theo Dõi
+                                    </Text>
+                                </View>
+                            ),
+                        }}
+                    />
+                    <Tab.Screen
+                        name="explore"
+                        component={HomeExplore}
+                        options={{
+                            tabBarStyle: styles.tabBarStyle,
+                            tabBarShowLabel: false,
+                            headerShown: false,
+                            tabBarIcon: ({ focused }) => (
+                                <View style={{ width: 100, marginLeft: -30 }}>
+                                    <Text style={focused ? styles.tabActive : styles.tab}>
+                                        Khám Phá
+                                    </Text>
+                                </View>
+                            ),
+                        }}
+                    />
+                </Tab.Navigator>
             </View>
-        </View>
+
+        </ScrollView>
     );
 }
 
@@ -78,7 +107,6 @@ const styles = StyleSheet.create({
         marginTop: 40,
         padding: 10,
         marginBottom: 20,
-        height: 150,
         backgroundColor: COLORS.lightWhite
     },
     //Search
@@ -99,21 +127,29 @@ const styles = StyleSheet.create({
         backgroundColor: '#E2E2E2',
         borderColor: '#E2E2E2'
     },
-    //Điều hướng
-    nav: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginTop: 40,
-        width: '60%',
-        marginHorizontal: '20%',
-        gap: 80
+
+    //Navigate
+    navContainer: {
+        marginTop: 15,
+        width: Dimensions.get('window').width,
+        height: 1500,
     },
-    shadowNav: {
-        borderWidth: 1,
-        borderColor: 'black',
-        marginTop: 2
-    }
+    tabBarStyle: {
+        marginTop: 10,
+        width: "100%",
+        elevation: 0, // This will remove the shadow on Android
+        shadowOpacity: 0, // This will remove the shadow on iOS
+    },
+    tabActive: {
+        fontSize: 18,
+        fontFamily: 'bold',
+        color: 'red',
+    },
+    tab: {
+        fontSize: 18,
+        fontFamily: 'bold',
+        color: 'black',
+    },
 
 
 })

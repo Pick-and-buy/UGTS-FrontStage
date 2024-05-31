@@ -109,7 +109,7 @@ const PosterInformation = () => {
                     </TouchableOpacity>
                 </View>
 
-                {/* Điều Hướng */}
+                {/* Navigate */}
                 <View style={styles.navContainer}>
                     <Tab.Navigator
                         initialRouteName="product"
@@ -119,7 +119,7 @@ const PosterInformation = () => {
                         inactiveColor={COLORS.secondary}
                     >
                         <Tab.Screen
-                            name="Sản Phẩm"
+                            name="product"
                             component={PosterProduct}
                             options={{
                                 tabBarStyle: styles.tabBarStyle,
@@ -135,7 +135,7 @@ const PosterInformation = () => {
                             }}
                         />
                         <Tab.Screen
-                            name="Bài Đăng"
+                            name="post"
                             component={PosterPost}
                             options={{
                                 tabBarStyle: styles.tabBarStyle,
@@ -163,7 +163,6 @@ export default PosterInformation;
 const styles = StyleSheet.create({
     container: {
         paddingTop: 50,
-        // height: 800,
         backgroundColor: COLORS.lightWhite
     },
 
@@ -217,7 +216,7 @@ const styles = StyleSheet.create({
         borderRadius: 5
     },
 
-    //Điều Hướng
+    //Navigate
     navContainer: {
         width: "100%",
         height: 600,
