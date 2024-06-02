@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { COLORS, SHADOWS } from "../../constants/theme";
+import { COLORS, SHADOWS, SIZES } from "../../constants/theme";
 
 
 const styles = StyleSheet.create({
@@ -46,6 +46,13 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderColor: COLORS.lightWhite,
         ...SHADOWS.medium,
+    },    
+    errorMessage: {
+        color: COLORS.red,
+        fontFamily: "regular",
+        marginTop: 5,
+        marginLeft: 5,
+        fontSize: SIZES.xSmall
     },
 })
 
