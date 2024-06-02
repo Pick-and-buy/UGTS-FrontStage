@@ -53,7 +53,12 @@ const PaymentMethod = ({ navigation }) => {
                 <View>
                     <Button
                         title={"TIẾP TỤC"}
-                        onPress={() => navigation.navigate("congrats-navigation")}
+                        onPress={() => navigation.navigate("congrats-navigation", {
+                                title:"HOÀN THÀNH!",
+                                content: "Hồ sơ của bạn đã sẵn sàng để sử dụng",
+                                routerName: "bottom-navigation",
+                                btnTxt: "Đi nào!",
+                        })}
                         isValid={true}
                     />
                 </View>

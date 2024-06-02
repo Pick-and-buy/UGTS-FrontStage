@@ -15,14 +15,6 @@ import styles from "./BottomTab.style";
 const Tab = createBottomTabNavigator();
 
 const BottomTab = () => {
-  // const {count, isCartLoading, error, refetch} =fetchCartCount();
-
-  // const { cartCount, setCartCount } = useContext(CartCountContext);
-  // const {login, setLogin} = useContext(LoginContext)
-
-  // if(isCartLoading){
-  //   setCartCount(count)
-  // }
 
   return (
     <Tab.Navigator
