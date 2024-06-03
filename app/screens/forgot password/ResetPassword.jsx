@@ -160,7 +160,13 @@ const ResetPassword = ({ navigation }) => {
                 <View>
                     <Button
                         title={"CẬP NHẬT"}
-                        onPress={() => navigation.navigate("reset-password-successfully-navigation")}
+                        onPress={() => navigation.navigate("congrats-navigation", {
+                                title:"HOÀN THÀNH!",
+                                content: "Cập nhật mật khẩu thành công!",
+                                routerName: "login-navigation",
+                                btnTxt: "ĐĂNG NHẬP NGAY",
+                        })
+                        }
                         isValid={true}
                     />
                 </View>
