@@ -22,6 +22,24 @@ export const logout = async () => {
 };
 
 
+export const register = async (userData) => {
+  // console.log(userData);
+  try {
+    const response = await axiosInstance.post('/auth/register', {
+      username: userData.username,
+      lastName: userData.lastName,
+      firstName: userData.firstName,
+      password: userData.password,
+      email: userData.email,
+      phoneNumber: userData.phoneNumber,
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+
 // Function to send OTP to email
 export const sendOtp = async (email) => {
   try {
