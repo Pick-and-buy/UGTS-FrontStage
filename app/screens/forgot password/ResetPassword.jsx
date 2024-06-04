@@ -30,7 +30,7 @@ const validationSchema = Yup.object().shape({
 
 
 const ResetPassword = ({ navigation, route }) => {
-    const { email } = route.params;
+    const email  = route.params.value;
     const [loader, setLoader] = useState(false);
     const [obsecureText, setObsecureText] = useState(false);
     const [obsecureText2, setObsecureText2] = useState(false);

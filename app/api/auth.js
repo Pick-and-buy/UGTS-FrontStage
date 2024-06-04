@@ -42,7 +42,7 @@ export const verifyOtp = async (email, otpCode) => {
   }
 };
 
-// Function to reset password gửi xuống 1 password ?
+// Function to reset password
 export const resetPassword = async (email, password, confirmPassword) => {
   try {
     const response = await axiosInstance.post('/auth/forgot-password', { email, password, confirmPassword });
