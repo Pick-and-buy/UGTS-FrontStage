@@ -52,7 +52,7 @@ const Profile = ({ navigation }) => {
   if (loading) {
     return null; // or a loading spinner
   }
-  console.log(user);
+  // console.log(user);
   const handleLogout = async () => {
     await logout();
     setUser(null);

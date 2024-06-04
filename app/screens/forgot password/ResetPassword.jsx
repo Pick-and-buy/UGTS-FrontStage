@@ -12,9 +12,10 @@ import { AntDesign, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-ic
 import styles from "../css/resetPassword.style.js";
 import Button from '../../components/Button.jsx';
 import BackBtn from '../../components/BackBtn.jsx';
-import { Form, Formik } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import { COLORS, SIZES } from "../../constants/theme.js";
+import { resetPassword } from "../../api/auth.js";
 
 
 const validationSchema = Yup.object().shape({
@@ -28,18 +29,35 @@ const validationSchema = Yup.object().shape({
 });
 
 
-const ResetPassword = ({ navigation }) => {
+const ResetPassword = ({ navigation, route }) => {
+    const email  = route.params.value;
     const [loader, setLoader] = useState(false);
     const [obsecureText, setObsecureText] = useState(false);
     const [obsecureText2, setObsecureText2] = useState(false);
+
+    const handleResetPassword = async (values) => {
+        try {
+
+            await resetPassword(email, values.password, values.passwordConfirmation);
+            // After successful password reset, navigate to the appropriate screen
+            navigation.navigate("congrats-navigation", {
+                title: "HOÀN THÀNH!",
+                content: "Cập nhật mật khẩu thành công!",
+                routerName: "login-navigation",
+                btnTxt: "ĐĂNG NHẬP NGAY",
+            });
+        } catch (error) {
+            // Handle password reset error
+            console.error("Password reset error:", error);
+            Alert.alert("Error", "Failed to reset password. Please try again.");
+        }
+    };
 
     return (
         <View style={styles.wrapper}>
             <View style={styles.view_1}>
                 <View style={{ marginBottom: "10%" }}>
-                    <Text style={styles.textHeader}>
-                        Thiết lập lại mật khẩu của bạn
-                    </Text>
+                    <Text style={styles.textHeader}>Thiết lập lại mật khẩu của bạn</Text>
                     <Text style={styles.textHeader_1}>
                         Dữ liệu này sẽ được cập nhật cho tài khoản của bạn
                     </Text>
@@ -48,7 +66,7 @@ const ResetPassword = ({ navigation }) => {
                 <Formik
                     initialValues={{ password: "", passwordConfirmation: "" }}
                     validationSchema={validationSchema}
-                    onSubmit={(values) => loginFunc(values)}
+                    onSubmit={handleResetPassword}
                 >
                     {({
                         handleChange,
@@ -150,30 +168,20 @@ const ResetPassword = ({ navigation }) => {
                                     <Text style={styles.errorMessage}>{errors.passwordConfirmation}</Text>
                                 )}
                             </View>
-                        </View>
 
+                            <View>
+                                <Button
+                                    title={"CẬP NHẬT"}
+                                    onPress={handleSubmit}
+                                    isValid={isValid}
+                                />
+                            </View>
+                        </View>
                     )}
                 </Formik>
-
-
-
-                <View>
-                    <Button
-                        title={"CẬP NHẬT"}
-                        onPress={() => navigation.navigate("congrats-navigation", {
-                                title:"HOÀN THÀNH!",
-                                content: "Cập nhật mật khẩu thành công!",
-                                routerName: "login-navigation",
-                                btnTxt: "ĐĂNG NHẬP NGAY",
-                        })
-                        }
-                        isValid={true}
-                    />
-                </View>
-
             </View>
         </View>
     );
-}
+};
 
-export default ResetPassword; 
+export default ResetPassword;

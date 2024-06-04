@@ -7,6 +7,7 @@ import { COLORS } from '../../constants/theme.js';
 import axios from 'axios';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
+import { register } from '../../api/auth.js';
 
 const RegisterInformation = ({ navigation, route }) => {
     const formData = route.params?.formData;
@@ -23,10 +24,9 @@ const RegisterInformation = ({ navigation, route }) => {
     const handleSubmit = async (values, { resetForm }) => {
         try {
             const userData = { ...values, ...data };
-            console.log('Submitting userData:', userData);
-            const response = await axios.post('http://10.0.2.2:8080/api/v1/auth/register', userData);
-            console.log('Registration successful:', response.data);
+            await register(userData);
             resetForm(); // Reset the form after successful submission
+            alert('Registration successful')
             navigation.reset({
                 index: 0,
                 routes: [{ name: 'login-navigation' }],
@@ -104,7 +104,7 @@ const RegisterInformation = ({ navigation, route }) => {
                             {touched.username && errors.username && (
                                 <Text style={styles.errorMessage}>{errors.username}</Text>
                             )}
-                            <View style={[styles.view_3, { marginTop: 12}]}>
+                            <View style={[styles.view_3, { marginTop: 12 }]}>
                                 <MaterialCommunityIcons name="email-outline" size={30} color={COLORS.primary} />
                                 <TextInput
                                     style={{ marginLeft: 10, flex: 1 }}
