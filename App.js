@@ -7,6 +7,8 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from "expo-splash-screen";
 import BottomTab from './app/navigation/BottomTab';
 import RegisterInformation from './app/screens/register/RegisterInformation';
+import ProductDetail from './app/screens/brand/ProductDetail';
+import BrandDetail from './app/screens/brand/BrandDetail';
 import Login from './app/screens/Login';
 import Register from './app/screens/register/Register';
 import PaymentMethod from './app/screens/PaymentMethod';
@@ -18,10 +20,18 @@ import ViaMethodForgotPassword from './app/screens/forgot password/ViaMethodForg
 import ForgotPasswordInformation from './app/screens/forgot password/ForgotPasswordInformation';
 import OTPVerification from './app/screens/forgot password/OTPVerification';
 import ResetPassword from './app/screens/forgot password/ResetPassword';
+
+import ResetPasswordSuccessfully from './app/screens/forgot password/ResetPasswordSuccessfully';
+import PostDetail from './app/screens/post/PostDetail';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Onboarding from './app/components/Onboarding';
+import PosterInformation from './app/screens/posterInformation/PosterInformation';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Onboarding from './app/components/Onboarding';
 import { LoginContext } from './app/context/LoginContext';
 import Profile from './app/screens/Profile';
+
 
 
 const Stack = createNativeStackNavigator();
@@ -152,6 +162,26 @@ export default function App() {
           <Stack.Screen
             name='profile-navigation'
             component={Profile}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='brand-detail'
+            component={BrandDetail}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='product-detail'
+            component={ProductDetail}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='post-detail'
+            component={PostDetail}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='poster-information'
+            component={PosterInformation}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
