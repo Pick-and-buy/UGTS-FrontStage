@@ -122,9 +122,9 @@ const Home = () => {
 
     //   </View>
     // </SafeAreaView>
-    <ScrollView>
+    <View>
       <Header />
-    </ScrollView>
+    </View>
   );
 };
 

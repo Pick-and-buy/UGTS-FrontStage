@@ -197,6 +197,7 @@ export default PostDetail;
 const styles = StyleSheet.create({
     container: {
         paddingTop: 50,
+        marginTop: 20
     },
 
     //Header
