@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
         borderWidth: 0.5,
         justifyContent: "center",
         alignItems: "center",
+        marginVertical:"6%"
     },
     textbtn: {
         color: COLORS.primary,

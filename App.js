@@ -20,20 +20,29 @@ import ViaMethodForgotPassword from './app/screens/forgot password/ViaMethodForg
 import ForgotPasswordInformation from './app/screens/forgot password/ForgotPasswordInformation';
 import OTPVerification from './app/screens/forgot password/OTPVerification';
 import ResetPassword from './app/screens/forgot password/ResetPassword';
+
 import ResetPasswordSuccessfully from './app/screens/forgot password/ResetPasswordSuccessfully';
 import PostDetail from './app/screens/post/PostDetail';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Onboarding from './app/components/Onboarding';
 import PosterInformation from './app/screens/posterInformation/PosterInformation';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Onboarding from './app/components/Onboarding';
+import { LoginContext } from './app/context/LoginContext';
+import Profile from './app/screens/Profile';
+
+
 
 const Stack = createNativeStackNavigator();
 export default function App() {
+  const [login, setLogin] = useState(null);
+
   const [isAppFirstLaunched, setIsAppFirstLaunched] = useState(null);
 
   const checkIsAppFirstLaunched = async () => {
     const appData = await AsyncStorage.getItem('isAppFirstLaunched');
-    console.log("checkIsAppFirstLaunched: ",appData);
+    console.log("checkIsAppFirstLaunched: ", appData);
     if (appData == null) {
       setIsAppFirstLaunched(true);
       AsyncStorage.setItem("isAppFirstLaunched", "false");
@@ -145,16 +154,14 @@ export default function App() {
             component={ResetPassword}
             options={{ headerShown: false }}
           />
-
-          <Stack.Screen
-            name='reset-password-successfully-navigation'
-            component={ResetPasswordSuccessfully}
-            options={{ headerShown: false }}
-          />
-
           <Stack.Screen
             name='home-navigation'
             component={Home}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='profile-navigation'
+            component={Profile}
             options={{ headerShown: false }}
           />
           <Stack.Screen

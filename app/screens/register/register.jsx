@@ -7,56 +7,41 @@ import {
     TextInput,
     Alert,
 } from "react-native";
-import React, { useState, useRef, useContext } from "react";
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import Button from "../../components/Button.jsx";
-import { Form, Formik } from "formik";
+import React, { useState } from "react";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { COLORS, SIZES } from "../../constants/theme.js";
 import styles from "../css/register.style.js";
-import RegisterInformation from "./RegisterInformation.jsx";
+import Button from "../../components/Button.jsx";
 
 const validationSchema = Yup.object().shape({
-    phone: Yup.number()
-        .typeError("Có vẻ như đó không phải là số điện thoại")
-        .positive("Số điện thoại không thể bắt đầu bằng dấu trừ")
-        .integer("Số điện thoại không được bao gồm dấu thập phân")
-        .min(8, "Điện thoại phải có ít nhất 8 ký tự")
-        .required('Vui lòng nhập số điện thoại'),
+    phoneNumber: Yup.string()
+        .matches(/^\d{10}$/, 'Số điện thoại phải có ít nhất 10 số')
+        .required('Vui lòng nhập số điện thoại')
+        .typeError("Có vẻ như đó không phải là số điện thoại"),
     password: Yup.string()
         .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
         .required("Vui lòng nhập mật khẩu"),
     passwordConfirmation: Yup.string()
-        .test('Mật khẩu trùng khớp', 'Mật khẩu không trùng khớp', function (value) {
-            return this.parent.password === value
-        })
+        .oneOf([Yup.ref('password'), null], 'Mật khẩu không trùng khớp')
+        .required("Vui lòng xác nhận mật khẩu")
 });
 
 const Register = ({ navigation }) => {
     const [loader, setLoader] = useState(false);
-    const [obsecureText, setObsecureText] = useState(false);
-    const [obsecureText2, setObsecureText2] = useState(false);
+    const [obsecureText, setObsecureText] = useState(true);
+    const [obsecureText2, setObsecureText2] = useState(true);
 
     const inValidForm = () => {
         Alert.alert("Invalid Form", "Please provide all required fields", [
-            {
-                text: "Cancel",
-                onPress: () => { },
-            },
-            {
-                text: "Continue",
-                onPress: () => { },
-            },
-            { defaultIndex: 1 },
+            { text: "OK" },
         ]);
     };
 
     return (
-
         <ScrollView style={{ backgroundColor: COLORS.white }}>
             <View style={{ marginHorizontal: 20, marginTop: 50 }}>
-                {/* <BackBtn onPress={() => navigation.goBack()} /> */}
                 <View style={{ width: SIZES.width, height: SIZES.height / 3 }}>
                     <Image
                         style={{ position: "absolute", top: -30, right: -30, transform: [{ scale: 0.75 }] }}
@@ -68,13 +53,24 @@ const Register = ({ navigation }) => {
                     />
                 </View>
 
-
                 <Text style={styles.titleLogin}>ĐĂNG KÝ</Text>
 
                 <Formik
-                    initialValues={{ phone: "", password: "", passwordConfirmation: "" }}
+                    initialValues={{ phoneNumber: "", password: "", passwordConfirmation: "" }}
                     validationSchema={validationSchema}
-                    onSubmit={(values) => loginFunc(values)}
+                    onSubmit={(values, { resetForm }) => {
+                        setLoader(true);
+                        try {
+                            // Navigate to the next screen with the form data
+                            navigation.navigate('register-infor-navigation', { formData: values });
+                            resetForm();
+                        } catch (error) {
+                            console.error(error);
+                            Alert.alert("Registration Error", "Something went wrong, please try again.");
+                        } finally {
+                            setLoader(false);
+                        }
+                    }}
                 >
                     {({
                         handleChange,
@@ -90,7 +86,7 @@ const Register = ({ navigation }) => {
                             <View style={styles.wrapper}>
                                 <View
                                     style={styles.inputWrapper(
-                                        touched.phone ? COLORS.secondary : COLORS.offwhite
+                                        touched.phoneNumber ? COLORS.secondary : COLORS.offwhite
                                     )}
                                 >
                                     <MaterialCommunityIcons
@@ -101,22 +97,18 @@ const Register = ({ navigation }) => {
                                     />
 
                                     <TextInput
-                                        keyboardType='numeric'
+                                        keyboardType='phoneNumber-pad'
                                         placeholder="Số điện thoại"
-                                        onFocus={() => {
-                                            setFieldTouched("phone");
-                                        }}
-                                        onBlur={() => {
-                                            setFieldTouched("phone", "");
-                                        }}
-                                        value={values.phone}
-                                        onChangeText={handleChange("phone")}
+                                        onFocus={() => setFieldTouched("phoneNumber")}
+                                        onBlur={handleBlur("phoneNumber")}
+                                        value={values.phoneNumber}
+                                        onChangeText={handleChange("phoneNumber")}
                                         autoCorrect={false}
                                         style={{ flex: 1 }}
                                     />
                                 </View>
-                                {touched.phone && errors.phone && (
-                                    <Text style={styles.errorMessage}>{errors.phone}</Text>
+                                {touched.phoneNumber && errors.phoneNumber && (
+                                    <Text style={styles.errorMessage}>{errors.phoneNumber}</Text>
                                 )}
                             </View>
 
@@ -136,12 +128,8 @@ const Register = ({ navigation }) => {
                                     <TextInput
                                         secureTextEntry={obsecureText}
                                         placeholder="Mật khẩu"
-                                        onFocus={() => {
-                                            setFieldTouched("password");
-                                        }}
-                                        onBlur={() => {
-                                            setFieldTouched("password", "");
-                                        }}
+                                        onFocus={() => setFieldTouched("password")}
+                                        onBlur={handleBlur("password")}
                                         value={values.password}
                                         onChangeText={handleChange("password")}
                                         autoCapitalize="none"
@@ -150,9 +138,7 @@ const Register = ({ navigation }) => {
                                     />
 
                                     <TouchableOpacity
-                                        onPress={() => {
-                                            setObsecureText(!obsecureText);
-                                        }}
+                                        onPress={() => setObsecureText(!obsecureText)}
                                     >
                                         <MaterialCommunityIcons
                                             name={obsecureText ? "eye-outline" : "eye-off-outline"}
@@ -181,12 +167,8 @@ const Register = ({ navigation }) => {
                                     <TextInput
                                         secureTextEntry={obsecureText2}
                                         placeholder="Nhập lại mật khẩu"
-                                        onFocus={() => {
-                                            setFieldTouched("passwordConfirmation");
-                                        }}
-                                        onBlur={() => {
-                                            setFieldTouched("passwordConfirmation", "");
-                                        }}
+                                        onFocus={() => setFieldTouched("passwordConfirmation")}
+                                        onBlur={handleBlur("passwordConfirmation")}
                                         value={values.passwordConfirmation}
                                         onChangeText={handleChange("passwordConfirmation")}
                                         autoCapitalize="none"
@@ -195,9 +177,7 @@ const Register = ({ navigation }) => {
                                     />
 
                                     <TouchableOpacity
-                                        onPress={() => {
-                                            setObsecureText2(!obsecureText2);
-                                        }}
+                                        onPress={() => setObsecureText2(!obsecureText2)}
                                     >
                                         <MaterialCommunityIcons
                                             name={obsecureText2 ? "eye-outline" : "eye-off-outline"}
@@ -212,10 +192,10 @@ const Register = ({ navigation }) => {
 
                             <Button
                                 loader={loader}
-                                title={"ĐĂNG KÝ"}
-                                onPress={() => navigation.navigate("register-infor-navigation")}
+                                title={"TIẾP TỤC"}
+                                isValid={isValid}
+                                onPress={isValid ? handleSubmit : inValidForm}
                             />
-
 
                             <Text style={{ textAlign: "center" }}>
                                 {" "}Bạn đã có tài khoản ? {" "}
@@ -227,8 +207,6 @@ const Register = ({ navigation }) => {
                                 </Text>
                             </Text>
                         </View>
-
-
                     )}
                 </Formik>
             </View>
@@ -237,4 +215,3 @@ const Register = ({ navigation }) => {
 }
 
 export default Register;
-
