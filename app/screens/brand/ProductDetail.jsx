@@ -21,11 +21,11 @@ const ProductDetail = () => {
     const navigation = useNavigation();
 
     //Lấy props khi onPress
+    //API cần phải lấy product detail
     const item = useRoute().params.itemDetail;
 
     useEffect(() => {
-        console.log("check product <ProductDetail>: ", item);
-        // brand && getProductByBrand();
+        // console.log("check product <ProductDetail>: ", item.product);
     }, [item])
 
     const carouselData = [
@@ -51,6 +51,8 @@ const ProductDetail = () => {
         console.warn('open comments')
     }
 
+    //Array: Nếu muốn hiển thị ảnh thì phải dùng vòng map
+    const slider = item.product.images;
 
     return (
         <ScrollView>
@@ -68,7 +70,7 @@ const ProductDetail = () => {
                             numberOfLines={1}
                             ellipsizeMode='tail'
                         >
-                            {item.name}
+                            {item.product.name}
                         </Text>
                     </View>
                 </View>
@@ -81,11 +83,11 @@ const ProductDetail = () => {
                         style={styles.carouselContainer}
                         showsControl={false}
                     >
-                        {carouselData.map((image) => (
+                        {slider.map((image) => (
                             <View style={styles.viewImage}>
                                 <Image
                                     style={styles.carouselImage}
-                                    source={{ uri: image?.image }}
+                                    source={{ uri: image?.imageUrl }}
                                     key={image.id}
                                 />
                             </View>
@@ -95,17 +97,17 @@ const ProductDetail = () => {
                 </View>
                 {/* Body */}
                 <View style={styles.inforProduct}>
-
                     <View>
                         <Text
                             style={{ fontSize: 20 }}
                             numberOfLines={2}
                             ellipsizeMode='tail'
                         >
-                            {item.title}
+                            {item.product.name}
                         </Text>
                         <Text style={styles.textCategory}>
-                            {item.category}
+                            {/* {item.category} */}
+                            Túi Xách
                         </Text>
                     </View>
 
@@ -116,7 +118,7 @@ const ProductDetail = () => {
                     </View>
                     <View>
                         <Text style={{ marginVertical: 10, color: COLORS.red, fontFamily: 'bold' }} >
-                            ${item.price}
+                            ${item.product.price}
                         </Text>
                     </View>
                     <View style={styles.viewPayment}>
@@ -125,7 +127,7 @@ const ProductDetail = () => {
                             size={24}
                             color="black" />
                         <Text style={{ marginLeft: 15 }}>
-                            Sử dụng ví GIATOTPAY để mua với giá <Text style={{ color: COLORS.red }}>${item.price - 200}</Text>
+                            Sử dụng ví GIATOTPAY để mua với giá <Text style={{ color: COLORS.red }}>${item.product.price - 100}</Text>
                         </Text>
                     </View>
                 </View>
@@ -148,6 +150,7 @@ const ProductDetail = () => {
                         <Text>
                             {item.contactPerson}
                         </Text>
+                        <Text>API THIẾU avatar + person</Text>
                     </View>
                 </View>
 
@@ -213,7 +216,7 @@ const ProductDetail = () => {
                             <Text>Thương Hiệu</Text>
                         </View>
                         <View style={styles.detail}>
-                            <Text style={{ color: 'blue' }}>Gucci</Text>
+                            <Text style={{ color: 'blue' }}>Gucci-fix cứng</Text>
                         </View>
                     </View>
                     <View style={styles.shadow}>
@@ -225,7 +228,7 @@ const ProductDetail = () => {
                             <Text>ID Sản Phẩm</Text>
                         </View>
                         <View style={styles.detail}>
-                            <Text style={{ color: 'blue' }}>Z189881722</Text>
+                            <Text style={{ color: 'blue' }}>{item.product.serialNumber}-null</Text>
                         </View>
                     </View>
                     <View style={styles.shadow}>
@@ -237,7 +240,31 @@ const ProductDetail = () => {
                             <Text>Màu Sắc</Text>
                         </View>
                         <View style={styles.detail}>
-                            <Text style={{ color: 'blue' }}>Màu Ghi</Text>
+                            <Text style={{ color: 'blue' }}>{item.product.color}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.shadow}>
+                        {/* Tạo Khoảng Trống */}
+                    </View>
+
+                    <View style={styles.detailContainer}>
+                        <View style={styles.detail}>
+                            <Text>Chất Liệu</Text>
+                        </View>
+                        <View style={styles.detail}>
+                            <Text style={{ color: 'blue' }}>{item.product.material}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.shadow}>
+                        {/* Tạo Khoảng Trống */}
+                    </View>
+
+                    <View style={styles.detailContainer}>
+                        <View style={styles.detail}>
+                            <Text>Kích Thước</Text>
+                        </View>
+                        <View style={styles.detail}>
+                            <Text style={{ color: 'blue' }}>{item.product.size}</Text>
                         </View>
                     </View>
                     <View style={styles.shadow}>
@@ -249,7 +276,7 @@ const ProductDetail = () => {
                             <Text>Tình trạng sản phẩm</Text>
                         </View>
                         <View style={styles.detail}>
-                            <Text style={{ color: 'blue' }}>Không trầy xước và bụi bẩn</Text>
+                            <Text style={{ color: 'blue' }}>{item.product.condition}</Text>
                         </View>
                     </View>
                     <View style={styles.shadow}>
@@ -286,7 +313,7 @@ const ProductDetail = () => {
                         </View>
                         <View style={styles.detail}>
                             <Text style={{ color: 'blue' }}>
-                                Gia Lâm - Hà Nội
+                            {item.product.purchasedPlace}-null
                             </Text>
                         </View>
                     </View>

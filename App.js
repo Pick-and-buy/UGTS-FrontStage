@@ -21,18 +21,14 @@ import ForgotPasswordInformation from './app/screens/forgot password/ForgotPassw
 import OTPVerification from './app/screens/forgot password/OTPVerification';
 import ResetPassword from './app/screens/forgot password/ResetPassword';
 
-import ResetPasswordSuccessfully from './app/screens/forgot password/ResetPasswordSuccessfully';
 import PostDetail from './app/screens/post/PostDetail';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Onboarding from './app/components/Onboarding';
 import PosterInformation from './app/screens/posterInformation/PosterInformation';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Onboarding from './app/components/Onboarding';
 import { LoginContext } from './app/context/LoginContext';
 import Profile from './app/screens/Profile';
-
-
+import TodoTask from './app/screens/todoTask/todoTask';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -182,6 +178,12 @@ export default function App() {
           <Stack.Screen
             name='poster-information'
             component={PosterInformation}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name='todo-task'
+            component={TodoTask}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

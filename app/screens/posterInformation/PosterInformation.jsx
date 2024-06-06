@@ -34,7 +34,7 @@ const PosterInformation = () => {
     }, [item])
 
     return (
-        <ScrollView>
+        <View>
             <View style={styles.container}>
                 {/* Header */}
                 <View style={styles.header}>
@@ -154,7 +154,7 @@ const PosterInformation = () => {
                 </View>
 
             </View>
-        </ScrollView>
+        </View>
     );
 }
 
