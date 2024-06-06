@@ -20,15 +20,10 @@ import ViaMethodForgotPassword from './app/screens/forgot password/ViaMethodForg
 import ForgotPasswordInformation from './app/screens/forgot password/ForgotPasswordInformation';
 import OTPVerification from './app/screens/forgot password/OTPVerification';
 import ResetPassword from './app/screens/forgot password/ResetPassword';
-
-import ResetPasswordSuccessfully from './app/screens/forgot password/ResetPasswordSuccessfully';
 import PostDetail from './app/screens/post/PostDetail';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Onboarding from './app/components/Onboarding';
 import PosterInformation from './app/screens/posterInformation/PosterInformation';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Onboarding from './app/components/Onboarding';
 import { LoginContext } from './app/context/LoginContext';
 import Profile from './app/screens/Profile';
 

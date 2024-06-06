@@ -1,11 +1,12 @@
 import { StyleSheet } from "react-native";
-import { COLORS, SHADOWS } from "../../constants/theme";
+import { COLORS, SHADOWS, SIZES } from "../../constants/theme";
 
 const styles = StyleSheet.create({
     text: {
         marginLeft: 10,
         fontFamily: "medium",
         color: COLORS.black,
+        fontSize: 16,
     },
     email: {
         marginLeft: 10,
@@ -18,6 +19,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginHorizontal: 20,
         marginTop: 60,
+        marginBottom:20
     },
     loginbtn: {
         width: 90,
@@ -27,23 +29,29 @@ const styles = StyleSheet.create({
         borderWidth: 0.5,
         justifyContent: "center",
         alignItems: "center",
-        marginVertical:"6%"
+        marginVertical: "2.5%",
+        marginBottom: 20,
+        marginLeft: 40,
     },
     textbtn: {
         color: COLORS.primary,
     },
     options: {
         width: '100%',
-        height: '10%',
+        height: '8%',
         flexDirection: "row",
         justifyContent: 'space-around',
         alignItems: 'center',
-        borderBottomColor:COLORS.gray2,
-        borderBottomWidth:2
+        borderBottomColor: "#e4e4e4",
+        borderBottomWidth: 18,
+        borderTopColor: "#e4e4e4",
+        borderTopWidth: 2,
     },
     option: {
         justifyContent: 'center',
         alignItems: 'center',
+        height: '100%',
+
     }
 });
 
