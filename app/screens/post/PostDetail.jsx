@@ -110,13 +110,13 @@ const PostDetail = () => {
                     </View>
                     <View style={{ gap: 10 }}>
                         <Text style={{ fontFamily: 'bold' }}>
-                            Kích Thước: <Text style={{ fontFamily: 'default' }}>50cm x 18cm x 15cm</Text>
+                            Kích Thước: <Text style={{ fontFamily: 'regular' }}>50cm x 18cm x 15cm</Text>
                         </Text>
                         <Text style={{ fontFamily: 'bold' }}>
-                            Màu Sắc: <Text style={{ fontFamily: 'default' }}>Trắng</Text>
+                            Màu Sắc: <Text style={{ fontFamily: 'regular' }}>Trắng</Text>
                         </Text>
                         <Text style={{ fontFamily: 'bold' }}>
-                            Chất Liệu: <Text style={{ fontFamily: 'default' }}>Da cao cấp, vải cao cấp</Text>
+                            Chất Liệu: <Text style={{ fontFamily: 'regular' }}>Da cao cấp, vải cao cấp</Text>
                         </Text>
                     </View>
                     <View style={{ marginVertical: 15 }}>
@@ -197,6 +197,7 @@ export default PostDetail;
 const styles = StyleSheet.create({
     container: {
         paddingTop: 50,
+        marginTop: 20
     },
 
     //Header
