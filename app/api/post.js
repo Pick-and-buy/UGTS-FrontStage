@@ -12,4 +12,8 @@ import axiosInstance from './axiosInstance';
 
 export const callFetchListPost = () => {
     return axiosInstance.get('/posts');
-  }
+}
+
+export const callFetchPostDetails = (id) => {
+  return axiosInstance.get(`/posts/${id}`)
+}
