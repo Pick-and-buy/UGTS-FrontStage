@@ -1,0 +1,100 @@
+import {
+  StyleSheet,
+  ScrollView,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  SafeAreaView,
+} from "react-native";
+import { MaterialCommunityIcons, Ionicons, Feather, Entypo } from '@expo/vector-icons';
+import { COLORS } from "../../constants/theme";
+import { Rating } from 'react-native-stock-star-rating'
+import { MaterialIcons } from '@expo/vector-icons';
+import styles from "../css/UserProfile.style";
+const UserProfile = ({ navigation, route }) => {
+  const user = route.params.result;
+  // console.log(user);
+
+  const profile =
+    "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
+
+  return (
+    <SafeAreaView>
+      <View style={styles.container}>
+        {/* Header */}
+        <View style={styles.header}>
+          <Ionicons
+            onPress={() => navigation.goBack()}
+            name="chevron-back-outline"
+            size={30}
+            color={COLORS.primary} />
+          <Text style={{ fontSize: 24, fontWeight: "bold", color: COLORS.primary }}>HỒ SƠ CỦA BẠN</Text>
+          <Feather
+            onPress={() => console.warn('More Function')}
+            name="more-horizontal"
+            size={35}
+            color="gray" />
+
+        </View>
+
+        <View style={styles.shadow}>
+          {/* Tạo Khoảng Trống */}
+        </View>
+
+        {/* Personal Information */}
+        <View style={styles.personalContainer}>
+          <View style={[styles.detailContainer, { alignItems: 'flex-start' }]}>
+            <Image
+              style={styles.avatar}
+              source={{ uri: profile }}
+            />
+            <View style={{ gap: 5 }}>
+              <Text style={{ fontSize: 18 }}>
+                {user.username}
+              </Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Rating
+                  stars={4.7}
+                  maxStars={5}
+                  size={16}
+
+                />
+                <Text style={{ fontSize: 12, marginLeft: 4, marginTop: 4 }}>(100)</Text>
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <MaterialIcons name="verified-user" size={16} color="#699BF7" style={{ marginTop: 0, marginLeft: 0 }} />
+                <Text style={{ fontSize: 12 }}>Tài khoản đã xác minh</Text>
+              </View>
+            </View>
+          </View>
+          <View>
+            <TouchableOpacity
+              onPress={() => console.warn('Chỉnh sửa')}
+              style={styles.followBtn}
+            >
+              <Text style={{ margin: 5, color: COLORS.primary }}>Chỉnh sửa</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Follower */}
+        <View style={styles.followerView}>
+          <Text>
+            100 <Text>người theo dõi</Text>
+          </Text>
+          <Text>
+            60 <Text>người đang theo dõi</Text>
+          </Text>
+        </View>
+
+        {/* User product */}
+
+      </View>
+    </SafeAreaView>
+  )
+}
+
+export default UserProfile
+
