@@ -24,11 +24,9 @@ import PostDetail from './app/screens/post/PostDetail';
 import Onboarding from './app/components/Onboarding';
 import PosterInformation from './app/screens/posterInformation/PosterInformation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { LoginContext } from './app/context/LoginContext';
 import Profile from './app/screens/Profile';
 import UserProfile from './app/screens/profile/UserProfile';
 import { LoginContext } from './app/context/LoginContext';
-import Profile from './app/screens/Profile';
 import TodoTask from './app/screens/todoTask/todoTask';
 
 const Stack = createNativeStackNavigator();
@@ -88,7 +86,7 @@ export default function App() {
             component={BottomTab}
             options={{ headerShown: false }}
           />
-          <Stack.Screen
+          <Stack.Screen 
             name='register-navigation'
             component={Register}
             options={{ headerShown: false }}
@@ -184,8 +182,7 @@ export default function App() {
 
           <Stack.Screen
             name='user-profile'
-            name='todo-task'
-            component={TodoTask}
+            component={UserProfile}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
