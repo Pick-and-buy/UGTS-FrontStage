@@ -28,6 +28,7 @@ import Profile from './app/screens/Profile';
 import UserProfile from './app/screens/profile/UserProfile';
 import { LoginContext } from './app/context/LoginContext';
 import TodoTask from './app/screens/todoTask/todoTask';
+import ChangePassword from './app/screens/change password/ChangePassword';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -86,7 +87,7 @@ export default function App() {
             component={BottomTab}
             options={{ headerShown: false }}
           />
-          <Stack.Screen 
+          <Stack.Screen
             name='register-navigation'
             component={Register}
             options={{ headerShown: false }}
@@ -183,6 +184,12 @@ export default function App() {
           <Stack.Screen
             name='user-profile'
             component={UserProfile}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name='change-password'
+            component={ChangePassword}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

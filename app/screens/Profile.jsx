@@ -109,7 +109,7 @@ const Profile = ({ navigation }) => {
 
                 {isAuthenticated ? (
                   <TouchableOpacity style={{ flexDirection: "row" }}
-                    onPress={() => navigation.navigate("user-profile",user)}
+                    onPress={() => navigation.navigate("user-profile", user)}
                   >
                     <View style={{ marginLeft: 4, marginTop: 2, flexDirection: "column" }}>
                       <Text style={styles.text}>
@@ -270,6 +270,13 @@ const Profile = ({ navigation }) => {
                   <ProfileTile title={"Địa chỉ"} icon={"location-pin"} font={4} isDivider={true} />
                   <ProfileTile title={"Danh sách thẻ tín dụng"} icon={"credit-card"} font={3} isDivider={true} />
                   <ProfileTile title={"Thiết lập thông báo"} icon={"notifications"} font={1} isDivider={true} />
+                  <ProfileTile
+                    title={"Đổi mật khẩu"}
+                    icon={"password"}
+                    font={4}
+                    isDivider={true}
+                    onPress={() => navigation.navigate('change-password',user)}
+                  />
                   <ProfileTile title={"Địa chỉ email"} icon={"email"} font={4} isDivider={true} />
                   <ProfileTile title={"Người dùng bị chặn"} icon={"block"} font={4} isDivider={true} />
                   <ProfileTile title={"Xác minh tài khoản"} icon={"verified-user"} font={4} isDivider={true} />

@@ -69,3 +69,15 @@ export const resetPassword = async (email, password, confirmPassword) => {
     throw error.response.data;
   }
 };
+
+// Function to change password
+
+export const changePassword = async (userId, oldPassword, newPassword) => {
+  console.log(userId, oldPassword, newPassword);
+  try {
+    const response = await axiosInstance.post(`/auth/change-password/${userId}`, { oldPassword, newPassword });
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
