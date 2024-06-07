@@ -14,45 +14,43 @@ import { FontAwesome, Ionicons, AntDesign, EvilIcons, MaterialIcons } from '@exp
 import React, { useState, useEffect } from "react";
 import { NavigationContaine, useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
-import Carousel from "pinar";
+import moment from "moment/moment";
+import { callFetchPostDetails } from "../../api/post";
 
 const ProductDetail = () => {
 
     const navigation = useNavigation();
-
     //Lấy props khi onPress
     //API cần phải lấy product detail
     const item = useRoute().params.itemDetail;
 
-    useEffect(() => {
-        // console.log("check product <ProductDetail>: ", item.product);
-    }, [item])
+    const [postDetail, setPostDetail] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
-    const carouselData = [
-        {
-            id: "01",
-            image: 'https://bantersa.com/wp-content/uploads/2015/05/5-Beautiful-Websites.jpg'
-        },
-        {
-            id: "02",
-            image: 'https://soliloquywp.com/wp-content/uploads/2016/09/How-to-Add-a-Homepage-Slider-in-WordPress.png'
-        },
-        {
-            id: "03",
-            image: 'https://www.searchenginejournal.com/wp-content/uploads/2019/10/25-of-the-best-examples-of-home-pages-5dc504205de2e.png'
-        },
-        {
-            id: "04",
-            image: 'https://bantersa.com/wp-content/uploads/2015/05/5-Beautiful-Websites.jpg'
-        },
-    ]
+    //Array: Nếu muốn hiển thị ảnh thì phải dùng vòng map
+    const [slider, setSLider] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    useEffect(() => {
+        fetchPostDetails()
+    }, [])
+
+    const fetchPostDetails = async () => {
+        setIsLoading(true);
+        const res = await callFetchPostDetails(item.id);
+        // console.log(">>> check res Post Detail<ProductDetail>: ", res.data.result);
+        if (res && res?.data && res?.data?.result) {
+            setPostDetail(res?.data?.result)
+            setSLider(res?.data?.result?.product?.images);
+        }
+        setIsLoading(false);
+    }
+
+    console.log(postDetail);
 
     const openComments = () => {
         console.warn('open comments')
     }
-
-    //Array: Nếu muốn hiển thị ảnh thì phải dùng vòng map
-    const slider = item.product.images;
 
     return (
         <ScrollView>
@@ -70,30 +68,61 @@ const ProductDetail = () => {
                             numberOfLines={1}
                             ellipsizeMode='tail'
                         >
-                            {item.product.name}
+                            {postDetail?.product?.name}
                         </Text>
                     </View>
                 </View>
                 <View style={styles.shadow}>
                     {/* Tạo Khoảng Trống */}
                 </View>
-                {/* Carousel */}
-                <View>
-                    <Carousel
-                        style={styles.carouselContainer}
-                        showsControl={false}
-                    >
-                        {slider.map((image) => (
-                            <View style={styles.viewImage}>
-                                <Image
-                                    style={styles.carouselImage}
-                                    source={{ uri: image?.imageUrl }}
-                                    key={image.id}
-                                />
-                            </View>
 
-                        ))}
-                    </Carousel>
+                {/* Carousel */}
+                <View style={{ marginBottom: 30 }}>
+                    <View style={styles.carouselContainer}>
+                        <View>
+                            <FlatList
+                                data={slider}
+                                horizontal={true}
+                                showsHorizontalScrollIndicator={false}
+                                pagingEnabled={true}
+                                onScroll={e => {
+                                    const x = e.nativeEvent.contentOffset.x;
+                                    setCurrentIndex((x / Dimensions.get('window').width).toFixed(0))
+                                }}
+                                renderItem={({ item, index }) => (
+                                    <View style={styles.imageContainer}>
+                                        <TouchableOpacity
+                                            disabled={true}
+                                            style={{ width: '90%', height: '90%', borderRadius: 10 }}
+                                        >
+                                            <Image
+                                                style={styles.carouselImage}
+                                                source={{ uri: item?.imageUrl }}
+                                                key={item.id}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.dotContainer}>
+                        {
+                            slider?.map((item, index) => {
+                                return (
+                                    <View style={{
+                                        width: currentIndex == index ? 40 : 8,
+                                        height: currentIndex == index ? 10 : 8,
+                                        borderRadius: currentIndex == index ? 5 : 4,
+                                        backgroundColor: currentIndex == index ? COLORS.primary : 'gray',
+                                        marginLeft: 5
+                                    }}>
+
+                                    </View>
+                                )
+                            })
+                        }
+                    </View>
                 </View>
                 {/* Body */}
                 <View style={styles.inforProduct}>
@@ -103,7 +132,7 @@ const ProductDetail = () => {
                             numberOfLines={2}
                             ellipsizeMode='tail'
                         >
-                            {item.product.name}
+                            {postDetail?.product?.name}
                         </Text>
                         <Text style={styles.textCategory}>
                             {/* {item.category} */}
@@ -117,8 +146,8 @@ const ProductDetail = () => {
                         </Text>
                     </View>
                     <View>
-                        <Text style={{ marginVertical: 10, color: COLORS.red, fontFamily: 'bold' }} >
-                            ${item.product.price}
+                        <Text style={{ marginVertical: 10, color: COLORS.red, fontFamily: 'bold', fontSize: 20 }} >
+                            ${postDetail?.product?.price}
                         </Text>
                     </View>
                     <View style={styles.viewPayment}>
@@ -143,13 +172,13 @@ const ProductDetail = () => {
                         </Text>
                     </TouchableOpacity>
                     <View style={styles.commentContainer}>
-                        <Image
+                        {/* <Image
                             style={styles.avatarComment}
                             source={{ uri: item?.avatar }}
                         />
                         <Text>
                             {item.contactPerson}
-                        </Text>
+                        </Text> */}
                         <Text>API THIẾU avatar + person</Text>
                     </View>
                 </View>
@@ -169,7 +198,9 @@ const ProductDetail = () => {
                                 name="time-outline"
                                 size={24}
                                 color="black" />
-                            <Text style={{ marginLeft: 5 }}>26-3-2024 8:10</Text>
+                            <Text style={{ marginLeft: 5 }}>
+                                {moment(postDetail.createdAt).format("DD-MM-YYYY HH:mm")}
+                            </Text>
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <Ionicons
@@ -228,7 +259,7 @@ const ProductDetail = () => {
                             <Text>ID Sản Phẩm</Text>
                         </View>
                         <View style={styles.detail}>
-                            <Text style={{ color: 'blue' }}>{item.product.serialNumber}-null</Text>
+                            <Text style={{ color: 'blue' }}>{postDetail?.product?.serialNumber}-null</Text>
                         </View>
                     </View>
                     <View style={styles.shadow}>
@@ -240,7 +271,7 @@ const ProductDetail = () => {
                             <Text>Màu Sắc</Text>
                         </View>
                         <View style={styles.detail}>
-                            <Text style={{ color: 'blue' }}>{item.product.color}</Text>
+                            <Text style={{ color: 'blue' }}>{postDetail?.product?.color}</Text>
                         </View>
                     </View>
                     <View style={styles.shadow}>
@@ -252,7 +283,7 @@ const ProductDetail = () => {
                             <Text>Chất Liệu</Text>
                         </View>
                         <View style={styles.detail}>
-                            <Text style={{ color: 'blue' }}>{item.product.material}</Text>
+                            <Text style={{ color: 'blue' }}>{postDetail?.product?.material}</Text>
                         </View>
                     </View>
                     <View style={styles.shadow}>
@@ -264,7 +295,7 @@ const ProductDetail = () => {
                             <Text>Kích Thước</Text>
                         </View>
                         <View style={styles.detail}>
-                            <Text style={{ color: 'blue' }}>{item.product.size}</Text>
+                            <Text style={{ color: 'blue' }}>{postDetail?.product?.size}</Text>
                         </View>
                     </View>
                     <View style={styles.shadow}>
@@ -276,7 +307,7 @@ const ProductDetail = () => {
                             <Text>Tình trạng sản phẩm</Text>
                         </View>
                         <View style={styles.detail}>
-                            <Text style={{ color: 'blue' }}>{item.product.condition}</Text>
+                            <Text style={{ color: 'blue' }}>{postDetail?.product?.condition}</Text>
                         </View>
                     </View>
                     <View style={styles.shadow}>
@@ -313,7 +344,7 @@ const ProductDetail = () => {
                         </View>
                         <View style={styles.detail}>
                             <Text style={{ color: 'blue' }}>
-                            {item.product.purchasedPlace}-null
+                                {postDetail?.product?.purchasedPlace}-null
                             </Text>
                         </View>
                     </View>
@@ -431,16 +462,28 @@ const styles = StyleSheet.create({
     },
     //Carousel
     carouselContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    imageContainer: {
         width: Dimensions.get('window').width,
-        height: 200,
+        height: Dimensions.get('window').height / 3,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     carouselImage: {
-        height: 150,
+        height: "100%",
         borderRadius: 10,
     },
-    viewImage: {
-        paddingHorizontal: 50
+
+    dotContainer: {
+        flexDirection: "row",
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: Dimensions.get('window').width
     },
+
     //Body: Information Product
     inforProduct: {
         marginHorizontal: 15,
@@ -479,7 +522,7 @@ const styles = StyleSheet.create({
         height: 30,
         borderRadius: 99,
     },
-    
+
     // Description
     description: {
         display: 'flex',

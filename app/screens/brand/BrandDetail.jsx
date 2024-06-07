@@ -23,7 +23,7 @@ const BrandDetail = () => {
 
     const [listPost, setListPost] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-
+    
     useEffect(() => {
         // console.log("check brand <BrandDetail>: ", brand);
         fetchAllPost();
@@ -32,7 +32,7 @@ const BrandDetail = () => {
     const fetchAllPost = async () => {
         setIsLoading(true);
         const res = await callFetchListPost();
-        console.log(">>> check res List Post<BrandDetail>: ", res.data.result[0]);
+        // console.log(">>> check res List Post<BrandDetail>: ", res.data.result[0]);
         // console.log(">>> check res List Post<BrandDetail>: ", res.data.result.length);
         // console.log(">>> check res List Post<BrandDetail>: ", res.data.result[0].title);
         if(res && res.data && res.data.result) {
