@@ -17,10 +17,6 @@ const ProductListItemByBrand = ({ listItem }) => {
 
     const navigation = useNavigation();
 
-    useEffect(() => {
-        // console.log(listItem?.product.images[0].imageUrl);
-    }, [])
-
     let dataFake = [
         {
             id: 1,
