@@ -27,8 +27,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LoginContext } from './app/context/LoginContext';
 import Profile from './app/screens/Profile';
 import UserProfile from './app/screens/profile/UserProfile';
-
-
+import { LoginContext } from './app/context/LoginContext';
+import Profile from './app/screens/Profile';
+import TodoTask from './app/screens/todoTask/todoTask';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -183,7 +184,8 @@ export default function App() {
 
           <Stack.Screen
             name='user-profile'
-            component={UserProfile}
+            name='todo-task'
+            component={TodoTask}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

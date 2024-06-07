@@ -7,10 +7,12 @@ import {
     Image,
     TextInput,
     Dimensions,
+    SafeAreaView,
 } from "react-native";
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { COLORS, SIZES } from "../../constants/theme";
+import { useNavigation } from '@react-navigation/native';
 import HomeFollow from "./HomeFollow";
 import HomeExplore from "./HomeExplore";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -19,6 +21,7 @@ const Tab = createMaterialTopTabNavigator();
 const Header = () => {
 
     const [listUser, setListUser] = useState([]);
+    const navigation = useNavigation();
 
     return (
         <ScrollView style={styles.container}>
@@ -44,7 +47,7 @@ const Header = () => {
                     </View>
                     <View style={styles.notification}>
                         <Ionicons
-                            onPress={() => console.warn('Todo List')}
+                            onPress={() => navigation.navigate('todo-task')}
                             name="checkmark"
                             size={24}
                             color="#828282" />
@@ -97,6 +100,7 @@ const Header = () => {
             </View>
 
         </ScrollView>
+
     );
 }
 
