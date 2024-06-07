@@ -108,7 +108,9 @@ const Profile = ({ navigation }) => {
 
 
                 {isAuthenticated ? (
-                  <TouchableOpacity style={{ flexDirection: "row" }}>
+                  <TouchableOpacity style={{ flexDirection: "row" }}
+                    onPress={() => navigation.navigate("user-profile",user)}
+                  >
                     <View style={{ marginLeft: 4, marginTop: 2, flexDirection: "column" }}>
                       <Text style={styles.text}>
                         {user?.result?.username}

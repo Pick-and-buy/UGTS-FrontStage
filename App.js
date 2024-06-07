@@ -26,6 +26,7 @@ import PosterInformation from './app/screens/posterInformation/PosterInformation
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LoginContext } from './app/context/LoginContext';
 import Profile from './app/screens/Profile';
+import UserProfile from './app/screens/profile/UserProfile';
 
 
 
@@ -177,6 +178,12 @@ export default function App() {
           <Stack.Screen
             name='poster-information'
             component={PosterInformation}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name='user-profile'
+            component={UserProfile}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
