@@ -10,6 +10,8 @@ import styles from "./css/profile.style";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fetchUserInfo, logout } from "../api/auth";
 import { getUserByToken } from "../api/user";
+import { Rating } from 'react-native-stock-star-rating'
+import { MaterialIcons } from '@expo/vector-icons';
 
 const Profile = ({ navigation }) => {
   const [user, setUser] = useState(null)
@@ -94,74 +96,75 @@ const Profile = ({ navigation }) => {
                 }}
               >
                 <NetworkImage
-                  source={user === null ? profile : user.profile}
+                  // source={user === null ? profile : user.profile}
+                  source={profile}
                   width={45}
                   height={45}
                   radius={99}
                 />
-                <View style={{ marginLeft: 10, marginTop: 10 }}>
-                  <Text style={styles.text}>
-                    {user === null ? "Bạn chưa đăng nhập" : user.result.username}
-                  </Text>
-                </View>
+
+
+
+
+
+                {isAuthenticated ? (
+                  <TouchableOpacity style={{ flexDirection: "row" }}
+                    onPress={() => navigation.navigate("user-profile",user)}
+                  >
+                    <View style={{ marginLeft: 4, marginTop: 2, flexDirection: "column" }}>
+                      <Text style={styles.text}>
+                        {user?.result?.username}
+                      </Text>
+                      <View style={{ marginLeft: 10, marginTop: -8, flexDirection: "row" }}>
+                        <Rating
+                          stars={4.7}
+                          maxStars={5}
+                          size={16}
+
+                        />
+                        <Text style={{ fontSize: 12, marginTop: 4, marginLeft: 2 }}>(100)</Text>
+                        <MaterialIcons name="verified-user" size={16} color="#699BF7" style={{ marginTop: 4, marginLeft: 10 }} />
+                        <Text style={{ fontSize: 12, marginTop: 4, marginLeft: 2 }}>Tài khoản đã xác minh</Text>
+                      </View>
+                    </View>
+                    <AntDesign name="right" size={22} color="gray" style={{ marginTop: 12, marginLeft: 40 }} />
+                  </TouchableOpacity>
+                ) : (
+
+                  <View style={{ flexDirection: "row" }}>
+                    <View style={{ marginLeft: 10, marginTop: 10, flexDirection: "column" }}>
+                      <Text style={styles.text}>
+                        Bạn chưa đăng nhập
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      style={styles.loginbtn}
+                      onPress={() => navigation.navigate("login-navigation")}
+                    >
+                      <Text style={styles.textbtn}>Đăng nhập</Text>
+                    </TouchableOpacity>
+                  </View>
+
+                )}
               </View>
-              {isAuthenticated ? (
-                <TouchableOpacity>
-                  <AntDesign name="logout" size={24} color="red" onPress={handleLogout} />
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  style={styles.loginbtn}
-                  onPress={() => navigation.navigate("login-navigation")}
-                >
-                  <Text style={styles.textbtn}>Đăng nhập</Text>
-                </TouchableOpacity>
-              )}
             </View>
 
-            <View style={styles.options}>
-              <TouchableOpacity style={styles.option}>
-                <FontAwesome name="camera" size={24} color="gray" />
-                <Text>Đã đăng</Text>
-              </TouchableOpacity>
 
-              <TouchableOpacity style={styles.option}>
-                <FontAwesome name="shopping-bag" size={24} color="gray" />
-                <Text>Đã mua</Text>
-              </TouchableOpacity>
 
-              <TouchableOpacity style={styles.option}>
-                <FontAwesome name="heart" size={24} color="gray" />
-                <Text>Yêu thích</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.option}>
-                <FontAwesome name="hashtag" size={24} color="gray" />
-                <Text>Theo dõi</Text>
-              </TouchableOpacity>
-            </View>
 
             {!isAuthenticated ? (
               <>
                 {/* Before login */}
-                <View
-                  style={{
-                    backgroundColor: COLORS.lightWhite,
-                    margin: 10,
-                    borderRadius: 12,
-                  }}
-                >
-                  <ProfileTile title={"Lịch sử mặt hàng đã xem"} icon={"history"} font={3} />
-                </View>
 
                 <View
                   style={{
-                    height: 140,
+                    height: "auto",
                     backgroundColor: COLORS.lightWhite,
                     margin: 10,
                     borderRadius: 12,
                   }}
                 >
+                  <ProfileTile title={"Lịch sử mặt hàng đã xem"} icon={"history"} font={3} isDivider={true} />
                   <ProfileTile title={"Thông báo"} icon={"notifications-circle"} font={1} isDivider={true} />
                   <ProfileTile title={"Trợ giúp / Yêu cầu"} icon={"message1"} isDivider={true} />
                   <ProfileTile title={"Hướng dẫn"} icon={"questioncircleo"} isDivider={false} />
@@ -191,6 +194,27 @@ const Profile = ({ navigation }) => {
             ) : (
               <>
                 {/* After login */}
+                <View style={styles.options}>
+                  <TouchableOpacity style={styles.option}>
+                    <FontAwesome name="camera" size={24} color="gray" />
+                    <Text>Đã đăng</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity style={styles.option}>
+                    <FontAwesome name="shopping-bag" size={24} color="gray" />
+                    <Text>Đã mua</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity style={styles.option}>
+                    <FontAwesome name="heart" size={24} color="gray" />
+                    <Text>Yêu thích</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity style={styles.option}>
+                    <FontAwesome name="hashtag" size={24} color="gray" />
+                    <Text>Theo dõi</Text>
+                  </TouchableOpacity>
+                </View>
                 <View style={{
                   flexDirection: "column",
                   justifyContent: "center",
@@ -285,6 +309,31 @@ const Profile = ({ navigation }) => {
 
                 </View>
                 {/* After login */}
+                <View
+                  style={{
+                    backgroundColor: COLORS.lightWhite,
+                    margin: 10,
+                    borderRadius: 12,
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}
+                >
+                  {isAuthenticated &&
+                    <TouchableOpacity style={{
+                      height: 40,
+                      width: "100%",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderColor: COLORS.primary,
+                      borderWidth: 1,
+                      borderRadius: 8
+                    }}
+                      onPress={handleLogout}
+                    >
+                      <Text style={{ color: COLORS.primary, fontSize: 16 }}>ĐĂNG XUẤT TÀI KHOẢN</Text>
+                    </TouchableOpacity>
+                  }
+                </View>
               </>
             )
 

@@ -20,12 +20,13 @@ import ViaMethodForgotPassword from './app/screens/forgot password/ViaMethodForg
 import ForgotPasswordInformation from './app/screens/forgot password/ForgotPasswordInformation';
 import OTPVerification from './app/screens/forgot password/OTPVerification';
 import ResetPassword from './app/screens/forgot password/ResetPassword';
-
 import PostDetail from './app/screens/post/PostDetail';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Onboarding from './app/components/Onboarding';
 import PosterInformation from './app/screens/posterInformation/PosterInformation';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LoginContext } from './app/context/LoginContext';
+import Profile from './app/screens/Profile';
+import UserProfile from './app/screens/profile/UserProfile';
 import { LoginContext } from './app/context/LoginContext';
 import Profile from './app/screens/Profile';
 import TodoTask from './app/screens/todoTask/todoTask';
@@ -182,6 +183,7 @@ export default function App() {
           />
 
           <Stack.Screen
+            name='user-profile'
             name='todo-task'
             component={TodoTask}
             options={{ headerShown: false }}
