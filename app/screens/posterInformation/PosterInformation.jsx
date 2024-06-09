@@ -61,6 +61,7 @@ const PosterInformation = () => {
                         <Image
                             style={styles.avatar}
                             source={{ uri: item?.avatar }}
+                            key={item.id}
                         />
                         <View style={{ gap: 5 }}>
                             <Text style={{ fontSize: 18 }}>

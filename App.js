@@ -192,6 +192,12 @@ export default function App() {
             component={ChangePassword}
             options={{ headerShown: false }}
           />
+
+          <Stack.Screen
+            name='todo-task'
+            component={TodoTask}
+            options={{ headerShown: false }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     )
