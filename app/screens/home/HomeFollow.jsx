@@ -22,8 +22,9 @@ const HomeFollow = () => {
         <View>
             <Slider />
             <View style={styles.container}>
-                <Brands />
-                <ProductList />
+                {/* <Brands />
+                <ProductList /> */}
+                <Text>Home Follow</Text>
             </View>
 
         </View>

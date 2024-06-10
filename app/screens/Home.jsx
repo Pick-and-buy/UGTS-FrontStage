@@ -15,6 +15,7 @@ import React, { useState, useRef, useContext, useEffect } from "react";
 import { COLORS, SIZES } from "../constants/theme";
 import styles from "../screens/css/page.style"
 import Header from "./home/Header";
+import HomeTab from "../navigation/HomeTab";
 
 const Home = () => {
 
@@ -22,9 +23,8 @@ const Home = () => {
   return (
     <SafeAreaView style={styles.viewOne}>
       <View style={styles.viewTwo}>
-        <Header/>
-        
-        
+        <Header />
+        <HomeTab />
         {/* <FlatList
           data={data}
           keyExtractor={(item) => item.login.usename}
