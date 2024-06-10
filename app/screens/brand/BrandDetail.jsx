@@ -13,7 +13,7 @@ import React, { useState, useEffect } from "react";
 import { NavigationContaine, useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS, SIZES } from "../../constants/theme";
 import ProductListItemByBrand from "./ProductListItemByBrand";
-import { callFetchListPost } from "../../api/post";
+import { callFetchListPost, callFetchPostByBrandName } from "../../api/post";
 
 const BrandDetail = () => {
 
@@ -23,19 +23,20 @@ const BrandDetail = () => {
 
     const [listPost, setListPost] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    
+
     useEffect(() => {
-        // console.log("check brand <BrandDetail>: ", brand);
+        console.log("check brand <BrandDetail>: ", brand);
+        console.log("check brand <BrandDetail>: ", listPost.length);
         fetchAllPost();
-    }, [brand])
+    }, [])
 
     const fetchAllPost = async () => {
         setIsLoading(true);
-        const res = await callFetchListPost();
-        // console.log(">>> check res List Post<BrandDetail>: ", res.data.result[0]);
+        let query = `name=${brand.name}`;
+        const res = await callFetchPostByBrandName(query);
         // console.log(">>> check res List Post<BrandDetail>: ", res.data.result.length);
         // console.log(">>> check res List Post<BrandDetail>: ", res.data.result[0].title);
-        if(res && res.data && res.data.result) {
+        if (res && res.data && res.data.result) {
             setListPost(res.data.result)
         }
         setIsLoading(false);
@@ -54,28 +55,27 @@ const BrandDetail = () => {
                 </Text>
 
             </View>
-            {/* fix cứng data về sau khi query từ API phải truyền lại data
-            khi click vào từng brand thì phải hiển thị ra list sản phẩm thuộc brand đó */}
-            <FlatList
-                data={listPost}
-                renderItem={({ item, index }) => (
-                    <ProductListItemByBrand listItem={item} />
-                )}
-            />
 
-            {/* {brand?.length > 0 ?
-                <Text>Truyền FlatList vào đây</Text>
+            {listPost?.length > 0 ?
+                <FlatList
+                    data={listPost}
+                    renderItem={({ item, index }) => (
+                        <ProductListItemByBrand listItem={item} />
+                    )}
+                />
                 :
-                <Text
-                    style={{
-                        fontFamily: 'bold',
-                        textAlign: 'center',
-                        marginTop: '20%',
-                        color: 'gray'
-                    }}>
-                    Không tìm thấy sản phẩm
-                </Text>
-            } */}
+                <View>
+                    <Text
+                        style={{
+                            fontFamily: 'bold',
+                            textAlign: 'center',
+                            marginTop: '20%',
+                            color: 'gray'
+                        }}>
+                        Không tìm thấy sản phẩm nào có thương hiệu {brand.name}
+                    </Text>
+                </View>
+            }
         </View>
     );
 }
@@ -85,7 +85,8 @@ export default BrandDetail;
 const styles = StyleSheet.create({
     container: {
         padding: 20,
-        paddingTop: 60
+        paddingTop: 60,
+        marginBottom: 80
     },
     header: {
         display: 'flex',

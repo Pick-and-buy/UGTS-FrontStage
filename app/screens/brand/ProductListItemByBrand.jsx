@@ -157,6 +157,7 @@ const ProductListItemByBrand = ({ listItem }) => {
                     <Image
                         style={styles.imag}
                         source={{ uri: listItem?.product.images[1].imageUrl }}
+                        key={listItem?.product.images[1].id}
                     />
                     <Text style={styles.textPrice}>
                         ${listItem.product.price}
