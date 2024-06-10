@@ -109,10 +109,12 @@ const ProductList = () => {
                         <View style={{ height: 145 }}>
                             <TouchableOpacity
                                 onPress={() => navigation.navigate('post-detail', { post:item })}
-                            >
+                                key={item.id}
+                           >
                                 <Image
                                     style={styles.thumbnail}
                                     source={{ uri: item?.thumbnail }}
+                                    key={item.id}
                                 />
                                 <View style={{ paddingHorizontal: 10 }}>
                                     <Text>
@@ -128,6 +130,7 @@ const ProductList = () => {
                                 <Image
                                     style={styles.avatar}
                                     source={{ uri: item?.avatar }}
+                                    key={item.id}
                                 />
                                 <View>
                                     <Text>

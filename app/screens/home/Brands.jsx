@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     Image,
     TextInput,
+    Dimensions,
     FlatList,
 } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
@@ -13,94 +14,70 @@ import React, { useState, useRef, useContext, useEffect } from "react";
 import { NavigationContaine, useNavigation } from '@react-navigation/native';
 import { COLORS, SIZES } from "../../constants/theme";
 import BrandDetail from "../brand/BrandDetail";
+import { callFetchListBrands } from "../../api/brand";
 
 const Brands = () => {
 
-    const [brands, setBrands] = useState([]);
+    const [listbrands, setListBrands] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const navigation = useNavigation();
 
-    const data = [
-        {
-            id: 1,
-            name: 'Chanel',
-            ima: 'https://bantersa.com/wp-content/uploads/2015/05/5-Beautiful-Websites.jpg'
-        },
-        {
-            id: 2,
-            name: 'Louis Vuitton',
-            ima: 'https://soliloquywp.com/wp-content/uploads/2016/09/How-to-Add-a-Homepage-Slider-in-WordPress.png'
-        },
-        {
-            id: 3,
-            name: 'Saint Laurent',
-            ima: 'https://www.searchenginejournal.com/wp-content/uploads/2019/10/25-of-the-best-examples-of-home-pages-5dc504205de2e.png'
-        },
-        {
-            id: 4,
-            name: 'Bazaar',
-            ima: 'https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/homepage-web-design.jpg?width=595&height=400&name=homepage-web-design.jpg'
-        },
-        {
-            id: 5,
-            name: 'Christian Dior',
-            ima: 'https://bantersa.com/wp-content/uploads/2015/05/5-Beautiful-Websites.jpg'
-        },
-        {
-            id: 6,
-            name: 'Fendi',
-            ima: 'https://www.searchenginejournal.com/wp-content/uploads/2019/10/25-of-the-best-examples-of-home-pages-5dc504205de2e.png'
-        },
-        {
-            id: 7,
-            name: 'Prada',
-            ima: 'https://bantersa.com/wp-content/uploads/2015/05/5-Beautiful-Websites.jpg'
-        },
-        {
-            id: 8,
-            name: 'Hermes',
-            ima: 'https://soliloquywp.com/wp-content/uploads/2016/09/How-to-Add-a-Homepage-Slider-in-WordPress.png'
-        },
-        {
-            id: 9,
-            name: 'Gucci',
-            ima: 'https://www.searchenginejournal.com/wp-content/uploads/2019/10/25-of-the-best-examples-of-home-pages-5dc504205de2e.png'
-        },
+    useEffect(() => {
+        fetchAllBrand();
+    }, [])
 
-    ]
+    const fetchAllBrand = async () => {
+        setIsLoading(true);
+        const res = await callFetchListBrands();
+        if (res && res.data && res.data.result) {
+            setListBrands(res.data.result)
+        }
+        setIsLoading(false);
+    }
 
     return (
         <>
             <View>
                 <View style={styles.container}>
                     <Text style={styles.heading}>Brand</Text>
-                    <Text>View All</Text>
+                    <TouchableOpacity
+                        onPress={() =>
+                            navigation.navigate('list-all-brand', { listBrands: listbrands })
+                        }
+                    >
+                        <Text>Xem Tất Cả</Text>
+                    </TouchableOpacity>
                 </View>
 
-                <FlatList
-                    data={data}
-                    horizontal={false}
-                    numColumns={3}
-                    renderItem={({ item, index }) => index <= 5 && (
-                        <TouchableOpacity
-                            style={styles.view}
-                            onPress={() =>
-                                navigation.navigate('brand-detail', { brands:item })
-                            }
-                        >
-                            <View>
-                                <Image
-                                    style={styles.sliderImage}
-                                    source={{ uri: item?.ima }}
-
-                                />
+                <View style={{ marginBottom: 30 }}>
+                    <FlatList
+                        data={listbrands}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={true}
+                        pagingEnabled={true}
+                        renderItem={({ item, index }) => index <= 5 && (
+                            <View style={styles.imageContainer}>
+                                <TouchableOpacity
+                                    onPress={() =>
+                                        navigation.navigate('brand-detail', { brands: item })
+                                    }
+                                >
+                                    <Image
+                                        style={styles.carouselImage}
+                                        source={{ uri: item?.logoUrl }}
+                                        key={item.id}
+                                    />
+                                </TouchableOpacity>
+                                <View style={styles.textView}>
+                                    <Text style={{ fontFamily: "bold", color: COLORS.primary, paddingBottom: 10 }}>
+                                        {item?.name}
+                                    </Text>
+                                </View>
                             </View>
-                            <Text style={{ fontFamily: "bold", color: COLORS.primary }}>
-                                {item?.name}
-                            </Text>
-                        </TouchableOpacity>
-                    )}
-                />
+                        )}
+                    />
+                </View>
             </View>
         </>
     );
@@ -114,28 +91,28 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginTop: -10
+        marginTop: -10,
+        marginBottom: 10,
     },
     heading: {
         fontSize: 20,
-        marginBottom: 10
-    },
-    view: {
-        flex: 1,
-        alignItems: 'center',
-        marginBottom: 10
-    },
-    iconContainer: {
-        backgroundColor: COLORS.primary,
-        padding: 17,
-        borderRadius: 10,
-        marginLeft: 5,
-        width: '45%',
-    },
-    sliderImage: {
-        width: 100,
-        height: 100,
-        borderRadius: 10,
         marginBottom: 10,
+    },
+
+    imageContainer: {
+        width: Dimensions.get('window').width / 3 - 5,
+        height: Dimensions.get('window').width / 3 + 20,
+
+    },
+    carouselImage: {
+        height: "90%",
+        width: "95%",
+        borderRadius: 10,
+    },
+    textView: {
+        width: "100%",
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: -10
     }
 })

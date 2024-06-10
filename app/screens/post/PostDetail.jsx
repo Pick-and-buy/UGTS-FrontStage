@@ -61,10 +61,12 @@ const PostDetail = () => {
                     <TouchableOpacity
                         onPress={() => navigation.navigate('poster-information', { posterDetail: item })}
                         style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}
+                        key={item.id}
                     >
                         <Image
                             style={styles.avatar}
                             source={{ uri: item?.avatar }}
+                            key={item.id}
                         />
                         <Text style={{ fontSize: 24 }}>
                             {item?.name}
