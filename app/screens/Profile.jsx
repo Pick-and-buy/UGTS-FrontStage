@@ -66,7 +66,6 @@ const Profile = ({ navigation }) => {
 
 
 
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView
@@ -275,7 +274,7 @@ const Profile = ({ navigation }) => {
                     icon={"password"}
                     font={4}
                     isDivider={true}
-                    onPress={() => navigation.navigate('change-password',user)}
+                    onPress={() => navigation.navigate('change-password', user)}
                   />
                   <ProfileTile title={"Địa chỉ email"} icon={"email"} font={4} isDivider={true} />
                   <ProfileTile title={"Người dùng bị chặn"} icon={"block"} font={4} isDivider={true} />

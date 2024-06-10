@@ -29,6 +29,7 @@ import UserProfile from './app/screens/profile/UserProfile';
 import { LoginContext } from './app/context/LoginContext';
 import TodoTask from './app/screens/todoTask/todoTask';
 import ChangePassword from './app/screens/change password/ChangePassword';
+import UpdateProfile from './app/screens/profile/UpdateProfile';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -190,6 +191,12 @@ export default function App() {
           <Stack.Screen
             name='change-password'
             component={ChangePassword}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name='update-profile'
+            component={UpdateProfile}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
