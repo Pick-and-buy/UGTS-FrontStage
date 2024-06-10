@@ -41,9 +41,16 @@ const Brands = () => {
             <View>
                 <View style={styles.container}>
                     <Text style={styles.heading}>Brand</Text>
+                    <TouchableOpacity
+                        onPress={() =>
+                            navigation.navigate('list-all-brand', { listBrands: listbrands })
+                        }
+                    >
+                        <Text>Xem Tất Cả</Text>
+                    </TouchableOpacity>
                 </View>
 
-                <View style={{marginBottom: 30}}>
+                <View style={{ marginBottom: 30 }}>
                     <FlatList
                         data={listbrands}
                         horizontal={true}
@@ -54,7 +61,7 @@ const Brands = () => {
                                 <TouchableOpacity
                                     onPress={() =>
                                         navigation.navigate('brand-detail', { brands: item })
-                                    }        
+                                    }
                                 >
                                     <Image
                                         style={styles.carouselImage}
@@ -84,13 +91,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginTop: -10
+        marginTop: -10,
+        marginBottom: 10,
     },
     heading: {
         fontSize: 20,
-        marginBottom: 10
+        marginBottom: 10,
     },
-    
+
     imageContainer: {
         width: Dimensions.get('window').width / 3 - 5,
         height: Dimensions.get('window').width / 3 + 20,
