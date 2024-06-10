@@ -198,7 +198,9 @@ export default function App() {
           <Stack.Screen
             name='update-profile'
             component={UpdateProfile}
-
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
             name='todo-task'
             component={TodoTask}
             options={{ headerShown: false }}

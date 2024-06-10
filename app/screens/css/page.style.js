@@ -1,13 +1,14 @@
 import { StyleSheet } from "react-native";
-import { COLORS, SIZES } from "../constants/theme";
+import { COLORS, SIZES } from "../../constants/theme";
 
 const pages = StyleSheet.create({
-    viewOne: { backgroundColor: COLORS.primary, height: SIZES.height },
+    viewOne: { 
+        backgroundColor: COLORS.white, 
+        height: SIZES.height 
+    },
     viewTwo: {
-        backgroundColor: COLORS.offwhite,
-        height: SIZES.height - 140,
-        borderBottomEndRadius: 30,
-        borderBottomStartRadius: 30,
+        backgroundColor: COLORS.white,
+        height: SIZES.height,
     },
     viewThree: {
         backgroundColor: COLORS.offwhite,
