@@ -30,7 +30,7 @@ const HomeTab = () => {
                     tabBarIcon: ({ focused }) => (
                         <View style={{ width: 100, marginLeft: -30 }}>
                             <Text style={focused ? styles.tabActive : styles.tab}>
-                                Theo Dõi
+                                Dành Cho Bạn
                             </Text>
                         </View>
                     ),

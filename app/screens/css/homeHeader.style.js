@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     options: {
-        width: "95%",
+        width: "96%",
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
