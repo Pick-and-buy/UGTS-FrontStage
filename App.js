@@ -173,7 +173,7 @@ export default function App() {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name='post-detail'
+            name='post-details'
             component={PostDetail}
             options={{ headerShown: false }}
           />
@@ -198,7 +198,9 @@ export default function App() {
           <Stack.Screen
             name='update-profile'
             component={UpdateProfile}
-
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
             name='todo-task'
             component={TodoTask}
             options={{ headerShown: false }}

@@ -19,20 +19,6 @@ const ProductList = () => {
 
     const navigation = useNavigation();
 
-    // useEffect(() => {
-    //     getBusinessList();
-    // }, [])
-
-    /**
-     * Get Business List from API
-     */
-
-    // const getBusinessList = () => {
-    //     Api.query.then(res => {
-    //         console.log(res);
-    //         setBusinessList(res.data)
-    //     })
-    // }
 
     let data = [
         {
