@@ -81,47 +81,7 @@ const Home = () => {
     );
   }
 
-
-
   return (
-    // <SafeAreaView style={styles.viewOne}>
-    //   <View style={styles.viewTwo}>
-    //     <EvilIcons
-    //       style={{ position: "absolute", paddingTop: 15 }}
-    //       name="search"
-    //       size={20}
-    //       color="black" />
-    //     <TextInput
-    //       style={styles.viewText}
-    //       placeholder="Search"
-    //       clearButtonMode="always"
-    //       autoCapitalize="none"
-    //       autoCorrect={true}
-    //       value={searchQuery}
-    //       onChangeText={(query) => handSearch(query)}
-    //     />
-
-    //     {/* <FlatList
-    //       data={data}
-    //       keyExtractor={(item) => item.login.usename}
-    //       renderItem={({ item }) => (
-    //         <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 10, marginTop: 10 }}>
-    //           <Image
-    //             style={{ width: 50, height: 50, borderRadius: 25 }}
-    //             source={{ uri: item.picture.thumbnail }}
-    //           />
-    //           <View>
-    //             <Text>
-    //               {item.name.firstName} {item.name.lastName}
-    //             </Text>
-    //             <Text>{item.email}</Text>
-    //           </View>
-    //         </View>
-    //       )}
-    //     /> */}
-
-    //   </View>
-    // </SafeAreaView>
     <View>
       <Header />
     </View>
