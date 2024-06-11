@@ -14,7 +14,7 @@ const Post = ({ product }) => {
         <View style={styles.container}>
             <GestureHandlerRootView>
                 <TouchableOpacity style={styles.wrapper}
-                    onPress={() => navigation.navigate('product-detail', product.id)}
+                    onPress={() => navigation.navigate('post-details', product.id)}
                 >
                     <ImageBackground source={{ uri: product.product.images[0].imageUrl }} style={styles.image}>
                         <Text style={styles.text}>{product.product.price}VND</Text>

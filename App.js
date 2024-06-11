@@ -173,7 +173,7 @@ export default function App() {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name='post-detail'
+            name='post-details'
             component={PostDetail}
             options={{ headerShown: false }}
           />
