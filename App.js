@@ -29,6 +29,7 @@ import UserProfile from './app/screens/profile/UserProfile';
 import { LoginContext } from './app/context/LoginContext';
 import TodoTask from './app/screens/todoTask/todoTask';
 import ChangePassword from './app/screens/change password/ChangePassword';
+import UpdateProfile from './app/screens/profile/UpdateProfile';
 import ListBrandHomePage from './app/screens/brand/ListBrandHomePage';
 import CreatePostDetail from './app/screens/post/CreatePostDetail';
 
@@ -173,7 +174,7 @@ export default function App() {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name='post-detail'
+            name='post-details'
             component={PostDetail}
             options={{ headerShown: false }}
           />
@@ -195,6 +196,11 @@ export default function App() {
             options={{ headerShown: false }}
           />
 
+          <Stack.Screen
+            name='update-profile'
+            component={UpdateProfile}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen
             name='todo-task'
             component={TodoTask}
