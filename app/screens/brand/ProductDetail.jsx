@@ -15,17 +15,17 @@ import React, { useState, useEffect } from "react";
 import { NavigationContaine, useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
 import moment from "moment/moment";
-import { callFetchPostDetails } from "../../api/post";
+import { getPostDetails } from "../../api/post";
 
-const ProductDetail = () => {
-
-    const navigation = useNavigation();
-    //Lấy props khi onPress
+const ProductDetail = ({ navigation, route }) => {
+    const item = route.params
+    console.log(item);
     //API cần phải lấy product detail
-    const item = useRoute().params.itemDetail;
+    // const item = useRoute().params.itemDetail;
 
     const [postDetail, setPostDetail] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    console.log(postDetail);
 
     //Array: Nếu muốn hiển thị ảnh thì phải dùng vòng map
     const [slider, setSLider] = useState([]);
@@ -36,17 +36,19 @@ const ProductDetail = () => {
     }, [])
 
     const fetchPostDetails = async () => {
-        setIsLoading(true);
-        const res = await callFetchPostDetails(item.id);
-        // console.log(">>> check res Post Detail<ProductDetail>: ", res.data.result);
-        if (res && res?.data && res?.data?.result) {
-            setPostDetail(res?.data?.result)
-            setSLider(res?.data?.result?.product?.images);
+        try {
+            const response = await getPostDetails(item);
+            // console.log(response.data.result);
+            const postInfo = response.data.result
+            setPostDetail(postInfo);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoading(false);
         }
-        setIsLoading(false);
     }
 
-    console.log(postDetail);
+    // console.log(postDetail);
 
     const openComments = () => {
         console.warn('open comments')
@@ -156,7 +158,7 @@ const ProductDetail = () => {
                             size={24}
                             color="black" />
                         <Text style={{ marginLeft: 15 }}>
-                            Sử dụng ví GIATOTPAY để mua với giá <Text style={{ color: COLORS.red }}>${item.product.price - 100}</Text>
+                            Sử dụng ví GIATOTPAY để mua với giá <Text style={{ color: COLORS.red }}>${item?.product?.price - 100}</Text>
                         </Text>
                     </View>
                 </View>
@@ -423,7 +425,6 @@ const ProductDetail = () => {
 
             </View>
         </ScrollView>
-
     );
 
 

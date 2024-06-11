@@ -10,13 +10,19 @@ export const getAllPosts = async () => {
   }
 }
 
-// export const callFetchListPost = () => {
-//     return axiosInstance.get('/posts');
-// }
-
-export const callFetchPostDetails = (id) => {
-  return axiosInstance.get(`/posts/${id}`)
+export const getPostDetails = async (id) => {
+  try {
+    const response = axiosInstance.get(`/posts/${id}`)
+    return response;
+  } catch (error) {
+    console.error('Error Get Post Details:', error);
+    throw error;
+  }
 }
+
+// export const callFetchPostDetails = (id) => {
+//   return axiosInstance.get(`/posts/${id}`)
+// }
 
 export const callFetchPostByBrandName = (query) => {
   return axiosInstance.get(`/posts/brands?${query}`)

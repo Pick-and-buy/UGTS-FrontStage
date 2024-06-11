@@ -13,10 +13,8 @@ import React, { useState, useRef, useContext, useEffect } from "react";
 import { COLORS, SIZES } from "../../constants/theme";
 import Carousel from "pinar";
 import Slider from './Slider';
-import Brands from './Brands';
-import ProductList from './ProductList';
-import ProductItem from "./ProductItem";
 import { getAllPosts } from "../../api/post";
+import Post from "../post/Post";
 const HomeFollow = ({ navigation }) => {
 
 
@@ -46,7 +44,7 @@ const HomeFollow = ({ navigation }) => {
             <View style={styles.row}>
                 {
                     products.map(product => (
-                        <ProductItem key={product.id} product={product} />
+                        <Post key={product.id} product={product} />
                     ))
                 }
 

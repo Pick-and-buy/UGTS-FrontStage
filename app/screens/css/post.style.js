@@ -22,11 +22,11 @@ const styles = StyleSheet.create({
     },
     text: {
         color: COLORS.white,
-        fontWeight:"400",
-        fontSize:14,
-        position:"absolute",
-        bottom:4,
-        left:6
+        fontWeight: "400",
+        fontSize: 14,
+        position: "absolute",
+        bottom: 4,
+        left: 6
     },
 });
 
