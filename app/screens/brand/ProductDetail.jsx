@@ -223,7 +223,7 @@ const ProductDetail = () => {
                         </View>
                     </View>
                 </View>
-
+                            
                 <View style={[styles.shadow, { marginTop: 10, height: 20 }]}>
                     {/* Tạo Khoảng Trống */}
                 </View>

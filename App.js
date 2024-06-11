@@ -31,6 +31,7 @@ import TodoTask from './app/screens/todoTask/todoTask';
 import ChangePassword from './app/screens/change password/ChangePassword';
 import UpdateProfile from './app/screens/profile/UpdateProfile';
 import ListBrandHomePage from './app/screens/brand/ListBrandHomePage';
+import CreatePostDetail from './app/screens/post/CreatePostDetail';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -209,6 +210,12 @@ export default function App() {
           <Stack.Screen
             name='list-all-brand'
             component={ListBrandHomePage}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name='create-post-details'
+            component={CreatePostDetail}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

@@ -27,6 +27,7 @@ const Home = () => {
         <HomeTab />
       </View>
     </SafeAreaView>
+
   );
 };
 
