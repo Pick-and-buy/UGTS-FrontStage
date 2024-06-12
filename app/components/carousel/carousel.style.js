@@ -4,16 +4,15 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     container: {
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        width:"100%",
-        height:"50%",
-        position:"relative",
-        top:-25
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: SCREEN_WIDTH,
+        height: 210,
+        // position: "relative",
     },
     image: {
         width: "100%",
-        height: SCREEN_WIDTH - 100,
+        height: SCREEN_WIDTH,
         resizeMode: "contain",
         borderRadius: 5,
     },
@@ -33,7 +32,7 @@ const styles = StyleSheet.create({
     sildeNumber: {
         position: "absolute",
         left: "48%",
-        bottom: "-210%",
+        top: 100,
         color: COLORS.white,
         backgroundColor: 'rgba(0, 0, 0, 0.4)',
         paddingLeft: 12,

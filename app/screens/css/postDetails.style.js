@@ -3,15 +3,11 @@ import { COLORS, SHADOWS, SIZES } from "../../constants/theme";
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         backgroundColor: COLORS.white,
-        width: "100%",
-        height: "100%",
-        justifyContent: "center",
-        alignItems: "center",
     },
     wrapper: {
-        width: "100%",
-        height: "100%",
+        flex: 1,
     },
     header: {
         width: "100%",
@@ -25,21 +21,21 @@ const styles = StyleSheet.create({
     },
     headerText: {
         color: COLORS.black,
-        fontSize: 18
+        fontSize: 18,
     },
     contentContainer: {
-        // position: "absolute",
-        // height: "20%",
-        backgroundColor: COLORS.white,
+        paddingBottom: "10%",
+        width: "100%",
+        marginHorizontal: "auto",
     },
     like: {
         width: 40,
         height: 40,
         position: "absolute",
-        left: "85%",
-        top: "-15%",
+        right: 15,
+        top: -30,
         backgroundColor: COLORS.white,
-        borderRadius: 99,
+        borderRadius: 20,
         padding: 5,
         ...SHADOWS.medium,
         justifyContent: "center",
@@ -47,30 +43,27 @@ const styles = StyleSheet.create({
     },
     informationContainer: {
         width: "96%",
-        // height:"30%",
+        height: "18%",
         marginHorizontal: "auto",
         backgroundColor: COLORS.white,
-        position: "relative",
-        top: -45,
+        // top: "-12%",
     },
     label: {
         flexDirection: "row",
-        justifyContent: "flex-start",
-        marginTop: 5
+        alignItems: "center",
+        marginTop: 4,
     },
     keyword: {
-        color: COLORS.blue
-
+        color: COLORS.blue,
     },
     verified: {
-        justifyContent: "center",
+        flexDirection: "row",
         alignItems: "center",
-        marginLeft: 20,
-        marginVertical: "auto",
-        flexDirection: "row"
+        marginLeft: 10,
     },
     verifiedText: {
-        color: COLORS.blue
+        color: COLORS.blue,
+        marginLeft: 2,
     },
     labelTransport: {
         marginTop: 20,
@@ -83,33 +76,81 @@ const styles = StyleSheet.create({
     },
     currency: {
         textDecorationLine: 'underline',
-        marginRight: 2
     },
     price: {
         fontSize: 35,
         color: COLORS.primary,
-        marginBottom: 20
+        marginVertical: 10,
     },
     wallet: {
         flexDirection: 'row',
-        justifyContent: 'flex-start',
         alignItems: 'center',
-        gap: 5
+        marginTop: 10,
     },
     walletTitle: {
-
+        marginLeft: 5,
     },
     walletTitlePrice: {
         color: COLORS.primary,
+        marginLeft: 5,
     },
     divider: {
         borderColor: COLORS.gray2,
-        opacity: 0.6,
-        borderWidth: 8,
+        opacity: 0.15,
+        borderWidth: 6,
         width: SIZES.width,
         backgroundColor: COLORS.gray,
+    },
+    dividerLight: {
+        borderColor: COLORS.gray2,
+        opacity: 1,
+        borderWidth: 0.3,
+        width: SIZES.width,
+        marginBottom: 5,
+        marginTop: 7,
+    },
+    comment: {
+        backgroundColor: COLORS.white,
+        padding: 10,
+    },
+    description: {
+        width:"96%",
+        backgroundColor: COLORS.white,
+        // padding: 10,
+        marginHorizontal: "auto",
+    },
+    descriptionTitle: {
+        fontWeight: "bold",
+        fontSize: 16,
+        marginBottom: 10,
+
+    },
+    descriptionText: {
+        marginBottom: 10,
+    },
+    createdTime: {
+        color: COLORS.gray,
+        fontSize: 12,
+    },
+    hashtags: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+    },
+    details: {
+        width: '96%',
+        flexDirection: 'row',
+        marginHorizontal:"auto"
+
+    },
+    left: {
+        flex: 1,
+    },
+    right: {
+        flex: 1,
+    },
+    rightText: {
+        color: COLORS.blue
     }
+});
 
-})
-export default styles
-
+export default styles;
