@@ -18,6 +18,7 @@ const COLORS = {
   red: "#e81e4d",
   green: " #00C135",
   lightWhite: "#FAFAFC",
+  blue:"#0000FF"
 };
 
 

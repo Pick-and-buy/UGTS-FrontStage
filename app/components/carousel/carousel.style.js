@@ -8,10 +8,12 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         width:"100%",
         height:"50%",
+        position:"relative",
+        top:-25
     },
     image: {
         width: "100%",
-        height: SCREEN_WIDTH - 10,
+        height: SCREEN_WIDTH - 100,
         resizeMode: "contain",
         borderRadius: 5,
     },
@@ -33,7 +35,7 @@ const styles = StyleSheet.create({
         left: "48%",
         bottom: "-210%",
         color: COLORS.white,
-        backgroundColor: "#7E7A77",
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
         paddingLeft: 12,
         paddingRight: 12,
         borderRadius: 10,
