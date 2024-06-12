@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { FlatList, Text, View, Dimensions, Image, Pressable } from 'react-native';
 import styles from './carousel.style';
 import { AntDesign } from '@expo/vector-icons';
@@ -11,6 +11,10 @@ const Carousel = ({ data }) => {
     const [slide, setSlide] = useState(0); // Initialize slide index as 0
     const [prevDisable, setPrevDisable] = useState(true); // Disable "Previous" button initially
     const [nextDisable, setNextDisable] = useState(data.length <= 1); // Disable "Next" button if less than 2 items
+
+    useEffect(() => {
+        setNextDisable(data.length <= 1);
+    }, [data]);
 
     const onPrevious = () => {
         if (slide === 0) return; // Prevent scrolling before the first item
@@ -31,6 +35,10 @@ const Carousel = ({ data }) => {
         setNextDisable(newSlide === data.length - 1);
     };
 
+    if (!data || data.length === 0) {
+        return <Text>No images available</Text>;
+    }
+
     return (
         <View style={styles.container}>
             <FlatList
@@ -45,7 +53,7 @@ const Carousel = ({ data }) => {
                 onScroll={onScroll}
                 renderItem={({ item }) => (
                     <View style={{ width: ITEM_WIDTH, justifyContent: 'center', alignItems: 'center' }}>
-                        <Image source={{ uri: item.uri }} style={styles.image} />
+                        <Image source={{ uri: item.imageUrl }} style={styles.image} />
                     </View>
                 )}
             />
@@ -66,7 +74,6 @@ const Carousel = ({ data }) => {
                     <AntDesign name="right" size={24} color="white" />
                 </Pressable>
             </View>
-            
         </View>
     );
 };

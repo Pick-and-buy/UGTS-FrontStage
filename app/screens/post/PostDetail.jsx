@@ -22,7 +22,8 @@ const PostDetail = ({ navigation, route }) => {
     const productId = route.params;
     const [postDetails, setPostDetails] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-
+    // console.log(product.product.images[0].imageUrl);
+    const data = postDetails?.product?.images || [];
     useEffect(() => {
         fetchPostDetails();
     }, []);
@@ -39,12 +40,12 @@ const PostDetail = ({ navigation, route }) => {
         }
     };
 
-    const data = [
-        { id: "01", uri: 'https://bantersa.com/wp-content/uploads/2015/05/5-Beautiful-Websites.jpg', title: "a" },
-        { id: "02", uri: 'https://soliloquywp.com/wp-content/uploads/2016/09/How-to-Add-a-Homepage-Slider-in-WordPress.png', title: "b" },
-        { id: "03", uri: 'https://www.searchenginejournal.com/wp-content/uploads/2019/10/25-of-the-best-examples-of-home-pages-5dc504205de2e.png', title: "c" },
-        { id: "04", uri: 'https://bantersa.com/wp-content/uploads/2015/05/5-Beautiful-Websites.jpg', title: "d" },
-    ];
+    // const data = [
+    //     { id: "01", uri: 'https://bantersa.com/wp-content/uploads/2015/05/5-Beautiful-Websites.jpg', title: "a" },
+    //     { id: "02", uri: 'https://soliloquywp.com/wp-content/uploads/2016/09/How-to-Add-a-Homepage-Slider-in-WordPress.png', title: "b" },
+    //     { id: "03", uri: 'https://www.searchenginejournal.com/wp-content/uploads/2019/10/25-of-the-best-examples-of-home-pages-5dc504205de2e.png', title: "c" },
+    //     { id: "04", uri: 'https://bantersa.com/wp-content/uploads/2015/05/5-Beautiful-Websites.jpg', title: "d" },
+    // ];
 
     return (
         <SafeAreaView style={styles.container}>
@@ -80,7 +81,7 @@ const PostDetail = ({ navigation, route }) => {
                                 <Text style={styles.walletTitlePrice}>
                                     <Text> </Text>
                                     <Text style={styles.currency}>đ</Text>
-                                    {postDetails?.product?.price}
+                                    260
                                 </Text>
                             </Text>
                         </View>
@@ -93,14 +94,14 @@ const PostDetail = ({ navigation, route }) => {
                     <View style={styles.description}>
                         <Text style={styles.descriptionTitle}>Mô tả sản phẩm</Text>
                         <Text style={styles.descriptionText}>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
                             {postDetails?.description}
                         </Text>
                         <Text style={styles.createdTime}>{postDetails?.createdAt}</Text>
