@@ -27,7 +27,8 @@ const styles = StyleSheet.create({
         color: COLORS.black,
         fontSize: 18
     },
-    carousel: {
+    contentContainer: {
+        // position: "absolute",
         height: "20%",
     }
 })

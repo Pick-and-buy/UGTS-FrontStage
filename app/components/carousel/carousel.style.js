@@ -3,8 +3,14 @@ import { COLORS, SHADOWS, SIZES } from "../../constants/theme";
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
+    container: {
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        width:"100%",
+        height:"50%",
+    },
     image: {
-        width: "72%",
+        width: "100%",
         height: SCREEN_WIDTH - 10,
         resizeMode: "contain",
         borderRadius: 5,
@@ -18,14 +24,14 @@ const styles = StyleSheet.create({
     footer: {
         flexDirection: "row",
         justifyContent: "space-between",
-        width: "98%",
+        width: "96%",
         position: "absolute",
-        top: "30%",
+        top: "40%",
     },
     sildeNumber: {
         position: "absolute",
         left: "48%",
-        bottom: "-140%",
+        bottom: "-210%",
         color: COLORS.white,
         backgroundColor: "#7E7A77",
         paddingLeft: 12,
@@ -35,8 +41,8 @@ const styles = StyleSheet.create({
 
     },
     button: {
-        padding: 10,
-        backgroundColor: "#F3F3F3",
+        padding: 5,
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
         borderRadius: 99,
         justifyContent: "center",
         alignItems: "center",

@@ -32,7 +32,7 @@ const Carousel = ({ data }) => {
     };
 
     return (
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <View style={styles.container}>
             <FlatList
                 ref={flatListRef}
                 data={data}
@@ -55,7 +55,7 @@ const Carousel = ({ data }) => {
                     disabled={prevDisable}
                     style={[styles.button, prevDisable && styles.hiddenButton]}
                 >
-                    <AntDesign name="left" size={24} color="black" />
+                    <AntDesign name="left" size={24} color="white" />
                 </Pressable>
                 <Text style={styles.sildeNumber}>{slide + 1}/{data.length}</Text>
                 <Pressable
@@ -63,7 +63,7 @@ const Carousel = ({ data }) => {
                     disabled={nextDisable}
                     style={[styles.button, nextDisable && styles.hiddenButton]}
                 >
-                    <AntDesign name="right" size={24} color="black" />
+                    <AntDesign name="right" size={24} color="white" />
                 </Pressable>
             </View>
             

@@ -77,11 +77,12 @@ const PostDetail = ({ navigation, route }) => {
                     <Text style={styles.headerText}>{postDetails?.product?.name}</Text>
                     <AntDesign name="sharealt" size={28} color={COLORS.primary} />
                 </View>
-                <View style={styles.carousel}>
+                <ScrollView style={styles.contentContainer}>
                     <Carousel
                         data={data}
                     />
-                </View>
+                    <Text>abc</Text>
+                </ScrollView>
 
             </View>
         </SafeAreaView>
