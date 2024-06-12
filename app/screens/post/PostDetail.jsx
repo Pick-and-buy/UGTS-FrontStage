@@ -5,7 +5,6 @@ import {
     View,
     TouchableOpacity,
     Image,
-    TextInput,
     FlatList,
     Dimensions,
     Pressable,
@@ -17,20 +16,34 @@ import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
 import Carousel from "../../components/carousel/Carousel";
 import { getPostDetails } from "../../api/post";
 import styles from "../css/postDetails.style";
+import { getUserByToken, likePost, unlikePost } from "../../api/user";
 
 const PostDetail = ({ navigation, route }) => {
-    const productId = route.params;
+    const postId = route.params;
     const [postDetails, setPostDetails] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    // console.log(product.product.images[0].imageUrl);
+    // State to manage the like status
+    const [isLiked, setIsLiked] = useState(false);
+    const [userId, setUserId] = useState(null);
     const data = postDetails?.product?.images || [];
+    console.log(postId);
     useEffect(() => {
         fetchPostDetails();
+        getUserData();
     }, []);
+
+    const getUserData = async () => {
+        try {
+            const userInfo = await getUserByToken(); // Retrieve user data from the API
+            setUserId(userInfo.result.id); // Assuming the user ID is accessible under the key "id"
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    };
 
     const fetchPostDetails = async () => {
         try {
-            const response = await getPostDetails(productId);
+            const response = await getPostDetails(postId);
             const postInfo = response.data.result;
             setPostDetails(postInfo);
         } catch (error) {
@@ -40,12 +53,24 @@ const PostDetail = ({ navigation, route }) => {
         }
     };
 
-    // const data = [
-    //     { id: "01", uri: 'https://bantersa.com/wp-content/uploads/2015/05/5-Beautiful-Websites.jpg', title: "a" },
-    //     { id: "02", uri: 'https://soliloquywp.com/wp-content/uploads/2016/09/How-to-Add-a-Homepage-Slider-in-WordPress.png', title: "b" },
-    //     { id: "03", uri: 'https://www.searchenginejournal.com/wp-content/uploads/2019/10/25-of-the-best-examples-of-home-pages-5dc504205de2e.png', title: "c" },
-    //     { id: "04", uri: 'https://bantersa.com/wp-content/uploads/2015/05/5-Beautiful-Websites.jpg', title: "d" },
-    // ];
+
+    const handleLike = async () => {
+        if (!userId) {
+            console.error("User is not authenticated");
+            return;
+        }
+
+        try {
+            if (isLiked) {
+                await unlikePost(userId,postId);
+            } else {
+                await likePost(userId,postId);
+            }
+            setIsLiked(!isLiked);
+        } catch (error) {
+            console.error("Error updating like status", error);
+        }
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -58,9 +83,13 @@ const PostDetail = ({ navigation, route }) => {
                 <ScrollView contentContainerStyle={styles.contentContainer}>
                     <Carousel data={data} />
                     <View style={styles.informationContainer}>
-                        <View style={styles.like}>
-                            <AntDesign name="hearto" size={24} color="gray" />
-                        </View>
+                        <Pressable onPress={handleLike} style={styles.like}>
+                            <AntDesign
+                                name={isLiked ? "heart" : "hearto"}
+                                size={24}
+                                color={isLiked ? "red" : "gray"}
+                            />
+                        </Pressable>
                         <Text numberOfLines={3} style={[styles.headerText, { width: "85%" }]}>{postDetails?.product?.name}</Text>
                         <View style={styles.label}>
                             <Text style={styles.keyword}>Túi xách</Text>
