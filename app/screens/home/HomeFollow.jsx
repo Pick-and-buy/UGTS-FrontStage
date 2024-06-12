@@ -72,6 +72,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         gap: 5,
         marginHorizontal: "auto",
-        marginTop: "-2%",
+        marginTop: "-4%",
     }
 });
