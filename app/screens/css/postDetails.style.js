@@ -21,7 +21,9 @@ const styles = StyleSheet.create({
     },
     headerText: {
         color: COLORS.black,
-        fontSize: 18,
+        fontSize: 20,
+        width:"65%",
+        marginBottom:4
     },
     contentContainer: {
         paddingBottom: "10%",
@@ -43,7 +45,7 @@ const styles = StyleSheet.create({
     },
     informationContainer: {
         width: "96%",
-        height: "16%",
+        height: "22%",
         marginHorizontal: "auto",
         backgroundColor: COLORS.white,
         // top: "-12%",
@@ -51,7 +53,6 @@ const styles = StyleSheet.create({
     label: {
         flexDirection: "row",
         alignItems: "center",
-        marginTop: 4,
     },
     keyword: {
         color: COLORS.blue,
@@ -127,6 +128,16 @@ const styles = StyleSheet.create({
     },
     descriptionText: {
         marginBottom: 10,
+    },
+    seeMore:{
+        borderColor: COLORS.gray,
+        borderWidth: 1,
+        width:"25%",
+        textAlign: "center",
+        marginHorizontal:"auto",
+        borderRadius:16,
+        padding:2
+
     },
     createdTime: {
         color: COLORS.gray,

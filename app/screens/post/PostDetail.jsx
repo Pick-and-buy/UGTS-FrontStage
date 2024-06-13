@@ -28,6 +28,9 @@ const PostDetail = ({ navigation, route }) => {
     // State to manage the like status
     const [isLiked, setIsLiked] = useState(false);
     const [userId, setUserId] = useState(null);
+    // State to manage description text visibility
+    const [showFullDescription, setShowFullDescription] = useState(false);
+
     const data = postDetails?.product?.images || [];
     // console.log(postId);
     useEffect(() => {
@@ -56,7 +59,6 @@ const PostDetail = ({ navigation, route }) => {
         }
     };
 
-
     const handleLike = async () => {
         if (!userId) {
             console.error("User is not authenticated");
@@ -80,7 +82,7 @@ const PostDetail = ({ navigation, route }) => {
             <View style={styles.wrapper}>
                 <View style={styles.header}>
                     <Feather name="chevron-left" size={30} color={COLORS.primary} onPress={() => navigation.goBack()} />
-                    <Text numberOfLines={1} style={styles.headerText}>{postDetails?.product?.name}</Text>
+                    <Text numberOfLines={1} style={styles.headerText}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate nisi quibusdam voluptatem consectetur sit officia odit vero eum modi, repellendus reiciendis maxime voluptatibus inventore vitae provident molestias culpa nam necessitatibus.</Text>
                     <AntDesign name="sharealt" size={25} color={COLORS.primary} />
                 </View>
                 <ScrollView contentContainerStyle={styles.contentContainer}
@@ -132,15 +134,10 @@ const PostDetail = ({ navigation, route }) => {
                     <View style={styles.description}>
                         <Text style={styles.descriptionTitle}>Mô tả sản phẩm</Text>
                         <Text style={styles.descriptionText}>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem facilis amet incidunt quod quis, est pariatur commodi esse cumque inventore repudiandae perspiciatis soluta reprehenderit, tempore illum asperiores voluptate et. Consequatur.
-                            {postDetails?.description}
+                            {showFullDescription ? postDetails?.description : `${postDetails?.description?.slice(0, 150)}...`}
+                        </Text>
+                        <Text style={styles.seeMore} onPress={() => setShowFullDescription(!showFullDescription)}>
+                            {showFullDescription ? 'Ẩn bớt' : 'Xem thêm'}
                         </Text>
                         <Text style={styles.createdTime}>{postDetails?.createdAt}</Text>
                         <View style={styles.dividerLight} />
@@ -152,22 +149,12 @@ const PostDetail = ({ navigation, route }) => {
                     </View>
                     <View style={styles.divider} />
 
-                    <View style={styles.details}>
+                    <View style={[styles.details, { marginTop: 4 }]}>
                         <View style={styles.left}>
                             <Text>Thương hiệu</Text>
                         </View>
                         <View style={styles.right}>
                             <Text style={styles.rightText}>{postDetails?.product?.brand?.name}</Text>
-                        </View>
-                    </View>
-                    <View style={styles.dividerLight} />
-
-                    <View style={styles.details}>
-                        <View style={styles.left}>
-                            <Text>Vật liệu</Text>
-                        </View>
-                        <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.material}</Text>
                         </View>
                     </View>
                     <View style={styles.dividerLight} />
@@ -182,6 +169,27 @@ const PostDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                     <View style={styles.dividerLight} />
+
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Kích thước</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.length} x {postDetails?.product?.width} x {postDetails?.product?.height} cm</Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Năm sản xuất</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.manufactureYear} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+
 
 
                     {/* Personal Information */}
