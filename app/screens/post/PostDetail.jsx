@@ -16,7 +16,10 @@ import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
 import Carousel from "../../components/carousel/Carousel";
 import { getPostDetails } from "../../api/post";
 import styles from "../css/postDetails.style";
+import { Rating } from 'react-native-stock-star-rating'
 import { getUserByToken, likePost, unlikePost } from "../../api/user";
+const profile =
+    "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
 const PostDetail = ({ navigation, route }) => {
     const postId = route.params;
@@ -26,7 +29,7 @@ const PostDetail = ({ navigation, route }) => {
     const [isLiked, setIsLiked] = useState(false);
     const [userId, setUserId] = useState(null);
     const data = postDetails?.product?.images || [];
-    console.log(postId);
+    // console.log(postId);
     useEffect(() => {
         fetchPostDetails();
         getUserData();
@@ -35,7 +38,7 @@ const PostDetail = ({ navigation, route }) => {
     const getUserData = async () => {
         try {
             const userInfo = await getUserByToken(); // Retrieve user data from the API
-            setUserId(userInfo.result.id); // Assuming the user ID is accessible under the key "id"
+            setUserId(userInfo.result.id);
         } catch (error) {
             console.error("Error fetching user data:", error);
         }
@@ -62,9 +65,9 @@ const PostDetail = ({ navigation, route }) => {
 
         try {
             if (isLiked) {
-                await unlikePost(userId,postId);
+                await unlikePost(userId, postId);
             } else {
-                await likePost(userId,postId);
+                await likePost(userId, postId);
             }
             setIsLiked(!isLiked);
         } catch (error) {
@@ -80,7 +83,9 @@ const PostDetail = ({ navigation, route }) => {
                     <Text numberOfLines={1} style={styles.headerText}>{postDetails?.product?.name}</Text>
                     <AntDesign name="sharealt" size={25} color={COLORS.primary} />
                 </View>
-                <ScrollView contentContainerStyle={styles.contentContainer}>
+                <ScrollView contentContainerStyle={styles.contentContainer}
+                    showsVerticalScrollIndicator={false}
+                >
                     <Carousel data={data} />
                     <View style={styles.informationContainer}>
                         <Pressable onPress={handleLike} style={styles.like}>
@@ -93,10 +98,14 @@ const PostDetail = ({ navigation, route }) => {
                         <Text numberOfLines={3} style={[styles.headerText, { width: "85%" }]}>{postDetails?.product?.name}</Text>
                         <View style={styles.label}>
                             <Text style={styles.keyword}>Túi xách</Text>
-                            <View style={styles.verified}>
-                                <MaterialIcons name="verified" size={14} color="green" />
-                                <Text style={styles.verifiedText}>Hàng chính hãng</Text>
-                            </View>
+
+                            {postDetails?.product?.isVerify &&
+                                <View style={styles.verified}>
+                                    <MaterialIcons name="verified" size={14} color="green" />
+                                    <Text style={styles.verifiedText}>Hàng chính hãng</Text>
+                                </View>
+                            }
+
                         </View>
                         <Text style={styles.labelTransport}>Miễn phí vận chuyển</Text>
                         <Text style={styles.price}>
@@ -155,10 +164,10 @@ const PostDetail = ({ navigation, route }) => {
 
                     <View style={styles.details}>
                         <View style={styles.left}>
-                            <Text>Màu sắc</Text>
+                            <Text>Vật liệu</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.color}</Text>
+                            <Text style={styles.rightText}>{postDetails?.product?.material}</Text>
                         </View>
                     </View>
                     <View style={styles.dividerLight} />
@@ -173,6 +182,50 @@ const PostDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                     <View style={styles.dividerLight} />
+
+
+                    {/* Personal Information */}
+                    <TouchableOpacity style={styles.personalContainer}>
+                        <View style={[styles.detailContainer, { alignItems: 'flex-start' }]}>
+                            <Image
+                                style={styles.avatar}
+                                source={{ uri: profile }}
+                            />
+                            <View style={{}}>
+                                <Text style={{ fontSize: 18 }}>
+                                    Tên ở đây
+                                </Text>
+                                <View style={{ flexDirection: 'row', justifyContent: "center", alignItems: 'center' }}>
+                                    <Rating
+                                        stars={4.7}
+                                        maxStars={5}
+                                        size={16}
+
+                                    />
+                                    <Text style={{ fontSize: 12, marginLeft: 4 }}>(100)</Text>
+
+                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 40 }}>
+                                        <MaterialIcons name="verified-user" size={12} color="#699BF7" style={{ marginTop: 0, marginLeft: 0 }} />
+                                        <Text style={{ fontSize: 12 }}>Tài khoản đã xác minh</Text>
+                                    </View>
+                                </View>
+
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+
+                    {/* Post recommend */}
+                    <View style={styles.recommended}>
+                        <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
+                            <MaterialIcons name="explore" size={18} color="gray" />
+                            <Text style={{ color: "gray", fontSize: 16 }}> Khám phá</Text>
+                        </View>
+                        <View>
+                            <Text>
+                                Products in here
+                            </Text>
+                        </View>
+                    </View>
 
                 </ScrollView>
             </View>

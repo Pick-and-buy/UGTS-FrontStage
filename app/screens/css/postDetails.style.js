@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     },
     informationContainer: {
         width: "96%",
-        height: "18%",
+        height: "16%",
         marginHorizontal: "auto",
         backgroundColor: COLORS.white,
         // top: "-12%",
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     description: {
-        width:"96%",
+        width: "96%",
         backgroundColor: COLORS.white,
         // padding: 10,
         marginHorizontal: "auto",
@@ -135,11 +135,18 @@ const styles = StyleSheet.create({
     hashtags: {
         flexDirection: 'row',
         flexWrap: 'wrap',
+        gap: 10,
+        marginVertical: 8
+    },
+    tag: {
+        backgroundColor: "#D9D9D9",
+        borderRadius: 3,
+        padding: 2
     },
     details: {
         width: '96%',
         flexDirection: 'row',
-        marginHorizontal:"auto"
+        marginHorizontal: "auto"
 
     },
     left: {
@@ -150,6 +157,31 @@ const styles = StyleSheet.create({
     },
     rightText: {
         color: COLORS.blue
+    },
+    personalContainer: {
+        height: 60,
+        width: "96%",
+        marginHorizontal: "auto",
+        flexDirection: "row",
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+
+    detailContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 10,
+    },
+    avatar: {
+        width: 50,
+        height: 50,
+        borderRadius: 99,
+    },
+    recommended: {
+        width: "96%",
+        marginHorizontal: "auto",
+        marginVertical:20
+
     }
 });
 
