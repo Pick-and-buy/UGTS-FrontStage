@@ -1,133 +1,144 @@
-        <View style={styles.wrapper}>
-            <View style={styles.view_1}>
-                <Formik
-                    initialValues={{ firstName: '', lastName: '', email: '', username: '', dateOfBirth: null }}
-                    validationSchema={validationSchema}
-                    // onSubmit={handleUpdateProfile}
-                    onSubmit={() => { }}
-                >
-                    {({
-                        handleChange,
-                        handleBlur,
-                        handleSubmit,
-                        setFieldValue,
-                        values,
-                        errors,
-                        touched,
-                    }) => (
-                        <>
-                            <View>
-                                <Text style={styles.textHeader}>
-                                    Cập nhật thông tin hồ sơ của bạn
-                                </Text>
-                                <Text style={styles.textHeader_1}>
-                                    Dữ liệu này sẽ được hiển thị trong hồ sơ tài khoản của bạn
-                                </Text>
-                            </View>
-                            <View>
-                                <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", width: "95%" }}>
-                                    <View style={styles.view_3}>
-                                        <View style={[styles.view_4]}>
-                                            <FontAwesome5 name="user-edit" size={24} color={COLORS.primary} />
-                                            <TextInput
-                                                style={{ marginLeft: 10, flex: 1 }}
-                                                placeholder={data?.result?.firstName}
-                                                placeholderTextColor='gray'
-                                                value={values.firstName}
-                                                onChangeText={handleChange('firstName')}
-                                                onBlur={handleBlur('firstName')}
-                                            />
-                                        </View>
-                                    </View>
-                                    <View style={styles.view_3}>
-                                        <View style={styles.view_4}>
-                                            <FontAwesome5 name="user-edit" size={24} color={COLORS.primary} />
-                                            <TextInput
-                                                style={{ marginLeft: 10, flex: 1 }}
-                                                placeholder={data?.result?.lastName}
-                                                placeholderTextColor='gray'
-                                                value={values.lastName}
-                                                onChangeText={handleChange('lastName')}
-                                                onBlur={handleBlur('lastName')}
-                                            />
-                                        </View>
+import { StyleSheet } from "react-native";
+import { COLORS, SHADOWS, SIZES } from "../../constants/theme";
 
-                                    </View>
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: COLORS.white,
+        width: "100%",
+        height: "100%",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    wrapper: {
+        width: "100%",
+        height: "100%",
+    },
+    header: {
+        width: "100%",
+        height: "10%",
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "flex-end",
+        backgroundColor: COLORS.white,
+        paddingBottom: 12,
+        ...SHADOWS.medium
+    },
+    headerText: {
+        color: COLORS.black,
+        fontSize: 18
+    },
+    contentContainer: {
+        width: "100%",
+        height: "100%",
+        backgroundColor: COLORS.white,
+    },
+    like: {
+        width: 40,
+        height: 40,
+        position: "absolute",
+        left: "85%",
+        top: "-20%",
+        backgroundColor: COLORS.white,
+        borderRadius: 99,
+        padding: 5,
+        ...SHADOWS.medium,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    informationContainer: {
+        width: "96%",
+        height: "20%",
+        marginHorizontal: "auto",
+        backgroundColor: COLORS.white,
+        top: "-13%",
+    },
+    label: {
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        marginTop: 0
+    },
+    keyword: {
+        color: COLORS.blue
+    },
+    verified: {
+        justifyContent: "center",
+        alignItems: "center",
+        marginLeft: 20,
+        marginVertical: "auto",
+        flexDirection: "row"
+    },
+    verifiedText: {
+        color: COLORS.blue
+    },
+    labelTransport: {
+        marginTop: 20,
+        backgroundColor: "#D9D9D9",
+        borderRadius: 3,
+        width: "35%",
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+    },
+    currency: {
+        textDecorationLine: 'underline',
+        marginRight: 2
+    },
+    price: {
+        fontSize: 35,
+        color: COLORS.primary,
+        marginBottom: 20
+    },
+    wallet: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        gap: 5
+    },
+    walletTitle: {
 
-                                </View>
-                                <View style={{ flexDirection: "row" }}>
-                                    {touched.firstName && errors.firstName && (
-                                        <Text style={[styles.errorMessage, { flex: 1 }]}>{errors.firstName}</Text>
-                                    )}
+    },
+    walletTitlePrice: {
+        color: COLORS.primary,
+    },
+    divider: {
+        borderColor: COLORS.gray2,
+        opacity: 0.6,
+        borderWidth: 6,
+        width: SIZES.width,
+        backgroundColor: COLORS.gray,
+    },
+    dividerLight: {
+        borderColor: COLORS.gray2,
+        opacity: 1,
+        borderWidth: 0.3,
+        width: SIZES.width,
+        marginBottom: 5,
+        marginTop: 7,
+    },
+    comment: {
+        backgroundColor: COLORS.white
+    },
+    description: {
+        width: "96%",
+        flex:1,
+        marginHorizontal: "auto",
+    },
+    descriptionTitle: {
+        fontWeight: "bold",
+        fontSize: 16,
+        marginTop: 20
+    },
+    descriptionText: {
+        marginBottom: 10,
+        marginTop: 20
+    },
+    createdTime: {
 
-                                    {touched.lastName && errors.lastName && (
-                                        <Text style={[styles.errorMessage, { flex: 1 }]}>{errors.lastName}</Text>
-                                    )}
-                                </View>
-                            </View>
-                            <View style={[styles.view_4, { marginTop: 12 }]}>
-                                <MaterialCommunityIcons name="account-outline" size={30} color={COLORS.primary} />
-                                <TextInput
-                                    style={{ marginLeft: 10, flex: 1 }}
-                                    placeholder={data?.result?.username}
-                                    placeholderTextColor='gray'
-                                    value={values.username}
-                                    onChangeText={handleChange('username')}
-                                    onBlur={handleBlur('username')}
-                                />
-                            </View>
-                            {touched.username && errors.username && (
-                                <Text style={styles.errorMessage}>{errors.username}</Text>
-                            )}
+    },
+    hashtags: {
+        
+    }
 
-                            <View style={[styles.view_4, { marginTop: 12 }]}>
-                                <MaterialCommunityIcons name="calendar" size={30} color={COLORS.primary} />
-                                <TextInput
-                                    style={{ marginLeft: 10, flex: 1 }}
-                                    placeholder={data?.result?.dob}
-                                    placeholderTextColor='gray'
-                                    value={values.dateOfBirth ? values.dateOfBirth.toLocaleDateString() : ''}
-                                    onFocus={() => setDatePickerVisibility(true)}
-                                    showSoftInputOnFocus={false}
-                                />
-                                <DateTimePickerModal
-                                    isVisible={isDatePickerVisible}
-                                    mode="date"
-                                    onConfirm={(date) => {
-                                        setDatePickerVisibility(false);
-                                        setFieldValue('dateOfBirth', date);
-                                    }}
-                                    onCancel={() => setDatePickerVisibility(false)}
-                                />
-                            </View>
-                            {touched.dateOfBirth && errors.dateOfBirth && (
-                                <Text style={styles.errorMessage}>{errors.dateOfBirth}</Text>
-                            )}
-                            <View style={[styles.view_4, { marginTop: 12 }]}>
-                                <MaterialCommunityIcons name="email-outline" size={30} color={COLORS.primary} />
-                                <TextInput
-                                    style={{ marginLeft: 10, flex: 1 }}
-                                    placeholder={data?.result?.email}
-                                    placeholderTextColor='gray'
-                                    value={values.email}
-                                    onChangeText={handleChange('email')}
-                                    onBlur={handleBlur('email')}
-                                />
-                            </View>
-                            {touched.email && errors.email && (
-                                <Text style={styles.errorMessage}>{errors.email}</Text>
-                            )}
+})
+export default styles
 
-
-                            <View>
-                                <Button
-                                    title={"CẬP NHẬT"}
-                                    onPress={handleSubmit}
-                                    isValid={true}
-                                />
-                            </View>
-                        </>
-                    )}
-                </Formik>
-            </View>
-        </View>

@@ -1,65 +1,63 @@
 import {
     StyleSheet,
-    ScrollView,
     Text,
     View,
     TouchableOpacity,
     Image,
-    TextInput,
     Dimensions,
 } from "react-native";
-import { FontAwesome } from '@expo/vector-icons';
-import React, { useState, useRef, useContext, useEffect } from "react";
+import React, { useState } from "react";
 import { COLORS, SIZES } from "../../constants/theme";
 import Carousel from "pinar";
 
 const Slider = () => {
-
-    const [slider, setSLider] = useState([]); //call API để lấy slider ra
+    const [slider, setSlider] = useState([]); //call API to fetch slider data
 
     const data = [
         {
             id: 1,
-            ima: 'https://bantersa.com/wp-content/uploads/2015/05/5-Beautiful-Websites.jpg'
+            image: 'https://bantersa.com/wp-content/uploads/2015/05/5-Beautiful-Websites.jpg'
         },
         {
             id: 2,
-            ima: 'https://soliloquywp.com/wp-content/uploads/2016/09/How-to-Add-a-Homepage-Slider-in-WordPress.png'
+            image: 'https://soliloquywp.com/wp-content/uploads/2016/09/How-to-Add-a-Homepage-Slider-in-WordPress.png'
         },
         {
             id: 3,
-            ima: 'https://www.searchenginejournal.com/wp-content/uploads/2019/10/25-of-the-best-examples-of-home-pages-5dc504205de2e.png'
+            image: 'https://www.searchenginejournal.com/wp-content/uploads/2019/10/25-of-the-best-examples-of-home-pages-5dc504205de2e.png'
         },
         {
             id: 4,
-            ima: 'https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/homepage-web-design.jpg?width=595&height=400&name=homepage-web-design.jpg'
+            image: 'https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/homepage-web-design.jpg?width=595&height=400&name=homepage-web-design.jpg'
         }
-    ]
+    ];
 
     return (
-        <TouchableOpacity
-            onPress={() => console.warn('Click to open Event')}
-            style={{ width: '98%', marginHorizontal: "auto",marginTop: "2%", marginBottom: "2%", }}>
-            <Image
-                style={styles.image}
-                source={{ uri: 'https://bantersa.com/wp-content/uploads/2015/05/5-Beautiful-Websites.jpg' }}
-            />
-            {/* <Carousel
+        <View
+            style={{ width: '98%', marginHorizontal: "auto", marginTop: "2%" }}
+        >
+            <Carousel
                 style={styles.carouselContainer}
-                showsControl={false}
+                showsControls={false}
                 showsDots={true}
+                autoplay={true}
+                autoplayInterval={3000} // Slide interval in milliseconds
+                loop={true}
             >
                 {data.map((image) => (
-                    <View>
+                    <TouchableOpacity
+                        key={image.id}
+                        style={styles.carouselItem}
+                        onPress={() => console.warn('Click to open Event', image.id)}
+                    >
                         <Image
                             style={styles.carouselImage}
-                            source={{ uri: image?.ima }}
-                            key={image.id}
+                            source={{ uri: image.image }}
                         />
-                    </View>
+                    </TouchableOpacity>
                 ))}
-            </Carousel> */}
-        </TouchableOpacity>
+            </Carousel>
+        </View>
     );
 }
 
@@ -70,7 +68,12 @@ const styles = StyleSheet.create({
         width: "100%",
         height: 200,
     },
+    carouselItem: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     carouselImage: {
+        width: '100%',
         height: 150,
         borderRadius: 10,
     },
@@ -78,5 +81,4 @@ const styles = StyleSheet.create({
         height: 150,
         borderRadius: 10,
     },
-})
-
+});
