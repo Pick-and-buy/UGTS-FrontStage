@@ -15,18 +15,31 @@ import React, { useState, useEffect } from "react";
 import { NavigationContaine, useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
 import Carousel from "pinar";
+import { getPostDetails } from "../../api/post";
 
-const PostDetail = () => {
+const PostDetail = ({ navigation, route }) => {
+    const productId = route.params;
+    // console.log(productId);
 
-    const navigation = useNavigation();
-
-    //Lấy props khi onPress
-    const item = useRoute().params.post;
+    const [postDetails, setPostDetails] = useState([]);
+    const [isLoading, setIsLoading] = useState();
 
     useEffect(() => {
-        console.log("check post <PostDetail>: ", item);
-        // brand && getProductByBrand();
-    }, [item])
+        fetchPostDetails()
+    }, [])
+
+    const fetchPostDetails = async () => {
+        try {
+            const response = await getPostDetails(productId);
+            // console.log(response.data.result);
+            const postInfo = response.data.result
+            setPostDetails(postInfo);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+        }
+    }
 
     const carouselData = [
         {
@@ -53,144 +66,14 @@ const PostDetail = () => {
             <View style={styles.container}>
                 {/* Header */}
                 <View style={styles.header}>
-                    <Ionicons
-                        onPress={() => navigation.goBack()}
-                        name="chevron-back-outline"
-                        size={35}
-                        color={COLORS.primary} />
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('poster-information', { posterDetail: item })}
-                        style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}
-                        key={item.id}
-                    >
-                        <Image
-                            style={styles.avatar}
-                            source={{ uri: item?.avatar }}
-                            key={item.id}
-                        />
-                        <Text style={{ fontSize: 24 }}>
-                            {item?.name}
-                        </Text>
-                    </TouchableOpacity>
+
                 </View>
                 <View style={styles.shadow}>
                     {/* Tạo Khoảng Trống */}
                 </View>
 
-                {/* Carousel */}
-                <View>
-                    <Carousel
-                        style={styles.carouselContainer}
-                        showsControl={false}
-                    >
-                        {carouselData.map((image) => (
-                            <View style={{ paddingHorizontal: 50 }}>
-                                <Image
-                                    style={styles.carouselImage}
-                                    source={{ uri: image?.image }}
-                                    key={image.id}
-                                />
-                            </View>
-
-                        ))}
-                    </Carousel>
-                </View>
-                {/* Body */}
-                <View style={styles.inforProduct}>
-                    <View>
-                        <Text
-                            style={{ fontSize: 20 }}
-                            numberOfLines={2}
-                            ellipsizeMode='tail'
-                        >
-                            {item.title}
-                        </Text>
-                        <Text style={styles.textCategory}>
-                            {item.category}
-                        </Text>
-
-                    </View>
-                    <View style={{ gap: 10 }}>
-                        <Text style={{ fontFamily: 'bold' }}>
-                            Kích Thước: <Text style={{ fontFamily: 'regular' }}>50cm x 18cm x 15cm</Text>
-                        </Text>
-                        <Text style={{ fontFamily: 'bold' }}>
-                            Màu Sắc: <Text style={{ fontFamily: 'regular' }}>Trắng</Text>
-                        </Text>
-                        <Text style={{ fontFamily: 'bold' }}>
-                            Chất Liệu: <Text style={{ fontFamily: 'regular' }}>Da cao cấp, vải cao cấp</Text>
-                        </Text>
-                    </View>
-                    <View style={{ marginVertical: 15 }}>
-                        <Text>
-                            Mô tả: Chúng tôi cam kết sẽ cẩn thận đóng gói và vận chuyển để sản phẩm không bị ướt hoặc bẩn
-                        </Text>
-                    </View>
-                </View>
-
-                {/* Icon: Time And More */}
-                <View style={styles.time}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Ionicons
-                            name="time-outline"
-                            size={24}
-                            color="black" />
-                        <Text style={{ marginLeft: 5 }}>16 giờ trước</Text>
-                    </View>
-                    <View style={styles.viewMoreIcon}>
-                        <Feather
-                            onPress={() => console.warn('More Function')}
-                            name="more-horizontal"
-                            size={24}
-                            color="black" />
-                    </View>
-                </View>
-                <View style={[styles.shadow, { marginTop: 10 }]}>
-                    {/* Tạo Khoảng Trống */}
-                </View>
-
-                {/* Comment */}
-                <View style={{ marginHorizontal: 15 }}>
-                    <View>
-                        <Text style={{ fontFamily: 'bold', marginVertical: 10 }}>
-                            Bình Luận
-                        </Text>
-                    </View>
-
-                    <View style={styles.commentContainer}>
-                        <View style={styles.commentBox}>
-                            <TextInput
-                                style={{ paddingHorizontal: 15 }}
-                                numberOfLines={2}
-                                multiline={true}
-                                placeholder="Hãy Nhập Bình Luận Vào Đây"
-                            />
-                        </View>
-                        <View style={styles.icon}>
-                            <View style={styles.iconHeart}>
-                                <Feather
-                                    name="heart"
-                                    size={26}
-                                    color="black" />
-                                <Text style={{ fontSize: 12 }}>
-                                    68
-                                </Text>
-                            </View>
-                            <View style={styles.iconHeart}>
-                                <Octicons
-                                    name="comment"
-                                    size={26}
-                                    color="black" />
-                                <Text style={{ fontSize: 12 }}>
-                                    10
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
-                </View>
             </View>
         </ScrollView>
-
     );
 }
 

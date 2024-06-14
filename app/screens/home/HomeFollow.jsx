@@ -13,20 +13,46 @@ import React, { useState, useRef, useContext, useEffect } from "react";
 import { COLORS, SIZES } from "../../constants/theme";
 import Carousel from "pinar";
 import Slider from './Slider';
-import Brands from './Brands';
-import ProductList from './ProductList';
+import { getAllPosts } from "../../api/post";
+import Post from "../post/Post";
+const HomeFollow = ({ navigation }) => {
 
-const HomeFollow = () => {
+
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await getAllPosts(); // Replace with your API URL
+                // console.log(response.data.result);
+                const products = response.data.result
+                setProducts(products);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, []);
 
     return (
-        <View>
+        <ScrollView style={styles.container}>
             <Slider />
-            <View style={styles.container}>
-                <Brands />
-                <ProductList />
+            <View style={styles.row}>
+                {
+                    products.map(product => (
+                        <Post key={product.id} product={product} />
+                    ))
+                }
+
+                {/* <Brands /> */}
+                {/* <ProductList /> */}
             </View>
 
-        </View>
+        </ScrollView>
     );
 }
 
@@ -35,9 +61,15 @@ export default HomeFollow;
 
 const styles = StyleSheet.create({
     container: {
-        marginVertical: 20,
-        marginRight: 20
+        width: '100%',
     },
-
-})
-
+    row: {
+        width: "98%",
+        justifyContent: "space-around",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        alignItems: "center",
+        gap: 5,
+        marginHorizontal: "auto",
+    }
+});

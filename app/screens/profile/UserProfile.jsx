@@ -14,7 +14,7 @@ import { Rating } from 'react-native-stock-star-rating'
 import { MaterialIcons } from '@expo/vector-icons';
 import styles from "../css/UserProfile.style";
 const UserProfile = ({ navigation, route }) => {
-  const user = route.params.result;
+  const user = route.params;
   // console.log(user);
 
   const profile =
@@ -29,8 +29,8 @@ const UserProfile = ({ navigation, route }) => {
             onPress={() => navigation.goBack()}
             name="chevron-back-outline"
             size={30}
-            color={COLORS.primary} />
-          <Text style={{ fontSize: 24, fontWeight: "bold", color: COLORS.primary }}>HỒ SƠ CỦA BẠN</Text>
+            color={COLORS.gray} />
+          <Text style={{ fontSize: 24, fontWeight: "bold", color: COLORS.black }}>THÔNG TIN CỦA BẠN</Text>
           <Feather
             onPress={() => console.warn('More Function')}
             name="more-horizontal"
@@ -52,7 +52,7 @@ const UserProfile = ({ navigation, route }) => {
             />
             <View style={{ gap: 5 }}>
               <Text style={{ fontSize: 18 }}>
-                {user.username}
+                {user?.result?.username}
               </Text>
               <View style={{ flexDirection: 'row' }}>
                 <Rating
@@ -71,7 +71,7 @@ const UserProfile = ({ navigation, route }) => {
           </View>
           <View>
             <TouchableOpacity
-              onPress={() => console.warn('Chỉnh sửa')}
+              onPress={() => navigation.navigate('update-profile', user)}
               style={styles.followBtn}
             >
               <Text style={{ margin: 5, color: COLORS.primary }}>Chỉnh sửa</Text>

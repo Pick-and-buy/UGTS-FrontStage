@@ -39,7 +39,7 @@ const Slider = () => {
     return (
         <TouchableOpacity
             onPress={() => console.warn('Click to open Event')}
-            style={{ marginVertical: 5 }}>
+            style={{ width: '98%', marginHorizontal: "auto",marginTop: "2%", marginBottom: "2%", }}>
             <Image
                 style={styles.image}
                 source={{ uri: 'https://bantersa.com/wp-content/uploads/2015/05/5-Beautiful-Websites.jpg' }}
@@ -67,7 +67,7 @@ export default Slider;
 
 const styles = StyleSheet.create({
     carouselContainer: {
-        width: Dimensions.get('window').width,
+        width: "100%",
         height: 200,
     },
     carouselImage: {
