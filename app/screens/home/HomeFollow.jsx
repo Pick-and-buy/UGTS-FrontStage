@@ -18,16 +18,17 @@ import Post from "../post/Post";
 const HomeFollow = ({ navigation }) => {
 
 
-    const [products, setProducts] = useState([]);
+    const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchProducts = async () => {
+        const fetchPosts = async () => {
             try {
                 const response = await getAllPosts(); // Replace with your API URL
                 // console.log(response.data.result);
-                const products = response.data.result
-                setProducts(products);
+                const posts = response.data.result
+                // console.log(response);
+                setPosts(posts);
             } catch (error) {
                 console.error(error);
             } finally {
@@ -35,7 +36,7 @@ const HomeFollow = ({ navigation }) => {
             }
         };
 
-        fetchProducts();
+        fetchPosts();
     }, []);
 
     return (
@@ -43,8 +44,8 @@ const HomeFollow = ({ navigation }) => {
             <Slider />
             <View style={styles.row}>
                 {
-                    products.map(product => (
-                        <Post key={product.id} product={product} />
+                    posts.map(post => (
+                        <Post key={post.id} post={post} />
                     ))
                 }
 

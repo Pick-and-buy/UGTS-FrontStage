@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const image = { uri: "https://docs.expo.dev/static/images/tutorial/background-image.png" };
 
-const Post = ({ product }) => {
+const Post = ({ post }) => {
     // console.log(product.product.images[0].imageUrl);
     // console.log(product.id);
     const navigation = useNavigation();
@@ -14,12 +14,12 @@ const Post = ({ product }) => {
         <View style={styles.container}>
             <GestureHandlerRootView>
                 <TouchableOpacity style={styles.wrapper}
-                    onPress={() => navigation.navigate('post-details', product.id)}
+                    onPress={() => navigation.navigate('post-details', post.id)}
                 >
-                    <ImageBackground source={{ uri: product?.product?.images[0].imageUrl }} style={styles.image}>
+                    <ImageBackground source={{ uri: post?.product?.images[1]?.imageUrl }} style={styles.image}>
                         <Text style={styles.text}>
                             <Text style={styles.currency}>đ</Text>
-                        {product?.product?.price}</Text>
+                            {post?.product?.price}</Text>
                     </ImageBackground>
                 </TouchableOpacity>
             </GestureHandlerRootView>
