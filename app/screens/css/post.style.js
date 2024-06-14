@@ -28,6 +28,10 @@ const styles = StyleSheet.create({
         bottom: 4,
         left: 6
     },
+    currency: {
+        textDecorationLine: 'underline',
+        fontSize: 14,
+    },
 });
 
 export default styles;

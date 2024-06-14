@@ -27,3 +27,29 @@ export const updateProfile = async (userId, profile) => {
     throw error;
   }
 };
+
+export const likePost = async (userId, postId) => {
+  try {
+    const response = await axiosInstance.post(`/like`, {
+      userId: userId,
+      postId: postId
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error liking the post', error);
+    throw error;
+  }
+};
+
+export const unlikePost = async (userId, postId) => {
+  try {
+    const response = await axiosInstance.delete(`/like`, {
+      userId: userId,
+      postId: postId
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error unliking the post', error);
+    throw error;
+  }
+};

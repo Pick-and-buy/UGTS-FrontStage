@@ -33,17 +33,17 @@ const CreatePostDetail = () => {
 
   const fetchAllBrand = async () => {
     setLoader(true);
-    const res = await callFetchListBrands();
-    console.log(res.data.result);
-    if (res && res.data && res.data.result) {
-      const brand = res.data.result.map(item => {
-        return {
-          label: item,
-          value: item
-        }
-      })
-      setListBrandName(brand)
-    }
+    // const res = await callFetchListBrands();
+    // console.log(res.data.result);
+    // if (res && res.data && res.data.result) {
+    //   // const brand = res.data.result.map(item => {
+    //   //   return {
+    //   //     label: item,
+    //   //     value: item
+    //   //   }
+    //   // })
+    //   // setListBrandName(brand)
+    // }
     setLoader(false);
   }
 
@@ -51,8 +51,8 @@ const CreatePostDetail = () => {
   const validationSchema = Yup.object().shape({
     brandName: Yup.string().required('Please select an option'),
     price: Yup.string().matches(/^\d{5}$/, 'Price có ít nhất 5 số').required('Vui lòng nhập Giá Tiền').typeError("Có vẻ như đó không phải là Giá Tiền"),
-    fee: Yup.string().matches(/^\d{5}$/, 'Price có ít nhất 5 số').required('Vui lòng nhập Tiền Hoa Hồng').typeError("Có vẻ như đó không phải là Tiền Hoa Hồng"),
-    saleProfit: Yup.string().matches(/^\d{5}$/, 'Price có ít nhất 5 số').required('Vui lòng nhập Lợi Nhuận').typeError("Có vẻ như đó không phải là Giá Tiền"),
+    //fee: Yup.string().matches(/^\d{5}$/, 'Price có ít nhất 5 số').required('Vui lòng nhập Tiền Hoa Hồng').typeError("Có vẻ như đó không phải là Tiền Hoa Hồng"),
+    //saleProfit: Yup.string().matches(/^\d{5}$/, 'Price có ít nhất 5 số').required('Vui lòng nhập Lợi Nhuận').typeError("Có vẻ như đó không phải là Giá Tiền"),
   });
 
   const dataBrandName = [
@@ -203,7 +203,7 @@ const CreatePostDetail = () => {
                 <Text style={styles.label}>Nhãn Hàng</Text>
                 <Dropdown
                   style={styles.dropdown}
-                  data={listBrandName}
+                  data={dataBrandName}
                   labelField="label"
                   valueField="value"
                   placeholder="Chọn Nhãn Hàng"

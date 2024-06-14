@@ -62,6 +62,7 @@ export default HomeFollow;
 const styles = StyleSheet.create({
     container: {
         width: '100%',
+        marginBottom: "8%"
     },
     row: {
         width: "98%",
@@ -71,5 +72,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         gap: 5,
         marginHorizontal: "auto",
+        marginTop: "-4%",
     }
 });
