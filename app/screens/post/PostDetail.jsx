@@ -35,8 +35,8 @@ const PostDetail = ({ navigation, route }) => {
 
     useEffect(() => {
         fetchPostDetails();
-        fetchComments();
-        getUserData();
+        // fetchComments();
+        // getUserData();
     }, []);
 
     const getUserData = async () => {

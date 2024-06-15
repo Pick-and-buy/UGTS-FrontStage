@@ -4,6 +4,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const axiosInstance = axios.create({
     baseURL: 'http://10.0.2.2:8080/api/v1/', // replace with your API base URL
+    // headers: {
+    //     'Content-Type': 'application/json',
+    // }
 });
 
 axiosInstance.interceptors.request.use(
@@ -24,17 +27,27 @@ axiosInstance.interceptors.response.use(
         return response;
     },
     async (error) => {
-        const originalRequest = error.config;
-        if (error.response.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true;
-            const refreshToken = await AsyncStorage.getItem('refreshToken');
-            const response = await axiosInstance.post('/auth/refresh-token', { token: refreshToken });
-            const { token } = response.data;
-            await AsyncStorage.setItem('token', token);
-            axiosInstance.defaults.headers.Authorization = `Bearer ${token}`;
-            originalRequest.headers.Authorization = `Bearer ${token}`;
-            return axiosInstance(originalRequest);
+        const originalConfig = error.config;
+        if (originalConfig.baseURL !== "/auth/login" && err.response) {
+            if (error.response.status === 401 && !originalConfig._retry) {
+                originalConfig._retry = true;
+
+                try {
+                    const response = await instance.post("/auth/refresh-token'", {
+                        refreshToken: AsyncStorage.getItem('token')
+                    });
+
+                    const { accessToken } = response.data;
+                    AsyncStorage.setItem('token', accessToken);
+
+                    return instance(originalConfig);
+                } catch (error) {
+                    return Promise.reject(error);
+                }
+            }
+
         }
+
         return Promise.reject(error);
     }
 );
