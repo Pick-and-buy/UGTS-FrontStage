@@ -20,6 +20,17 @@ export const getPostDetails = async (id) => {
   }
 }
 
+
+export const getComments = async (id) => {
+  try {
+    const response = axiosInstance.get(`/comments/${id}`)
+    return response;
+  } catch (error) {
+    console.error('Error Get Post Details:', error);
+    throw error;
+  }
+}
+
 // export const callFetchPostDetails = (id) => {
 //   return axiosInstance.get(`/posts/${id}`)
 // }

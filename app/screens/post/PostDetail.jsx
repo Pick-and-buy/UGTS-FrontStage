@@ -5,42 +5,43 @@ import {
     View,
     TouchableOpacity,
     Image,
-    FlatList,
-    Dimensions,
     Pressable,
     SafeAreaView,
+    TextInput,
 } from "react-native";
-import { Ionicons, Feather, AntDesign, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
 import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
 import Carousel from "../../components/carousel/Carousel";
-import { getPostDetails } from "../../api/post";
+import { getPostDetails, getComments, postComment } from "../../api/post";
 import styles from "../css/postDetails.style";
-import { Rating } from 'react-native-stock-star-rating'
+import { Rating } from 'react-native-stock-star-rating';
 import { getUserByToken, likePost, unlikePost } from "../../api/user";
-const profile =
-    "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
+
+const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
 const PostDetail = ({ navigation, route }) => {
     const postId = route.params;
     const [postDetails, setPostDetails] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    // State to manage the like status
     const [isLiked, setIsLiked] = useState(false);
     const [userId, setUserId] = useState(null);
-    // State to manage description text visibility
     const [showFullDescription, setShowFullDescription] = useState(false);
-
+    const [comments, setComments] = useState([]);
+    const [showAllComments, setShowAllComments] = useState(false);
+    const [newComment, setNewComment] = useState("");
+    console.log(postId);
     const data = postDetails?.product?.images || [];
-    // console.log(postId);
+
     useEffect(() => {
         fetchPostDetails();
-        getUserData();
+        // fetchComments();
+        // getUserData();
     }, []);
 
     const getUserData = async () => {
         try {
-            const userInfo = await getUserByToken(); // Retrieve user data from the API
+            const userInfo = await getUserByToken();
             setUserId(userInfo.result.id);
         } catch (error) {
             console.error("Error fetching user data:", error);
@@ -56,6 +57,16 @@ const PostDetail = ({ navigation, route }) => {
             console.error(error);
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const fetchComments = async () => {
+        try {
+            const response = await getComments(postId);
+            setComments(response.data);
+            console.log(response.data);
+        } catch (error) {
+            console.error("Error fetching comments:", error);
         }
     };
 
@@ -77,12 +88,27 @@ const PostDetail = ({ navigation, route }) => {
         }
     };
 
+    const handleCommentSubmit = async () => {
+        if (!userId || !newComment.trim()) {
+            console.error("User is not authenticated or comment is empty");
+            return;
+        }
+
+        try {
+            await postComment(userId, postId, newComment);
+            setNewComment("");
+            fetchComments();
+        } catch (error) {
+            console.error("Error posting comment", error);
+        }
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.wrapper}>
                 <View style={styles.header}>
                     <Feather name="chevron-left" size={30} color={COLORS.primary} onPress={() => navigation.goBack()} />
-                    <Text numberOfLines={1} style={styles.headerText}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate nisi quibusdam voluptatem consectetur sit officia odit vero eum modi, repellendus reiciendis maxime voluptatibus inventore vitae provident molestias culpa nam necessitatibus.</Text>
+                    <Text numberOfLines={1} style={styles.headerText}>{postDetails?.title}</Text>
                     <AntDesign name="sharealt" size={25} color={COLORS.primary} />
                 </View>
                 <ScrollView contentContainerStyle={styles.contentContainer}
@@ -101,12 +127,17 @@ const PostDetail = ({ navigation, route }) => {
                         <View style={styles.label}>
                             <Text style={styles.keyword}>Túi xách</Text>
 
-                            {postDetails?.product?.isVerify &&
+                            {postDetails?.product?.isVerify ? (
                                 <View style={styles.verified}>
                                     <MaterialIcons name="verified" size={14} color="green" />
-                                    <Text style={styles.verifiedText}>Hàng chính hãng</Text>
+                                    <Text style={styles.verifiedText}>Đã được xác minh</Text>
                                 </View>
-                            }
+                            ) : (
+                                <View style={styles.verified}>
+                                    <Entypo name="circle-with-cross" size={15} color="red" />
+                                    <Text style={styles.verifiedText}>Chưa được xác minh</Text>
+                                </View>
+                            )}
 
                         </View>
                         <Text style={styles.labelTransport}>Miễn phí vận chuyển</Text>
@@ -128,7 +159,33 @@ const PostDetail = ({ navigation, route }) => {
                     </View>
                     <View style={styles.divider} />
                     <View style={styles.comment}>
-                        <Text>Comment in here</Text>
+                        <View style={styles.commentInputContainer}>
+                            <TextInput
+                                style={styles.commentInput}
+                                value={newComment}
+                                onChangeText={setNewComment}
+                                placeholder="Add a comment"
+                            />
+                            <Pressable onPress={handleCommentSubmit}>
+                                <MaterialIcons name="send" size={24} color="black" />
+                            </Pressable>
+                        </View>
+                        {/* <View style={styles.divider} /> */}
+                        {comments && comments.slice(0, showAllComments ? comments.length : 2).map((comment, index) => (
+                            <View key={index} style={styles.commentContainer}>
+                                <Text style={styles.commentText}>
+                                    <Text style={{ fontWeight: "bold" }}>
+                                        {comment.username}
+                                    </Text>
+                                    : {comment.commentContent}
+                                </Text>
+                            </View>
+                        ))}
+                        {comments && comments.length > 2 && (
+                            <Text style={styles.seeMore} onPress={() => setShowAllComments(!showAllComments)}>
+                                {showAllComments ? 'Hide comments' : 'See all comments'}
+                            </Text>
+                        )}
                     </View>
                     <View style={styles.divider} />
                     <View style={styles.description}>
@@ -158,7 +215,6 @@ const PostDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                     <View style={styles.dividerLight} />
-
 
                     <View style={styles.details}>
                         <View style={styles.left}>
@@ -190,9 +246,6 @@ const PostDetail = ({ navigation, route }) => {
                     </View>
                     <View style={styles.dividerLight} />
 
-
-
-                    {/* Personal Information */}
                     <TouchableOpacity style={styles.personalContainer}>
                         <View style={[styles.detailContainer, { alignItems: 'flex-start' }]}>
                             <Image
@@ -200,29 +253,23 @@ const PostDetail = ({ navigation, route }) => {
                                 source={{ uri: profile }}
                             />
                             <View style={{}}>
-                                <Text style={{ fontSize: 18 }}>
-                                    Tên ở đây
-                                </Text>
+                                <Text style={{ fontSize: 18 }}>Tên ở đây</Text>
                                 <View style={{ flexDirection: 'row', justifyContent: "center", alignItems: 'center' }}>
                                     <Rating
                                         stars={4.7}
                                         maxStars={5}
                                         size={16}
-
                                     />
                                     <Text style={{ fontSize: 12, marginLeft: 4 }}>(100)</Text>
-
                                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 40 }}>
                                         <MaterialIcons name="verified-user" size={12} color="#699BF7" style={{ marginTop: 0, marginLeft: 0 }} />
                                         <Text style={{ fontSize: 12 }}>Tài khoản đã xác minh</Text>
                                     </View>
                                 </View>
-
                             </View>
                         </View>
                     </TouchableOpacity>
 
-                    {/* Post recommend */}
                     <View style={styles.recommended}>
                         <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
                             <MaterialIcons name="explore" size={18} color="gray" />
@@ -234,7 +281,6 @@ const PostDetail = ({ navigation, route }) => {
                             </Text>
                         </View>
                     </View>
-
                 </ScrollView>
             </View>
         </SafeAreaView>

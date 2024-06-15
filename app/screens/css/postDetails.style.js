@@ -22,8 +22,8 @@ const styles = StyleSheet.create({
     headerText: {
         color: COLORS.black,
         fontSize: 20,
-        width:"65%",
-        marginBottom:4
+        width: "65%",
+        marginBottom: 4
     },
     contentContainer: {
         paddingBottom: "10%",
@@ -129,14 +129,14 @@ const styles = StyleSheet.create({
     descriptionText: {
         marginBottom: 10,
     },
-    seeMore:{
+    seeMore: {
         borderColor: COLORS.gray,
         borderWidth: 1,
-        width:"25%",
+        width: "25%",
         textAlign: "center",
-        marginHorizontal:"auto",
-        borderRadius:16,
-        padding:2
+        marginHorizontal: "auto",
+        borderRadius: 16,
+        padding: 2
 
     },
     createdTime: {
@@ -191,9 +191,37 @@ const styles = StyleSheet.create({
     recommended: {
         width: "96%",
         marginHorizontal: "auto",
-        marginVertical:20
+        marginVertical: 20
 
-    }
+    },
+
+    commentInputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderColor: COLORS.gray,
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
+        marginBottom: 10,
+    },
+    commentInput: {
+        flex: 1,
+        fontSize: 16,
+    },
+    commentContainer: {
+        padding: 10,
+        // borderBottomColor: COLORS.lightGray,
+        // borderBottomWidth: 1,
+    },
+    commentText: {
+        fontSize: 12,
+    },
+    seeMore: {
+        color: COLORS.primary,
+        textAlign: 'center',
+        justifyContent: 'center',
+        marginTop: 5,
+    },
 });
 
 export default styles;
