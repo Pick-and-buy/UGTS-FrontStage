@@ -17,6 +17,7 @@ import { getPostDetails, getComments, postComment } from "../../api/post";
 import styles from "../css/postDetails.style";
 import { Rating } from 'react-native-stock-star-rating';
 import { getUserByToken, likePost, unlikePost } from "../../api/user";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
@@ -26,6 +27,7 @@ const PostDetail = ({ navigation, route }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isLiked, setIsLiked] = useState(false);
     const [userId, setUserId] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [showFullDescription, setShowFullDescription] = useState(false);
     const [comments, setComments] = useState([]);
     const [showAllComments, setShowAllComments] = useState(false);
@@ -35,11 +37,28 @@ const PostDetail = ({ navigation, route }) => {
 
     useEffect(() => {
         fetchPostDetails();
-        // fetchComments();
-        // getUserData();
+        fetchComments();
+        checkAuthentication();
+        getUserData();
     }, []);
 
+    // Function to determine authentication status
+    const checkAuthentication = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            setIsAuthenticated(!!token); // Boolean check for authentication
+        } catch (error) {
+            console.error("Error checking authentication status:", error);
+        }
+    };
+
+    // Function to fetch user data if authenticated
     const getUserData = async () => {
+        if (!isAuthenticated) {
+            // console.error("User is not authenticated!");
+            return;
+        }
+
         try {
             const userInfo = await getUserByToken();
             setUserId(userInfo.result.id);
@@ -64,15 +83,34 @@ const PostDetail = ({ navigation, route }) => {
         try {
             const response = await getComments(postId);
             setComments(response.data);
-            console.log(response.data);
+            // console.log(response.data);
         } catch (error) {
             console.error("Error fetching comments:", error);
         }
     };
 
+    // Function to handle comment submission
+    const handleCommentSubmit = async () => {
+        if (!newComment.trim()) {
+            alert("Comment is empty");
+        } else if (!isAuthenticated) {
+            alert("User is not authenticated!");
+        } else {
+            try {
+                await postComment(userId, postId, newComment);
+                setNewComment(""); // Clear the input field
+                fetchComments(); // Fetch updated comments list
+            } catch (error) {
+                console.error("Error posting comment", error);
+            }
+        }
+
+
+
+    };
     const handleLike = async () => {
         if (!userId) {
-            console.error("User is not authenticated");
+            alert("User is not authenticated");
             return;
         }
 
@@ -88,20 +126,7 @@ const PostDetail = ({ navigation, route }) => {
         }
     };
 
-    const handleCommentSubmit = async () => {
-        if (!userId || !newComment.trim()) {
-            console.error("User is not authenticated or comment is empty");
-            return;
-        }
 
-        try {
-            await postComment(userId, postId, newComment);
-            setNewComment("");
-            fetchComments();
-        } catch (error) {
-            console.error("Error posting comment", error);
-        }
-    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -355,7 +380,7 @@ const PostDetail = ({ navigation, route }) => {
                                 source={{ uri: profile }}
                             />
                             <View style={{}}>
-                                <Text style={{ fontSize: 18 }}>Tên ở đây</Text>
+                                <Text style={{ fontSize: 18 }}>{postDetails?.user?.username}</Text>
                                 <View style={{ flexDirection: 'row', justifyContent: "center", alignItems: 'center' }}>
                                     <Rating
                                         stars={4.7}
