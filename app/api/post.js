@@ -23,18 +23,24 @@ export const getPostDetails = async (id) => {
 
 export const getComments = async (id) => {
   try {
-    const response = axiosInstance.get(`/comments/${id}`)
+    const response = axiosInstance.get(`/comments/${id}`);
+    return response;
+  } catch (error) {
+    logger.error('Error Get Comments:', error);
+    throw error;
+  }
+}
+
+export const postComment = async (userId,postId,commentContent) => {
+  try {
+    const response = axiosInstance.post("/comments",{
+      userId: userId,
+      postId: postId,
+      commentContent: commentContent
+    })
     return response;
   } catch (error) {
     console.error('Error Get Post Details:', error);
     throw error;
   }
-}
-
-// export const callFetchPostDetails = (id) => {
-//   return axiosInstance.get(`/posts/${id}`)
-// }
-
-export const callFetchPostByBrandName = (query) => {
-  return axiosInstance.get(`/posts/brands?${query}`)
 }

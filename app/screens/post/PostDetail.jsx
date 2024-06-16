@@ -17,6 +17,7 @@ import { getPostDetails, getComments, postComment } from "../../api/post";
 import styles from "../css/postDetails.style";
 import { Rating } from 'react-native-stock-star-rating';
 import { getUserByToken, likePost, unlikePost } from "../../api/user";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
@@ -26,6 +27,7 @@ const PostDetail = ({ navigation, route }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isLiked, setIsLiked] = useState(false);
     const [userId, setUserId] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [showFullDescription, setShowFullDescription] = useState(false);
     const [comments, setComments] = useState([]);
     const [showAllComments, setShowAllComments] = useState(false);
@@ -35,11 +37,28 @@ const PostDetail = ({ navigation, route }) => {
 
     useEffect(() => {
         fetchPostDetails();
-        // fetchComments();
-        // getUserData();
+        fetchComments();
+        checkAuthentication();
+        getUserData();
     }, []);
 
+    // Function to determine authentication status
+    const checkAuthentication = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            setIsAuthenticated(!!token); // Boolean check for authentication
+        } catch (error) {
+            console.error("Error checking authentication status:", error);
+        }
+    };
+
+    // Function to fetch user data if authenticated
     const getUserData = async () => {
+        if (!isAuthenticated) {
+            // console.error("User is not authenticated!");
+            return;
+        }
+
         try {
             const userInfo = await getUserByToken();
             setUserId(userInfo.result.id);
@@ -64,15 +83,34 @@ const PostDetail = ({ navigation, route }) => {
         try {
             const response = await getComments(postId);
             setComments(response.data);
-            console.log(response.data);
+            // console.log(response.data);
         } catch (error) {
             console.error("Error fetching comments:", error);
         }
     };
 
+    // Function to handle comment submission
+    const handleCommentSubmit = async () => {
+        if (!newComment.trim()) {
+            alert("Comment is empty");
+        } else if (!isAuthenticated) {
+            alert("User is not authenticated!");
+        } else {
+            try {
+                await postComment(userId, postId, newComment);
+                setNewComment(""); // Clear the input field
+                fetchComments(); // Fetch updated comments list
+            } catch (error) {
+                console.error("Error posting comment", error);
+            }
+        }
+
+
+
+    };
     const handleLike = async () => {
         if (!userId) {
-            console.error("User is not authenticated");
+            alert("User is not authenticated");
             return;
         }
 
@@ -88,27 +126,14 @@ const PostDetail = ({ navigation, route }) => {
         }
     };
 
-    const handleCommentSubmit = async () => {
-        if (!userId || !newComment.trim()) {
-            console.error("User is not authenticated or comment is empty");
-            return;
-        }
 
-        try {
-            await postComment(userId, postId, newComment);
-            setNewComment("");
-            fetchComments();
-        } catch (error) {
-            console.error("Error posting comment", error);
-        }
-    };
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.wrapper}>
                 <View style={styles.header}>
                     <Feather name="chevron-left" size={30} color={COLORS.primary} onPress={() => navigation.goBack()} />
-                    <Text numberOfLines={1} style={styles.headerText}>{postDetails?.title}</Text>
+                    <Text numberOfLines={1} style={styles.headerText}>{postDetails?.product?.name}</Text>
                     <AntDesign name="sharealt" size={25} color={COLORS.primary} />
                 </View>
                 <ScrollView contentContainerStyle={styles.contentContainer}
@@ -205,27 +230,48 @@ const PostDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                     <View style={styles.divider} />
-
+                    {/* Thương hiệu */}
                     <View style={[styles.details, { marginTop: 4 }]}>
                         <View style={styles.left}>
                             <Text>Thương hiệu</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.brand?.name}</Text>
+                            <Text style={styles.rightText}>{postDetails?.product?.brand?.name.toLowerCase() === "none" ? "N/A" : postDetails?.product?.brand?.name}</Text>
                         </View>
                     </View>
                     <View style={styles.dividerLight} />
-
+                    {/* Tình trạng */}
                     <View style={styles.details}>
                         <View style={styles.left}>
                             <Text>Tình trạng</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.condition}</Text>
+                            <Text style={styles.rightText}>{postDetails?.product?.condition.toLowerCase() === "none" ? "N/A" : postDetails?.product?.condition}</Text>
                         </View>
                     </View>
                     <View style={styles.dividerLight} />
 
+                    {/* Size */}
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Size</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.size.toLowerCase() === "none" ? "N/A" : postDetails?.product?.size} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+                    {/* Màu sắc */}
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Màu sắc</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.color.toLowerCase() === "none" ? "N/A" : postDetails?.product?.color} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+                    {/* Kích thước */}
                     <View style={styles.details}>
                         <View style={styles.left}>
                             <Text>Kích thước</Text>
@@ -235,17 +281,98 @@ const PostDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                     <View style={styles.dividerLight} />
-
+                    {/* Năm sản xuất */}
                     <View style={styles.details}>
                         <View style={styles.left}>
                             <Text>Năm sản xuất</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.manufactureYear} </Text>
+                            <Text style={styles.rightText}>{postDetails?.product?.manufactureYear.toLowerCase() === "none" ? "N/A" : postDetails?.product?.manufactureYear} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+                    {/* Reference Code */}
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Reference Code</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.referenceCode.toLowerCase() === "none" ? "N/A" : postDetails?.product?.referenceCode} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+                    {/* Exterior Material */}
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Chất liệu bên ngoài</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.exteriorMaterial.toLowerCase() === "none" ? " N/A" : postDetails?.product?.exteriorMaterial} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+                    {/* Interior Material */}
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Chất liệu bên trong</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.interiorMaterial.toLowerCase() === "none" ? " N/A" : postDetails?.product?.interiorMaterial} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+                    {/* Accessories */}
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Phụ kiện</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.accessories.toLowerCase() === "none" ? " N/A" : postDetails?.product?.accessories} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+                    {/* Date Code */}
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Date Code</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.dateCode.toLowerCase() === "none" ? " N/A" : postDetails?.product?.dateCode} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+                    {/* Serial Number */}
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Serial Number</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.serialNumber.toLowerCase() === "none" ? " N/A" : postDetails?.product?.serialNumber} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+                    {/* Purchased Place */}
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Purchased Place</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.purchasedPlace.toLowerCase() === "none" ? " N/A" : postDetails?.product?.purchasedPlace} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+                    {/* story */}
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Story</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.story.toLowerCase() === "none" ? " N/A" : postDetails?.product?.story} </Text>
                         </View>
                     </View>
                     <View style={styles.dividerLight} />
 
+                    {/* Profile seller */}
                     <TouchableOpacity style={styles.personalContainer}>
                         <View style={[styles.detailContainer, { alignItems: 'flex-start' }]}>
                             <Image
@@ -253,7 +380,7 @@ const PostDetail = ({ navigation, route }) => {
                                 source={{ uri: profile }}
                             />
                             <View style={{}}>
-                                <Text style={{ fontSize: 18 }}>Tên ở đây</Text>
+                                <Text style={{ fontSize: 18 }}>{postDetails?.user?.username}</Text>
                                 <View style={{ flexDirection: 'row', justifyContent: "center", alignItems: 'center' }}>
                                     <Rating
                                         stars={4.7}

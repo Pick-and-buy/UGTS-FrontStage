@@ -45,9 +45,10 @@ const styles = StyleSheet.create({
     },
     informationContainer: {
         width: "96%",
-        height: "22%",
+        // height: "16%",
         marginHorizontal: "auto",
         backgroundColor: COLORS.white,
+        marginVertical: 10,
         // top: "-12%",
     },
     label: {
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
     price: {
         fontSize: 35,
         color: COLORS.primary,
-        marginVertical: 10,
+        marginBottom: 10,
     },
     wallet: {
         flexDirection: 'row',
