@@ -93,8 +93,10 @@ const PostDetail = ({ navigation, route }) => {
     const handleCommentSubmit = async () => {
         if (!newComment.trim()) {
             alert("Comment is empty");
+            return;
         } else if (!isAuthenticated) {
             alert("User is not authenticated!");
+            return;
         } else {
             try {
                 await postComment(userId, postId, newComment);
