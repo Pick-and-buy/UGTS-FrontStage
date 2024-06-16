@@ -108,7 +108,7 @@ const PostDetail = ({ navigation, route }) => {
             <View style={styles.wrapper}>
                 <View style={styles.header}>
                     <Feather name="chevron-left" size={30} color={COLORS.primary} onPress={() => navigation.goBack()} />
-                    <Text numberOfLines={1} style={styles.headerText}>{postDetails?.title}</Text>
+                    <Text numberOfLines={1} style={styles.headerText}>{postDetails?.product?.name}</Text>
                     <AntDesign name="sharealt" size={25} color={COLORS.primary} />
                 </View>
                 <ScrollView contentContainerStyle={styles.contentContainer}
@@ -205,27 +205,48 @@ const PostDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                     <View style={styles.divider} />
-
+                    {/* Thương hiệu */}
                     <View style={[styles.details, { marginTop: 4 }]}>
                         <View style={styles.left}>
                             <Text>Thương hiệu</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.brand?.name}</Text>
+                            <Text style={styles.rightText}>{postDetails?.product?.brand?.name.toLowerCase() === "none" ? "N/A" : postDetails?.product?.brand?.name}</Text>
                         </View>
                     </View>
                     <View style={styles.dividerLight} />
-
+                    {/* Tình trạng */}
                     <View style={styles.details}>
                         <View style={styles.left}>
                             <Text>Tình trạng</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.condition}</Text>
+                            <Text style={styles.rightText}>{postDetails?.product?.condition.toLowerCase() === "none" ? "N/A" : postDetails?.product?.condition}</Text>
                         </View>
                     </View>
                     <View style={styles.dividerLight} />
 
+                    {/* Size */}
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Size</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.size.toLowerCase() === "none" ? "N/A" : postDetails?.product?.size} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+                    {/* Màu sắc */}
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Màu sắc</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.color.toLowerCase() === "none" ? "N/A" : postDetails?.product?.color} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+                    {/* Kích thước */}
                     <View style={styles.details}>
                         <View style={styles.left}>
                             <Text>Kích thước</Text>
@@ -235,17 +256,98 @@ const PostDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                     <View style={styles.dividerLight} />
-
+                    {/* Năm sản xuất */}
                     <View style={styles.details}>
                         <View style={styles.left}>
                             <Text>Năm sản xuất</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.manufactureYear} </Text>
+                            <Text style={styles.rightText}>{postDetails?.product?.manufactureYear.toLowerCase() === "none" ? "N/A" : postDetails?.product?.manufactureYear} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+                    {/* Reference Code */}
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Reference Code</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.referenceCode.toLowerCase() === "none" ? "N/A" : postDetails?.product?.referenceCode} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+                    {/* Exterior Material */}
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Chất liệu bên ngoài</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.exteriorMaterial.toLowerCase() === "none" ? " N/A" : postDetails?.product?.exteriorMaterial} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+                    {/* Interior Material */}
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Chất liệu bên trong</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.interiorMaterial.toLowerCase() === "none" ? " N/A" : postDetails?.product?.interiorMaterial} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+                    {/* Accessories */}
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Phụ kiện</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.accessories.toLowerCase() === "none" ? " N/A" : postDetails?.product?.accessories} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+                    {/* Date Code */}
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Date Code</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.dateCode.toLowerCase() === "none" ? " N/A" : postDetails?.product?.dateCode} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+                    {/* Serial Number */}
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Serial Number</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.serialNumber.toLowerCase() === "none" ? " N/A" : postDetails?.product?.serialNumber} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+                    {/* Purchased Place */}
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Purchased Place</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.purchasedPlace.toLowerCase() === "none" ? " N/A" : postDetails?.product?.purchasedPlace} </Text>
+                        </View>
+                    </View>
+                    <View style={styles.dividerLight} />
+                    {/* story */}
+                    <View style={styles.details}>
+                        <View style={styles.left}>
+                            <Text>Story</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{postDetails?.product?.story.toLowerCase() === "none" ? " N/A" : postDetails?.product?.story} </Text>
                         </View>
                     </View>
                     <View style={styles.dividerLight} />
 
+                    {/* Profile seller */}
                     <TouchableOpacity style={styles.personalContainer}>
                         <View style={[styles.detailContainer, { alignItems: 'flex-start' }]}>
                             <Image

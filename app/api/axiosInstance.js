@@ -33,7 +33,7 @@ axiosInstance.interceptors.response.use(
                 originalConfig._retry = true;
 
                 try {
-                    const response = await instance.post("/auth/refresh-token'", {
+                    const response = await instance.post("/auth/refresh-token", {
                         refreshToken: AsyncStorage.getItem('token')
                     });
 
