@@ -12,29 +12,8 @@ import Carousel from "pinar";
 import { getAllNews } from "../../api/news";
 
 const Slider = ({ navigation }) => {
-    const [slider, setSlider] = useState([]); //call API to fetch slider data
+    const [slider, setSlider] = useState([]);
     const [news, setNews] = useState([]);
-
-
-    // const data = [
-    //     {
-    //         id: 1,
-    //         image: 'https://bantersa.com/wp-content/uploads/2015/05/5-Beautiful-Websites.jpg'
-    //     },
-    //     {
-    //         id: 2,
-    //         image: 'https://soliloquywp.com/wp-content/uploads/2016/09/How-to-Add-a-Homepage-Slider-in-WordPress.png'
-    //     },
-    //     {
-    //         id: 3,
-    //         image: 'https://www.searchenginejournal.com/wp-content/uploads/2019/10/25-of-the-best-examples-of-home-pages-5dc504205de2e.png'
-    //     },
-    //     {
-    //         id: 4,
-    //         image: 'https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/homepage-web-design.jpg?width=595&height=400&name=homepage-web-design.jpg'
-    //     }
-    // ];
-
 
     useEffect(() => {
         fetchAllNews();
@@ -45,22 +24,19 @@ const Slider = ({ navigation }) => {
             const response = await getAllNews();
             setNews(response.data.result);
             fetchSlider(response.data.result);
-            // console.log(response.data.result);
         } catch (error) {
             console.error("Error fetching news:", error);
         }
     };
 
-
     const fetchSlider = (data) => {
         const extracted = data.map(item => ({
             id: item.id,
-            banner: item.banner
+            banner: item.banner,
+            title: item.title
         }));
         setSlider(extracted);
     };
-    // console.log(slider);
-
 
     return (
         <View
@@ -71,7 +47,7 @@ const Slider = ({ navigation }) => {
                 showsControls={false}
                 showsDots={true}
                 autoplay={true}
-                autoplayInterval={3000} // Slide interval in milliseconds
+                autoplayInterval={3000}
                 loop={true}
             >
                 {slider.map((image) => (
@@ -84,6 +60,15 @@ const Slider = ({ navigation }) => {
                             style={styles.carouselImage}
                             source={{ uri: image.banner }}
                         />
+                        <View style={styles.textContainer}>
+                            <Text style={styles.text}>{image.title}</Text>
+                            <TouchableOpacity
+                                style={styles.viewMoreButton}
+                                onPress={() => navigation.navigate('news-navigation', image.id)}
+                            >
+                                <Text style={styles.viewMoreText}>View more</Text>
+                            </TouchableOpacity>
+                        </View>
                     </TouchableOpacity>
                 ))}
             </Carousel>
@@ -101,6 +86,7 @@ const styles = StyleSheet.create({
     carouselItem: {
         justifyContent: 'center',
         alignItems: 'center',
+        position: 'relative'
     },
     carouselImage: {
         width: '98%',
@@ -108,6 +94,37 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         resizeMode: "cover",
         marginHorizontal: "auto"
+    },
+    textContainer: {
+        position: 'absolute',
+        bottom: 10,
+        left: 10,
+        right: 10,
+        alignItems: 'center',
+    },
+    text: {
+        color: COLORS.white,
+        fontSize: 18,
+        textAlign: 'center',
+        marginBottom: "10%",
+        // backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        // borderRadius: 10,
+        // padding: 5,
+    },
+    viewMoreButton: {
+        marginBottom: 15,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        backgroundColor: COLORS.primary,
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    viewMoreText: {
+        color: 'white',
+        fontSize: 14,
+        textAlign: 'center',
+        // textDecorationLine: 'underline',
     },
     image: {
         height: 150,
