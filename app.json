@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -42,7 +44,14 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         }
-      ]
+      ],
+      "expo-font",
+      [
+          "expo-font",
+          {
+            "fonts": ["node_modules/@expo-google-fonts/inter/Inter_100Thin.ttf"]
+          }
+        ]
     ]
   }
 }

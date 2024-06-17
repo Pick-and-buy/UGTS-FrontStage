@@ -32,6 +32,8 @@ import ChangePassword from './app/screens/change password/ChangePassword';
 import UpdateProfile from './app/screens/profile/UpdateProfile';
 import ListBrandHomePage from './app/screens/brand/ListBrandHomePage';
 import CreatePostDetail from './app/screens/post/CreatePostDetail';
+import News from './app/screens/news/News';
+import Slider from './app/screens/home/Slider';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -216,6 +218,16 @@ export default function App() {
           <Stack.Screen
             name='create-post-details'
             component={CreatePostDetail}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='news-navigation'
+            component={News}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='slider-navigation'
+            component={Slider}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

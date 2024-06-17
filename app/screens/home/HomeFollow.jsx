@@ -41,7 +41,7 @@ const HomeFollow = ({ navigation }) => {
 
     return (
         <ScrollView style={styles.container}>
-            <Slider />
+            <Slider navigation={navigation}/>
             <View style={styles.row}>
                 {
                     posts.map(post => (
