@@ -31,9 +31,10 @@ export const getComments = async (id) => {
   }
 }
 
-export const postComment = async (userId,postId,commentContent) => {
+export const postComment = async (userId, postId, commentContent) => {
+  // console.log(userId, postId, commentContent);
   try {
-    const response = axiosInstance.post("/comments",{
+    const response = axiosInstance.post("/comments", {
       userId: userId,
       postId: postId,
       commentContent: commentContent

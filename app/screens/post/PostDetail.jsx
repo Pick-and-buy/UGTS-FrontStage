@@ -32,17 +32,20 @@ const PostDetail = ({ navigation, route }) => {
     const [comments, setComments] = useState([]);
     const [showAllComments, setShowAllComments] = useState(false);
     const [newComment, setNewComment] = useState("");
-    console.log(postId);
     const data = postDetails?.product?.images || [];
 
     useEffect(() => {
         fetchPostDetails();
-        fetchComments();
         checkAuthentication();
-        getUserData();
+        fetchComments();
     }, []);
 
-    // Function to determine authentication status
+    useEffect(() => {
+        if (isAuthenticated) {
+            getUserData();
+        }
+    }, [isAuthenticated]);
+
     const checkAuthentication = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
@@ -52,16 +55,10 @@ const PostDetail = ({ navigation, route }) => {
         }
     };
 
-    // Function to fetch user data if authenticated
     const getUserData = async () => {
-        if (!isAuthenticated) {
-            // console.error("User is not authenticated!");
-            return;
-        }
-
         try {
             const userInfo = await getUserByToken();
-            setUserId(userInfo.result.id);
+            setUserId(userInfo.result.id); // Set userId after fetching user information
         } catch (error) {
             console.error("Error fetching user data:", error);
         }
@@ -83,13 +80,11 @@ const PostDetail = ({ navigation, route }) => {
         try {
             const response = await getComments(postId);
             setComments(response.data);
-            // console.log(response.data);
         } catch (error) {
             console.error("Error fetching comments:", error);
         }
     };
 
-    // Function to handle comment submission
     const handleCommentSubmit = async () => {
         if (!newComment.trim()) {
             alert("Comment is empty");
@@ -97,19 +92,17 @@ const PostDetail = ({ navigation, route }) => {
         } else if (!isAuthenticated) {
             alert("User is not authenticated!");
             return;
-        } else {
-            try {
-                await postComment(userId, postId, newComment);
-                setNewComment(""); // Clear the input field
-                fetchComments(); // Fetch updated comments list
-            } catch (error) {
-                console.error("Error posting comment", error);
-            }
         }
 
-
-
+        try {
+            await postComment(userId, postId, newComment);
+            setNewComment(""); // Clear the input field
+            fetchComments(); // Fetch updated comments list
+        } catch (error) {
+            console.error("Error posting comment", error);
+        }
     };
+
     const handleLike = async () => {
         if (!userId) {
             alert("User is not authenticated");
@@ -127,9 +120,6 @@ const PostDetail = ({ navigation, route }) => {
             console.error("Error updating like status", error);
         }
     };
-
-
-
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.wrapper}>
