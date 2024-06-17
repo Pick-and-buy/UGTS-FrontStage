@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.lightWhite,
         borderRadius: 5,
         alignItems: 'center',
-        paddingTop: 10
+        paddingTop: -10
     },
     //Product Information
     productContainer: {

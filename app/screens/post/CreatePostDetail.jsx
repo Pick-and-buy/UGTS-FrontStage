@@ -19,34 +19,93 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Dropdown } from 'react-native-element-dropdown';
 import { callFetchListBrands } from "../../api/brand";
+import { getAllCategories, getAllCategoriesByBrandLineName } from "../../api/category";
+import { getAllBrandLines, getAllBrandLinesByBrandName } from "../../api/brandLine";
+import * as ImagePicker from "expo-image-picker";
 
 
 const CreatePostDetail = () => {
 
+  //for upload image to backend
+  const FormData = global.FormData;
+
   const navigation = useNavigation();
-  const [listBrandName, setListBrandName] = useState(false);
+  const [listBrandName, setListBrandName] = useState([]);
+  const [listCategory, setListCategory] = useState([]);
+  const [listBrandLines, setListBrandLines] = useState([]);
+  const [image, setImage] = useState();
+
+  const [selectedBrand, setSelectedBrand] = useState(null);
+  const [selectedBrandLine, setSelectedBrandLine] = useState(null);
+
   const [loader, setLoader] = useState(false);
 
   useEffect(() => {
-    fetchAllBrand();
+    fetchAllBrands();
   }, [])
 
-  const fetchAllBrand = async () => {
+  //Get Brand Lines by brandName
+  useEffect(() => {
+    if(selectedBrand) {
+      fetchAllBrandLines(selectedBrand);
+    }
+  }, [selectedBrand])
+
+  //Get Categories by Brand Line Name
+  useEffect(() => {
+    if(selectedBrandLine) {
+    fetchAllCategories(selectedBrandLine);
+    }
+  }, [selectedBrandLine])
+
+  const fetchAllBrands = async () => {
     setLoader(true);
-    // const res = await callFetchListBrands();
-    // console.log(res.data.result);
-    // if (res && res.data && res.data.result) {
-    //   // const brand = res.data.result.map(item => {
-    //   //   return {
-    //   //     label: item,
-    //   //     value: item
-    //   //   }
-    //   // })
-    //   // setListBrandName(brand)
-    // }
+    const res = await callFetchListBrands();
+    if (res && res.data && res?.data?.result) {
+      const brand = res?.data?.result.map(item => {
+        return {
+          label: item.name,
+          value: item.name
+        }
+      })
+      setListBrandName(brand)
+    }
     setLoader(false);
   }
 
+  const fetchAllCategories = async (brandLineName) => {
+    setLoader(true);
+    let query = `brandLineName=${brandLineName}`;
+    const res = await getAllCategoriesByBrandLineName(query);
+
+    if (res && res.data && res?.data?.result) {
+      const category = res?.data?.result.map(item => {
+        return {
+          label: item.categoryName,
+          value: item.categoryName,
+        }
+      })
+      setListCategory(category)
+    }
+    setLoader(false);
+  }
+
+  const fetchAllBrandLines = async (brandName) => {
+    setLoader(true);
+    let query = `brandName=${brandName}`;
+    const res = await getAllBrandLinesByBrandName(query);
+
+    if (res && res.data && res?.data?.result) {
+      const brandLine = res?.data?.result.map(item => {
+        return {
+          label: item.lineName,
+          value: item.lineName
+        }
+      })
+      setListBrandLines(brandLine)
+    }
+    setLoader(false);
+  }
 
   const validationSchema = Yup.object().shape({
     brandName: Yup.string().required('Please select an option'),
@@ -55,22 +114,11 @@ const CreatePostDetail = () => {
     //saleProfit: Yup.string().matches(/^\d{5}$/, 'Price có ít nhất 5 số').required('Vui lòng nhập Lợi Nhuận').typeError("Có vẻ như đó không phải là Giá Tiền"),
   });
 
-  const dataBrandName = [
-    { label: 'Marmont 1', value: 'Marmont 1' },
-    { label: 'Marmont 2', value: 'Marmont 2' },
-    { label: 'Marmont 3', value: 'Marmont 3' },
-  ];
 
   const dataProductCondition = [
     { label: 'used 1', value: 'used 1' },
     { label: 'used 2', value: 'used 2' },
     { label: 'used 3', value: 'used 3' },
-  ];
-
-  const dataCategory = [
-    { label: 'HandBags 1', value: 'HandBags 1' },
-    { label: 'HandBags 2', value: 'HandBags 2' },
-    { label: 'HandBags 3', value: 'HandBags 3' },
   ];
 
   const dataSize = [
@@ -100,8 +148,109 @@ const CreatePostDetail = () => {
       // dataShippingMethod, dataShippingTime, shippingAddress, fee, saleProfit,
     } = values;
 
-
     console.log(values);
+  }
+
+  const onGalleryPress = async () => {
+    try {
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quantity: 1,
+      })
+
+      if (!result.canceled) {
+        //save images
+        await saveImage(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Error Upload Image: ', error);
+    }
+  }
+
+  const uploadImageCamera = async () => {
+    try {
+      await ImagePicker.requestCameraPermissionsAsync();
+      let result = await ImagePicker.launchCameraAsync({
+        // Use the front camera and allows editing photo frames at 1:1 ratio
+        cameraType: ImagePicker.CameraType.front,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quantity: 1,
+      });
+
+      if (!result.canceled) {
+        //save images
+        await saveImage(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Error Upload Image: ', error);
+    }
+  };
+
+  const uploadImageGallery = async () => {
+    try {
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quantity: 1,
+      })
+
+      if (!result.canceled) {
+        //save images
+        await saveImage(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Error Upload Image: ', error);
+    }
+  };
+
+  const saveImage = async (image) => {
+    try {
+      //update displayed image
+      setImage(image);
+
+      //make api call to save
+      sendToBackend();
+    } catch (error) {
+      console.error('Error Save Image: ', error);
+    }
+  }
+  
+  const sendToBackend = async () => {
+    try {
+      const formData = new FormData();
+
+      formData.append("productImage", {
+        uri: image,
+        type: "image/png",
+        name: "productImage"
+      });
+
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        transformRequest: () => {
+          return formData;
+        },
+      };
+
+    } catch (error) {
+      
+    }
+  }
+
+  const removeImage = async () => {
+    try {
+      saveImage(null);
+    } catch (error) {
+      console.error('Error Remove Image: ', error);
+    }
   }
 
   return (
@@ -128,11 +277,24 @@ const CreatePostDetail = () => {
 
             {/* Image Upload */}
             <View style={styles.imageUploadContaniner}>
-              <View style={styles.imageUpload}>
-                <View style={styles.image}>
-                  <FontAwesome name="camera" size={20} color={COLORS.gray} />
-                  <Text style={{ marginTop: 5, color: COLORS.gray }}>Ảnh</Text>
-                </View>
+              <View
+                style={styles.imageUpload}>
+                <TouchableOpacity
+                  onPress={onGalleryPress}
+                >
+                  <View style={styles.image}>
+                    {image ?
+                      <Image
+                        source={{ uri: image }}
+                        style={styles.image} />
+                      :
+                      <View>
+                        <FontAwesome style={{ marginTop: 10 }} name="camera" size={20} color={COLORS.gray} />
+                        <Text style={{ marginTop: 5, color: COLORS.gray }}>Ảnh</Text>
+                      </View>
+                    }
+                  </View>
+                </TouchableOpacity>
                 <View style={styles.image}></View>
                 <View style={styles.image}></View>
                 <View style={styles.image}></View>
@@ -142,7 +304,7 @@ const CreatePostDetail = () => {
                 <Text style={{ fontSize: 16 }}>Thông tin sản phẩm</Text>
                 <TouchableOpacity
                   style={{ flexDirection: "row", gap: 10 }}
-                  onPress={() => console.warn("Quy Tắc")}
+                  onPress={removeImage}
                 >
                   <AntDesign name="questioncircle" size={20} color="black" />
                   <Text>Quy tắc</Text>
@@ -203,13 +365,13 @@ const CreatePostDetail = () => {
                 <Text style={styles.label}>Nhãn Hàng</Text>
                 <Dropdown
                   style={styles.dropdown}
-                  data={dataBrandName}
+                  data={listBrandName}
                   labelField="label"
                   valueField="value"
-                  placeholder="Chọn Nhãn Hàng"
                   value={values.brandName}
                   onChange={(item) => {
                     setFieldValue('brandName', item.value);
+                    setSelectedBrand(item.value);
                   }}
                 />
                 {touched.brandName && errors.brandName && (
@@ -219,25 +381,22 @@ const CreatePostDetail = () => {
               <View style={styles.shadow}></View>
 
               {/* Brand Line */}
-              <View style={{ marginHorizontal: 5 }}>
-                <View>
-                  <Text style={{ fontSize: 16 }}>Dòng Thương Hiệu</Text>
-                </View>
-                <View style={{ height: 40 }}>
-                  <TextInput
-                    value={values.brandLineName}
-                    placeholder="Nhập dòng thương hiệu"
-                    style={styles.inputProduct}
-                    onFocus={() => {
-                      setFieldTouched("brandLineName");
-                    }}
-                    onBlur={() => {
-                      setFieldTouched("brandLineName", "");
-                    }}
-                    onChangeText={handleChange("brandLineName")}
-                    autoCorrect={false}
-                  />
-                </View>
+              <View style={styles.dropdownContainer}>
+                <Text style={styles.label}>Dòng Thương Hiệu</Text>
+                <Dropdown
+                  style={styles.dropdown}
+                  data={listBrandLines}
+                  labelField="label"
+                  valueField="value"
+                  value={values.brandLineName}
+                  onChange={(item) => {
+                    setFieldValue('brandLineName', item.value);
+                    setSelectedBrandLine(item.value);
+                  }}
+                />
+                {touched.brandLineName && errors.brandLineName && (
+                  <Text style={styles.errorText}>{errors.brandLineName}</Text>
+                )}
               </View>
               <View style={styles.shadow}></View>
 
@@ -249,7 +408,6 @@ const CreatePostDetail = () => {
                   data={dataProductCondition}
                   labelField="label"
                   valueField="value"
-                  placeholder="Trạng Thái Sản Phẩm"
                   value={values.condition}
                   onChange={(item) => {
                     setFieldValue('condition', item.value);
@@ -266,10 +424,9 @@ const CreatePostDetail = () => {
                 <Text style={styles.label}>Thể Loại</Text>
                 <Dropdown
                   style={styles.dropdown}
-                  data={dataCategory}
+                  data={listCategory}
                   labelField="label"
                   valueField="value"
-                  placeholder="Thể Loại"
                   value={values.category}
                   onChange={(item) => {
                     setFieldValue('category', item.value);
@@ -335,7 +492,6 @@ const CreatePostDetail = () => {
                   data={dataSize}
                   labelField="label"
                   valueField="value"
-                  placeholder="Kích Thước"
                   value={values.size}
                   onChange={(item) => {
                     setFieldValue('size', item.value);

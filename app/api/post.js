@@ -38,3 +38,21 @@ export const getComments = async (id) => {
 export const callFetchPostByBrandName = (query) => {
   return axiosInstance.get(`/posts/brands?${query}`)
 }
+
+export const createPost = async (
+  title, brandName, productName, brandLineName, condition, category, exteriorColor,
+  interiorColor, size, width, height, length, referenceCode, manufactureYear, material, accessories, dateCode,
+  serialNumber, purchasedPlace, story, description, price
+) => {
+  try {
+    const response = axiosInstance.post('/posts', {
+      title, brandName, productName, brandLineName, condition, category, exteriorColor,
+      interiorColor, size, width, height, length, referenceCode, manufactureYear, material, accessories, dateCode,
+      serialNumber, purchasedPlace, story, description, price
+    })
+    return response;
+  } catch (error) {
+    console.error('Error Create PostS:', error);
+    throw error;
+  }
+}
