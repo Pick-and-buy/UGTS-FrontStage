@@ -362,12 +362,12 @@ const PostDetail = ({ navigation, route }) => {
                             <Text style={styles.rightText}>{postDetails?.product?.story.toLowerCase() === "none" ? " N/A" : postDetails?.product?.story} </Text>
                         </View>
                     </View>
-                    <View style={styles.dividerLight} />
+                    <View style={styles.divider} />
 
                     {/* Profile seller */}
                     <TouchableOpacity
                         style={styles.personalContainer}
-                        onPress={() => navigation.navigate("seller-profile-navigation", postDetails?.user)}
+                        onPress={() => navigation.navigate("seller-profile-navigation", { userOfPost: postDetails?.user, userIdLogged: userId })}
                     >
                         <View style={[styles.detailContainer, { alignItems: 'flex-start' }]}>
                             <Image
@@ -391,7 +391,7 @@ const PostDetail = ({ navigation, route }) => {
                             </View>
                         </View>
                     </TouchableOpacity>
-                    <View style={styles.dividerLight} />
+                    <View style={styles.divider} />
                     <View style={styles.recommended}>
                         <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
                             <MaterialIcons name="explore" size={18} color="gray" />

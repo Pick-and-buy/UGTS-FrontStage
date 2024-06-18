@@ -51,7 +51,17 @@ export const searchPostsByTitle = async (title) => {
     const response = axiosInstance.get(`/posts/search/${title}`);
     return response;
   } catch (error) {
-    logger.error('Error Get Comments:', error);
+    logger.error('Error Get Posts by title:', error);
+    throw error;
+  }
+}
+
+export const getPostsByUserId = async (id) => {
+  try {
+    const response = axiosInstance.get(`/posts/user?id=${id}`);
+    return response;
+  } catch (error) {
+    logger.error('Error Get PosComments:', error);
     throw error;
   }
 }
