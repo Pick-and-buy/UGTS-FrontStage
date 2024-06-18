@@ -45,3 +45,13 @@ export const postComment = async (userId, postId, commentContent) => {
     throw error;
   }
 }
+
+export const searchPostsByTitle = async (title) => {
+  try {
+    const response = axiosInstance.get(`/posts/search/${title}`);
+    return response;
+  } catch (error) {
+    logger.error('Error Get Comments:', error);
+    throw error;
+  }
+}

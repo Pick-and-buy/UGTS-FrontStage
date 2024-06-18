@@ -16,7 +16,7 @@ const Post = ({ post }) => {
                 <TouchableOpacity style={styles.wrapper}
                     onPress={() => navigation.navigate('post-details', post.id)}
                 >
-                    <ImageBackground source={{ uri: post?.product?.images[1]?.imageUrl }} style={styles.image}>
+                    <ImageBackground source={{ uri: post?.product?.images[0]?.imageUrl }} style={styles.image}>
                         <Text style={styles.text}>
                             <Text style={styles.currency}>đ</Text>
                             {post?.product?.price}</Text>

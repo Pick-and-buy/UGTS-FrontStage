@@ -7,6 +7,7 @@ import {
     Image,
     TextInput,
     Dimensions,
+    ActivityIndicator,
 } from "react-native";
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import React, { useState, useRef, useContext, useEffect } from "react";
@@ -23,6 +24,7 @@ const HomeFollow = ({ navigation }) => {
 
     useEffect(() => {
         const fetchPosts = async () => {
+            setLoading(true);
             try {
                 const response = await getAllPosts(); // Replace with your API URL
                 // console.log(response.data.result);
@@ -41,18 +43,23 @@ const HomeFollow = ({ navigation }) => {
 
     return (
         <ScrollView style={styles.container}>
-            <Slider navigation={navigation}/>
-            <View style={styles.row}>
-                {
-                    posts.map(post => (
-                        <Post key={post.id} post={post} />
-                    ))
-                }
+            <Slider navigation={navigation} />
 
-                {/* <Brands /> */}
-                {/* <ProductList /> */}
-            </View>
+            {loading ? (
+                <ActivityIndicator size="large" color={COLORS.primary} />
+            ) : (
+                <View style={styles.row}>
+                    {
+                        posts.map(post => (
+                            <Post key={post.id} post={post} />
+                        ))
+                    }
 
+                    {/* <Brands /> */}
+                    {/* <ProductList /> */}
+                </View>
+
+            )}
         </ScrollView>
     );
 }
