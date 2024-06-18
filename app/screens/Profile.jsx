@@ -15,6 +15,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 const Profile = ({ navigation }) => {
   const [user, setUser] = useState(null)
+  const [createdPosts, setCreatedPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const profile =
@@ -22,16 +23,16 @@ const Profile = ({ navigation }) => {
   const bkImg =
     "https://d326fntlu7tb1e.cloudfront.net/uploads/ab6356de-429c-45a1-b403-d16f7c20a0bc-bkImg-min.png";
 
-
+  // console.log(createdPosts[0].product);
   const fetchUserData = async () => {
     try {
       const userData = await getUserByToken();
       setUser(userData);
+      setCreatedPosts(userData.result.createdPosts);
     } catch (error) {
       console.error('Fetching user data failed:', error);
     }
   };
-
   // Function to check token presence
   const checkToken = async () => {
     const token = await AsyncStorage.getItem('token');
@@ -95,8 +96,7 @@ const Profile = ({ navigation }) => {
                 }}
               >
                 <NetworkImage
-                  // source={user === null ? profile : user.profile}
-                  source={profile}
+                  source={user?.result?.avatar ? user?.result?.avatar : profile}
                   width={45}
                   height={45}
                   radius={99}
@@ -108,7 +108,7 @@ const Profile = ({ navigation }) => {
 
                 {isAuthenticated ? (
                   <TouchableOpacity style={{ flexDirection: "row" }}
-                    onPress={() => navigation.navigate("user-profile", user)}
+                    onPress={() => navigation.navigate("user-profile", { user, createdPosts })}
                   >
                     <View style={{ marginLeft: 4, marginTop: 2, flexDirection: "column" }}>
                       <Text style={styles.text}>

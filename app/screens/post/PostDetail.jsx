@@ -365,11 +365,14 @@ const PostDetail = ({ navigation, route }) => {
                     <View style={styles.dividerLight} />
 
                     {/* Profile seller */}
-                    <TouchableOpacity style={styles.personalContainer}>
+                    <TouchableOpacity
+                        style={styles.personalContainer}
+                        onPress={() => navigation.navigate("seller-profile-navigation", postDetails?.user)}
+                    >
                         <View style={[styles.detailContainer, { alignItems: 'flex-start' }]}>
                             <Image
                                 style={styles.avatar}
-                                source={{ uri: profile }}
+                                source={{ uri: postDetails?.user?.avatar ? postDetails?.user?.avatar : profile }}
                             />
                             <View style={{}}>
                                 <Text style={{ fontSize: 18 }}>{postDetails?.user?.username}</Text>
@@ -388,7 +391,7 @@ const PostDetail = ({ navigation, route }) => {
                             </View>
                         </View>
                     </TouchableOpacity>
-
+                    <View style={styles.dividerLight} />
                     <View style={styles.recommended}>
                         <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
                             <MaterialIcons name="explore" size={18} color="gray" />

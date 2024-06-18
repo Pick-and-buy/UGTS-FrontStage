@@ -5,23 +5,25 @@ import {
   View,
   TouchableOpacity,
   Image,
-  Dimensions,
   SafeAreaView,
+  ActivityIndicator,
 } from "react-native";
-import { MaterialCommunityIcons, Ionicons, Feather, Entypo } from '@expo/vector-icons';
+import { Ionicons, Feather, MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from "../../constants/theme";
-import { Rating } from 'react-native-stock-star-rating'
-import { MaterialIcons } from '@expo/vector-icons';
+import { Rating } from 'react-native-stock-star-rating';
 import styles from "../css/UserProfile.style";
+import Post from "../post/Post";
+import { useState } from "react";
+
 const UserProfile = ({ navigation, route }) => {
-  const user = route.params;
-  // console.log(user);
+  const { user, createdPosts } = route.params;
+  const [loading, setLoading] = useState(false);
 
   const profile =
     "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
@@ -36,7 +38,6 @@ const UserProfile = ({ navigation, route }) => {
             name="more-horizontal"
             size={35}
             color="gray" />
-
         </View>
 
         <View style={styles.shadow}>
@@ -48,7 +49,7 @@ const UserProfile = ({ navigation, route }) => {
           <View style={[styles.detailContainer, { alignItems: 'flex-start' }]}>
             <Image
               style={styles.avatar}
-              source={{ uri: profile }}
+              source={{ uri: user?.result?.avatar ? user?.result?.avatar : profile }}
             />
             <View style={{ gap: 5 }}>
               <Text style={{ fontSize: 18 }}>
@@ -59,7 +60,6 @@ const UserProfile = ({ navigation, route }) => {
                   stars={4.7}
                   maxStars={5}
                   size={16}
-
                 />
                 <Text style={{ fontSize: 12, marginLeft: 4, marginTop: 4 }}>(100)</Text>
               </View>
@@ -90,11 +90,25 @@ const UserProfile = ({ navigation, route }) => {
         </View>
 
         {/* User product */}
-
+        <View style={styles.containerPost}>
+          <View style={{ marginTop: 20, justifyContent: "center", alignItems: "center" }}>
+            <Text style={{ fontSize: 20, fontWeight: "bold" }}>Sản phẩm</Text>
+          </View>
+          <ScrollView contentContainerStyle={styles.scrollViewContent}>
+            {loading ? (
+              <ActivityIndicator size="large" color={COLORS.primary} />
+            ) : (
+              <View style={styles.row}>
+                {createdPosts.map(post => (
+                  <Post key={post.id} post={post} />
+                ))}
+              </View>
+            )}
+          </ScrollView>
+        </View>
       </View>
     </SafeAreaView>
   )
 }
 
-export default UserProfile
-
+export default UserProfile;

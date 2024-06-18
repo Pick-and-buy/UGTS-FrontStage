@@ -35,6 +35,7 @@ import CreatePostDetail from './app/screens/post/CreatePostDetail';
 import News from './app/screens/news/News';
 import Slider from './app/screens/home/Slider';
 import Search from './app/screens/Search';
+import SellerProfile from './app/screens/profile/SellerProfile';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -234,6 +235,11 @@ export default function App() {
           <Stack.Screen
             name='search-navigation'
             component={Search}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='seller-profile-navigation'
+            component={SellerProfile}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
