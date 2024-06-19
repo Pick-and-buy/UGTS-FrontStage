@@ -53,3 +53,17 @@ export const unlikePost = async (userId, postId) => {
     throw error;
   }
 };
+
+
+// export const updateAvatar = async (userId, formData) => {
+//   console.log(formData);
+//   try {
+//     const response = await axiosInstance.put(`/users/${userId}/avatar`, formData);
+//     return response.data;
+//   } catch (error) {
+//     console.error('Error update avatar', error);
+//     throw error;
+//   }
+// };
+
+

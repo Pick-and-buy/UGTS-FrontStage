@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, SafeAreaView } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, SafeAreaView,RefreshControl } from "react-native";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { COLORS, SIZES } from "../constants/theme";
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from "@expo/vector-icons";
@@ -14,16 +14,15 @@ import { Rating } from 'react-native-stock-star-rating'
 import { MaterialIcons } from '@expo/vector-icons';
 
 const Profile = ({ navigation }) => {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(null);
   const [createdPosts, setCreatedPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const profile =
-    "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
-  const bkImg =
-    "https://d326fntlu7tb1e.cloudfront.net/uploads/ab6356de-429c-45a1-b403-d16f7c20a0bc-bkImg-min.png";
+  const [refreshing, setRefreshing] = useState(false);
 
-  // console.log(createdPosts[0].product);
+  const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
+  const bkImg = "https://d326fntlu7tb1e.cloudfront.net/uploads/ab6356de-429c-45a1-b403-d16f7c20a0bc-bkImg-min.png";
+
   const fetchUserData = async () => {
     try {
       const userData = await getUserByToken();
@@ -33,14 +32,13 @@ const Profile = ({ navigation }) => {
       console.error('Fetching user data failed:', error);
     }
   };
-  // Function to check token presence
+
   const checkToken = async () => {
     const token = await AsyncStorage.getItem('token');
     setIsAuthenticated(!!token);
     setLoading(false);
   };
 
-  // useEffect to call both functions
   useEffect(() => {
     const initialize = async () => {
       await checkToken();
@@ -51,11 +49,16 @@ const Profile = ({ navigation }) => {
     initialize();
   }, [isAuthenticated]);
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchUserData();
+    setRefreshing(false);
+  }, []);
 
   if (loading) {
     return null; // or a loading spinner
   }
-  // console.log(user);
+
   const handleLogout = async () => {
     await logout();
     setUser(null);
@@ -66,7 +69,6 @@ const Profile = ({ navigation }) => {
   };
 
 
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView
@@ -74,6 +76,9 @@ const Profile = ({ navigation }) => {
         scrollEnabled={true}
         nestedScrollEnabled={true}
         style={{ flex: 1 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
         <View style={{
           backgroundColor: COLORS.offwhite,
@@ -108,7 +113,7 @@ const Profile = ({ navigation }) => {
 
                 {isAuthenticated ? (
                   <TouchableOpacity style={{ flexDirection: "row" }}
-                    onPress={() => navigation.navigate("user-profile", { user, createdPosts })}
+                    onPress={() => navigation.navigate("user-profile-details", { user, createdPosts })}
                   >
                     <View style={{ marginLeft: 4, marginTop: 2, flexDirection: "column" }}>
                       <Text style={styles.text}>

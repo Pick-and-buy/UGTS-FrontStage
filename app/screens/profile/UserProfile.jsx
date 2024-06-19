@@ -46,11 +46,19 @@ const UserProfile = ({ navigation, route }) => {
 
         {/* Personal Information */}
         <View style={styles.personalContainer}>
-          <View style={[styles.detailContainer, { alignItems: 'flex-start' }]}>
-            <Image
-              style={styles.avatar}
-              source={{ uri: user?.result?.avatar ? user?.result?.avatar : profile }}
-            />
+          <View style={[styles.detailContainer, { alignItems: 'flex-start', position: 'relative' }]}>
+            <TouchableOpacity
+              style={styles.avatarTouchable}
+              onPress={() => navigation.navigate('upload-photo-navigation', user)}
+            >
+              <Image
+                style={styles.avatar}
+                source={{ uri: user?.result?.avatar ? user?.result?.avatar : profile }}
+              />
+              <View style={styles.editIcon}>
+                <Feather name="edit" size={24} color={COLORS.primary} />
+              </View>
+            </TouchableOpacity>
             <View style={{ gap: 5 }}>
               <Text style={{ fontSize: 18 }}>
                 {user?.result?.username}

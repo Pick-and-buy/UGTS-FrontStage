@@ -25,7 +25,6 @@ import Onboarding from './app/components/Onboarding';
 import PosterInformation from './app/screens/posterInformation/PosterInformation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Profile from './app/screens/Profile';
-import UserProfile from './app/screens/profile/UserProfile';
 import { LoginContext } from './app/context/LoginContext';
 import TodoTask from './app/screens/todoTask/todoTask';
 import ChangePassword from './app/screens/change password/ChangePassword';
@@ -36,7 +35,7 @@ import News from './app/screens/news/News';
 import Slider from './app/screens/home/Slider';
 import Search from './app/screens/Search';
 import SellerProfile from './app/screens/profile/SellerProfile';
-
+import UserProfile from './app/screens/profile/UserProfile';
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [login, setLogin] = useState(null);
@@ -189,7 +188,7 @@ export default function App() {
           />
 
           <Stack.Screen
-            name='user-profile'
+            name='user-profile-details'
             component={UserProfile}
             options={{ headerShown: false }}
           />
