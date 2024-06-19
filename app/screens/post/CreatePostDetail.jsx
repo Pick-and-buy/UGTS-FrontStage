@@ -19,10 +19,10 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Dropdown } from 'react-native-element-dropdown';
 import { callFetchListBrands } from "../../api/brand";
+import { createPost } from "../../api/post";
 import { getAllCategories, getAllCategoriesByBrandLineName } from "../../api/category";
 import { getAllBrandLines, getAllBrandLinesByBrandName } from "../../api/brandLine";
 import * as ImagePicker from "expo-image-picker";
-
 
 const CreatePostDetail = () => {
 
@@ -46,15 +46,15 @@ const CreatePostDetail = () => {
 
   //Get Brand Lines by brandName
   useEffect(() => {
-    if(selectedBrand) {
+    if (selectedBrand) {
       fetchAllBrandLines(selectedBrand);
     }
   }, [selectedBrand])
 
   //Get Categories by Brand Line Name
   useEffect(() => {
-    if(selectedBrandLine) {
-    fetchAllCategories(selectedBrandLine);
+    if (selectedBrandLine) {
+      fetchAllCategories(selectedBrandLine);
     }
   }, [selectedBrandLine])
 
@@ -142,13 +142,61 @@ const CreatePostDetail = () => {
   ];
 
   const handleCreatePost = async (values, actions) => {
-    const { title, brandName, productName, brandLineName, condition, category, exteriorColor,
-      interiorColor, size, width, height, length, referenceCode, manufactureYear, material, accessories, dateCode,
-      serialNumber, purchasedPlace, story, description, price,
-      // dataShippingMethod, dataShippingTime, shippingAddress, fee, saleProfit,
-    } = values;
+    try {
+      const { title, brandName, productName, brandLineName, condition, category, exteriorMaterial,
+        interiorMaterial, size, width, height, length, referenceCode, manufactureYear, color, accessories, dateCode,
+        serialNumber, purchasedPlace, story, description, price,
+        // dataShippingMethod, dataShippingTime, shippingAddress, fee, saleProfit,
+      } = values;
+      console.log(values);
+      const formData = new FormData();
 
-    console.log(values);
+      const request = {
+        title: title,
+        description: description,
+        brand: { name: brandName },
+        brandLine: { lineName: brandLineName },
+        category: { categoryName: category },
+        product: {
+          name: productName,
+          price: parseFloat(price),
+          color: color,
+          size: size,
+          width: parseFloat(width),
+          height: parseFloat(height),
+          length: parseFloat(length),
+          referenceCode: referenceCode,
+          manufactureYear: manufactureYear,
+          exteriorMaterial: exteriorMaterial,
+          interiorMaterial: interiorMaterial,
+          accessories: accessories,
+          dateCode: dateCode,
+          serialNumber: serialNumber,
+          purchasedPlace: purchasedPlace,
+          story: story,
+        },
+        condition: condition,
+      };
+
+      formData.append('request', JSON.stringify(request));
+
+      const uriParts = image.split('.');
+      const fileType = uriParts[uriParts.length - 1];
+
+      // Lấy binary data từ file
+      formData.append('productImage', {
+        uri: image,
+        // name: `photo.${fileType}`,
+        // type: `image/${fileType}`,
+        name: 'fb5f99ef-9f55-4b3e-8586-fdbf3364988c.jpeg',
+        type: 'image/jpeg',
+      });
+
+      console.log('>>check form data: ', formData);
+      await createPost(formData)
+    } catch (error) {
+      console.error('ERROR handle create post: ', error);
+    }
   }
 
   const onGalleryPress = async () => {
@@ -160,10 +208,11 @@ const CreatePostDetail = () => {
         aspect: [1, 1],
         quantity: 1,
       })
-
+      console.log('Result Image: ', result);
       if (!result.canceled) {
         //save images
-        await saveImage(result.assets[0].uri);
+        setImage(result.assets[0].uri);
+        // setImage([...image, ...result.assets.map(asset => asset.uri)]);
       }
     } catch (error) {
       console.error('Error Upload Image: ', error);
@@ -183,7 +232,7 @@ const CreatePostDetail = () => {
 
       if (!result.canceled) {
         //save images
-        await saveImage(result.assets[0].uri);
+        setImage(result.assets[0].uri);
       }
     } catch (error) {
       console.error('Error Upload Image: ', error);
@@ -202,52 +251,16 @@ const CreatePostDetail = () => {
 
       if (!result.canceled) {
         //save images
-        await saveImage(result.assets[0].uri);
+        setImage(result.assets[0].uri);
       }
     } catch (error) {
       console.error('Error Upload Image: ', error);
     }
   };
 
-  const saveImage = async (image) => {
-    try {
-      //update displayed image
-      setImage(image);
-
-      //make api call to save
-      sendToBackend();
-    } catch (error) {
-      console.error('Error Save Image: ', error);
-    }
-  }
-  
-  const sendToBackend = async () => {
-    try {
-      const formData = new FormData();
-
-      formData.append("productImage", {
-        uri: image,
-        type: "image/png",
-        name: "productImage"
-      });
-
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        transformRequest: () => {
-          return formData;
-        },
-      };
-
-    } catch (error) {
-      
-    }
-  }
-
   const removeImage = async () => {
     try {
-      saveImage(null);
+      setImage(null);
     } catch (error) {
       console.error('Error Remove Image: ', error);
     }
@@ -258,8 +271,8 @@ const CreatePostDetail = () => {
       <Formik
         initialValues={{
           title: '', productName: '', brandName: '', brandLineName: '', condition: '',
-          category: '', exteriorColor: '', interiorColor: '', size: '', width: '',
-          height: '', length: '', referenceCode: '', manufactureYear: '', material: '',
+          category: '', exteriorMaterial: '', interiorMaterial: '', size: '', width: '',
+          height: '', length: '', referenceCode: '', manufactureYear: '', color: '',
           accessories: '', dateCode: '', serialNumber: '', purchasedPlace: '', story: '', description: '', price: '',
           // dataShippingMethod: '', dataShippingTime: '', shippingAddress: '', fee: '', saleProfit: '',
         }}
@@ -438,46 +451,46 @@ const CreatePostDetail = () => {
               </View>
               <View style={styles.shadow}></View>
 
-              {/* Exterior Color */}
+              {/* Exterior Material */}
               <View style={styles.viewContainer}>
                 <View style={styles.textCenter}>
-                  <Text style={{ fontSize: 16 }}>Màu Sắc Bên Ngoài: </Text>
+                  <Text style={{ fontSize: 16 }}>Chất Liệu Bên Ngoài: </Text>
                 </View>
                 <View style={[styles.textCenter, { width: "60%" }]}>
                   <TextInput
-                    value={values.exteriorColor}
-                    placeholder="Nhập màu sắc bên ngoài"
+                    value={values.exteriorMaterial}
+                    placeholder="Nhập chất liệu bên ngoài"
                     style={styles.inputProduct}
                     onFocus={() => {
-                      setFieldTouched("exteriorColor");
+                      setFieldTouched("exteriorMaterial");
                     }}
                     onBlur={() => {
-                      setFieldTouched("exteriorColor", "");
+                      setFieldTouched("exteriorMaterial", "");
                     }}
-                    onChangeText={handleChange("exteriorColor")}
+                    onChangeText={handleChange("exteriorMaterial")}
                     autoCorrect={false}
                   />
                 </View>
               </View>
               <View style={styles.shadow}></View>
 
-              {/* Interior Color */}
+              {/* Interior Material */}
               <View style={styles.viewContainer}>
                 <View style={styles.textCenter}>
-                  <Text style={{ fontSize: 16 }}>Màu Sắc Bên Trong: </Text>
+                  <Text style={{ fontSize: 16 }}>Chất Liệu Bên Trong: </Text>
                 </View>
                 <View style={[styles.textCenter, { width: "60%" }]}>
                   <TextInput
-                    value={values.interiorColor}
-                    placeholder="Nhập màu sắc bên trong"
+                    value={values.interiorMaterial}
+                    placeholder="Nhập chất liệu bên trong"
                     style={styles.inputProduct}
                     onFocus={() => {
-                      setFieldTouched("interiorColor");
+                      setFieldTouched("interiorMaterial");
                     }}
                     onBlur={() => {
-                      setFieldTouched("interiorColor", "");
+                      setFieldTouched("interiorMaterial", "");
                     }}
-                    onChangeText={handleChange("interiorColor")}
+                    onChangeText={handleChange("interiorMaterial")}
                     autoCorrect={false}
                   />
                 </View>
@@ -622,23 +635,23 @@ const CreatePostDetail = () => {
               </View>
               <View style={styles.shadow}></View>
 
-              {/* material */}
+              {/* color */}
               <View style={styles.viewContainer}>
                 <View style={styles.textCenter}>
-                  <Text style={{ fontSize: 16 }}>Chất Liệu</Text>
+                  <Text style={{ fontSize: 16 }}>Màu Sắc</Text>
                 </View>
                 <View style={[styles.textCenter, { width: "80%" }]}>
                   <TextInput
-                    value={values.material}
-                    placeholder="Nhập chất liệu của sản phẩm"
+                    value={values.color}
+                    placeholder="Nhập màu sắc của sản phẩm"
                     style={styles.inputProduct}
                     onFocus={() => {
-                      setFieldTouched("material");
+                      setFieldTouched("color");
                     }}
                     onBlur={() => {
-                      setFieldTouched("material", "");
+                      setFieldTouched("color", "");
                     }}
-                    onChangeText={handleChange("material")}
+                    onChangeText={handleChange("color")}
                     autoCorrect={false}
                   />
                 </View>
@@ -671,12 +684,12 @@ const CreatePostDetail = () => {
               {/* Date Code */}
               <View style={styles.viewContainer}>
                 <View style={styles.textCenter}>
-                  <Text style={{ fontSize: 16 }}>Hạn sử dụng</Text>
+                  <Text style={{ fontSize: 16 }}>Date Code</Text>
                 </View>
                 <View style={[styles.textCenter, { width: "70%" }]}>
                   <TextInput
                     value={values.dateCode}
-                    placeholder="Nhập hạn sử dụng (nếu có)"
+                    placeholder="Nhập Date Code (nếu có)"
                     style={styles.inputProduct}
                     onFocus={() => {
                       setFieldTouched("dateCode");

@@ -1,4 +1,5 @@
 import axiosInstance from './axiosInstance';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const getAllPosts = async () => {
   try {
@@ -31,28 +32,22 @@ export const getComments = async (id) => {
   }
 }
 
-// export const callFetchPostDetails = (id) => {
-//   return axiosInstance.get(`/posts/${id}`)
-// }
-
 export const callFetchPostByBrandName = (query) => {
   return axiosInstance.get(`/posts/brands?${query}`)
 }
 
-export const createPost = async (
-  title, brandName, productName, brandLineName, condition, category, exteriorColor,
-  interiorColor, size, width, height, length, referenceCode, manufactureYear, material, accessories, dateCode,
-  serialNumber, purchasedPlace, story, description, price
-) => {
+export const createPost = async (formData) => {
   try {
-    const response = axiosInstance.post('/posts', {
-      title, brandName, productName, brandLineName, condition, category, exteriorColor,
-      interiorColor, size, width, height, length, referenceCode, manufactureYear, material, accessories, dateCode,
-      serialNumber, purchasedPlace, story, description, price
-    })
+    const token = await AsyncStorage.getItem('token');
+    const response = await axiosInstance.post('/posts', formData, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response;
   } catch (error) {
-    console.error('Error Create PostS:', error);
+    console.error('Error Create Post:', error);
     throw error;
   }
 }
