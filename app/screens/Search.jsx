@@ -1,65 +1,87 @@
-import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity } from "react-native";
-import React, { useRef, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { COLORS, SIZES } from "../constants/theme";
-import { Feather, AntDesign } from '@expo/vector-icons';
-import styles from "./search.style";
-import LottieView from "lottie-react-native";
+import React, { useState, useEffect } from "react";
+import {
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View,
+  TextInput,
+  ActivityIndicator,
+  FlatList,
+} from "react-native";
+import { useRoute, useFocusEffect } from '@react-navigation/native';
+import { FontAwesome } from '@expo/vector-icons';
+import styles from "../screens/css/search.style";
+import { searchPostsByTitle } from "../api/post";
+import { COLORS } from "../constants/theme";
+import Post from "./post/Post";
 
 const Search = () => {
-  const [searchKey, setSearchKey] = useState('')
-  const [searchResults, setSearchResults] = useState([])
-  const animation = useRef(null);
+  const route = useRoute();
+  const initialQuery = route.params?.query ?? '';
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
+  const [loading, setLoading] = useState(false);
+  const [results, setResults] = useState([]);
+  // console.log(results);
+  useFocusEffect(
+    React.useCallback(() => {
+      if (initialQuery) {
+        setSearchQuery(initialQuery);
+        fetchResults(initialQuery);
+      }
+    }, [initialQuery])
+  );
 
-  const handleSearch = async () => {
+  const fetchResults = async (query) => {
+    setLoading(true);
     try {
-      const response = await axios.get(`https://travelapprailway-production.up.railway.app/api/places/search/${searchKey}`)
-      setSearchResults(response.data)
+      const response = await searchPostsByTitle(query);
+      setResults(response.data.result);
     } catch (error) {
-      console.log("Failed to get products", error);
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSearchSubmit = () => {
+    if (searchQuery.trim() !== '') {
+      fetchResults(searchQuery);
     }
   };
 
   return (
-    <SafeAreaView>
-      <View style={{ backgroundColor: COLORS.primary, height: SIZES.height }}>
-        <View style={{ backgroundColor: COLORS.offwhite, height: SIZES.height - 140, borderBottomEndRadius: 30, borderBottomStartRadius: 30 }}>
-          <View style={styles.searchContainer}>
-
-            <View style={styles.searchWrapper}>
-
-              <TextInput
-                style={styles.input}
-                value={searchKey}
-                onChangeText={setSearchKey}
-                placeholder='What do you want to find?'
-              />
-            </View>
-
-            <TouchableOpacity style={styles.searchBtn} onPress={handleSearch}>
-              <Feather name='search' size={24} color={COLORS.secondary} />
-            </TouchableOpacity>
-          </View>
-
-          {searchResults.length === 0 ? (
-            <View style={{ width: SIZES.width, height: SIZES.height / 1.5, right: 90 }}>
-              <LottieView
-                autoPlay
-                ref={animation}
-                style={{ width: "100%", height: "100%", }}
-              // source={require("")}
-              />
-            </View>
-          ) : (
-            <FlatList
-              data={searchResults}
-              keyExtractor={(item) => item._id}
-              renderItem={({ item }) => (
-                <View style={styles.tile}>
-
-                </View>
-              )}
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.search}>
+            <FontAwesome
+              name="search"
+              size={20}
+              color="#AFAFAE"
+              style={{ marginLeft: 8 }}
             />
+            <TextInput
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              onSubmitEditing={handleSearchSubmit}
+              placeholder="Nhập tên sản phẩm bạn muốn tìm kiếm"
+              placeholderTextColor="#AFAFAE"
+              style={styles.textInput}
+            />
+          </View>
+        </View>
+        <View style={styles.content}>
+          {loading ? (
+            <ActivityIndicator size="large" color={COLORS.primary} />
+          ) : (
+            <View style={styles.row}>
+              {
+                results.map(post => (
+                  <Post key={post.id} post={post} />
+                ))
+              }
+            </View>
+
           )}
         </View>
       </View>
@@ -68,5 +90,3 @@ const Search = () => {
 };
 
 export default Search;
-
-

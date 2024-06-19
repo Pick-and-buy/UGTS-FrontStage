@@ -37,19 +37,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 10,
-        position: 'relative',
     },
     avatar: {
         width: 80,
         height: 80,
         borderRadius: 99,
-    },
-    editIcon: {
-        position: 'absolute',
-        bottom: 0,
-        left: 50,
-        borderRadius: 15,
-        padding: 3,
     },
     // Follower
     followerView: {
@@ -63,6 +55,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: COLORS.primary,
         borderRadius: 5,
+        paddingHorizontal: 5
     },
     containerPost: {
         flex: 1,

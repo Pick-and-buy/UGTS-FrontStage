@@ -10,13 +10,27 @@ import {
     SafeAreaView,
 } from "react-native";
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
-import React from "react";
+import React, { useState } from "react";
 import { COLORS, SIZES } from "../../constants/theme";
 import { useNavigation } from '@react-navigation/native';
 import styles from "../../screens/css/homeHeader.style";
-import HomeTab from "../../navigation/HomeTab";
+const Header = () => {
+    const navigation = useNavigation();
+    const [searchQuery, setSearchQuery] = useState('');
 
-const Header = ({ navigation }) => {
+    const handleSearchChange = (text) => {
+        setSearchQuery(text);
+    };
+
+    const handleSearchSubmit = () => {
+        if (searchQuery.trim() !== '') {
+            // Navigate to the Search screen with query parameter
+            navigation.navigate('Search', { query: searchQuery });
+            setSearchQuery(''); // Clear input after navigation
+            // Keyboard.dismiss(); // Close keyboard after submission
+        }
+    };
+
     return (
         <SafeAreaView>
             <View style={styles.container}>
@@ -29,8 +43,12 @@ const Header = ({ navigation }) => {
                             color="#AFAFAE"
                         />
                         <TextInput
+                            value={searchQuery}
+                            onChangeText={handleSearchChange}
+                            onSubmitEditing={handleSearchSubmit} // Listen for submit event
                             placeholder="Nhập sản phẩm bạn muốn tìm kiếm"
                             placeholderTextColor="#AFAFAE"
+                            style={styles.textInput}
                         />
                     </View>
                     <View style={styles.option}>

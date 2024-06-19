@@ -33,7 +33,7 @@ const CreatePostDetail = () => {
   const [listBrandName, setListBrandName] = useState([]);
   const [listCategory, setListCategory] = useState([]);
   const [listBrandLines, setListBrandLines] = useState([]);
-  const [image, setImage] = useState();
+  const [image, setImage] = useState(null);
 
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [selectedBrandLine, setSelectedBrandLine] = useState(null);
@@ -180,19 +180,15 @@ const CreatePostDetail = () => {
 
       formData.append('request', JSON.stringify(request));
 
-      const uriParts = image.split('.');
-      const fileType = uriParts[uriParts.length - 1];
-
-      // Lấy binary data từ file
+      const fileName = image.split('/').pop();
       formData.append('productImage', {
         uri: image,
-        // name: `photo.${fileType}`,
-        // type: `image/${fileType}`,
-        name: 'fb5f99ef-9f55-4b3e-8586-fdbf3364988c.jpeg',
+        name: fileName,
         type: 'image/jpeg',
       });
 
       console.log('>>check form data: ', formData);
+      
       await createPost(formData)
     } catch (error) {
       console.error('ERROR handle create post: ', error);
@@ -212,6 +208,7 @@ const CreatePostDetail = () => {
       if (!result.canceled) {
         //save images
         setImage(result.assets[0].uri);
+        
         // setImage([...image, ...result.assets.map(asset => asset.uri)]);
       }
     } catch (error) {
