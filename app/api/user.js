@@ -84,6 +84,7 @@ export const unfollowUser = async (userId, targetUserId) => {
 
 export const getListsFollowers = async (userId) => {
   try {
+    console.log(userId);
     const response = await axiosInstance.get(`/followers/${userId}`);
     return response.data;
   } catch (error) {

@@ -8,6 +8,7 @@ import {
     SafeAreaView,
     ActivityIndicator,
     RefreshControl,
+    Alert
 } from "react-native";
 import { Ionicons, Feather, MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from "../../constants/theme";
@@ -27,8 +28,6 @@ const SellerProfile = ({ navigation, route }) => {
     const [followersCount, setFollowersCount] = useState(0);
     const [followingCount, setFollowingCount] = useState(0)
     const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
-    console.log(userOfPost.id);
-
 
     useEffect(() => {
         fetchPostsByUserId();
@@ -82,16 +81,36 @@ const SellerProfile = ({ navigation, route }) => {
     };
 
     const handleFollowToggle = async () => {
+        if (!userIdLogged) {
+            Alert.alert(
+                "Đăng nhập",
+                "Bạn cần đăng nhập để theo dõi người bán.",
+                [
+                    {
+                        text: "Cancel",
+                        style: "cancel"
+                    },
+                    {
+                        text: "Đăng nhập",
+                        onPress: () => navigation.navigate('login-navigation') // Redirect to login screen
+                    }
+                ]
+            );
+            return;
+        }
+
         try {
             setLoading(true);
             if (isFollowing) {
                 console.log('Unfollowing user...');
                 const response = await unfollowUser(userIdLogged, userOfPost.id);
                 console.log('Unfollow response:', response);
+                setFollowersCount(prevCount => prevCount - 1);
             } else {
                 console.log('Following user...');
                 const response = await followUser(userIdLogged, userOfPost.id);
                 console.log('Follow response:', response);
+                setFollowersCount(prevCount => prevCount + 1);
             }
             setIsFollowing(!isFollowing);
         } catch (error) {
@@ -173,6 +192,16 @@ const SellerProfile = ({ navigation, route }) => {
                                 </Text>
                             </TouchableOpacity>
                         )}
+                        {!userIdLogged && (
+                            <TouchableOpacity
+                                onPress={handleFollowToggle}
+                                style={styles.followBtn}
+                            >
+                                <Text style={styles.followBtnText}>
+                                    Theo dõi
+                                </Text>
+                            </TouchableOpacity>
+                        )}
                     </View>
                 </View>
 
@@ -214,7 +243,7 @@ const SellerProfile = ({ navigation, route }) => {
                 </View>
             </View>
         </SafeAreaView>
-    )
+    );
 }
 
 export default SellerProfile;
