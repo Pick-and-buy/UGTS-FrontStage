@@ -77,11 +77,11 @@ const styles = StyleSheet.create({
     },
     row: {
         width: "98%",
-        justifyContent: "space-around",
+        justifyContent: "flex-start",
         flexDirection: "row",
         flexWrap: "wrap",
         alignItems: "center",
-        gap: 5,
+        gap: 6,
         marginHorizontal: "auto",
         marginTop: "-4%",
     },
