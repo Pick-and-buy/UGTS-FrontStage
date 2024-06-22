@@ -3,9 +3,9 @@ import { COLORS, SHADOWS } from "../../constants/theme";
 
 const styles = StyleSheet.create({
     container: {
-        width: 130,
+        width: 125,
         height: 200,
-        borderRadius: 10,
+        borderRadius: 8,
         overflow: 'hidden',
         backgroundColor: COLORS.white,
     },
@@ -16,24 +16,24 @@ const styles = StyleSheet.create({
     },
     image: {
         width: "100%",
-        height: "60%",
+        height: "62%",
         resizeMode: 'cover',
         justifyContent: 'center',
     },
     content: {
         width: "92%",
         // height: "100%",
-        marginHorizontal: "auto"
+        marginHorizontal: "auto",
     },
     title: {
         color: COLORS.gray,
-
+        fontSize:16
     },
     price: {
         color: COLORS.black,
         fontWeight: "400",
         fontSize: 22,
-        marginBottom: 2,
+        // marginBottom: 2,
         marginLeft: 2
     },
     currency: {
@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "flex-start",
         alignItems: "center",
+        marginBottom:2
     }
 });
 

@@ -24,7 +24,7 @@ const Post = ({ post }) => {
                         size={28}
                         style={{
                             position: 'absolute',
-                            bottom: "42%",
+                            bottom: "40%",
                             right: 4,
                         }}
                     />
@@ -37,7 +37,7 @@ const Post = ({ post }) => {
                         <View style={styles.numberLiked}>
                             <Ionicons
                                 name="heart"
-                                color={COLORS.gray2}
+                                color={COLORS.gray}
                                 size={20} />
                             <Text style={{ fontSize: 18, color: COLORS.gray2, marginBottom: 2, marginLeft: 4 }}>1</Text>
                         </View>
