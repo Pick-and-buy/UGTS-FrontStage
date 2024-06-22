@@ -8,6 +8,7 @@ import {
     Pressable,
     SafeAreaView,
     TextInput,
+    Alert,
 } from "react-native";
 import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
@@ -105,7 +106,20 @@ const PostDetail = ({ navigation, route }) => {
 
     const handleLike = async () => {
         if (!userId) {
-            alert("User is not authenticated");
+            Alert.alert(
+                "Đăng nhập",
+                "Bạn cần đăng nhập để thêm sản phẩm vào danh mục yêu thích.",
+                [
+                    {
+                        text: "Cancel",
+                        style: "cancel"
+                    },
+                    {
+                        text: "Đăng nhập",
+                        onPress: () => navigation.navigate('login-navigation')
+                    }
+                ]
+            );
             return;
         }
 

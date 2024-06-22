@@ -92,7 +92,7 @@ const SellerProfile = ({ navigation, route }) => {
                     },
                     {
                         text: "Đăng nhập",
-                        onPress: () => navigation.navigate('login-navigation') // Redirect to login screen
+                        onPress: () => navigation.navigate('login-navigation') 
                     }
                 ]
             );
