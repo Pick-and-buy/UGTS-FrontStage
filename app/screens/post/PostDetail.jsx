@@ -14,7 +14,7 @@ import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo } from '@expo/vecto
 import React, { useState, useEffect } from "react";
 import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
 import Carousel from "../../components/carousel/Carousel";
-import { getPostDetails, getComments, postComment } from "../../api/post";
+import { getPostDetails, getComments, postComment, getLikedPostByUser } from "../../api/post";
 import styles from "../css/postDetails.style";
 import { Rating } from 'react-native-stock-star-rating';
 import { getUserByToken, likePost, unlikePost } from "../../api/user";
@@ -47,10 +47,16 @@ const PostDetail = ({ navigation, route }) => {
         }
     }, [isAuthenticated]);
 
+    useEffect(() => {
+        if (userId) {
+            checkIfPostIsLiked();
+        }
+    }, [userId]);
+
     const checkAuthentication = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
-            setIsAuthenticated(!!token); // Boolean check for authentication
+            setIsAuthenticated(!!token);
         } catch (error) {
             console.error("Error checking authentication status:", error);
         }
@@ -59,9 +65,20 @@ const PostDetail = ({ navigation, route }) => {
     const getUserData = async () => {
         try {
             const userInfo = await getUserByToken();
-            setUserId(userInfo.result.id); // Set userId after fetching user information
+            setUserId(userInfo.result.id); 
         } catch (error) {
             console.error("Error fetching user data:", error);
+        }
+    };
+
+    const checkIfPostIsLiked = async () => {
+        try {
+            const response = await getLikedPostByUser(userId);
+            const likedPosts = response.data.result;
+            const isPostLiked = likedPosts.some((post) => post.id === postId);
+            setIsLiked(isPostLiked);
+        } catch (error) {
+            console.error("Error checking if post is liked:", error);
         }
     };
 
@@ -134,6 +151,7 @@ const PostDetail = ({ navigation, route }) => {
             console.error("Error updating like status", error);
         }
     };
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.wrapper}>
@@ -201,7 +219,6 @@ const PostDetail = ({ navigation, route }) => {
                                 <MaterialIcons name="send" size={24} color="black" />
                             </Pressable>
                         </View>
-                        {/* <View style={styles.divider} /> */}
                         {comments && comments.slice(0, showAllComments ? comments.length : 2).map((comment, index) => (
                             <View key={index} style={styles.commentContainer}>
                                 <Text style={styles.commentText}>
@@ -222,10 +239,12 @@ const PostDetail = ({ navigation, route }) => {
                     <View style={styles.description}>
                         <Text style={styles.descriptionTitle}>Mô tả sản phẩm</Text>
                         <Text style={styles.descriptionText}>
-                            {showFullDescription ? postDetails?.description : `${postDetails?.description?.slice(0, 150)}...`}
-                        </Text>
-                        <Text style={styles.seeMore} onPress={() => setShowFullDescription(!showFullDescription)}>
-                            {showFullDescription ? 'Ẩn bớt' : 'Xem thêm'}
+                            {showFullDescription ? postDetails?.description : `${postDetails?.description?.slice(0, 100)}...`}
+                            {postDetails?.description?.length > 100 && (
+                                <Text style={styles.readMore} onPress={() => setShowFullDescription(!showFullDescription)}>
+                                    {showFullDescription ? ' Ẩn bớt' : ' Xem thêm'}
+                                </Text>
+                            )}
                         </Text>
                         <Text style={styles.createdTime}>{postDetails?.createdAt}</Text>
                         <View style={styles.dividerLight} />
