@@ -11,7 +11,7 @@ import {
     Alert,
     Button,
 } from "react-native";
-import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo } from '@expo/vector-icons';
+import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo, FontAwesome } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
 import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
 import Carousel from "../../components/carousel/Carousel";
@@ -20,6 +20,7 @@ import styles from "../css/postDetails.style";
 import { Rating } from 'react-native-stock-star-rating';
 import { getUserByToken, likePost, unlikePost } from "../../api/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Comment from "./Comment";
 
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
@@ -35,7 +36,8 @@ const PostDetail = ({ navigation, route }) => {
     const [showAllComments, setShowAllComments] = useState(false);
     const [newComment, setNewComment] = useState("");
     const data = postDetails?.product?.images || [];
-
+    const [modalVisible, setModalVisible] = useState(false);
+    
     useEffect(() => {
         fetchPostDetails();
         checkAuthentication();
@@ -208,6 +210,19 @@ const PostDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                     <View style={styles.divider} />
+
+                    <View style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}>
+                        <Button title="Show Comments" onPress={() => setModalVisible(true)} />
+                        <Comment
+                            visible={modalVisible}
+                            onClose={() => setModalVisible(false)}
+                        />
+                    </View>
+
                     <View style={styles.comment}>
                         <View style={styles.commentInputContainer}>
                             <TextInput
@@ -438,9 +453,15 @@ const PostDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                 </ScrollView>
-                <View style={styles.shoppingBtn}>
-                    <TouchableOpacity style={styles.button} onPress={() => { }}>
-                        <Text style={styles.buttonText}>Tiếp tục mua hàng</Text>
+                <View style={styles.bottomBtn}>
+                    <TouchableOpacity style={styles.leftButton}>
+                        <FontAwesome name="comments" size={24} color="white" />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.leftButton}>
+                        <FontAwesome name="shopping-cart" size={24} color="white" />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.rightButton}>
+                        <Text style={styles.rightButtonText}>Mua ngay</Text>
                     </TouchableOpacity>
                 </View>
             </View>

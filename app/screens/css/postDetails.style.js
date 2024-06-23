@@ -223,28 +223,36 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginTop: 5,
     },
-    shoppingBtn: {
-        width: '100%',
-        height: '10%',
-        alignItems: 'center',
+    bottomBtn: {
+        flexDirection: 'row',
+        height: 50,
+        backgroundColor: '#fff',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -5 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        elevation: 10,
+        zIndex:999
+    },
+    leftButton: {
+        flex: 1,
         justifyContent: 'center',
-        zIndex: 9999,
-        backgroundColor: COLORS.white,
-        borderTopLeftRadius: 15,
-        borderTopRightRadius: 15,
+        alignItems: 'center',
+        backgroundColor: '#00bfa5',
+        borderLeftWidth: 1,
+        borderColor: COLORS.gray2
     },
-    button: {
-        backgroundColor: COLORS.primary, // Adjust this color to match the image
-        paddingVertical: 15,
-        paddingHorizontal: 30,
-        borderRadius: 10,
-
+    rightButton: {
+        flex: 2,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: COLORS.primary,
+        borderColor: COLORS.gray2
     },
-    buttonText: {
+    rightButtonText: {
         color: 'white',
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
-        textAlign: 'center',
     },
 });
 
