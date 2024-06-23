@@ -55,7 +55,7 @@ const HomeFollow = ({ navigation }) => {
             }
         >
             <Slider navigation={navigation} />
-            <Brands/>
+            <Brands />
             {loading ? (
                 <ActivityIndicator size="large" color={COLORS.primary} />
             ) : (
@@ -84,6 +84,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         gap: 6,
         marginHorizontal: "auto",
-        marginTop: "-4%",
+        marginTop: "-8%",
     },
 });

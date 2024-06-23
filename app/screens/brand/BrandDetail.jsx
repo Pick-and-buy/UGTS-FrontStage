@@ -1,32 +1,28 @@
 import {
     StyleSheet,
-    ScrollView,
     Text,
     View,
-    TouchableOpacity,
-    Image,
-    TextInput,
     FlatList,
+    RefreshControl,
 } from "react-native";
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
-import React, { useState, useEffect } from "react";
-import { NavigationContaine, useNavigation, useRoute } from '@react-navigation/native';
+import React, { useState, useEffect, useCallback } from "react";
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS, SIZES } from "../../constants/theme";
 import { getPostsByBrandName } from "../../api/post";
 import PostHorizontal from "../post/PostHorizontal";
 import BackBtn from "../../components/BackBtn";
 
 const BrandDetail = ({ navigation }) => {
-
-    //Lấy props khi onPress
+    // Lấy props khi onPress
     const brand = useRoute().params.brands;
-    // console.log(brand);
     const [listPosts, setListPosts] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         fetchAllPostsByBrandName();
-    }, [])
+    }, []);
 
     const fetchAllPostsByBrandName = async () => {
         setIsLoading(true);
@@ -35,11 +31,15 @@ const BrandDetail = ({ navigation }) => {
             setListPosts(res.data.result);
         } catch (error) {
             console.error("Error fetching brands:", error);
-            // Handle error as per your application's requirements
         } finally {
             setIsLoading(false);
         }
     };
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        fetchAllPostsByBrandName().finally(() => setRefreshing(false));
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -48,40 +48,48 @@ const BrandDetail = ({ navigation }) => {
                 <Text style={styles.headerText}>SẢN PHẨM</Text>
             </View>
 
-            {listPosts?.length > 0 ?
+            {listPosts?.length > 0 ? (
                 <FlatList
                     data={listPosts}
                     renderItem={({ item, index }) => (
                         <PostHorizontal post={item} />
                     )}
+                    keyExtractor={(item) => item.id.toString()}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                            colors={[COLORS.primary]}
+                        />
+                    }
                 />
-                :
+            ) : (
                 <View>
                     <Text
                         style={{
                             fontFamily: 'bold',
                             textAlign: 'center',
                             marginTop: '20%',
-                            color: 'gray'
-                        }}>
+                            color: 'gray',
+                        }}
+                    >
                         Không tìm thấy sản phẩm nào có thương hiệu {brand.name}
                     </Text>
                 </View>
-            }
+            )}
         </View>
     );
-}
+};
 
 export default BrandDetail;
 
 const styles = StyleSheet.create({
     container: {
-        // padding: 20,
         width: '100%',
         height: '100%',
         paddingTop: 60,
         marginBottom: 80,
-        backgroundColor: COLORS.white
+        backgroundColor: COLORS.white,
     },
     header: {
         width: '96%',
@@ -96,14 +104,13 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: "bold",
         position: 'absolute',
-        top: -28
+        top: -28,
     },
     textName: {
         fontSize: 25,
         fontFamily: 'bold',
         color: COLORS.black,
         textAlign: 'center',
-        paddingLeft: 40
+        paddingLeft: 40,
     },
-})
-
+});
