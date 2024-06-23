@@ -223,6 +223,29 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginTop: 5,
     },
+    shoppingBtn: {
+        width: '100%',
+        height: '10%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 9999,
+        backgroundColor: COLORS.white,
+        borderTopLeftRadius: 15,
+        borderTopRightRadius: 15,
+    },
+    button: {
+        backgroundColor: COLORS.primary, // Adjust this color to match the image
+        paddingVertical: 15,
+        paddingHorizontal: 30,
+        borderRadius: 10,
+
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
 });
 
 export default styles;

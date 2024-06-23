@@ -9,6 +9,7 @@ import {
     SafeAreaView,
     TextInput,
     Alert,
+    Button,
 } from "react-native";
 import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
@@ -65,7 +66,7 @@ const PostDetail = ({ navigation, route }) => {
     const getUserData = async () => {
         try {
             const userInfo = await getUserByToken();
-            setUserId(userInfo.result.id); 
+            setUserId(userInfo.result.id);
         } catch (error) {
             console.error("Error fetching user data:", error);
         }
@@ -387,7 +388,7 @@ const PostDetail = ({ navigation, route }) => {
                     </View>
                     <View style={styles.dividerLight} />
                     {/* story */}
-                    <View style={styles.details}>
+                    <View style={[styles.details, { marginBottom: 6 }]}>
                         <View style={styles.left}>
                             <Text>Story</Text>
                         </View>
@@ -437,6 +438,11 @@ const PostDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                 </ScrollView>
+                <View style={styles.shoppingBtn}>
+                    <TouchableOpacity style={styles.button} onPress={() => { }}>
+                        <Text style={styles.buttonText}>Tiếp tục mua hàng</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </SafeAreaView>
     );
