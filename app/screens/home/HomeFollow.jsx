@@ -17,6 +17,7 @@ import Carousel from "pinar";
 import Slider from './Slider';
 import { getAllPosts } from "../../api/post";
 import Post from "../post/Post";
+import Brands from "./Brands";
 
 const HomeFollow = ({ navigation }) => {
     const [posts, setPosts] = useState([]);
@@ -54,7 +55,7 @@ const HomeFollow = ({ navigation }) => {
             }
         >
             <Slider navigation={navigation} />
-
+            <Brands/>
             {loading ? (
                 <ActivityIndicator size="large" color={COLORS.primary} />
             ) : (

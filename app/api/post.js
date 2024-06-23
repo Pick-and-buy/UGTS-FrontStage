@@ -74,4 +74,13 @@ export const getLikedPostByUser = async (id) => {
     throw error;
   }
 }
+export const getPostsByBrandName = async (brandName) => {
+  try {
+    const response = axiosInstance.get(`/posts/brands?name=${brandName}`);
+    return response;
+  } catch (error) {
+    logger.error('Error Get Liked Post:', error);
+    throw error;
+  }
+}
 

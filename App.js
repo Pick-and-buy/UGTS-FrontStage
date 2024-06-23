@@ -29,13 +29,13 @@ import { LoginContext } from './app/context/LoginContext';
 import TodoTask from './app/screens/todoTask/todoTask';
 import ChangePassword from './app/screens/change password/ChangePassword';
 import UpdateProfile from './app/screens/profile/UpdateProfile';
-import ListBrandHomePage from './app/screens/brand/ListBrandHomePage';
 import CreatePostDetail from './app/screens/post/CreatePostDetail';
 import News from './app/screens/news/News';
 import Slider from './app/screens/home/Slider';
 import Search from './app/screens/Search';
 import SellerProfile from './app/screens/profile/SellerProfile';
 import UserProfile from './app/screens/profile/UserProfile';
+import ListBrands from './app/screens/brand/ListBrands';
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [login, setLogin] = useState(null);
@@ -212,7 +212,7 @@ export default function App() {
 
           <Stack.Screen
             name='list-all-brand'
-            component={ListBrandHomePage}
+            component={ListBrands}
             options={{ headerShown: false }}
           />
 

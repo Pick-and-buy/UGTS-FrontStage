@@ -1,144 +1,248 @@
-import { StyleSheet } from "react-native";
-import { COLORS, SHADOWS, SIZES } from "../../constants/theme";
+import {
+    StyleSheet,
+    ScrollView,
+    Text,
+    View,
+    TouchableOpacity,
+    Image,
+    SafeAreaView,
+    ActivityIndicator,
+    RefreshControl,
+    Alert
+} from "react-native";
+import { Ionicons, Feather, MaterialIcons } from '@expo/vector-icons';
+import { COLORS } from "../../constants/theme";
+import { Rating } from 'react-native-stock-star-rating';
+import Post from "../post/Post";
+import { useEffect, useState, useCallback } from "react";
+import { followUser, unfollowUser, checkIfFollowing, getListsFollowers, getListsFollowing } from "../../api/user";
+import { getPostsByUserId } from "../../api/post";
+import styles from "../css/sellerProfile.style";
 
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: COLORS.white,
-        width: "100%",
-        height: "100%",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    wrapper: {
-        width: "100%",
-        height: "100%",
-    },
-    header: {
-        width: "100%",
-        height: "10%",
-        flexDirection: "row",
-        justifyContent: "space-around",
-        alignItems: "flex-end",
-        backgroundColor: COLORS.white,
-        paddingBottom: 12,
-        ...SHADOWS.medium
-    },
-    headerText: {
-        color: COLORS.black,
-        fontSize: 18
-    },
-    contentContainer: {
-        width: "100%",
-        height: "100%",
-        backgroundColor: COLORS.white,
-    },
-    like: {
-        width: 40,
-        height: 40,
-        position: "absolute",
-        left: "85%",
-        top: "-20%",
-        backgroundColor: COLORS.white,
-        borderRadius: 99,
-        padding: 5,
-        ...SHADOWS.medium,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    informationContainer: {
-        width: "96%",
-        height: "20%",
-        marginHorizontal: "auto",
-        backgroundColor: COLORS.white,
-        top: "-13%",
-    },
-    label: {
-        flexDirection: "row",
-        justifyContent: "flex-start",
-        marginTop: 0
-    },
-    keyword: {
-        color: COLORS.blue
-    },
-    verified: {
-        justifyContent: "center",
-        alignItems: "center",
-        marginLeft: 20,
-        marginVertical: "auto",
-        flexDirection: "row"
-    },
-    verifiedText: {
-        color: COLORS.blue
-    },
-    labelTransport: {
-        marginTop: 20,
-        backgroundColor: "#D9D9D9",
-        borderRadius: 3,
-        width: "35%",
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-    },
-    currency: {
-        textDecorationLine: 'underline',
-        marginRight: 2
-    },
-    price: {
-        fontSize: 35,
-        color: COLORS.primary,
-        marginBottom: 20
-    },
-    wallet: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        gap: 5
-    },
-    walletTitle: {
+const SellerProfile = ({ navigation, route }) => {
+    const { userOfPost, userIdLogged } = route.params;
+    const [loading, setLoading] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
+    const [postsOfSeller, setPostsOfSeller] = useState([]);
+    const [isFollowing, setIsFollowing] = useState(false);
+    const [followersCount, setFollowersCount] = useState(0);
+    const [followingCount, setFollowingCount] = useState(0)
+    const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
+    useEffect(() => {
+        fetchPostsByUserId();
+        if (userIdLogged) {
+            checkFollowStatus();
+        } else {
+            // Reset follow status if user is not logged in
+            setIsFollowing(false);
+        }
+        // Add userIdLogged to dependency array
+    }, [userIdLogged]);
 
-    },
-    walletTitlePrice: {
-        color: COLORS.primary,
-    },
-    divider: {
-        borderColor: COLORS.gray2,
-        opacity: 0.6,
-        borderWidth: 6,
-        width: SIZES.width,
-        backgroundColor: COLORS.gray,
-    },
-    dividerLight: {
-        borderColor: COLORS.gray2,
-        opacity: 1,
-        borderWidth: 0.3,
-        width: SIZES.width,
-        marginBottom: 5,
-        marginTop: 7,
-    },
-    comment: {
-        backgroundColor: COLORS.white
-    },
-    description: {
-        width: "96%",
-        flex:1,
-        marginHorizontal: "auto",
-    },
-    descriptionTitle: {
-        fontWeight: "bold",
-        fontSize: 16,
-        marginTop: 20
-    },
-    descriptionText: {
-        marginBottom: 10,
-        marginTop: 20
-    },
-    createdTime: {
+    const fetchFollowersCount = async () => {
+        try {
+            const response = await getListsFollowers(userOfPost.id);
+            setFollowersCount(response.result.length);
+            console.log(response.result.length);
+        } catch (error) {
+            console.error('Error fetching followers count:', error);
+        }
+    };
 
-    },
-    hashtags: {
-        
-    }
+    const fetchFollowingCount = async () => {
+        try {
+            const response = await getListsFollowing(userOfPost.id);
+            setFollowingCount(response.result.length);
+        } catch (error) {
+            console.error('Error fetching following count:', error);
+        }
+    };
 
-})
-export default styles
+    const fetchPostsByUserId = async () => {
+        setLoading(true);
+        try {
+            const response = await getPostsByUserId(userOfPost.id);
+            setPostsOfSeller(response?.data?.result);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    const checkFollowStatus = async () => {
+        try {
+            const status = await checkIfFollowing(userIdLogged, userOfPost.id);
+            setIsFollowing(status);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleFollowToggle = async () => {
+        if (!userIdLogged) {
+            Alert.alert(
+                "Đăng nhập",
+                "Bạn cần đăng nhập để theo dõi người bán.",
+                [
+                    {
+                        text: "Cancel",
+                        style: "cancel"
+                    },
+                    {
+                        text: "Đăng nhập",
+                        onPress: () => navigation.navigate('login-navigation')
+                    }
+                ]
+            );
+            return;
+        }
+
+        try {
+            setLoading(true);
+            if (isFollowing) {
+                console.log('Unfollowing user...');
+                const response = await unfollowUser(userIdLogged, userOfPost.id);
+                console.log('Unfollow response:', response);
+                setFollowersCount(prevCount => prevCount - 1);
+            } else {
+                console.log('Following user...');
+                const response = await followUser(userIdLogged, userOfPost.id);
+                console.log('Follow response:', response);
+                setFollowersCount(prevCount => prevCount + 1);
+            }
+            setIsFollowing(!isFollowing);
+        } catch (error) {
+            console.error('Error in handleFollowToggle:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        fetchPostsByUserId().then(() => setRefreshing(false));
+        if (userIdLogged) {
+            checkFollowStatus();
+        }
+    }, [userIdLogged]); // Add userIdLogged to dependency array
+
+    return (
+        <SafeAreaView style={styles.safeArea}>
+            <View style={styles.container}>
+                {/* Header */}
+                <View style={styles.header}>
+                    <Ionicons
+                        onPress={() => navigation.goBack()}
+                        name="chevron-back-outline"
+                        size={30}
+                        color={COLORS.gray} />
+                    <Text style={{ fontSize: 24, fontWeight: "bold", color: COLORS.black }}>THÔNG TIN NGƯỜI BÁN</Text>
+                    <Feather
+                        onPress={() => console.warn('More Function')}
+                        name="more-horizontal"
+                        size={35}
+                        color="gray" />
+                </View>
+
+                <View style={styles.shadow}>
+                    {/* Tạo Khoảng Trống */}
+                </View>
+
+                {/* Personal Information */}
+                <View style={styles.personalContainer}>
+                    <View style={[styles.detailContainer, { alignItems: 'flex-start' }]}>
+                        <Image
+                            style={styles.avatar}
+                            source={{ uri: userOfPost?.avatar ? userOfPost?.avatar : profile }}
+                        />
+                        <View style={{ gap: 5 }}>
+                            <Text style={{ fontSize: 18 }}>
+                                {userOfPost?.username}
+                            </Text>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Rating
+                                    stars={4.7}
+                                    maxStars={5}
+                                    size={16}
+                                />
+                                <Text style={{ fontSize: 12, marginLeft: 4, marginTop: 4 }}>(100)</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <MaterialIcons name="verified-user" size={16} color="#699BF7" style={{ marginTop: 0, marginLeft: 0 }} />
+                                <Text style={{ fontSize: 12 }}>Tài khoản đã xác minh</Text>
+                            </View>
+                        </View>
+                    </View>
+                    <View>
+                        {userIdLogged && userOfPost.id !== userIdLogged && (
+                            <TouchableOpacity
+                                onPress={handleFollowToggle}
+                                style={[
+                                    styles.followBtn,
+                                    isFollowing && styles.followingBtn
+                                ]}
+                            >
+                                <Text style={[
+                                    styles.followBtnText,
+                                    isFollowing && styles.followingBtnText
+                                ]}>
+                                    {isFollowing ? 'Đang theo dõi' : 'Theo dõi'}
+                                </Text>
+                            </TouchableOpacity>
+                        )}
+                        {!userIdLogged && (
+                            <TouchableOpacity
+                                onPress={handleFollowToggle}
+                                style={styles.followBtn}
+                            >
+                                <Text style={styles.followBtnText}>
+                                    Theo dõi
+                                </Text>
+                            </TouchableOpacity>
+                        )}
+                    </View>
+                </View>
+
+                {/* Follower */}
+                <View style={styles.followerView}>
+                    <Text>
+                        {followersCount}<Text> người theo dõi</Text>
+                    </Text>
+                    <Text>
+                        {followingCount}<Text> người đang theo dõi</Text>
+                    </Text>
+                </View>
+
+                {/* User product */}
+                <View style={styles.containerPost}>
+                    <View style={{ marginTop: 20, justifyContent: "center", alignItems: "center" }}>
+                        <Text style={{ fontSize: 20, fontWeight: "bold" }}>Sản phẩm</Text>
+                    </View>
+                    <ScrollView
+                        contentContainerStyle={styles.scrollViewContent}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={refreshing}
+                                onRefresh={onRefresh}
+                                colors={[COLORS.primary]}
+                            />
+                        }
+                    >
+                        {loading ? (
+                            <ActivityIndicator size="large" color={COLORS.primary} />
+                        ) : (
+                            <View style={styles.row}>
+                                {postsOfSeller.map(post => (
+                                    <Post key={post.id} post={post} />
+                                ))}
+                            </View>
+                        )}
+                    </ScrollView>
+                </View>
+            </View>
+        </SafeAreaView>
+    );
+}
+
+export default SellerProfile;

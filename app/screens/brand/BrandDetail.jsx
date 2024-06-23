@@ -12,55 +12,47 @@ import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
 import { NavigationContaine, useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS, SIZES } from "../../constants/theme";
-import ProductListItemByBrand from "./ProductListItemByBrand";
-import { callFetchListPost, callFetchPostByBrandName } from "../../api/post";
+import { getPostsByBrandName } from "../../api/post";
+import PostHorizontal from "../post/PostHorizontal";
+import BackBtn from "../../components/BackBtn";
 
-const BrandDetail = () => {
+const BrandDetail = ({ navigation }) => {
 
     //Lấy props khi onPress
     const brand = useRoute().params.brands;
-    const navigation = useNavigation();
-
-    const [listPost, setListPost] = useState([]);
+    // console.log(brand);
+    const [listPosts, setListPosts] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        console.log("check brand <BrandDetail>: ", brand);
-        console.log("check brand <BrandDetail>: ", listPost.length);
-        fetchAllPost();
+        fetchAllPostsByBrandName();
     }, [])
 
-    const fetchAllPost = async () => {
+    const fetchAllPostsByBrandName = async () => {
         setIsLoading(true);
-        let query = `name=${brand.name}`;
-        const res = await callFetchPostByBrandName(query);
-        // console.log(">>> check res List Post<BrandDetail>: ", res.data.result.length);
-        // console.log(">>> check res List Post<BrandDetail>: ", res.data.result[0].title);
-        if (res && res.data && res.data.result) {
-            setListPost(res.data.result)
+        try {
+            const res = await getPostsByBrandName(brand.name);
+            setListPosts(res.data.result);
+        } catch (error) {
+            console.error("Error fetching brands:", error);
+            // Handle error as per your application's requirements
+        } finally {
+            setIsLoading(false);
         }
-        setIsLoading(false);
-    }
+    };
 
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Ionicons
-                    onPress={() => navigation.goBack()}
-                    name="chevron-back-outline"
-                    size={35}
-                    color={COLORS.primary} />
-                <Text style={styles.textName}>
-                    {brand.name}
-                </Text>
-
+                <BackBtn onPress={() => navigation.goBack()} />
+                <Text style={styles.headerText}>SẢN PHẨM</Text>
             </View>
 
-            {listPost?.length > 0 ?
+            {listPosts?.length > 0 ?
                 <FlatList
-                    data={listPost}
+                    data={listPosts}
                     renderItem={({ item, index }) => (
-                        <ProductListItemByBrand listItem={item} />
+                        <PostHorizontal post={item} />
                     )}
                 />
                 :
@@ -84,16 +76,27 @@ export default BrandDetail;
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
+        // padding: 20,
+        width: '100%',
+        height: '100%',
         paddingTop: 60,
-        marginBottom: 80
+        marginBottom: 80,
+        backgroundColor: COLORS.white
     },
     header: {
-        display: 'flex',
-        flexDirection: 'row',
+        width: '96%',
+        marginTop: 30,
+        marginBottom: 30,
+        marginHorizontal: "auto",
+        justifyContent: 'center',
         alignItems: 'center',
-        gap: 20,
-        marginBottom: 20
+    },
+    headerText: {
+        textAlign: 'center',
+        fontSize: 24,
+        fontWeight: "bold",
+        position: 'absolute',
+        top: -28
     },
     textName: {
         fontSize: 25,
