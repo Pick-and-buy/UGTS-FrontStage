@@ -1,36 +1,83 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, Modal, Image } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, Modal, Image, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { COLORS } from '../../constants/theme';
+import { getComments, postComment } from '../../api/post';
+import moment from 'moment';
 
-const Comment = ({ visible, onClose }) => {
-    const [comments, setComments] = useState([
-        { id: 1, userName: 'Thanh Ha Bui', comment: 'Đáng đồng tiền bát gạo đấy. Tôi yêu chó lắm. Nhưng không đủ tiền mua cả con. Mỗi lần mua được có 5 lạng thôi', timeAgo: '1 ngày', avatar: 'https://haycafe.vn/wp-content/uploads/2022/02/Anh-gai-xinh-de-thuong.jpg' },
-        { id: 2, userName: 'Phan Trung Hiếu', comment: 'Mặt nó gian vậy? :))', timeAgo: '17 giờ', avatar: 'https://haycafe.vn/wp-content/uploads/2022/02/Anh-gai-xinh-de-thuong.jpg' },
-        { id: 3, userName: 'Thành Lộc', comment: 'Nhớ mua 2 bích xúc xích nha ní', timeAgo: '12 giờ', avatar: 'https://haycafe.vn/wp-content/uploads/2022/02/Anh-gai-xinh-de-thuong.jpg' },
-        { id: 4, userName: 'Nam Nguyễn', comment: 'Trộm said: 2 que xương chứ phải :)))', timeAgo: '5 giờ', avatar: 'https://haycafe.vn/wp-content/uploads/2022/02/Anh-gai-xinh-de-thuong.jpg' },
-    ]);
-
+const Comment = ({ visible, onClose, postId, isAuthenticated, user, navigation }) => {
+    const userId = user?.id;
     const [newComment, setNewComment] = useState('');
-    const currentUserAvatar = 'https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/04/anh-con-gai-3.jpg';
+    const [comments, setComments] = useState([]);
+    const [isInputEmpty, setIsInputEmpty] = useState(true);
 
-    const addComment = () => {
-        if (newComment.trim() !== '') {
-            setComments([
-                ...comments,
-                { id: comments.length + 1, userName: 'User', comment: newComment, timeAgo: 'Just now', avatar: currentUserAvatar },
-            ]);
-            setNewComment('');
+    const flatListRef = useRef();
+
+    useEffect(() => {
+        if (flatListRef.current) {
+            flatListRef.current.scrollToOffset({ animated: true, offset: 0 });
+        }
+    }, [comments]);
+
+    useEffect(() => {
+        fetchComments();
+    }, []);
+
+    useEffect(() => {
+        setIsInputEmpty(newComment.trim() === '');
+    }, [newComment]);
+
+    const handleCommentSubmit = async () => {
+        if (!newComment.trim()) {
+            alert("Comment is empty");
+            return;
+        } else if (!isAuthenticated) {
+            Alert.alert(
+                "Đăng nhập",
+                "Bạn cần đăng nhập để bình luận bài viết.",
+                [
+                    {
+                        text: "Cancel",
+                        style: "cancel"
+                    },
+                    {
+                        text: "Đăng nhập",
+                        onPress: () => navigation.navigate('login-navigation')
+                    }
+                ]
+            );
+            return;
+        }
+
+        try {
+            await postComment(userId, postId, newComment);
+            setNewComment(""); // Clear the input field
+            fetchComments(); // Fetch updated comments list
+        } catch (error) {
+            console.error("Error posting comment", error);
+        }
+    };
+
+    const fetchComments = async () => {
+        try {
+            const response = await getComments(postId);
+            const formattedComments = response.data.map(comment => ({
+                ...comment,
+                timeAgo: moment(comment.createAt, 'YYYY-MM-DD HH:mm:ss').fromNow(),
+            }));
+            setComments(formattedComments); // Reverse the fetched comments
+        } catch (error) {
+            console.error("Error fetching comments:", error);
         }
     };
 
     const renderComment = ({ item }) => (
         <View style={styles.commentContainer}>
-            <Image source={{ uri: item.avatar }} style={styles.avatar} />
+            <Image source={{ uri: item?.userImageUrl }} style={styles.avatar} />
             <View style={styles.commentTextContainer}>
-                <Text style={styles.userName}>{item.userName}</Text>
-                <Text style={styles.commentText}>{item.comment}</Text>
-                <Text style={styles.timeAgo}>{item.timeAgo}</Text>
+                <Text style={styles.userName}>{item?.username}</Text>
+                <Text style={styles.commentText}>{item?.commentContent}</Text>
+                <Text style={styles.timeAgo}>{item?.timeAgo}</Text>
             </View>
         </View>
     );
@@ -44,27 +91,32 @@ const Comment = ({ visible, onClose }) => {
             <View style={styles.modalOverlay}>
                 <View style={styles.modalContainer}>
                     <View style={styles.header}>
-                        <Text style={styles.title}>2.586 bình luận</Text>
+                        <Text style={styles.title}>{comments.length} bình luận</Text>
                         <TouchableOpacity style={styles.closeButton} onPress={onClose}>
                             <Icon name="close" size={24} color="black" />
                         </TouchableOpacity>
                     </View>
                     <FlatList
-                        data={comments}
+                        ref={flatListRef}
+                        data={comments.reverse()}
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={renderComment}
                         contentContainerStyle={styles.list}
                         showsVerticalScrollIndicator={false}
                     />
                     <View style={styles.inputContainer}>
-                        <Image source={{ uri: currentUserAvatar }} style={styles.avatarSmall} />
+                        <Image source={{ uri: user?.avatar }} style={styles.avatarSmall} />
                         <TextInput
                             style={styles.textInput}
-                            placeholder="Add a comment..."
+                            placeholder="Thêm bình luận..."
                             value={newComment}
                             onChangeText={setNewComment}
                         />
-                        <TouchableOpacity style={styles.sendButton} onPress={addComment}>
+                        <TouchableOpacity
+                            style={[styles.sendButton, isInputEmpty && styles.sendButtonDisabled]}
+                            onPress={handleCommentSubmit}
+                            disabled={isInputEmpty}
+                        >
                             <Icon name="arrow-up" size={24} color="white" />
                         </TouchableOpacity>
                     </View>
@@ -83,7 +135,7 @@ const styles = StyleSheet.create({
     },
     modalContainer: {
         width: '100%',
-        height: "70%",
+        height: "65%",
         backgroundColor: 'white',
         borderRadius: 10,
         padding: 20,
@@ -107,7 +159,7 @@ const styles = StyleSheet.create({
         right: 0,
     },
     title: {
-        fontSize: 20,
+        fontSize: 16,
         fontWeight: 'bold',
     },
     list: {
@@ -137,8 +189,6 @@ const styles = StyleSheet.create({
     },
     commentText: {
         fontSize: 16,
-        marginTop: 4,
-        marginBottom: 4,
     },
     timeAgo: {
         color: 'gray',
@@ -153,7 +203,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         flex: 1,
-        height: 40,
+        height: 35,
         borderColor: '#ccc',
         borderWidth: 1,
         borderRadius: 20,
@@ -163,10 +213,13 @@ const styles = StyleSheet.create({
     sendButton: {
         backgroundColor: COLORS.primary,
         borderRadius: 20,
-        width: 40,
-        height: 40,
+        width: 30,
+        height: 30,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    sendButtonDisabled: {
+        backgroundColor: '#ccc',
     },
 });
 

@@ -10,6 +10,7 @@ import {
     TextInput,
     Alert,
     Button,
+    RefreshControl,
 } from "react-native";
 import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo, FontAwesome } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
@@ -30,6 +31,7 @@ const PostDetail = ({ navigation, route }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isLiked, setIsLiked] = useState(false);
     const [userId, setUserId] = useState(null);
+    const [user, setUser] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [showFullDescription, setShowFullDescription] = useState(false);
     const [comments, setComments] = useState([]);
@@ -37,7 +39,9 @@ const PostDetail = ({ navigation, route }) => {
     const [newComment, setNewComment] = useState("");
     const data = postDetails?.product?.images || [];
     const [modalVisible, setModalVisible] = useState(false);
-    
+    const [refreshing, setRefreshing] = useState(false);
+
+    // console.log(postId);
     useEffect(() => {
         fetchPostDetails();
         checkAuthentication();
@@ -69,6 +73,7 @@ const PostDetail = ({ navigation, route }) => {
         try {
             const userInfo = await getUserByToken();
             setUserId(userInfo.result.id);
+            setUser(userInfo.result)
         } catch (error) {
             console.error("Error fetching user data:", error);
         }
@@ -100,27 +105,9 @@ const PostDetail = ({ navigation, route }) => {
     const fetchComments = async () => {
         try {
             const response = await getComments(postId);
-            setComments(response.data);
+            setComments(response.data.reverse());
         } catch (error) {
             console.error("Error fetching comments:", error);
-        }
-    };
-
-    const handleCommentSubmit = async () => {
-        if (!newComment.trim()) {
-            alert("Comment is empty");
-            return;
-        } else if (!isAuthenticated) {
-            alert("User is not authenticated!");
-            return;
-        }
-
-        try {
-            await postComment(userId, postId, newComment);
-            setNewComment(""); // Clear the input field
-            fetchComments(); // Fetch updated comments list
-        } catch (error) {
-            console.error("Error posting comment", error);
         }
     };
 
@@ -155,6 +142,23 @@ const PostDetail = ({ navigation, route }) => {
         }
     };
 
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('vi-VN', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(price);
+    }
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await fetchPostDetails();
+        await checkAuthentication();
+        await fetchComments();
+        setRefreshing(false);
+    };
+
+    // Format the price using the helper function
+    const formattedPrice = formatPrice(postDetails?.product?.price);
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.wrapper}>
@@ -165,6 +169,9 @@ const PostDetail = ({ navigation, route }) => {
                 </View>
                 <ScrollView contentContainerStyle={styles.contentContainer}
                     showsVerticalScrollIndicator={false}
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    }
                 >
                     <Carousel data={data} />
                     <View style={styles.informationContainer}>
@@ -195,7 +202,7 @@ const PostDetail = ({ navigation, route }) => {
                         <Text style={styles.labelTransport}>Miễn phí vận chuyển</Text>
                         <Text style={styles.price}>
                             <Text style={styles.currency}>đ</Text>
-                            {postDetails?.product?.price}
+                            {formattedPrice}
                         </Text>
                         <View style={styles.wallet}>
                             <AntDesign name="creditcard" size={20} color="gray" />
@@ -211,20 +218,17 @@ const PostDetail = ({ navigation, route }) => {
                     </View>
                     <View style={styles.divider} />
 
-                    <View style={{
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}>
-                        <Button title="Show Comments" onPress={() => setModalVisible(true)} />
-                        <Comment
-                            visible={modalVisible}
-                            onClose={() => setModalVisible(false)}
-                        />
-                    </View>
+
 
                     <View style={styles.comment}>
-                        <View style={styles.commentInputContainer}>
+                        <Text style={{
+                            fontWeight: "bold",
+                            fontSize: 16,
+                            marginBottom: 10,
+                        }}>Bình luận
+                            <Text> ({comments.length})</Text>
+                        </Text>
+                        {/* <View style={styles.commentInputContainer}>
                             <TextInput
                                 style={styles.commentInput}
                                 value={newComment}
@@ -234,22 +238,56 @@ const PostDetail = ({ navigation, route }) => {
                             <Pressable onPress={handleCommentSubmit}>
                                 <MaterialIcons name="send" size={24} color="black" />
                             </Pressable>
-                        </View>
-                        {comments && comments.slice(0, showAllComments ? comments.length : 2).map((comment, index) => (
+                        </View> */}
+                        {comments && comments.slice(0, showAllComments ? comments.length : 3).map((comment, index) => (
                             <View key={index} style={styles.commentContainer}>
-                                <Text style={styles.commentText}>
-                                    <Text style={{ fontWeight: "bold" }}>
-                                        {comment.username}
-                                    </Text>
-                                    : {comment.commentContent}
-                                </Text>
+                                <Image source={{ uri: comment?.userImageUrl }} style={styles.avatarComment} />
+                                <View style={styles.commentTextContainer}>
+                                    <Text style={styles.userName}>{comment?.username}</Text>
+                                    <Text style={styles.commentText}>{comment?.commentContent}</Text>
+                                    <Text style={styles.timeAgo}>{comment.createAt}</Text>
+                                </View>
                             </View>
                         ))}
-                        {comments && comments.length > 2 && (
-                            <Text style={styles.seeMore} onPress={() => setShowAllComments(!showAllComments)}>
-                                {showAllComments ? 'Hide comments' : 'See all comments'}
-                            </Text>
-                        )}
+                        <View style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}>
+                            <TouchableOpacity
+                                style={{
+                                    width: '80%',
+                                    height: 40,
+                                    borderRadius: 5,
+                                    overflow: 'hidden',
+                                    backgroundColor: COLORS.white,
+                                    borderWidth: 1.5,
+                                    borderColor: COLORS.primary,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginBottom: 20,
+                                    marginTop: 10
+                                }}
+                                onPress={() => setModalVisible(true)}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 22,
+                                        // fontWeight: '500',
+                                        color: COLORS.primary,
+                                    }}>BÌNH LUẬN</Text>
+                            </TouchableOpacity>
+                            <Comment
+                                visible={modalVisible}
+                                onClose={() => setModalVisible(false)}
+                                postId={postId}
+                                isAuthenticated={isAuthenticated}
+                                user={user}
+                                navigation={navigation}
+                            />
+                        </View>
+
+
                     </View>
                     <View style={styles.divider} />
                     <View style={styles.description}>

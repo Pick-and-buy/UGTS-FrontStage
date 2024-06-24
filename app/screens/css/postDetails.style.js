@@ -112,14 +112,44 @@ const styles = StyleSheet.create({
         marginTop: 7,
     },
     comment: {
+        flex: 1,
+        width: "96%",
         backgroundColor: COLORS.white,
-        padding: 10,
+        // padding: 10,
+        marginHorizontal: "auto",
+        marginTop:8
     },
+    commentContainer: {
+        flexDirection: 'row',
+        paddingVertical: 8,
+    },
+    avatarComment: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        marginRight: 10,
+    },
+    commentTextContainer: {
+        flex: 1,
+    },
+    userName: {
+        fontWeight: 'bold',
+    },
+    commentText: {
+        fontSize: 16,
+    },
+    timeAgo: {
+        color: 'gray',
+        fontSize: 12,
+    },
+
+    
     description: {
         width: "96%",
         backgroundColor: COLORS.white,
         // padding: 10,
         marginHorizontal: "auto",
+        marginTop:8
     },
     descriptionTitle: {
         fontWeight: "bold",
@@ -209,11 +239,11 @@ const styles = StyleSheet.create({
         flex: 1,
         fontSize: 16,
     },
-    commentContainer: {
-        padding: 10,
-        // borderBottomColor: COLORS.lightGray,
-        // borderBottomWidth: 1,
-    },
+    // commentContainer: {
+    //     padding: 10,
+    //     // borderBottomColor: COLORS.lightGray,
+    //     // borderBottomWidth: 1,
+    // },
     commentText: {
         fontSize: 12,
     },
@@ -232,7 +262,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 5,
         elevation: 10,
-        zIndex:999
+        zIndex: 999
     },
     leftButton: {
         flex: 1,
