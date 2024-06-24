@@ -57,7 +57,7 @@ const ListBrands = ({ navigation, route }) => {
                                     />
                                 </TouchableOpacity>
                                 <View style={styles.textView}>
-                                    <Text style={{ fontFamily: "bold", color: COLORS.primary, paddingBottom: 10 }}>
+                                    <Text style={{ fontWeight: '500', color: COLORS.primary, paddingBottom: 10 }}>
                                         {item?.name}
                                     </Text>
                                 </View>

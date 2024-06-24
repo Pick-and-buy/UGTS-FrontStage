@@ -6,6 +6,17 @@ import { useNavigation } from '@react-navigation/native';
 const PostHorizontal = ({ post }) => {
     const navigation = useNavigation();
     // console.log(post.description);
+
+
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('vi-VN', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(price);
+    }
+
+    // Format the price using the helper function
+    const formattedPrice = formatPrice(post?.product?.price);
     return (
         <TouchableOpacity
             style={styles.container}
@@ -15,7 +26,7 @@ const PostHorizontal = ({ post }) => {
             <View style={styles.textContainer}>
                 <Text numberOfLines={1} style={styles.title}>{post?.title}</Text>
                 <Text numberOfLines={1} style={styles.subtitle}>{post?.description}</Text>
-                <Text style={styles.price}>đ{post?.product?.price}</Text>
+                <Text style={styles.price}>đ{formattedPrice}</Text>
             </View>
             <TouchableOpacity style={styles.buttonActive}>
                 <Text style={styles.buttonTextActive}>

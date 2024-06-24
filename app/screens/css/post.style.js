@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     },
     text: {
         color: COLORS.white,
-        fontWeight: "400",
+        fontWeight: "600",
         fontSize: 14,
         position: "absolute",
         bottom: 4,
