@@ -164,20 +164,39 @@ const Search = () => {
           </View>
         )}
         {results.length === 0 && searchHistory.length > 0 && (
-          <View style={styles.historyContainer}>
-            <Text style={styles.historyTitle}>Lịch sử tìm kiếm</Text>
-            <FlatList
-              data={searchHistory}
-              renderItem={renderSearchHistoryItem}
-              keyExtractor={(item, index) => index.toString()}
-              refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-              }
-            />
-            <TouchableOpacity onPress={clearSearchHistory} style={styles.clearButton}>
-              <Text style={styles.clearButtonText}>Xóa lịch sử</Text>
-            </TouchableOpacity>
-          </View>
+          <>
+            <View style={styles.popularContainer}>
+              <Text style={styles.popularTitle}>Từ khóa phổ biến</Text>
+              <View style={styles.popularKeywords}>
+                <Text style={styles.popularKeyword}>Túi gucci</Text>
+                <Text style={styles.popularKeyword}>Túi chanel</Text>
+                <Text style={styles.popularKeyword}>Túi YSL</Text>
+              </View>
+            </View>
+            <View style={styles.topSearchContainer}>
+              <Text style={styles.topSearchTitle}>Top tìm kiếm</Text>
+              <View style={styles.topSearchKeywords}>
+                <Text style={styles.topSearchKeyword}>Gucci Vip</Text>
+                <Text style={styles.topSearchKeyword}>Dior</Text>
+                <Text style={styles.topSearchKeyword}>Handmade Chanel</Text>
+              </View>
+            </View>
+
+            <View style={styles.historyContainer}>
+              <Text style={styles.historyTitle}>Lịch sử tìm kiếm</Text>
+              <FlatList
+                data={searchHistory}
+                renderItem={renderSearchHistoryItem}
+                keyExtractor={(item, index) => index.toString()}
+                refreshControl={
+                  <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
+              />
+              <TouchableOpacity onPress={clearSearchHistory} style={styles.clearButton}>
+                <Text style={styles.clearButtonText}>Xóa lịch sử</Text>
+              </TouchableOpacity>
+            </View>
+          </>
         )}
         <View style={styles.content}>
           {loading ? (

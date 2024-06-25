@@ -61,30 +61,90 @@ const styles = StyleSheet.create({
     marginHorizontal: "auto",
     marginBottom: 5,
   },
+  popularContainer: {
+    width: "100%",
+    backgroundColor: COLORS.white,
+    paddingVertical: 10,
+    marginTop: 20,
+  },
+  popularTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    marginLeft: 20
+  },
+  popularKeywords: {
+    flexDirection: 'row',
+    flexWrap: "wrap",
+    justifyContent: 'flex-start',
+    marginLeft: 20,
+    gap: 15,
+    marginTop: 15,
+    marginBottom: 20
+  },
+  popularKeyword: {
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    backgroundColor: "#ddd",
+    borderRadius: 2
+  },
+  topSearchContainer: {
+    width: "100%",
+    backgroundColor: COLORS.white,
+    paddingVertical: 10,
+    marginTop: 20,
+  },
+  topSearchTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    marginLeft: 20
+  },
+  topSearchKeywords: {
+    flexDirection: 'row',
+    flexWrap: "wrap",
+    justifyContent: 'flex-start',
+    marginLeft: 20,
+    gap: 15,
+    marginTop: 15,
+    marginBottom: 20
+  },
+  topSearchKeyword: {
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    backgroundColor: "#ddd",
+    borderRadius: 2
+  },
+
   historyContainer: {
-    paddingHorizontal: 16,
+    // paddingHorizontal: 16,
     paddingTop: 16,
   },
   historyTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 8,
+    marginLeft: 20
   },
   historyItemContainer: {
+    width: "100%",
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingTop: 10,
     paddingBottom: 6,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.gray2,
+    borderBottomWidth: 2,
+    borderBottomColor: "#ddd",
+    backgroundColor: COLORS.white
   },
   historyIcon: {
-    marginRight: 12,
+    marginRight: 10,
+    marginLeft: 20
   },
   historyItem: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
   },
   historyText: {
     fontSize: 16,
@@ -99,11 +159,13 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   clearButton: {
+    width: "50%",
     marginTop: 16,
     paddingVertical: 12,
     alignItems: 'center',
     backgroundColor: COLORS.primary,
     borderRadius: 8,
+    marginHorizontal: "auto"
   },
   clearButtonText: {
     color: COLORS.white,
