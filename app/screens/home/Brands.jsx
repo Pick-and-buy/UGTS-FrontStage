@@ -1,62 +1,55 @@
-import {
-    StyleSheet,
-    ScrollView,
-    Text,
-    View,
-    TouchableOpacity,
-    Image,
-    TextInput,
-    Dimensions,
-    FlatList,
-} from "react-native";
-import { FontAwesome } from '@expo/vector-icons';
-import React, { useState, useRef, useContext, useEffect } from "react";
-import { NavigationContaine, useNavigation } from '@react-navigation/native';
-import { COLORS, SIZES } from "../../constants/theme";
-import BrandDetail from "../brand/BrandDetail";
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, Image, StyleSheet, Dimensions, FlatList, ActivityIndicator } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 import { callFetchListBrands } from "../../api/brand";
+import { COLORS } from "../../constants/theme";
 
 const Brands = () => {
-
     const [listbrands, setListBrands] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-
     const navigation = useNavigation();
-
+    // console.log(listbrands);
     useEffect(() => {
         fetchAllBrand();
-    }, [])
+    }, []);
 
     const fetchAllBrand = async () => {
         setIsLoading(true);
-        const res = await callFetchListBrands();
-        if (res && res.data && res.data.result) {
-            setListBrands(res.data.result)
+        try {
+            const res = await callFetchListBrands();
+            setListBrands(res.data.result);
+        } catch (error) {
+            console.error("Error fetching brands:", error);
+            // Handle error as per your application's requirements
+        } finally {
+            setIsLoading(false);
         }
-        setIsLoading(false);
-    }
+    };
 
     return (
-        <>
-            <View>
-                <View style={styles.container}>
-                    <Text style={styles.heading}>Brand</Text>
-                    <TouchableOpacity
-                        onPress={() =>
-                            navigation.navigate('list-all-brand', { listBrands: listbrands })
-                        }
-                    >
-                        <Text>Xem Tất Cả</Text>
-                    </TouchableOpacity>
-                </View>
+        <View style={styles.container}>
+            <View style={styles.header}>
+                <Text style={styles.heading}>Thương hiệu</Text>
+                <TouchableOpacity
+                    onPress={() =>
+                        navigation.navigate('list-all-brand', { listBrands: listbrands })
+                    }
+                >
+                    <Text style={styles.expandedText}>Xem Tất Cả</Text>
+                </TouchableOpacity>
+            </View>
 
+            {isLoading ? (
+                <ActivityIndicator size="large" color={COLORS.primary} style={{ marginTop: 20 }} />
+            ) : (
                 <View style={{ marginBottom: 30 }}>
                     <FlatList
                         data={listbrands}
                         horizontal={true}
                         showsHorizontalScrollIndicator={true}
                         pagingEnabled={true}
-                        renderItem={({ item, index }) => index <= 5 && (
+                        keyExtractor={(item) => item?.id}
+                        renderItem={({ item, index }) => (
                             <View style={styles.imageContainer}>
                                 <TouchableOpacity
                                     onPress={() =>
@@ -65,12 +58,11 @@ const Brands = () => {
                                 >
                                     <Image
                                         style={styles.carouselImage}
-                                        source={{ uri: item?.logoUrl }}
-                                        key={item.id}
+                                        source={{ uri: item?.brandLogos[0]?.logoUrl }}
                                     />
                                 </TouchableOpacity>
                                 <View style={styles.textView}>
-                                    <Text style={{ fontFamily: "bold", color: COLORS.primary, paddingBottom: 10 }}>
+                                    <Text style={{ fontWeight: "500", color: COLORS.primary, paddingBottom: 10 }}>
                                         {item?.name}
                                     </Text>
                                 </View>
@@ -78,31 +70,39 @@ const Brands = () => {
                         )}
                     />
                 </View>
-            </View>
-        </>
+            )}
+        </View>
     );
-}
+};
 
 export default Brands;
 
 const styles = StyleSheet.create({
     container: {
-        display: 'flex',
+        width: '98%',
+        marginHorizontal: "auto",
+        top: -20
+    },
+    header: {
+        width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginTop: -10,
-        marginBottom: 10,
+        // marginTop: -10,
+        // marginBottom: 10,
     },
     heading: {
-        fontSize: 20,
-        marginBottom: 10,
+        fontSize: 18,
+        marginBottom: 8,
+        fontWeight: 'bold',
     },
-
+    expandedText: {
+        fontSize: 14,
+        color: COLORS.primary
+    },
     imageContainer: {
-        width: Dimensions.get('window').width / 3 - 5,
-        height: Dimensions.get('window').width / 3 + 20,
-
+        width: Dimensions.get('window').width / 3 - 15,
+        height: Dimensions.get('window').width / 3,
     },
     carouselImage: {
         height: "90%",
@@ -114,5 +114,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: -10
-    }
-})
+    },
+});

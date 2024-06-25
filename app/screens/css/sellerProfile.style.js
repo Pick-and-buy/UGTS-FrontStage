@@ -37,19 +37,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 10,
-        position: 'relative',
     },
     avatar: {
         width: 80,
         height: 80,
         borderRadius: 99,
-    },
-    editIcon: {
-        position: 'absolute',
-        bottom: 0,
-        left: 50,
-        borderRadius: 15,
-        padding: 3,
     },
     // Follower
     followerView: {
@@ -63,6 +55,19 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: COLORS.primary,
         borderRadius: 5,
+        paddingHorizontal: 5,
+        paddingVertical: 5, // Add some padding to make it look better
+    },
+    followBtnText: {
+        color: COLORS.primary,
+        textAlign: 'center',
+    },
+    followingBtn: {
+        backgroundColor: COLORS.primary,
+    },
+    followingBtnText: {
+        color: COLORS.white,
+        textAlign: 'center',
     },
     containerPost: {
         flex: 1,
@@ -78,10 +83,10 @@ const styles = StyleSheet.create({
         flexWrap: "wrap",
         justifyContent: "flex-start",
         alignItems: "center",
+        marginHorizontal:"auto",
         gap: 6,
-        marginHorizontal: 10,
+        // marginHorizontal: 10,
         marginTop: 10,
-        marginHorizontal: "auto",
     },
 });
 

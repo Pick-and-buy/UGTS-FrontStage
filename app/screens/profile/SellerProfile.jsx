@@ -91,7 +91,7 @@ const SellerProfile = ({ navigation, route }) => {
                     },
                     {
                         text: "Đăng nhập",
-                        onPress: () => navigation.navigate('login-navigation')
+                        onPress: () => navigation.navigate('login-navigation') 
                     }
                 ]
             );

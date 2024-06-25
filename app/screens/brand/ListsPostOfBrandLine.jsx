@@ -9,28 +9,26 @@ import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS, SIZES } from "../../constants/theme";
-import { getPostsByBrandName } from "../../api/post";
+import { getPostsByBrandLineName } from "../../api/post";
 import PostHorizontal from "../post/PostHorizontal";
 import BackBtn from "../../components/BackBtn";
-
-const BrandDetail = ({ navigation }) => {
-    // Lấy props khi onPress
-    const brand = useRoute().params.brands;
+const ListsPostOfBrandLine = ({ navigation }) => {
+    const brandLine = useRoute().params.brandLine;
     const [listPosts, setListPosts] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
-
+    console.log(brandLine);
     useEffect(() => {
-        fetchAllPostsByBrandName();
+        fetchAllPostsByBrandLineName();
     }, []);
 
-    const fetchAllPostsByBrandName = async () => {
+    const fetchAllPostsByBrandLineName = async () => {
         setIsLoading(true);
         try {
-            const res = await getPostsByBrandName(brand.name);
+            const res = await getPostsByBrandLineName(brandLine);
             setListPosts(res.data.result);
         } catch (error) {
-            console.error("Error fetching brands:", error);
+            console.error("Error fetching brands line:", error);
         } finally {
             setIsLoading(false);
         }
@@ -38,14 +36,14 @@ const BrandDetail = ({ navigation }) => {
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        fetchAllPostsByBrandName().finally(() => setRefreshing(false));
+        fetchAllPostsByBrandLineName().finally(() => setRefreshing(false));
     }, []);
 
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <BackBtn onPress={() => navigation.goBack()} />
-                <Text style={styles.headerText}>SẢN PHẨM</Text>
+                <Text style={styles.headerText}>{brandLine} Bags</Text>
             </View>
 
             {listPosts?.length > 0 ? (
@@ -73,15 +71,15 @@ const BrandDetail = ({ navigation }) => {
                             color: 'gray',
                         }}
                     >
-                        Không tìm thấy sản phẩm nào có thương hiệu {brand.name}
+                        Không tìm thấy sản phẩm nào có thương hiệu {brandLine}
                     </Text>
                 </View>
             )}
         </View>
-    );
-};
+    )
+}
 
-export default BrandDetail;
+export default ListsPostOfBrandLine
 
 const styles = StyleSheet.create({
     container: {
@@ -113,4 +111,4 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         paddingLeft: 40,
     },
-});
+})

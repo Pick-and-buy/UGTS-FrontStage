@@ -1,72 +1,222 @@
-import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity } from "react-native";
-import React, { useRef, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { COLORS, SIZES } from "../constants/theme";
-import { Feather, AntDesign } from '@expo/vector-icons';
-import styles from "./search.style";
-import LottieView from "lottie-react-native";
+import React, { useState, useCallback, useEffect } from 'react';
+import {
+  SafeAreaView,
+  Text,
+  View,
+  TextInput,
+  ActivityIndicator,
+  FlatList,
+  TouchableOpacity,
+  RefreshControl,
+} from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
+import { FontAwesome } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from '../screens/css/search.style';
+import { searchPostsByTitle } from '../api/post';
+import { COLORS } from '../constants/theme';
+import Post from './post/Post';
 
 const Search = () => {
-  const [searchKey, setSearchKey] = useState('')
-  const [searchResults, setSearchResults] = useState([])
-  const animation = useRef(null);
+  const route = useRoute();
+  const navigation = useNavigation();
+  const initialQuery = route.params?.query ?? '';
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
+  const [loading, setLoading] = useState(false);
+  const [results, setResults] = useState([]);
+  const [searchHistory, setSearchHistory] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const handleSearch = async () => {
+  useEffect(() => {
+    if (initialQuery) {
+      setSearchQuery(initialQuery);
+      fetchResults(initialQuery);
+    }
+    loadSearchHistory();
+  }, [initialQuery]);
+
+  const fetchResults = async (query) => {
+    setLoading(true);
     try {
-      const response = await axios.get(`https://travelapprailway-production.up.railway.app/api/places/search/${searchKey}`)
-      setSearchResults(response.data)
+      const response = await searchPostsByTitle(query);
+      setResults(response.data.result);
+      await saveSearchHistory(query);
     } catch (error) {
-      console.log("Failed to get products", error);
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
+  const handleSearchSubmit = () => {
+    if (searchQuery.trim() !== '') {
+      fetchResults(searchQuery);
+    }
+  };
+
+  const saveSearchHistory = async (query) => {
+    try {
+      const currentHistory = await AsyncStorage.getItem('searchHistory');
+      let historyArray = currentHistory ? JSON.parse(currentHistory) : [];
+      if (!historyArray.includes(query)) {
+        historyArray.push(query);
+        await AsyncStorage.setItem('searchHistory', JSON.stringify(historyArray));
+        setSearchHistory(historyArray);
+      }
+    } catch (error) {
+      console.error('Failed to save search history:', error);
+    }
+  };
+
+  const loadSearchHistory = async () => {
+    try {
+      const history = await AsyncStorage.getItem('searchHistory');
+      if (history) {
+        setSearchHistory(JSON.parse(history));
+      }
+    } catch (error) {
+      console.error('Failed to load search history:', error);
+    }
+  };
+
+  const clearSearchHistory = async () => {
+    try {
+      await AsyncStorage.removeItem('searchHistory');
+      setSearchHistory([]);
+    } catch (error) {
+      console.error('Failed to clear search history:', error);
+    }
+  };
+
+  const removeSearchHistoryItem = async (item) => {
+    try {
+      const currentHistory = await AsyncStorage.getItem('searchHistory');
+      let historyArray = currentHistory ? JSON.parse(currentHistory) : [];
+      const updatedHistory = historyArray.filter((query) => query !== item);
+      await AsyncStorage.setItem('searchHistory', JSON.stringify(updatedHistory));
+      setSearchHistory(updatedHistory);
+    } catch (error) {
+      console.error('Failed to remove search history item:', error);
+    }
+  };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    if (searchQuery.trim() !== '') {
+      fetchResults(searchQuery).finally(() => setRefreshing(false));
+    } else {
+      setRefreshing(false);
+    }
+  }, [searchQuery]);
+
+  const renderSearchHistoryItem = ({ item }) => (
+    <View style={styles.historyItemContainer}>
+      <TouchableOpacity onPress={() => handleSearchFromHistory(item)} style={styles.historyItem}>
+        <FontAwesome name="history" size={16} color="#AFAFAE" style={styles.historyIcon} />
+        <Text style={styles.historyText}>{item}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => removeSearchHistoryItem(item)} style={styles.removeButton}>
+        <FontAwesome name="times" size={16} color="#AFAFAE" />
+      </TouchableOpacity>
+    </View>
+  );
+
+  const handleSearchFromHistory = (query) => {
+    setSearchQuery(query);
+    fetchResults(query);
+  };
+
+  const clearSearchInput = () => {
+    setSearchQuery('');
+    setResults([]); // Clear the search results
+    loadSearchHistory(); // Load search history to display
+  };
+
   return (
-    <SafeAreaView>
-      <View style={{ backgroundColor: COLORS.primary, height: SIZES.height }}>
-        <View style={{ backgroundColor: COLORS.offwhite, height: SIZES.height - 140, borderBottomEndRadius: 30, borderBottomStartRadius: 30 }}>
-          <View style={styles.searchContainer}>
-
-            <View style={styles.searchWrapper}>
-
-              <TextInput
-                style={styles.input}
-                value={searchKey}
-                onChangeText={setSearchKey}
-                placeholder='What do you want to find?'
-              />
-            </View>
-
-            <TouchableOpacity style={styles.searchBtn} onPress={handleSearch}>
-              <Feather name='search' size={24} color={COLORS.secondary} />
-            </TouchableOpacity>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.search}>
+            <FontAwesome
+              name="search"
+              size={20}
+              color="#AFAFAE"
+              style={{ marginLeft: 8 }}
+            />
+            <TextInput
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              onSubmitEditing={handleSearchSubmit}
+              placeholder="Nhập tên sản phẩm bạn muốn tìm kiếm"
+              placeholderTextColor="#AFAFAE"
+              style={styles.textInput}
+            />
+            {searchQuery.trim() !== '' && (
+              <TouchableOpacity onPress={clearSearchInput} style={styles.clearInputButton}>
+                <FontAwesome name="times-circle" size={16} color="#AFAFAE" />
+              </TouchableOpacity>
+            )}
           </View>
-
-          {searchResults.length === 0 ? (
-            <View style={{ width: SIZES.width, height: SIZES.height / 1.5, right: 90 }}>
-              <LottieView
-                autoPlay
-                ref={animation}
-                style={{ width: "100%", height: "100%", }}
-              // source={require("")}
-              />
+        </View>
+        {!loading && results.length === 0 && (
+          <View style={styles.notificationContainer}>
+            <Text style={styles.notificationText}>Sản phẩm bạn tìm kiếm không tồn tại</Text>
+          </View>
+        )}
+        {results.length === 0 && searchHistory.length > 0 && (
+          <>
+            <View style={styles.popularContainer}>
+              <Text style={styles.popularTitle}>Từ khóa phổ biến</Text>
+              <View style={styles.popularKeywords}>
+                <Text style={styles.popularKeyword}>Túi gucci</Text>
+                <Text style={styles.popularKeyword}>Túi chanel</Text>
+                <Text style={styles.popularKeyword}>Túi YSL</Text>
+              </View>
             </View>
+            <View style={styles.topSearchContainer}>
+              <Text style={styles.topSearchTitle}>Top tìm kiếm</Text>
+              <View style={styles.topSearchKeywords}>
+                <Text style={styles.topSearchKeyword}>Gucci Vip</Text>
+                <Text style={styles.topSearchKeyword}>Dior</Text>
+                <Text style={styles.topSearchKeyword}>Handmade Chanel</Text>
+              </View>
+            </View>
+
+            <View style={styles.historyContainer}>
+              <Text style={styles.historyTitle}>Lịch sử tìm kiếm</Text>
+              <FlatList
+                data={searchHistory}
+                renderItem={renderSearchHistoryItem}
+                keyExtractor={(item, index) => index.toString()}
+                refreshControl={
+                  <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
+              />
+              <TouchableOpacity onPress={clearSearchHistory} style={styles.clearButton}>
+                <Text style={styles.clearButtonText}>Xóa lịch sử</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+        <View style={styles.content}>
+          {loading ? (
+            <ActivityIndicator size="large" color={COLORS.primary} />
           ) : (
             <FlatList
-              data={searchResults}
-              keyExtractor={(item) => item._id}
-              renderItem={({ item }) => (
-                <View style={styles.tile}>
-
-                </View>
-              )}
+              data={results}
+              renderItem={({ item }) => <Post key={item.id} post={item} />}
+              keyExtractor={(item) => item.id.toString()}
+              numColumns={3}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              columnWrapperStyle={styles.row}
             />
           )}
         </View>
       </View>
     </SafeAreaView>
   );
-};
+}
 
 export default Search;
-
-

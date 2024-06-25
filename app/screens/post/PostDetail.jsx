@@ -8,16 +8,20 @@ import {
     Pressable,
     SafeAreaView,
     TextInput,
+    Alert,
+    Button,
+    RefreshControl,
 } from "react-native";
-import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo } from '@expo/vector-icons';
+import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo, FontAwesome } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
 import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
 import Carousel from "../../components/carousel/Carousel";
-import { getPostDetails, getComments, postComment } from "../../api/post";
+import { getPostDetails, getComments, postComment, getLikedPostByUser } from "../../api/post";
 import styles from "../css/postDetails.style";
 import { Rating } from 'react-native-stock-star-rating';
 import { getUserByToken, likePost, unlikePost } from "../../api/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Comment from "./Comment";
 
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
@@ -27,43 +31,62 @@ const PostDetail = ({ navigation, route }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isLiked, setIsLiked] = useState(false);
     const [userId, setUserId] = useState(null);
+    const [user, setUser] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [showFullDescription, setShowFullDescription] = useState(false);
     const [comments, setComments] = useState([]);
     const [showAllComments, setShowAllComments] = useState(false);
     const [newComment, setNewComment] = useState("");
-    console.log(postId);
     const data = postDetails?.product?.images || [];
+    const [modalVisible, setModalVisible] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
 
+    // console.log(postId);
     useEffect(() => {
         fetchPostDetails();
-        fetchComments();
         checkAuthentication();
-        getUserData();
+        fetchComments();
     }, []);
 
-    // Function to determine authentication status
+    useEffect(() => {
+        if (isAuthenticated) {
+            getUserData();
+        }
+    }, [isAuthenticated]);
+
+    useEffect(() => {
+        if (userId) {
+            checkIfPostIsLiked();
+        }
+    }, [userId]);
+
     const checkAuthentication = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
-            setIsAuthenticated(!!token); // Boolean check for authentication
+            setIsAuthenticated(!!token);
         } catch (error) {
             console.error("Error checking authentication status:", error);
         }
     };
 
-    // Function to fetch user data if authenticated
     const getUserData = async () => {
-        if (!isAuthenticated) {
-            // console.error("User is not authenticated!");
-            return;
-        }
-
         try {
             const userInfo = await getUserByToken();
             setUserId(userInfo.result.id);
+            setUser(userInfo.result)
         } catch (error) {
             console.error("Error fetching user data:", error);
+        }
+    };
+
+    const checkIfPostIsLiked = async () => {
+        try {
+            const response = await getLikedPostByUser(userId);
+            const likedPosts = response.data.result;
+            const isPostLiked = likedPosts.some((post) => post.id === postId);
+            setIsLiked(isPostLiked);
+        } catch (error) {
+            console.error("Error checking if post is liked:", error);
         }
     };
 
@@ -82,35 +105,28 @@ const PostDetail = ({ navigation, route }) => {
     const fetchComments = async () => {
         try {
             const response = await getComments(postId);
-            setComments(response.data);
-            // console.log(response.data);
+            setComments(response.data.reverse());
         } catch (error) {
             console.error("Error fetching comments:", error);
         }
     };
 
-    // Function to handle comment submission
-    const handleCommentSubmit = async () => {
-        if (!newComment.trim()) {
-            alert("Comment is empty");
-        } else if (!isAuthenticated) {
-            alert("User is not authenticated!");
-        } else {
-            try {
-                await postComment(userId, postId, newComment);
-                setNewComment(""); // Clear the input field
-                fetchComments(); // Fetch updated comments list
-            } catch (error) {
-                console.error("Error posting comment", error);
-            }
-        }
-
-
-
-    };
     const handleLike = async () => {
         if (!userId) {
-            alert("User is not authenticated");
+            Alert.alert(
+                "Đăng nhập",
+                "Bạn cần đăng nhập để thêm sản phẩm vào danh mục yêu thích.",
+                [
+                    {
+                        text: "Cancel",
+                        style: "cancel"
+                    },
+                    {
+                        text: "Đăng nhập",
+                        onPress: () => navigation.navigate('login-navigation')
+                    }
+                ]
+            );
             return;
         }
 
@@ -126,7 +142,22 @@ const PostDetail = ({ navigation, route }) => {
         }
     };
 
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('vi-VN', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(price);
+    }
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await fetchPostDetails();
+        await checkAuthentication();
+        await fetchComments();
+        setRefreshing(false);
+    };
 
+    // Format the price using the helper function
+    const formattedPrice = formatPrice(postDetails?.product?.price);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -138,6 +169,9 @@ const PostDetail = ({ navigation, route }) => {
                 </View>
                 <ScrollView contentContainerStyle={styles.contentContainer}
                     showsVerticalScrollIndicator={false}
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    }
                 >
                     <Carousel data={data} />
                     <View style={styles.informationContainer}>
@@ -168,7 +202,7 @@ const PostDetail = ({ navigation, route }) => {
                         <Text style={styles.labelTransport}>Miễn phí vận chuyển</Text>
                         <Text style={styles.price}>
                             <Text style={styles.currency}>đ</Text>
-                            {postDetails?.product?.price}
+                            {formattedPrice}
                         </Text>
                         <View style={styles.wallet}>
                             <AntDesign name="creditcard" size={20} color="gray" />
@@ -183,43 +217,81 @@ const PostDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                     <View style={styles.divider} />
+
+
+
                     <View style={styles.comment}>
-                        <View style={styles.commentInputContainer}>
-                            <TextInput
-                                style={styles.commentInput}
-                                value={newComment}
-                                onChangeText={setNewComment}
-                                placeholder="Add a comment"
-                            />
-                            <Pressable onPress={handleCommentSubmit}>
-                                <MaterialIcons name="send" size={24} color="black" />
-                            </Pressable>
-                        </View>
-                        {/* <View style={styles.divider} /> */}
-                        {comments && comments.slice(0, showAllComments ? comments.length : 2).map((comment, index) => (
+                        <Text style={{
+                            fontWeight: "bold",
+                            fontSize: 16,
+                            marginBottom: 10,
+                        }}>Bình luận
+                            <Text> ({comments.length})</Text>
+                        </Text>
+                        {comments && comments.slice(0, showAllComments ? comments.length : 3).map((comment, index) => (
                             <View key={index} style={styles.commentContainer}>
-                                <Text style={styles.commentText}>
-                                    <Text style={{ fontWeight: "bold" }}>
-                                        {comment.username}
-                                    </Text>
-                                    : {comment.commentContent}
-                                </Text>
+                                <Image source={{ uri: comment?.userImageUrl }} style={styles.avatarComment} />
+                                <View style={styles.commentTextContainer}>
+                                    <Text style={styles.userName}>{comment?.username}</Text>
+                                    <Text style={styles.commentText}>{comment?.commentContent}</Text>
+                                    <Text style={styles.timeAgo}>{comment.createAt}</Text>
+                                </View>
                             </View>
                         ))}
-                        {comments && comments.length > 2 && (
-                            <Text style={styles.seeMore} onPress={() => setShowAllComments(!showAllComments)}>
-                                {showAllComments ? 'Hide comments' : 'See all comments'}
-                            </Text>
-                        )}
+                        <View style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}>
+                            <TouchableOpacity
+                                style={{
+                                    width: '80%',
+                                    height: 40,
+                                    borderRadius: 5,
+                                    overflow: 'hidden',
+                                    backgroundColor: COLORS.white,
+                                    borderWidth: 1.5,
+                                    borderColor: COLORS.primary,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginBottom: 20,
+                                    marginTop: 10
+                                }}
+                                onPress={() => setModalVisible(true)}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: 22,
+                                        // fontWeight: '500',
+                                        color: COLORS.primary,
+                                    }}>BÌNH LUẬN</Text>
+                            </TouchableOpacity>
+                            <Comment
+                                visible={modalVisible}
+                                onClose={() => {
+                                    setModalVisible(false)
+                                    fetchComments()
+                                }
+                                }
+                                postId={postId}
+                                isAuthenticated={isAuthenticated}
+                                user={user}
+                                navigation={navigation}
+                            />
+                        </View>
+
+
                     </View>
                     <View style={styles.divider} />
                     <View style={styles.description}>
                         <Text style={styles.descriptionTitle}>Mô tả sản phẩm</Text>
                         <Text style={styles.descriptionText}>
-                            {showFullDescription ? postDetails?.description : `${postDetails?.description?.slice(0, 150)}...`}
-                        </Text>
-                        <Text style={styles.seeMore} onPress={() => setShowFullDescription(!showFullDescription)}>
-                            {showFullDescription ? 'Ẩn bớt' : 'Xem thêm'}
+                            {showFullDescription ? postDetails?.description : `${postDetails?.description?.slice(0, 100)}...`}
+                            {postDetails?.description?.length > 100 && (
+                                <Text style={styles.readMore} onPress={() => setShowFullDescription(!showFullDescription)}>
+                                    {showFullDescription ? ' Ẩn bớt' : ' Xem thêm'}
+                                </Text>
+                            )}
                         </Text>
                         <Text style={styles.createdTime}>{postDetails?.createdAt}</Text>
                         <View style={styles.dividerLight} />
@@ -362,7 +434,7 @@ const PostDetail = ({ navigation, route }) => {
                     </View>
                     <View style={styles.dividerLight} />
                     {/* story */}
-                    <View style={styles.details}>
+                    <View style={[styles.details, { marginBottom: 6 }]}>
                         <View style={styles.left}>
                             <Text>Story</Text>
                         </View>
@@ -370,14 +442,17 @@ const PostDetail = ({ navigation, route }) => {
                             <Text style={styles.rightText}>{postDetails?.product?.story.toLowerCase() === "none" ? " N/A" : postDetails?.product?.story} </Text>
                         </View>
                     </View>
-                    <View style={styles.dividerLight} />
+                    <View style={styles.divider} />
 
                     {/* Profile seller */}
-                    <TouchableOpacity style={styles.personalContainer}>
+                    <TouchableOpacity
+                        style={styles.personalContainer}
+                        onPress={() => navigation.navigate("seller-profile-navigation", { userOfPost: postDetails?.user, userIdLogged: userId })}
+                    >
                         <View style={[styles.detailContainer, { alignItems: 'flex-start' }]}>
                             <Image
                                 style={styles.avatar}
-                                source={{ uri: profile }}
+                                source={{ uri: postDetails?.user?.avatar ? postDetails?.user?.avatar : profile }}
                             />
                             <View style={{}}>
                                 <Text style={{ fontSize: 18 }}>{postDetails?.user?.username}</Text>
@@ -396,7 +471,7 @@ const PostDetail = ({ navigation, route }) => {
                             </View>
                         </View>
                     </TouchableOpacity>
-
+                    <View style={styles.divider} />
                     <View style={styles.recommended}>
                         <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
                             <MaterialIcons name="explore" size={18} color="gray" />
@@ -409,6 +484,17 @@ const PostDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                 </ScrollView>
+                <View style={styles.bottomBtn}>
+                    <TouchableOpacity style={styles.leftButton}>
+                        <FontAwesome name="comments" size={24} color="white" />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.leftButton}>
+                        <FontAwesome name="shopping-cart" size={24} color="white" />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.rightButton}>
+                        <Text style={styles.rightButtonText}>Mua ngay</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </SafeAreaView>
     );

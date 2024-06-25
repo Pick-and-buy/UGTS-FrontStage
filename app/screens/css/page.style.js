@@ -7,6 +7,7 @@ const pages = StyleSheet.create({
         height: SIZES.height,
         justifyContent: "center",
         alignItems: "center",
+        width:"100%"
     },
     viewTwo: {
         backgroundColor: COLORS.white,
