@@ -26,7 +26,7 @@ import Comment from "./Comment";
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
 const PostDetail = ({ navigation, route }) => {
-    const postId = route.params;
+    const { postId, type } = route.params;
     const [postDetails, setPostDetails] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isLiked, setIsLiked] = useState(false);
@@ -36,7 +36,6 @@ const PostDetail = ({ navigation, route }) => {
     const [showFullDescription, setShowFullDescription] = useState(false);
     const [comments, setComments] = useState([]);
     const [showAllComments, setShowAllComments] = useState(false);
-    const [newComment, setNewComment] = useState("");
     const data = postDetails?.product?.images || [];
     const [modalVisible, setModalVisible] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
@@ -245,8 +244,8 @@ const PostDetail = ({ navigation, route }) => {
                         }}>
                             <TouchableOpacity
                                 style={{
-                                    width: '80%',
-                                    height: 40,
+                                    width: '40%',
+                                    height: 30,
                                     borderRadius: 5,
                                     overflow: 'hidden',
                                     backgroundColor: COLORS.white,
@@ -261,10 +260,10 @@ const PostDetail = ({ navigation, route }) => {
                             >
                                 <Text
                                     style={{
-                                        fontSize: 22,
+                                        fontSize: 18,
                                         // fontWeight: '500',
                                         color: COLORS.primary,
-                                    }}>BÌNH LUẬN</Text>
+                                    }}>Bình luận</Text>
                             </TouchableOpacity>
                             <Comment
                                 visible={modalVisible}
@@ -485,15 +484,19 @@ const PostDetail = ({ navigation, route }) => {
                     </View>
                 </ScrollView>
                 <View style={styles.bottomBtn}>
-                    <TouchableOpacity style={styles.leftButton}>
-                        <FontAwesome name="comments" size={24} color="white" />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.leftButton}>
-                        <FontAwesome name="shopping-cart" size={24} color="white" />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.rightButton}>
-                        <Text style={styles.rightButtonText}>Mua ngay</Text>
-                    </TouchableOpacity>
+                    {type === "buyer" && (
+                        <TouchableOpacity style={styles.button}>
+                            <Text style={styles.buttonText}>Mua ngay</Text>
+                        </TouchableOpacity>
+                    )
+                    }
+                    {type === "seller" && (
+                        <TouchableOpacity style={styles.button}>
+                            <Text style={styles.buttonText}>Chỉnh sửa</Text>
+                        </TouchableOpacity>
+                    )
+                    }
+
                 </View>
             </View>
         </SafeAreaView>

@@ -255,31 +255,28 @@ const styles = StyleSheet.create({
     },
     bottomBtn: {
         flexDirection: 'row',
-        height: 50,
+        height: "10%",
         backgroundColor: '#fff',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: -5 },
-        shadowOpacity: 0.1,
+        shadowOpacity: 1,
         shadowRadius: 5,
         elevation: 10,
-        zIndex: 999
+        zIndex: 999,
+        backgroundColor:COLORS.white,
     },
-    leftButton: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#00bfa5',
-        borderLeftWidth: 1,
-        borderColor: COLORS.gray2
-    },
-    rightButton: {
-        flex: 2,
+    button: {
+        width:"60%",
+        height:50,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: COLORS.primary,
-        borderColor: COLORS.gray2
+        borderColor: COLORS.gray2,
+        marginHorizontal:"auto",
+        marginVertical:'auto',
+        borderRadius:8
     },
-    rightButtonText: {
+    buttonText: {
         color: 'white',
         fontSize: 18,
         fontWeight: 'bold',
