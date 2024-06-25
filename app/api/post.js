@@ -79,7 +79,17 @@ export const getPostsByBrandName = async (brandName) => {
     const response = axiosInstance.get(`/posts/brands?name=${brandName}`);
     return response;
   } catch (error) {
-    logger.error('Error Get Liked Post:', error);
+    logger.error('Error Get Posts By Brand Name:', error);
+    throw error;
+  }
+}
+
+export const getPostsByBrandLineName = async (brandLineName) => {
+  try {
+    const response = axiosInstance.get(`/posts/brandLine?brandLineName=${brandLineName}`);
+    return response;
+  } catch (error) {
+    logger.error('Error Get Posts by brand line name:', error);
     throw error;
   }
 }

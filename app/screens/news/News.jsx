@@ -6,7 +6,6 @@ import styles from '../css/news.style';
 const News = ({ navigation, route }) => {
     const newsId = route.params;
     const [newsDetails, setNewsDetails] = useState();
-
     useEffect(() => {
         fetchNewsDetails();
     }, []);
@@ -47,7 +46,7 @@ const News = ({ navigation, route }) => {
 
                 <TouchableOpacity style={styles.button}
                     onPress={() =>
-                        navigation.navigate('brand-detail', { brands: newsDetails })
+                        navigation.navigate('lists-post-brand-line', { brandLine: newsDetails?.brandLine?.lineName })
                     }
                 >
                     <Text style={styles.buttonText}>See {newsDetails?.brandLine?.lineName} Bags</Text>
