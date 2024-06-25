@@ -65,7 +65,7 @@ const Comment = ({ visible, onClose, postId, isAuthenticated, user, navigation }
                 ...comment,
                 timeAgo: moment(comment.createAt, 'YYYY-MM-DD HH:mm:ss').fromNow(),
             }));
-            setComments(formattedComments); // Reverse the fetched comments
+            setComments(formattedComments.reverse()); // Reverse the fetched comments
         } catch (error) {
             console.error("Error fetching comments:", error);
         }
@@ -98,7 +98,7 @@ const Comment = ({ visible, onClose, postId, isAuthenticated, user, navigation }
                     </View>
                     <FlatList
                         ref={flatListRef}
-                        data={comments.reverse()}
+                        data={comments}
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={renderComment}
                         contentContainerStyle={styles.list}

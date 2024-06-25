@@ -228,17 +228,6 @@ const PostDetail = ({ navigation, route }) => {
                         }}>Bình luận
                             <Text> ({comments.length})</Text>
                         </Text>
-                        {/* <View style={styles.commentInputContainer}>
-                            <TextInput
-                                style={styles.commentInput}
-                                value={newComment}
-                                onChangeText={setNewComment}
-                                placeholder="Add a comment"
-                            />
-                            <Pressable onPress={handleCommentSubmit}>
-                                <MaterialIcons name="send" size={24} color="black" />
-                            </Pressable>
-                        </View> */}
                         {comments && comments.slice(0, showAllComments ? comments.length : 3).map((comment, index) => (
                             <View key={index} style={styles.commentContainer}>
                                 <Image source={{ uri: comment?.userImageUrl }} style={styles.avatarComment} />
@@ -279,7 +268,11 @@ const PostDetail = ({ navigation, route }) => {
                             </TouchableOpacity>
                             <Comment
                                 visible={modalVisible}
-                                onClose={() => setModalVisible(false)}
+                                onClose={() => {
+                                    setModalVisible(false)
+                                    fetchComments()
+                                }
+                                }
                                 postId={postId}
                                 isAuthenticated={isAuthenticated}
                                 user={user}
