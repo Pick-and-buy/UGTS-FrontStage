@@ -25,8 +25,16 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         fontSize: 14,
         position: "absolute",
-        bottom: 4,
-        left: 6
+        bottom: 6,
+        left: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        paddingLeft:6,
+        paddingRight:6,
+        paddingVertical:2,
+        borderTopRightRadius:10,
+        borderBottomRightRadius:10,
+        justifyContent: 'center',
+        alignItems:"center",
     },
     currency: {
         textDecorationLine: 'underline',
