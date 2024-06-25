@@ -30,7 +30,7 @@ const Slider = ({ navigation }) => {
     };
 
     const fetchSlider = (data) => {
-        const extracted = data.map(item => ({
+        const extracted = data.slice(0, 5).map(item => ({
             id: item.id,
             banner: item.banner,
             title: item.title
@@ -107,9 +107,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textAlign: 'center',
         marginBottom: "10%",
-        // backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        // borderRadius: 10,
-        // padding: 5,
     },
     viewMoreButton: {
         marginBottom: 15,
@@ -124,7 +121,6 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 14,
         textAlign: 'center',
-        // textDecorationLine: 'underline',
     },
     image: {
         height: 150,
