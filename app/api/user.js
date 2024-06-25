@@ -1,4 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axiosInstance from './axiosInstance';
+import { Alert } from 'react-native';
 
 export const getUserByToken = async () => {
   try {
@@ -7,6 +9,15 @@ export const getUserByToken = async () => {
   } catch (error) {
     console.error('Error fetching user data:', error);
     throw error;
+  }
+};
+
+export const getAuthToken = async () => {
+  try {
+      const token = await AsyncStorage.getItem('token');
+      return token;
+  } catch (error) {
+      console.error("Error retrieving token: ", error);
   }
 };
 
@@ -23,6 +34,42 @@ export const updateProfile = async (userId, profile) => {
   } catch (error) {
     console.error('Error updating user profile:', error);
     throw error;
+  }
+};
+
+export const sendImageToAPI = async (imageUri, userId, authToken) => {
+  if (!imageUri) return;
+
+  const formData = new FormData();
+  const fileName = imageUri.split('/').pop();
+  formData.append('avatar', {
+    uri: imageUri,
+    name: fileName,
+    type: 'image/jpeg'
+  });
+
+  try {
+    const response = await fetch(`http://10.0.2.2:8080/api/v1/users/${userId}/avatar`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+        'Accept': 'application/json',
+        'Content-Type': 'multipart/form-data'
+      },
+      body: formData
+    });
+
+    if (!response.ok) {
+      throw new Error(`Network request failed with status ${response.status}`);
+    }
+
+    const responseData = await response.json();
+    console.log(responseData);
+    Alert.alert("Success", "Image uploaded successfully!");
+
+  } catch (error) {
+    console.error("Error uploading image: ", error);
+    Alert.alert("Error", "Failed to upload image. Please try again.");
   }
 };
 
