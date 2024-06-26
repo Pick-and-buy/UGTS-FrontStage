@@ -44,28 +44,35 @@ const styles = StyleSheet.create({
         borderColor: '#C0C0C0',
         backgroundColor: '#D3D3D3',
         width: Dimensions.get('window').width,
+        marginVertical: 5
     },
     //Image Upload
     imageUploadContaniner: {
         marginVertical: 20,
         width: Dimensions.get('window').width,
-        height: 150,
-        backgroundColor: COLORS.gray2,
+        height: 160,
+        backgroundColor: '#dbd9d9',
     },
     imageUpload: {
         flexDirection: "row",
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 20,
-        gap: 20
+        marginTop: 15,
+        gap: 10,
     },
     image: {
-        width: Dimensions.get('window').width / 6.5,
-        height: Dimensions.get('window').width / 6.5,
+        position: 'relative',
+        width: Dimensions.get('window').width / 5.8,
+        height: Dimensions.get('window').width / 5.8,
         backgroundColor: COLORS.lightWhite,
         borderRadius: 5,
         alignItems: 'center',
-        paddingTop: -10
+    },
+
+    xmark: {
+        position: 'absolute', 
+        top: 3, 
+        right: 18
     },
     //Product Information
     productContainer: {

@@ -26,9 +26,6 @@ import * as ImagePicker from "expo-image-picker";
 
 const CreatePostDetail = () => {
 
-  //for upload image to backend
-  const FormData = global.FormData;
-
   const navigation = useNavigation();
   const [listBrandName, setListBrandName] = useState([]);
   const [listCategory, setListCategory] = useState([]);
@@ -116,9 +113,9 @@ const CreatePostDetail = () => {
 
 
   const dataProductCondition = [
-    { label: 'used 1', value: 'used 1' },
-    { label: 'used 2', value: 'used 2' },
-    { label: 'used 3', value: 'used 3' },
+    { label: 'GOOD', value: 'GOOD' },
+    { label: 'used', value: 'used' },
+    { label: 'bad', value: 'bad' },
   ];
 
   const dataSize = [
@@ -159,12 +156,12 @@ const CreatePostDetail = () => {
         category: { categoryName: category },
         product: {
           name: productName,
-          price: parseFloat(price),
+          price: price,
           color: color,
           size: size,
-          width: parseFloat(width),
-          height: parseFloat(height),
-          length: parseFloat(length),
+          width: width,
+          height: height,
+          length: length,
           referenceCode: referenceCode,
           manufactureYear: manufactureYear,
           exteriorMaterial: exteriorMaterial,
@@ -187,9 +184,34 @@ const CreatePostDetail = () => {
         type: 'image/jpeg',
       });
 
-      console.log('>>check form data: ', formData);
-      
-      await createPost(formData)
+      await createPost(formData);
+      navigation.navigate('Home')
+      setImage(null);
+
+      actions.resetForm({
+        title: '',
+        brandName: '',
+        productName: '',
+        brandLineName: '',
+        condition: '',
+        category: '',
+        exteriorMaterial: '',
+        interiorMaterial: '',
+        size: '',
+        width: '',
+        height: '',
+        length: '',
+        referenceCode: '',
+        manufactureYear: '',
+        color: '',
+        accessories: '',
+        dateCode: '',
+        serialNumber: '',
+        purchasedPlace: '',
+        story: '',
+        description: '',
+        price: '',
+      })
     } catch (error) {
       console.error('ERROR handle create post: ', error);
     }
