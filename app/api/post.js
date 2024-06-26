@@ -93,4 +93,23 @@ export const getPostsByBrandLineName = async (brandLineName) => {
     throw error;
   }
 }
+export const getAllBrandLines = async () => {
+  try {
+    const response = axiosInstance.get('/brand-lines');
+    return response;
+  } catch (error) {
+    logger.error('Error get all brand line :', error);
+    throw error;
+  }
+}
+export const getBrandLinesByBrandName = async (brandName) => {
+  try {
+    const response = axiosInstance.get(`/brand-lines/brand-name?brandName=${brandName}`);
+    return response;
+  } catch (error) {
+    logger.error('Error get all brand line :', error);
+    throw error;
+  }
+}
+
 
