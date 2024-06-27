@@ -62,7 +62,7 @@ const Brands = () => {
                                     />
                                 </TouchableOpacity>
                                 <View style={styles.textView}>
-                                    <Text style={{ fontWeight: "500", color: COLORS.primary, paddingBottom: 10 }}>
+                                    <Text style={{ fontWeight: "600", color: COLORS.black }}>
                                         {item?.name}
                                     </Text>
                                 </View>
@@ -98,7 +98,8 @@ const styles = StyleSheet.create({
     },
     expandedText: {
         fontSize: 14,
-        color: COLORS.primary
+        color: COLORS.black,
+        fontWeight: '600'
     },
     imageContainer: {
         width: Dimensions.get('window').width / 3 - 15,
@@ -113,6 +114,6 @@ const styles = StyleSheet.create({
         width: "100%",
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: -10
+        marginTop: -10,
     },
 });

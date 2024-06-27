@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { COLORS, SHADOWS } from '../../constants/theme';
 import { useNavigation } from '@react-navigation/native';
 
-const PostHorizontal = ({ post }) => {
+const PostHorizontal = ({ post, type }) => {
     const navigation = useNavigation();
     // console.log(post.description);
 
@@ -20,7 +20,7 @@ const PostHorizontal = ({ post }) => {
     return (
         <TouchableOpacity
             style={styles.container}
-            onPress={() => navigation.navigate("post-details", post.id)}
+            onPress={() => navigation.navigate('post-details', { postId: post.id, type })}
         >
             <Image source={{ uri: post?.product?.images[0]?.imageUrl }} style={styles.image} />
             <View style={styles.textContainer}>
@@ -28,7 +28,10 @@ const PostHorizontal = ({ post }) => {
                 <Text numberOfLines={1} style={styles.subtitle}>{post?.description}</Text>
                 <Text style={styles.price}>đ{formattedPrice}</Text>
             </View>
-            <TouchableOpacity style={styles.buttonActive}>
+            <TouchableOpacity
+                style={styles.buttonActive}
+                onPress={() => navigation.navigate('post-details', { postId: post.id, type })}
+            >
                 <Text style={styles.buttonTextActive}>
                     Xem chi tiết
                 </Text>

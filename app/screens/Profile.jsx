@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, SafeAreaView,RefreshControl } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, SafeAreaView, RefreshControl } from "react-native";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { COLORS, SIZES } from "../constants/theme";
 import { Ionicons } from '@expo/vector-icons';
@@ -77,7 +77,9 @@ const Profile = ({ navigation }) => {
         nestedScrollEnabled={true}
         style={{ flex: 1 }}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          isAuthenticated ? (
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          ) : null
         }
       >
         <View style={{
@@ -106,11 +108,6 @@ const Profile = ({ navigation }) => {
                   height={45}
                   radius={99}
                 />
-
-
-
-
-
                 {isAuthenticated ? (
                   <TouchableOpacity style={{ flexDirection: "row" }}
                     onPress={() => navigation.navigate("user-profile-details", { user, createdPosts })}

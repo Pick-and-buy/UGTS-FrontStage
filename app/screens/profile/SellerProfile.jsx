@@ -91,7 +91,7 @@ const SellerProfile = ({ navigation, route }) => {
                     },
                     {
                         text: "Đăng nhập",
-                        onPress: () => navigation.navigate('login-navigation') 
+                        onPress: () => navigation.navigate('login-navigation')
                     }
                 ]
             );
@@ -234,7 +234,7 @@ const SellerProfile = ({ navigation, route }) => {
                         ) : (
                             <View style={styles.row}>
                                 {postsOfSeller.map(post => (
-                                    <Post key={post.id} post={post} />
+                                    <Post key={post.id} post={post} type="buyer" />
                                 ))}
                             </View>
                         )}

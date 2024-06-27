@@ -11,11 +11,12 @@ const Post = ({ post }) => {
     // console.log(product.product.images[0].imageUrl);
     // console.log(product.id);
     const navigation = useNavigation();
+    // console.log(post);
     return (
         <View style={styles.container}>
             <GestureHandlerRootView>
                 <TouchableOpacity style={styles.wrapper}
-                    onPress={() => navigation.navigate('post-details', post.id)}
+                    onPress={() => navigation.navigate('post-details', { postId: post.id, type:"buyer" })}
                 >
                     <Image source={{ uri: post?.product?.images[0]?.imageUrl }} style={styles.image} />
                     <Ionicons

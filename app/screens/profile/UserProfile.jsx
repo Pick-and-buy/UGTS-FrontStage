@@ -134,7 +134,7 @@ const UserProfile = ({ navigation, route }) => {
             ) : (
               <View style={styles.row}>
                 {createdPosts.map(post => (
-                  <Post key={post.id} post={post} />
+                  <Post key={post.id} post={post} type="seller"/>
                 ))}
               </View>
             )}
