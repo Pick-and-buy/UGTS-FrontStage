@@ -121,9 +121,11 @@ const CreatePost = () => {
 
 
   const dataProductCondition = [
+    { label: 'BRAND_NEW', value: 'BRAND_NEW' },
+    { label: 'EXCELLENT', value: 'EXCELLENT' },
+    { label: 'VERY_GOOD', value: 'VERY_GOOD' },
     { label: 'GOOD', value: 'GOOD' },
-    { label: 'used', value: 'used' },
-    { label: 'bad', value: 'bad' },
+    { label: 'FAIR', value: 'FAIR' },
   ];
 
   const dataSize = [
