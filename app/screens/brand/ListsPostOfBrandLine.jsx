@@ -50,7 +50,7 @@ const ListsPostOfBrandLine = ({ navigation }) => {
                 <FlatList
                     data={listPosts}
                     renderItem={({ item, index }) => (
-                        <PostHorizontal post={item} />
+                        <PostHorizontal post={item} type="buyer"/>
                     )}
                     keyExtractor={(item) => item.id.toString()}
                     refreshControl={
