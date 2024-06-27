@@ -22,6 +22,7 @@ import { Rating } from 'react-native-stock-star-rating';
 import { getUserByToken, likePost, unlikePost } from "../../api/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Comment from "./Comment";
+import moment from "moment";
 
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
@@ -104,7 +105,11 @@ const PostDetail = ({ navigation, route }) => {
     const fetchComments = async () => {
         try {
             const response = await getComments(postId);
-            setComments(response.data.reverse());
+            const formattedComments = response.data.map(comment => ({
+                ...comment,
+                timeAgo: moment(comment.createAt, 'YYYY-MM-DD HH:mm:ss').fromNow(),
+            }));
+            setComments(formattedComments.reverse()); // Reverse the fetched comments
         } catch (error) {
             console.error("Error fetching comments:", error);
         }
@@ -233,7 +238,7 @@ const PostDetail = ({ navigation, route }) => {
                                 <View style={styles.commentTextContainer}>
                                     <Text style={styles.userName}>{comment?.username}</Text>
                                     <Text style={styles.commentText}>{comment?.commentContent}</Text>
-                                    <Text style={styles.timeAgo}>{comment.createAt}</Text>
+                                    <Text style={styles.timeAgo}>{comment.timeAgo}</Text>
                                 </View>
                             </View>
                         ))}
