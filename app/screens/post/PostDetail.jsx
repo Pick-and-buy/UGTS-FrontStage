@@ -27,7 +27,7 @@ import moment from "moment";
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
 const PostDetail = ({ navigation, route }) => {
-    const { postId, type } = route.params;
+    const { postId } = route.params;
     const [postDetails, setPostDetails] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isLiked, setIsLiked] = useState(false);
@@ -40,6 +40,7 @@ const PostDetail = ({ navigation, route }) => {
     const data = postDetails?.product?.images || [];
     const [modalVisible, setModalVisible] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
+    const [type, setType] = useState('buyer');
 
     // console.log(postId);
     useEffect(() => {
@@ -57,8 +58,13 @@ const PostDetail = ({ navigation, route }) => {
     useEffect(() => {
         if (userId) {
             checkIfPostIsLiked();
+            if (postDetails?.user?.id === userId) {
+                setType("seller");
+            } else {
+                setType("buyer");
+            }
         }
-    }, [userId]);
+    }, [userId, postDetails]);
 
     const checkAuthentication = async () => {
         try {
@@ -162,7 +168,6 @@ const PostDetail = ({ navigation, route }) => {
 
     // Format the price using the helper function
     const formattedPrice = formatPrice(postDetails?.product?.price);
-
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.wrapper}>
@@ -490,7 +495,7 @@ const PostDetail = ({ navigation, route }) => {
                 </ScrollView>
                 <View style={styles.bottomBtn}>
                     {type === "buyer" && (
-                        <TouchableOpacity style={styles.button}>
+                        <TouchableOpacity style={styles.button} onPress={() => { }}>
                             <Text style={styles.buttonText}>Mua ngay</Text>
                         </TouchableOpacity>
                     )

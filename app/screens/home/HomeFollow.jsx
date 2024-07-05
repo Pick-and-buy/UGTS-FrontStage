@@ -61,7 +61,7 @@ const HomeFollow = ({ navigation }) => {
             ) : (
                 <View style={styles.row}>
                     {posts.map(post => (
-                        <Post key={post.id} post={post} type={"buyer"}/>
+                        <Post key={post.id} post={post}/>
                     ))}
                 </View>
             )}
