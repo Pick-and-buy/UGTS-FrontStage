@@ -495,7 +495,7 @@ const PostDetail = ({ navigation, route }) => {
                 </ScrollView>
                 <View style={styles.bottomBtn}>
                     {type === "buyer" && (
-                        <TouchableOpacity style={styles.button} onPress={() => { }}>
+                        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("order-details",postDetails)}>
                             <Text style={styles.buttonText}>Mua ngay</Text>
                         </TouchableOpacity>
                     )

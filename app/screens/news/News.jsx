@@ -60,6 +60,18 @@ const News = ({ navigation, route }) => {
                     {newsDetails?.subContent1}
                 </Text>
 
+                <Text style={styles.subContent2}>
+                    {newsDetails?.subContent2}
+                </Text>
+
+                <Text style={styles.subContent3}>
+                    {newsDetails?.subContent3}
+                </Text>
+
+                <Text style={styles.subContent4}>
+                    {newsDetails?.subContent4}
+                </Text>
+
                 <Image
                     style={styles.image}
                     source={{ uri: newsDetails?.brandLine?.brandLineImages[0]?.lineImageUrl }}
@@ -69,8 +81,14 @@ const News = ({ navigation, route }) => {
                     {newsDetails?.subTitle2}
                 </Text>
 
-                <Text style={styles.subContent2}>
-                    {newsDetails?.subContent2}
+                <Text style={styles.subContent5}>
+                    {newsDetails?.subContent5}
+                </Text>
+                <Text style={styles.subContent6}>
+                    {newsDetails?.subContent6}
+                </Text>
+                <Text style={styles.subContent7}>
+                    {newsDetails?.subContent7}
                 </Text>
 
                 <Image
@@ -82,8 +100,14 @@ const News = ({ navigation, route }) => {
                     {newsDetails?.subTitle3}
                 </Text>
 
-                <Text style={styles.subContent3}>
-                    {newsDetails?.subContent3}
+                <Text style={styles.subContent8}>
+                    {newsDetails?.subContent8}
+                </Text>
+                <Text style={styles.subContent9}>
+                    {newsDetails?.subContent9}
+                </Text>
+                <Text style={styles.subContent10}>
+                    {newsDetails?.subContent10}
                 </Text>
             </View>
         </ScrollView>

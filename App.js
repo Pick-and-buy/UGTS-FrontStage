@@ -36,6 +36,7 @@ import SellerProfile from './app/screens/profile/SellerProfile';
 import UserProfile from './app/screens/profile/UserProfile';
 import ListBrands from './app/screens/brand/ListBrands';
 import ListsPostOfBrandLine from './app/screens/brand/ListsPostOfBrandLine';
+import OrderDetails from './app/screens/payment/OrderDetails';
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [login, setLogin] = useState(null);
@@ -239,6 +240,11 @@ export default function App() {
           <Stack.Screen
             name='lists-post-brand-line'
             component={ListsPostOfBrandLine}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='order-details'
+            component={OrderDetails}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
