@@ -53,7 +53,7 @@ const AddressLists = ({ navigation, route }) => {
             <View style={styles.addressItem}>
                 <View style={styles.addressHeader}>
                     <Text style={styles.addressName}>{user?.result?.firstName} {user?.result?.lastName}</Text>
-                    <TouchableOpacity onPress={() => navigation.navigate("update-address")}>
+                    <TouchableOpacity onPress={() => navigation.navigate("update-address",user)}>
                         <Text style={styles.editText}>Chỉnh sửa</Text>
                     </TouchableOpacity>
                 </View>

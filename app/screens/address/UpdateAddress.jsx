@@ -6,17 +6,29 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { COLORS } from '../../constants/theme';
 import styles from '../css/updateAddress.style';
 import dvhcvn from '../../constants/uidata';
+import { updateAddress } from '../../api/user';
 
 const UpdateAddress = ({ navigation, route }) => {
+    const user = route.params;
     const [selectedCountry, setSelectedCountry] = useState('Việt Nam');
     const [selectedCity, setSelectedCity] = useState('');
     const [selectedProvince, setSelectedProvince] = useState('');
     const [selectedDistrict, setSelectedDistrict] = useState('');
     const [isEnabled, setIsEnabled] = useState(false);
-    const toggleSwitch = () => setIsEnabled(previousState => !previousState)
-    const handleSubmit = (values) => {
-        // Handle form submission logic here
-        console.log(values);
+    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
+    const handleSubmit = async (values, { setSubmitting, setErrors }) => {
+        // console.log(values.country);
+
+        try {
+            await updateAddress(user?.result?.id, values);
+            navigation.goBack();
+        } catch (err) {
+            const errorMessage = err.response?.data?.message || err.message || 'Cập nhật thông tin không thành công. Vui lòng thử lại.';
+            setErrors({ api: errorMessage });
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     const handleCountryChange = (item) => {
@@ -89,7 +101,7 @@ const UpdateAddress = ({ navigation, route }) => {
             </View>
             <Formik
                 initialValues={{
-                    country: '',
+                    country: selectedCountry,
                     city: '',
                     province: '',
                     district: '',
@@ -188,7 +200,7 @@ const UpdateAddress = ({ navigation, route }) => {
                         <View style={styles.setting}>
                             <Text style={[styles.labelText, { marginTop: 20 }]}>Cài đặt</Text>
                             <View style={styles.toggle}>
-                            <Text style={{fontSize:16,marginLeft:10}}>Đặt làm mặc định</Text>
+                                <Text style={{ fontSize: 16, marginLeft: 10 }}>Đặt làm mặc định</Text>
                                 <Switch
                                     trackColor={{ false: 'gray', true: '#green' }}
                                     thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}

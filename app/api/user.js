@@ -14,10 +14,10 @@ export const getUserByToken = async () => {
 
 export const getAuthToken = async () => {
   try {
-      const token = await AsyncStorage.getItem('token');
-      return token;
+    const token = await AsyncStorage.getItem('token');
+    return token;
   } catch (error) {
-      console.error("Error retrieving token: ", error);
+    console.error("Error retrieving token: ", error);
   }
 };
 
@@ -33,6 +33,23 @@ export const updateProfile = async (userId, profile) => {
     return response.data;
   } catch (error) {
     console.error('Error updating user profile:', error);
+    throw error;
+  }
+};
+
+export const updateAddress = async (userId, address) => {
+  try {
+    const response = await axiosInstance.put(`/users/address?userId=${userId}`, {
+      country: address.country,
+      province: address.city,
+      district: address.province,
+      street: address.district,
+      addressLine1: address.street,
+      addressLine2: address.address
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating user address:', error);
     throw error;
   }
 };
