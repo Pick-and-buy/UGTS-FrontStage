@@ -4,10 +4,17 @@ import { Ionicons, Feather, AntDesign, MaterialIcons, MaterialCommunityIcons, En
 import { COLORS } from '../../constants/theme';
 import styles from '../css/addressLists.style';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
 const AddressLists = ({ navigation, route }) => {
     const user = route.params;
 
     // console.log(user.result);
+
+    const maskPhoneNumber = (phoneNumber, regionCode) => {
+        if (!phoneNumber) return '';
+        const visibleDigits = phoneNumber.slice(0, 2) + '******' + phoneNumber.slice(-2);
+        return `(${regionCode}) ${visibleDigits}`;
+    };
 
     // const AddressItem = ({ item }) => (
     //     <View style={styles.addressItem}>
@@ -53,11 +60,13 @@ const AddressLists = ({ navigation, route }) => {
             <View style={styles.addressItem}>
                 <View style={styles.addressHeader}>
                     <Text style={styles.addressName}>{user?.result?.firstName} {user?.result?.lastName}</Text>
-                    <TouchableOpacity onPress={() => navigation.navigate("update-address",user)}>
+                    <TouchableOpacity onPress={() => navigation.navigate("update-address", user)}>
                         <Text style={styles.editText}>Chỉnh sửa</Text>
                     </TouchableOpacity>
                 </View>
-                <Text style={styles.addressPhone}>{user?.result?.phoneNumber}</Text>
+                <Text style={styles.addressPhone}>
+                    {maskPhoneNumber(user?.result?.phoneNumber, '+84')}
+                </Text>
                 <Text style={styles.addressDetails}>
                     {user?.result?.address?.addressLine2}
                     ,{user?.result?.address?.street}
