@@ -166,6 +166,28 @@ const PostDetail = ({ navigation, route }) => {
         setRefreshing(false);
     };
 
+    const handlePress = () => {
+        if (isAuthenticated) {
+            navigation.navigate("order-details", postDetails);
+        } else {
+            Alert.alert(
+                "Đăng nhập",
+                "Bạn cần đăng nhập để thêm sản phẩm vào danh mục yêu thích.",
+                [
+                    {
+                        text: "Cancel",
+                        style: "cancel"
+                    },
+                    {
+                        text: "Đăng nhập",
+                        onPress: () => navigation.navigate('login-navigation')
+                    }
+                ]
+            );
+            return;
+        }
+    };
+
     // Format the price using the helper function
     const formattedPrice = formatPrice(postDetails?.product?.price);
     return (
@@ -495,7 +517,7 @@ const PostDetail = ({ navigation, route }) => {
                 </ScrollView>
                 <View style={styles.bottomBtn}>
                     {type === "buyer" && (
-                        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("order-details",postDetails)}>
+                        <TouchableOpacity style={styles.button} onPress={handlePress}>
                             <Text style={styles.buttonText}>Mua ngay</Text>
                         </TouchableOpacity>
                     )

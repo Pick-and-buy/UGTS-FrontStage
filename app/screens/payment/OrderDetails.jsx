@@ -22,7 +22,8 @@ const OrderDetails = ({ navigation, route }) => {
     const [deliveryDateFrom, setDeliveryDateFrom] = useState(null);
     const [deliveryDateTo, setDeliveryDateTo] = useState(null);
     // console.log(postDetails?.id);
-    console.log(new Date());
+    // console.log(new Date());
+    // console.log(format(new Date(), 'yyyy-MM-dd HH:mm:ss'));
     useEffect(() => {
         const initialize = async () => {
             await checkToken();
