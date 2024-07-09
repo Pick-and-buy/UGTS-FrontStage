@@ -7,6 +7,7 @@ import { G, Line, Svg } from "react-native-svg";
 import { getUserByToken } from "../../api/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RadioButton } from 'react-native-paper';
+import { format, addDays } from 'date-fns'; // Import necessary functions from date-fns
 
 const OrderDetails = ({ navigation, route }) => {
     const postDetails = route.params;
@@ -17,6 +18,8 @@ const OrderDetails = ({ navigation, route }) => {
     const [productPrice, setProductPrice] = useState(0);
     const [shippingPrice, setShippingPrice] = useState(0);
     const [guaranteeFee, setGuaranteeFee] = useState(0);
+    const [deliveryDateFrom, setDeliveryDateFrom] = useState(null);
+    const [deliveryDateTo, setDeliveryDateTo] = useState(null);
 
     useEffect(() => {
         const initialize = async () => {
@@ -24,6 +27,7 @@ const OrderDetails = ({ navigation, route }) => {
             if (isAuthenticated) {
                 await fetchUserData();
                 calculatePrices();
+                calculateDeliveryDate();
             } else {
                 setLoading(false);
             }
@@ -56,6 +60,14 @@ const OrderDetails = ({ navigation, route }) => {
         setGuaranteeFee(500000); // Example guarantee fee
     };
 
+    const calculateDeliveryDate = () => {
+        const currentDate = new Date(); // Get current date
+        const deliveryFrom = addDays(currentDate, 3); // Add 3 days to current date
+        const deliveryTo = addDays(currentDate, 6)
+        setDeliveryDateFrom(deliveryFrom);
+        setDeliveryDateTo(deliveryTo);
+    };
+
     const formatPrice = (price) => {
         return new Intl.NumberFormat('vi-VN', {
             minimumFractionDigits: 0,
@@ -63,11 +75,10 @@ const OrderDetails = ({ navigation, route }) => {
         }).format(price);
     };
 
-    const totalPrice = productPrice + shippingPrice + guaranteeFee;
     const formattedProductPrice = formatPrice(productPrice);
     const formattedShippingPrice = formatPrice(shippingPrice);
     const formattedGuaranteeFee = formatPrice(guaranteeFee);
-    const formattedTotalPrice = formatPrice(totalPrice);
+    const formattedTotalPrice = formatPrice(productPrice + shippingPrice + guaranteeFee);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -139,7 +150,7 @@ const OrderDetails = ({ navigation, route }) => {
                     <View style={styles.relatedInformation}>
                         <View style={styles.transport}>
                             <Text style={{ fontSize: 16, color: COLORS.gray }}>Vận chuyển tiêu chuẩn</Text>
-                            <Text style={{ fontSize: 16, color: COLORS.gray }}>{formattedShippingPrice}</Text>
+                            <Text style={{ fontSize: 16, color: COLORS.gray }}>{formattedShippingPrice}đ</Text>
                         </View>
                         <View style={styles.transportFrom}>
                             <MaterialCommunityIcons name="truck-delivery-outline" size={18} color={COLORS.gray} />
@@ -147,10 +158,10 @@ const OrderDetails = ({ navigation, route }) => {
                         </View>
                         <View style={styles.transportTime}>
                             <AntDesign name="clockcircleo" size={16} color={COLORS.gray} />
-                            <Text style={{ fontSize: 12, color: COLORS.gray }}>Ngày giao hàng dự kiến: Jul 4 - Jul 6</Text>
+                            <Text style={{ fontSize: 12, color: COLORS.gray }}>Ngày giao hàng dự kiến: {deliveryDateFrom ? format(deliveryDateFrom, 'MMM d') : ''} - {deliveryDateTo ? format(deliveryDateTo, 'MMM d') : ''}</Text>
                         </View>
                         <View style={styles.summary}>
-                            <Text style={{ fontSize: 16 }}>1 mặt hàng, tổng cộng: {formattedTotalPrice}</Text>
+                            <Text style={{ fontSize: 16 }}>1 mặt hàng, tổng cộng: {formattedTotalPrice}đ</Text>
                         </View>
                     </View>
 
@@ -167,13 +178,13 @@ const OrderDetails = ({ navigation, route }) => {
 
                             <View style={styles.totalRight}>
                                 <Text style={styles.totalText}>{formattedProductPrice}đ</Text>
-                                <Text style={styles.totalText}>{formattedShippingPrice}</Text>
-                                <Text style={styles.totalText}>{formattedGuaranteeFee}</Text>
+                                <Text style={styles.totalText}>{formattedShippingPrice}đ</Text>
+                                <Text style={styles.totalText}>{formattedGuaranteeFee}đ</Text>
                             </View>
                         </View>
                         <View style={styles.totalPrice}>
                             <Text style={styles.totalHeader}>Tổng</Text>
-                            <Text style={styles.totalHeader}>{formattedTotalPrice}</Text>
+                            <Text style={styles.totalHeader}>{formattedTotalPrice}đ</Text>
                         </View>
                     </View>
 
