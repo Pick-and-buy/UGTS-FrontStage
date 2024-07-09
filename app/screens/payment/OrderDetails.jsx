@@ -8,6 +8,7 @@ import { getUserByToken } from "../../api/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RadioButton } from 'react-native-paper';
 import { format, addDays } from 'date-fns'; // Import necessary functions from date-fns
+import { order } from '../../api/order';
 
 const OrderDetails = ({ navigation, route }) => {
     const postDetails = route.params;
@@ -20,7 +21,8 @@ const OrderDetails = ({ navigation, route }) => {
     const [guaranteeFee, setGuaranteeFee] = useState(0);
     const [deliveryDateFrom, setDeliveryDateFrom] = useState(null);
     const [deliveryDateTo, setDeliveryDateTo] = useState(null);
-
+    // console.log(postDetails?.id);
+    console.log(new Date());
     useEffect(() => {
         const initialize = async () => {
             await checkToken();
@@ -35,8 +37,15 @@ const OrderDetails = ({ navigation, route }) => {
         initialize();
     }, [isAuthenticated]);
 
-    const handleOrder = () => {
+    const handleOrder = async () => {
         console.log('Selected payment method:', checked);
+        try {
+            await order(checked, deliveryDateFrom, deliveryDateTo, postDetails?.id);
+            console.log('Submit order successfully!')
+            navigation.navigate('bottom-navigation')
+        } catch (error) {
+            console.error('Submit order', error);
+        }
     };
 
     const fetchUserData = async () => {

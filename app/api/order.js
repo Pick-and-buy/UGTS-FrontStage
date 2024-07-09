@@ -2,13 +2,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axiosInstance from './axiosInstance';
 
 
-export const order = async () => {
+export const order = async (paymentMethod,deliveryDate,receivedDate,postId) => {
     try {
         const response = await axiosInstance.post(`/orders`, {
-            paymentMethod: "credit card",
-            packageDate: "2022-01-01T00:00:00Z",
-            deliveryDate: "2022-01-02T00:00:00Z",
-            receivedDate: "2022-01-03T00:00:00Z",
+            paymentMethod: paymentMethod,
+            packageDate: new Date(),
+            deliveryDate: deliveryDate,
+            receivedDate: receivedDate,
             post: {
                 id: postId
             }
