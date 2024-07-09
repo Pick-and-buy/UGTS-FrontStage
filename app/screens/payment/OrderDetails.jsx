@@ -52,7 +52,7 @@ const OrderDetails = ({ navigation, route }) => {
     const fetchUserData = async () => {
         try {
             const userData = await getUserByToken();
-            setUser(userData.result);
+            setUser(userData);
         } catch (error) {
             console.error('Fetching user data failed:', error);
         }
@@ -97,23 +97,23 @@ const OrderDetails = ({ navigation, route }) => {
                 <Text style={styles.headerText}>Tổng quan đơn hàng</Text>
             </View>
             <ScrollView style={styles.wrapper} showsVerticalScrollIndicator={false}>
-                <View style={styles.address}>
+                <TouchableOpacity style={styles.address} onPress={() => navigation.navigate("address-lists", user)}>
                     <View style={styles.ownerAddress}>
                         <SimpleLineIcons name="location-pin" size={20} color="black" />
                         <Text style={styles.ownerName}>
-                            {user?.firstName} {user?.lastName} {user?.phoneNumber}
+                            {user?.result?.firstName} {user?.result?.lastName} {user?.result?.phoneNumber}
                         </Text>
                     </View>
                     <View style={styles.locationDetails}>
                         <Text style={styles.locationText}>
-                            {user?.address?.addressLine2}
+                            {user?.result?.address?.addressLine2}
                         </Text>
                         <Text style={styles.locationText}>
-                            {user?.address?.addressLine1},
-                            {user?.address?.street},
-                            {user?.address?.district},
-                            {user?.address?.province},
-                            {user?.address?.country}
+                            {user?.result?.address?.addressLine1},
+                            {user?.result?.address?.street},
+                            {user?.result?.address?.district},
+                            {user?.result?.address?.province},
+                            {user?.result?.address?.country}
                         </Text>
                     </View>
                     <FontAwesome6
@@ -121,7 +121,7 @@ const OrderDetails = ({ navigation, route }) => {
                         style={{ position: 'absolute', right: 0, top: 10 }}
                         color="gray"
                     />
-                </View>
+                </TouchableOpacity>
                 <View style={styles.slanted}>
                     <Svg height="20" width="100%">
                         <G transform="rotate(0)">

@@ -25,7 +25,6 @@ import PosterInformation from './app/screens/posterInformation/PosterInformation
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Profile from './app/screens/Profile';
 import { LoginContext } from './app/context/LoginContext';
-import TodoTask from './app/screens/todoTask/todoTask';
 import ChangePassword from './app/screens/change password/ChangePassword';
 import UpdateProfile from './app/screens/profile/UpdateProfile';
 import CreatePostDetail from './app/screens/post/CreatePostDetail';
@@ -40,6 +39,7 @@ import OrderDetails from './app/screens/payment/OrderDetails';
 import AddressLists from './app/screens/address/AddressLists';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import UpdateAddress from './app/screens/address/UpdateAddress';
+import TodoTask from './app/screens/todoTask/TodoTask';
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [login, setLogin] = useState(null);
