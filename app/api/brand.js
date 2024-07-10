@@ -10,6 +10,3 @@ export const callFetchListBrands = async () => {
   }
 }
 
-// export const callFetchListBrands = () => {
-//   return axiosInstance.get('/brands');
-// }

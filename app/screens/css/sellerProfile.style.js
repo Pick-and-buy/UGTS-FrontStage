@@ -55,7 +55,19 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: COLORS.primary,
         borderRadius: 5,
-        paddingHorizontal: 5
+        paddingHorizontal: 5,
+        paddingVertical: 5, // Add some padding to make it look better
+    },
+    followBtnText: {
+        color: COLORS.primary,
+        textAlign: 'center',
+    },
+    followingBtn: {
+        backgroundColor: COLORS.primary,
+    },
+    followingBtnText: {
+        color: COLORS.white,
+        textAlign: 'center',
     },
     containerPost: {
         flex: 1,
@@ -69,12 +81,12 @@ const styles = StyleSheet.create({
         width: '98%',
         flexDirection: "row",
         flexWrap: "wrap",
-        justifyContent: "space-around",
+        justifyContent: "flex-start",
         alignItems: "center",
-        gap: 5,
-        marginHorizontal: 10,
+        marginHorizontal:"auto",
+        gap: 6,
+        // marginHorizontal: 10,
         marginTop: 10,
-        marginHorizontal: "auto",
     },
 });
 

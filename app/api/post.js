@@ -54,7 +54,7 @@ export const callFetchPostByBrandName = (query) => {
 export const createPost = async (formData) => {
   try {
     const token = await getAuthToken();
-    const response = await fetch('http://10.0.2.2:8080/api/v1/posts', {
+    const response = await fetch('http://192.168.1.9:8080/api/v1/posts', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -96,3 +96,51 @@ export const getPostsByUserId = async (id) => {
     throw error;
   }
 }
+export const getLikedPostByUser = async (id) => {
+  try {
+    const response = axiosInstance.get(`/like/liked-posts/${id}`);
+    return response;
+  } catch (error) {
+    logger.error('Error Get Liked Post:', error);
+    throw error;
+  }
+}
+export const getPostsByBrandName = async (brandName) => {
+  try {
+    const response = axiosInstance.get(`/posts/brands?name=${brandName}`);
+    return response;
+  } catch (error) {
+    logger.error('Error Get Posts By Brand Name:', error);
+    throw error;
+  }
+}
+
+export const getPostsByBrandLineName = async (brandLineName) => {
+  try {
+    const response = axiosInstance.get(`/posts/brandLine?brandLineName=${brandLineName}`);
+    return response;
+  } catch (error) {
+    logger.error('Error Get Posts by brand line name:', error);
+    throw error;
+  }
+}
+export const getAllBrandLines = async () => {
+  try {
+    const response = axiosInstance.get('/brand-lines');
+    return response;
+  } catch (error) {
+    logger.error('Error get all brand line :', error);
+    throw error;
+  }
+}
+export const getBrandLinesByBrandName = async (brandName) => {
+  try {
+    const response = axiosInstance.get(`/brand-lines/brand-name?brandName=${brandName}`);
+    return response;
+  } catch (error) {
+    logger.error('Error get all brand line :', error);
+    throw error;
+  }
+}
+
+

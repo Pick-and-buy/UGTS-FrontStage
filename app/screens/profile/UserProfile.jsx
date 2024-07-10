@@ -13,14 +13,40 @@ import { COLORS } from "../../constants/theme";
 import { Rating } from 'react-native-stock-star-rating';
 import styles from "../css/UserProfile.style";
 import Post from "../post/Post";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getListsFollowers, getListsFollowing } from "../../api/user";
 
 const UserProfile = ({ navigation, route }) => {
   const { user, createdPosts } = route.params;
   const [loading, setLoading] = useState(false);
-
+  const [followersCount, setFollowersCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
   const profile =
     "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
+  // console.log(user.result.id);
+  useEffect(() => {
+    fetchFollowersCount();
+    fetchFollowingCount();
+  }, []);
+
+  const fetchFollowersCount = async () => {
+    try {
+      const response = await getListsFollowers(user.result.id);
+      setFollowersCount(response.result.length);
+      // console.log(response.result.length);
+    } catch (error) {
+      console.error('Error fetching followers count:', error);
+    }
+  };
+
+  const fetchFollowingCount = async () => {
+    try {
+      const response = await getListsFollowing(user.result.id);
+      setFollowingCount(response.result.length);
+    } catch (error) {
+      console.error('Error fetching following count:', error);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -90,10 +116,10 @@ const UserProfile = ({ navigation, route }) => {
         {/* Follower */}
         <View style={styles.followerView}>
           <Text>
-            100 <Text>người theo dõi</Text>
+            {followersCount}<Text> người theo dõi</Text>
           </Text>
           <Text>
-            60 <Text>người đang theo dõi</Text>
+            {followingCount}<Text> người đang theo dõi</Text>
           </Text>
         </View>
 
@@ -108,7 +134,7 @@ const UserProfile = ({ navigation, route }) => {
             ) : (
               <View style={styles.row}>
                 {createdPosts.map(post => (
-                  <Post key={post.id} post={post} />
+                  <Post key={post.id} post={post} type="seller"/>
                 ))}
               </View>
             )}

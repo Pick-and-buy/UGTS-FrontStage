@@ -7,7 +7,6 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from "expo-splash-screen";
 import BottomTab from './app/navigation/BottomTab';
 import RegisterInformation from './app/screens/register/RegisterInformation';
-import ProductDetail from './app/screens/brand/ProductDetail';
 import BrandDetail from './app/screens/brand/BrandDetail';
 import Login from './app/screens/Login';
 import Register from './app/screens/register/Register';
@@ -29,13 +28,14 @@ import { LoginContext } from './app/context/LoginContext';
 import TodoTask from './app/screens/todoTask/todoTask';
 import ChangePassword from './app/screens/change password/ChangePassword';
 import UpdateProfile from './app/screens/profile/UpdateProfile';
-import ListBrandHomePage from './app/screens/brand/ListBrandHomePage';
 import CreatePostDetail from './app/screens/post/CreatePostDetail';
 import News from './app/screens/news/News';
 import Slider from './app/screens/home/Slider';
 import Search from './app/screens/Search';
 import SellerProfile from './app/screens/profile/SellerProfile';
 import UserProfile from './app/screens/profile/UserProfile';
+import ListBrands from './app/screens/brand/ListBrands';
+import ListsPostOfBrandLine from './app/screens/brand/ListsPostOfBrandLine';
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [login, setLogin] = useState(null);
@@ -172,11 +172,6 @@ export default function App() {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name='product-detail'
-            component={ProductDetail}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
             name='post-details'
             component={PostDetail}
             options={{ headerShown: false }}
@@ -212,7 +207,7 @@ export default function App() {
 
           <Stack.Screen
             name='list-all-brand'
-            component={ListBrandHomePage}
+            component={ListBrands}
             options={{ headerShown: false }}
           />
 
@@ -239,6 +234,11 @@ export default function App() {
           <Stack.Screen
             name='seller-profile-navigation'
             component={SellerProfile}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='lists-post-brand-line'
+            component={ListsPostOfBrandLine}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

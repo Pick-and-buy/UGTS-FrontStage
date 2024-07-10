@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View, Image } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { getNewsById } from '../../api/news';
 import styles from '../css/news.style';
@@ -6,7 +6,6 @@ import styles from '../css/news.style';
 const News = ({ navigation, route }) => {
     const newsId = route.params;
     const [newsDetails, setNewsDetails] = useState();
-
     useEffect(() => {
         fetchNewsDetails();
     }, []);
@@ -45,6 +44,13 @@ const News = ({ navigation, route }) => {
 
                 <Text style={styles.content}>{newsDetails?.content}</Text>
 
+                <TouchableOpacity style={styles.button}
+                    onPress={() =>
+                        navigation.navigate('lists-post-brand-line', { brandLine: newsDetails?.brandLine?.lineName })
+                    }
+                >
+                    <Text style={styles.buttonText}>See {newsDetails?.brandLine?.lineName} Bags</Text>
+                </TouchableOpacity>
 
                 <Text style={styles.subTitle1}>
                     {newsDetails?.subTitle1}

@@ -7,26 +7,56 @@ import {
     Image,
     SafeAreaView,
     ActivityIndicator,
+    RefreshControl,
+    Alert
 } from "react-native";
 import { Ionicons, Feather, MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from "../../constants/theme";
 import { Rating } from 'react-native-stock-star-rating';
-import styles from "../css/sellerProfile.style";
 import Post from "../post/Post";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { followUser, unfollowUser, checkIfFollowing, getListsFollowers, getListsFollowing } from "../../api/user";
 import { getPostsByUserId } from "../../api/post";
+import styles from "../css/sellerProfile.style";
 
 const SellerProfile = ({ navigation, route }) => {
     const { userOfPost, userIdLogged } = route.params;
     const [loading, setLoading] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
     const [postsOfSeller, setPostsOfSeller] = useState([]);
-
-    const profile =
-        "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
-
+    const [isFollowing, setIsFollowing] = useState(false);
+    const [followersCount, setFollowersCount] = useState(0);
+    const [followingCount, setFollowingCount] = useState(0)
+    const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
     useEffect(() => {
         fetchPostsByUserId();
-    }, []);
+        if (userIdLogged) {
+            checkFollowStatus();
+        } else {
+            // Reset follow status if user is not logged in
+            setIsFollowing(false);
+        }
+        // Add userIdLogged to dependency array
+    }, [userIdLogged]);
+
+    const fetchFollowersCount = async () => {
+        try {
+            const response = await getListsFollowers(userOfPost.id);
+            setFollowersCount(response.result.length);
+            console.log(response.result.length);
+        } catch (error) {
+            console.error('Error fetching followers count:', error);
+        }
+    };
+
+    const fetchFollowingCount = async () => {
+        try {
+            const response = await getListsFollowing(userOfPost.id);
+            setFollowingCount(response.result.length);
+        } catch (error) {
+            console.error('Error fetching following count:', error);
+        }
+    };
 
     const fetchPostsByUserId = async () => {
         setLoading(true);
@@ -40,7 +70,62 @@ const SellerProfile = ({ navigation, route }) => {
         }
     };
 
-    // console.log(postsOfSeller[0].product);
+    const checkFollowStatus = async () => {
+        try {
+            const status = await checkIfFollowing(userIdLogged, userOfPost.id);
+            setIsFollowing(status);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleFollowToggle = async () => {
+        if (!userIdLogged) {
+            Alert.alert(
+                "Đăng nhập",
+                "Bạn cần đăng nhập để theo dõi người bán.",
+                [
+                    {
+                        text: "Cancel",
+                        style: "cancel"
+                    },
+                    {
+                        text: "Đăng nhập",
+                        onPress: () => navigation.navigate('login-navigation')
+                    }
+                ]
+            );
+            return;
+        }
+
+        try {
+            setLoading(true);
+            if (isFollowing) {
+                console.log('Unfollowing user...');
+                const response = await unfollowUser(userIdLogged, userOfPost.id);
+                console.log('Unfollow response:', response);
+                setFollowersCount(prevCount => prevCount - 1);
+            } else {
+                console.log('Following user...');
+                const response = await followUser(userIdLogged, userOfPost.id);
+                console.log('Follow response:', response);
+                setFollowersCount(prevCount => prevCount + 1);
+            }
+            setIsFollowing(!isFollowing);
+        } catch (error) {
+            console.error('Error in handleFollowToggle:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        fetchPostsByUserId().then(() => setRefreshing(false));
+        if (userIdLogged) {
+            checkFollowStatus();
+        }
+    }, [userIdLogged]); // Add userIdLogged to dependency array
 
     return (
         <SafeAreaView style={styles.safeArea}>
@@ -90,12 +175,30 @@ const SellerProfile = ({ navigation, route }) => {
                         </View>
                     </View>
                     <View>
-                        {userOfPost.id !== userIdLogged && (
+                        {userIdLogged && userOfPost.id !== userIdLogged && (
                             <TouchableOpacity
-                                onPress={() => navigation.navigate('update-profile', user)}
+                                onPress={handleFollowToggle}
+                                style={[
+                                    styles.followBtn,
+                                    isFollowing && styles.followingBtn
+                                ]}
+                            >
+                                <Text style={[
+                                    styles.followBtnText,
+                                    isFollowing && styles.followingBtnText
+                                ]}>
+                                    {isFollowing ? 'Đang theo dõi' : 'Theo dõi'}
+                                </Text>
+                            </TouchableOpacity>
+                        )}
+                        {!userIdLogged && (
+                            <TouchableOpacity
+                                onPress={handleFollowToggle}
                                 style={styles.followBtn}
                             >
-                                <Text style={{ margin: 5, color: COLORS.primary }}>Theo dõi</Text>
+                                <Text style={styles.followBtnText}>
+                                    Theo dõi
+                                </Text>
                             </TouchableOpacity>
                         )}
                     </View>
@@ -104,10 +207,10 @@ const SellerProfile = ({ navigation, route }) => {
                 {/* Follower */}
                 <View style={styles.followerView}>
                     <Text>
-                        100 <Text>người theo dõi</Text>
+                        {followersCount}<Text> người theo dõi</Text>
                     </Text>
                     <Text>
-                        60 <Text>người đang theo dõi</Text>
+                        {followingCount}<Text> người đang theo dõi</Text>
                     </Text>
                 </View>
 
@@ -116,13 +219,22 @@ const SellerProfile = ({ navigation, route }) => {
                     <View style={{ marginTop: 20, justifyContent: "center", alignItems: "center" }}>
                         <Text style={{ fontSize: 20, fontWeight: "bold" }}>Sản phẩm</Text>
                     </View>
-                    <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                    <ScrollView
+                        contentContainerStyle={styles.scrollViewContent}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={refreshing}
+                                onRefresh={onRefresh}
+                                colors={[COLORS.primary]}
+                            />
+                        }
+                    >
                         {loading ? (
                             <ActivityIndicator size="large" color={COLORS.primary} />
                         ) : (
                             <View style={styles.row}>
                                 {postsOfSeller.map(post => (
-                                    <Post key={post.id} post={post} />
+                                    <Post key={post.id} post={post} type="buyer" />
                                 ))}
                             </View>
                         )}
@@ -130,7 +242,7 @@ const SellerProfile = ({ navigation, route }) => {
                 </View>
             </View>
         </SafeAreaView>
-    )
+    );
 }
 
 export default SellerProfile;

@@ -2,7 +2,7 @@ import {
     StyleSheet,
     Dimensions,
 } from "react-native";
-import { COLORS, SIZES } from "../../constants/theme";
+import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
 
 
 const styles = StyleSheet.create({
@@ -58,22 +58,46 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 15,
-        gap: 10,
+        marginHorizontal: 'auto'
     },
     image: {
         position: 'relative',
-        width: Dimensions.get('window').width / 5.8,
-        height: Dimensions.get('window').width / 5.8,
+        width: Dimensions.get('window').width / 5.3,
+        height: Dimensions.get('window').width / 5.3,
         backgroundColor: COLORS.lightWhite,
         borderRadius: 5,
         alignItems: 'center',
+        marginRight: 5
     },
 
     xmark: {
         position: 'absolute', 
         top: 3, 
-        right: 18
+        left: 18
     },
+
+    //Upload Image by gallery and Camera Option
+    selectOption: {
+        flexDirection: 'row',
+        marginBottom: 20,
+        marginHorizontal: "10%",
+        gap: 20,
+    },
+    uploadContainer: {
+        flexDirection: 'column',
+        borderWidth: 2,
+        borderRadius: 20,
+        width: '40%',
+        backgroundColor: 'white',
+        borderColor: COLORS.lightWhite,
+        ...SHADOWS.medium,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    imageSelect:{
+        marginVertical:10,
+    },
+
     //Product Information
     productContainer: {
         width: Dimensions.get('window').width,
@@ -81,7 +105,7 @@ const styles = StyleSheet.create({
     },
     inputProduct: {
         flex: 1,
-        width: "90%",
+        width: "100%",
         marginVertical: 5,
         fontSize: 16,
     },
@@ -144,7 +168,7 @@ const styles = StyleSheet.create({
     shippingInformation: {
         width: Dimensions.get('window').width,
         height: 50,
-        backgroundColor: COLORS.gray2,
+        backgroundColor: '#dbd9d9',
         paddingHorizontal: 10,
         paddingTop: 10,
         flexDirection: 'row',

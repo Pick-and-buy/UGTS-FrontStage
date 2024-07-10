@@ -17,6 +17,7 @@ import Carousel from "pinar";
 import Slider from './Slider';
 import { getAllPosts } from "../../api/post";
 import Post from "../post/Post";
+import Brands from "./Brands";
 
 const HomeFollow = ({ navigation }) => {
     const [posts, setPosts] = useState([]);
@@ -54,13 +55,13 @@ const HomeFollow = ({ navigation }) => {
             }
         >
             <Slider navigation={navigation} />
-
+            <Brands />
             {loading ? (
                 <ActivityIndicator size="large" color={COLORS.primary} />
             ) : (
                 <View style={styles.row}>
                     {posts.map(post => (
-                        <Post key={post.id} post={post} />
+                        <Post key={post.id} post={post} type={"buyer"}/>
                     ))}
                 </View>
             )}
@@ -77,12 +78,12 @@ const styles = StyleSheet.create({
     },
     row: {
         width: "98%",
-        justifyContent: "space-around",
+        justifyContent: "flex-start",
         flexDirection: "row",
         flexWrap: "wrap",
         alignItems: "center",
-        gap: 5,
+        gap: 6,
         marginHorizontal: "auto",
-        marginTop: "-4%",
+        marginTop: "-8%",
     },
 });

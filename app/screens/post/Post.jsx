@@ -6,20 +6,32 @@ import { useNavigation } from '@react-navigation/native';
 
 const image = { uri: "https://docs.expo.dev/static/images/tutorial/background-image.png" };
 
-const Post = ({ post }) => {
+const Post = ({ post, type }) => {
     // console.log(product.product.images[0].imageUrl);
     // console.log(product.id);
     const navigation = useNavigation();
+
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('vi-VN', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(price);
+    }
+
+    // Format the price using the helper function
+    const formattedPrice = formatPrice(post?.product?.price);
+
     return (
         <View style={styles.container}>
             <GestureHandlerRootView>
                 <TouchableOpacity style={styles.wrapper}
-                    onPress={() => navigation.navigate('post-details', post.id)}
+                    onPress={() => navigation.navigate('post-details', { postId: post.id, type })}
                 >
                     <ImageBackground source={{ uri: post?.product?.images[0]?.imageUrl }} style={styles.image}>
                         <Text style={styles.text}>
                             <Text style={styles.currency}>đ</Text>
-                            {post?.product?.price}</Text>
+                            {formattedPrice}
+                        </Text>
                     </ImageBackground>
                 </TouchableOpacity>
             </GestureHandlerRootView>

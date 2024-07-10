@@ -33,6 +33,19 @@ const styles = StyleSheet.create({
         // fontSize: 24,
         color: COLORS.black
     },
+    button:{
+        width:"50%",
+        height:40,
+        backgroundColor: "#003bc3",
+        marginHorizontal:"auto",
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
+    },
+    buttonText:{
+        color: COLORS.white,
+        fontSize: 16,
+    },
     subTitle1: {
         fontSize: 20,
         fontWeight: 'bold',

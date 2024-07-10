@@ -8,9 +8,10 @@ import {
   TextInput,
   Dimensions,
   FlatList,
+  ImageBackground,
   Button,
 } from "react-native";
-import { FontAwesome, Ionicons, AntDesign, Feather } from '@expo/vector-icons';
+import { FontAwesome, AntDesign, MaterialIcons, FontAwesome6, Ionicons } from '@expo/vector-icons';
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { NavigationContaine, useNavigation } from '@react-navigation/native';
 import { COLORS } from "../../constants/theme";
@@ -27,10 +28,12 @@ import * as ImagePicker from "expo-image-picker";
 const CreatePostDetail = () => {
 
   const navigation = useNavigation();
+
   const [listBrandName, setListBrandName] = useState([]);
   const [listCategory, setListCategory] = useState([]);
   const [listBrandLines, setListBrandLines] = useState([]);
-  const [image, setImage] = useState(null);
+
+  const [images, setImages] = useState([null, null, null, null, null]);
 
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [selectedBrandLine, setSelectedBrandLine] = useState(null);
@@ -105,17 +108,18 @@ const CreatePostDetail = () => {
   }
 
   const validationSchema = Yup.object().shape({
-    brandName: Yup.string().required('Please select an option'),
-    price: Yup.string().matches(/^\d{5}$/, 'Price có ít nhất 5 số').required('Vui lòng nhập Giá Tiền').typeError("Có vẻ như đó không phải là Giá Tiền"),
-    //fee: Yup.string().matches(/^\d{5}$/, 'Price có ít nhất 5 số').required('Vui lòng nhập Tiền Hoa Hồng').typeError("Có vẻ như đó không phải là Tiền Hoa Hồng"),
-    //saleProfit: Yup.string().matches(/^\d{5}$/, 'Price có ít nhất 5 số').required('Vui lòng nhập Lợi Nhuận').typeError("Có vẻ như đó không phải là Giá Tiền"),
+    brandName: Yup.string().required('Hãy chọn thương hiệu'),
+    brandLineName: Yup.string().required('Hãy chọn dòng thương hiệu'),
+    condition: Yup.string().required('Hãy chọn trạng thái sản phẩm'),
+    category: Yup.string().required('Hãy chọn thể loại'),
   });
 
-
   const dataProductCondition = [
+    { label: 'BRAND_NEW', value: 'BRAND_NEW' },
+    { label: 'EXCELLENT', value: 'EXCELLENT' },
+    { label: 'VERY_GOOD', value: 'VERY_GOOD' },
     { label: 'GOOD', value: 'GOOD' },
-    { label: 'used', value: 'used' },
-    { label: 'bad', value: 'bad' },
+    { label: 'FAIR', value: 'FAIR' },
   ];
 
   const dataSize = [
@@ -124,23 +128,9 @@ const CreatePostDetail = () => {
     { label: 'big', value: 'big' },
   ];
 
-  const dataShippingMethod = [
-    { label: 'J&T Express', value: 'J&T Express' },
-    { label: 'Giao Hàng Nhanh', value: 'Giao Hàng Nhanh' },
-    { label: 'Viettel Post', value: 'Viettel Post' },
-    { label: 'Giao Hàng Tiết Kiệm', value: 'Giao Hàng Tiết Kiệm' },
-  ];
-
-  const dataShippingTime = [
-    { label: '1 ngày', value: '1' },
-    { label: '2 ngày', value: '2' },
-    { label: '3 ngày', value: '3' },
-    { label: '4 ngày', value: '4' },
-  ];
-
   const handleCreatePost = async (values, actions) => {
     try {
-      const { title, brandName, productName, brandLineName, condition, category, exteriorMaterial,
+      let { title, brandName, productName, brandLineName, condition, category, exteriorMaterial,
         interiorMaterial, size, width, height, length, referenceCode, manufactureYear, color, accessories, dateCode,
         serialNumber, purchasedPlace, story, description, price,
         // dataShippingMethod, dataShippingTime, shippingAddress, fee, saleProfit,
@@ -176,113 +166,95 @@ const CreatePostDetail = () => {
       };
 
       formData.append('request', JSON.stringify(request));
-
-      const fileName = image.split('/').pop();
-      formData.append('productImage', {
-        uri: image,
-        name: fileName,
-        type: 'image/jpeg',
+      console.log('>>> check images: ', images);
+      images.forEach((image, index) => {
+        const fileName = image.split('/').pop();
+        formData.append('productImage', {
+          uri: image,
+          type: 'image/jpeg',
+          name: fileName,
+        });
       });
 
       await createPost(formData);
       navigation.navigate('Home')
-      setImage(null);
+      setImages([]);
+      // actions.resetForm({
+      //   title: '',
+      //   brandName: '',
+      //   productName: '',
+      //   brandLineName: '',
+      //   condition: '',
+      //   category: '',
+      //   exteriorMaterial: '',
+      //   interiorMaterial: '',
+      //   size: '',
+      //   width: '',
+      //   height: '',
+      //   length: '',
+      //   referenceCode: '',
+      //   manufactureYear: '',
+      //   color: '',
+      //   accessories: '',
+      //   dateCode: '',
+      //   serialNumber: '',
+      //   purchasedPlace: '',
+      //   story: '',
+      //   description: '',
+      //   price: '',
+      // })
 
-      actions.resetForm({
-        title: '',
-        brandName: '',
-        productName: '',
-        brandLineName: '',
-        condition: '',
-        category: '',
-        exteriorMaterial: '',
-        interiorMaterial: '',
-        size: '',
-        width: '',
-        height: '',
-        length: '',
-        referenceCode: '',
-        manufactureYear: '',
-        color: '',
-        accessories: '',
-        dateCode: '',
-        serialNumber: '',
-        purchasedPlace: '',
-        story: '',
-        description: '',
-        price: '',
-      })
     } catch (error) {
       console.error('ERROR handle create post: ', error);
     }
   }
 
-  const onGalleryPress = async () => {
+  //Upload Image
+  const onGalleryMultiplePress = async (index) => {
     try {
       await ImagePicker.requestMediaLibraryPermissionsAsync();
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
         aspect: [1, 1],
-        quantity: 1,
-      })
-      console.log('Result Image: ', result);
+        allowsMultipleSelection: true,  // allow multiple images
+      });
       if (!result.canceled) {
-        //save images
-        setImage(result.assets[0].uri);
-        
-        // setImage([...image, ...result.assets.map(asset => asset.uri)]);
+        const newImages = result?.assets?.map(asset => asset.uri);
+        const updatedImages = [...newImages, ...images].slice(0, 5);
+        setImages(updatedImages);
       }
     } catch (error) {
       console.error('Error Upload Image: ', error);
     }
   }
 
-  const uploadImageCamera = async () => {
+  const uploadImageCamera = async (index) => {
     try {
       await ImagePicker.requestCameraPermissionsAsync();
       let result = await ImagePicker.launchCameraAsync({
         // Use the front camera and allows editing photo frames at 1:1 ratio
-        cameraType: ImagePicker.CameraType.front,
+        cameraType: ImagePicker.CameraType.back,
         allowsEditing: true,
         aspect: [1, 1],
-        quantity: 1,
       });
-
+      console.log('>>> check result: ', result);
       if (!result.canceled) {
         //save images
-        setImage(result.assets[0].uri);
+        const newImages = result?.assets?.map(asset => asset.uri);
+        const updatedImages = [...newImages, ...images].slice(0, 5);
+        setImages(updatedImages);
       }
     } catch (error) {
       console.error('Error Upload Image: ', error);
     }
   };
 
-  const uploadImageGallery = async () => {
-    try {
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quantity: 1,
-      })
-
-      if (!result.canceled) {
-        //save images
-        setImage(result.assets[0].uri);
-      }
-    } catch (error) {
-      console.error('Error Upload Image: ', error);
-    }
-  };
-
-  const removeImage = async () => {
-    try {
-      setImage(null);
-    } catch (error) {
-      console.error('Error Remove Image: ', error);
-    }
+  //Remove Image
+  const removeImage = (index) => {
+    const newImages = [...images];
+    newImages.splice(index, 1);
+    newImages.push("")
+    setImages(newImages);
   }
 
   return (
@@ -293,7 +265,6 @@ const CreatePostDetail = () => {
           category: '', exteriorMaterial: '', interiorMaterial: '', size: '', width: '',
           height: '', length: '', referenceCode: '', manufactureYear: '', color: '',
           accessories: '', dateCode: '', serialNumber: '', purchasedPlace: '', story: '', description: '', price: '',
-          // dataShippingMethod: '', dataShippingTime: '', shippingAddress: '', fee: '', saleProfit: '',
         }}
         validationSchema={validationSchema}
         onSubmit={handleCreatePost}
@@ -302,8 +273,8 @@ const CreatePostDetail = () => {
           <View style={styles.container}>
             {/* Header */}
             <View style={styles.headerContainer}>
-              <Feather onPress={() => navigation.goBack()} name="x" size={35} color={COLORS.primary} />
-              <Text style={styles.textName}>Thông Tin Sản Phẩm</Text>
+            <FontAwesome6 name="xmark" size={30} color={COLORS.primary} />
+              <Text style={[styles.textName, { marginLeft: 50 }]}>Thông Tin Sản Phẩm</Text>
             </View>
             <View style={styles.shadow}>{/* Tạo Khoảng Trống */}</View>
 
@@ -311,38 +282,52 @@ const CreatePostDetail = () => {
             <View style={styles.imageUploadContaniner}>
               <View
                 style={styles.imageUpload}>
-                <TouchableOpacity
-                  onPress={onGalleryPress}
-                >
-                  <View style={styles.image}>
-                    {image ?
-                      <Image
-                        source={{ uri: image }}
-                        style={styles.image} />
+                <FlatList
+                  data={images}
+                  keyExtractor={(item, index) => index.toString()}
+                  horizontal
+                  renderItem={({ item, index }) => (
+                    item === null || item === "" ?
+                      (
+                        <View key={index} style={styles.image} >
+                          <TouchableOpacity onPress={() => uploadImageCamera(index)}>
+                            <View style={{ position: 'absolute', top: 3, left: 1 }}>
+                              <Text style={{ color: COLORS.gray }}>{index + 1}</Text>
+                            </View>
+                            <FontAwesome style={{ marginTop: 20, marginHorizontal: 20 }} name="camera" size={26} color={COLORS.gray} />
+                            <Text style={{ marginTop: 10, color: COLORS.gray, textAlign: 'center' }}>Ảnh</Text>
+                          </TouchableOpacity>
+                        </View>
+                      )
                       :
-                      <View>
-                        <FontAwesome style={{ marginTop: 10 }} name="camera" size={20} color={COLORS.gray} />
-                        <Text style={{ marginTop: 5, color: COLORS.gray }}>Ảnh</Text>
-                      </View>
-                    }
-                  </View>
-                </TouchableOpacity>
-                <View style={styles.image}></View>
-                <View style={styles.image}></View>
-                <View style={styles.image}></View>
-                <View style={styles.image}></View>
+                      (
+                        <View key={index}>
+                          <ImageBackground
+                            source={{ uri: item }}
+                            style={styles.image} >
+                            <TouchableOpacity onPress={() => removeImage(index)}>
+
+                              <FontAwesome6 style={styles.xmark} name="xmark" size={20} color="white" />
+                            </TouchableOpacity>
+                          </ImageBackground>
+                        </View>
+                      )
+                  )}
+                />
               </View>
               <View style={{ marginTop: 35, flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10 }}>
                 <Text style={{ fontSize: 16 }}>Thông tin sản phẩm</Text>
                 <TouchableOpacity
                   style={{ flexDirection: "row", gap: 10 }}
-                  onPress={removeImage}
+                  onPress={() => console.warn("Quy Tắc")}
                 >
                   <AntDesign name="questioncircle" size={20} color="black" />
                   <Text>Quy tắc</Text>
                 </TouchableOpacity>
+
               </View>
             </View>
+            <View style={styles.shadow}></View>
 
             {/* Product Information */}
             <View style={styles.productContainer}>
@@ -432,6 +417,25 @@ const CreatePostDetail = () => {
               </View>
               <View style={styles.shadow}></View>
 
+              {/* Category Name */}
+              <View style={styles.dropdownContainer}>
+                <Text style={styles.label}>Thể Loại</Text>
+                <Dropdown
+                  style={styles.dropdown}
+                  data={listCategory}
+                  labelField="label"
+                  valueField="value"
+                  value={values.category}
+                  onChange={(item) => {
+                    setFieldValue('category', item.value);
+                  }}
+                />
+                {touched.category && errors.category && (
+                  <Text style={styles.errorText}>{errors.category}</Text>
+                )}
+              </View>
+              <View style={styles.shadow}></View>
+
               {/* Trạng Thái Sản Phẩm */}
               <View style={styles.dropdownContainer}>
                 <Text style={styles.label}>Trạng Thái Sản Phẩm</Text>
@@ -451,21 +455,21 @@ const CreatePostDetail = () => {
               </View>
               <View style={styles.shadow}></View>
 
-              {/* Category Name */}
+              {/* Size */}
               <View style={styles.dropdownContainer}>
-                <Text style={styles.label}>Thể Loại</Text>
+                <Text style={styles.label}>Kích Thước</Text>
                 <Dropdown
                   style={styles.dropdown}
-                  data={listCategory}
+                  data={dataSize}
                   labelField="label"
                   valueField="value"
-                  value={values.category}
+                  value={values.size}
                   onChange={(item) => {
-                    setFieldValue('category', item.value);
+                    setFieldValue('size', item.value);
                   }}
                 />
-                {touched.category && errors.category && (
-                  <Text style={styles.errorText}>{errors.category}</Text>
+                {touched.size && errors.size && (
+                  <Text style={styles.errorText}>{errors.size}</Text>
                 )}
               </View>
               <View style={styles.shadow}></View>
@@ -513,25 +517,6 @@ const CreatePostDetail = () => {
                     autoCorrect={false}
                   />
                 </View>
-              </View>
-              <View style={styles.shadow}></View>
-
-              {/* Size */}
-              <View style={styles.dropdownContainer}>
-                <Text style={styles.label}>Kích Thước</Text>
-                <Dropdown
-                  style={styles.dropdown}
-                  data={dataSize}
-                  labelField="label"
-                  valueField="value"
-                  value={values.size}
-                  onChange={(item) => {
-                    setFieldValue('size', item.value);
-                  }}
-                />
-                {touched.size && errors.size && (
-                  <Text style={styles.errorText}>{errors.size}</Text>
-                )}
               </View>
               <View style={styles.shadow}></View>
 
@@ -858,66 +843,6 @@ const CreatePostDetail = () => {
             </View>
 
             <View style={{ marginVertical: 20 }}>
-              {/* Phương thức vận chuyển */}
-              {/* <View style={styles.dropdownContainer}>
-                <Dropdown
-                  style={styles.dropdown}
-                  data={dataShippingMethod}
-                  labelField="label"
-                  valueField="value"
-                  placeholder="Phương Thức Vận Chuyển"
-                  value={values.shippingMethod}
-                  onChange={(item) => {
-                    setFieldValue('shippingMethod', item.value);
-                  }}
-                />
-                {touched.shippingMethod && errors.shippingMethod && (
-                  <Text style={styles.errorText}>{errors.shippingMethod}</Text>
-                )}
-              </View> */}
-
-              {/* Thời gian vận chuyển */}
-              {/* <View style={styles.dropdownContainer}>
-                <Dropdown
-                  style={styles.dropdown}
-                  data={dataShippingTime}
-                  labelField="label"
-                  valueField="value"
-                  placeholder="Thời Gian Vận Chuyển"
-                  value={values.shippingTime}
-                  onChange={(item) => {
-                    setFieldValue('shippingTime', item.value);
-                  }}
-                />
-                {touched.shippingTime && errors.shippingTime && (
-                  <Text style={styles.errorText}>{errors.shippingTime}</Text>
-                )}
-              </View>
-              <View style={styles.shadow}></View> */}
-
-              {/* Khu Vực Xuất Hàng */}
-              {/* <View style={styles.viewContainer}>
-                <View style={styles.textCenter}>
-                  <Text style={{ fontSize: 16 }}>Khu Vực Xuất Hàng:</Text>
-                </View>
-                <View style={[styles.textCenter, { width: "60%" }]}>
-                  <TextInput
-                    value={values.shippingAddress}
-                    placeholder="Nhập địa chỉ"
-                    style={styles.inputProduct}
-                    onFocus={() => {
-                      setFieldTouched("shippingAddress");
-                    }}
-                    onBlur={() => {
-                      setFieldTouched("shippingAddress", "");
-                    }}
-                    onChangeText={handleChange("shippingAddress")}
-                    autoCorrect={false}
-                  />
-                </View>
-              </View>
-              <View style={styles.shadow}></View> */}
-
               {/* price */}
               <View style={styles.viewContainer}>
                 <View style={styles.textCenter}>
@@ -942,68 +867,20 @@ const CreatePostDetail = () => {
               </View>
               {touched.price && errors.price && <Text style={styles.errorMessage}>{errors.price}</Text>}
               <View style={styles.shadow}></View>
-
-              {/* fee */}
-              {/* <View style={styles.viewContainer}>
-                <View style={styles.textCenter}>
-                  <Text style={{ fontSize: 16 }}>Tiền Hoa Hồng:</Text>
-                </View>
-                <View style={[styles.textCenter, { width: "70%" }]}>
-                  <TextInput
-                    keyboardType='number-pad'
-                    value={values.fee}
-                    placeholder="Nhập tiền hoa hồng"
-                    style={styles.inputProduct}
-                    onFocus={() => {
-                      setFieldTouched("fee");
-                    }}
-                    onBlur={() => {
-                      setFieldTouched("fee", "");
-                    }}
-                    onChangeText={handleChange("fee")}
-                    autoCorrect={false}
-                  />
-                </View>
-              </View>
-              {touched.fee && errors.fee && <Text style={styles.errorMessage}>{errors.fee}</Text>}
-              <View style={styles.shadow}></View> */}
-
-              {/* sales profit */}
-              {/* <View style={styles.viewContainer}>
-                <View style={styles.textCenter}>
-                  <Text style={{ fontSize: 16 }}>Lợi Nhuận Bán Hàng:</Text>
-                </View>
-                <View style={[styles.textCenter, { width: "60%" }]}>
-                  <TextInput
-                    keyboardType='number-pad'
-                    value={values.saleProfit}
-                    placeholder="Lợi Nhuận"
-                    style={styles.inputProduct}
-                    onFocus={() => {
-                      setFieldTouched("saleProfit");
-                    }}
-                    onBlur={() => {
-                      setFieldTouched("saleProfit", "");
-                    }}
-                    onChangeText={handleChange("saleProfit")}
-                    autoCorrect={false}
-                  />
-                </View>
-              </View>
-              {touched.saleProfit && errors.saleProfit && <Text style={styles.errorMessage}>{errors.saleProfit}</Text>}
-              <View style={styles.shadow}></View> */}
-
             </View>
 
             <View style={{ marginTop: 50 }}>
-              <Button onPress={handleSubmit} title="Submit" />
+              <Button
+                onPress={handleSubmit}
+                title="Submit"
+              />
             </View>
           </View>
         )}
       </Formik>
     </ScrollView>
   );
-};
+}
 
 
 export default CreatePostDetail;
