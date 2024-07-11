@@ -87,8 +87,7 @@ const OrderDetails = ({ navigation, route }) => {
 
     const formattedProductPrice = formatPrice(productPrice);
     const formattedShippingPrice = formatPrice(shippingPrice);
-    const formattedGuaranteeFee = formatPrice(guaranteeFee);
-    const formattedTotalPrice = formatPrice(productPrice + shippingPrice + guaranteeFee);
+    const formattedTotalPrice = formatPrice(productPrice + shippingPrice);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -183,13 +182,11 @@ const OrderDetails = ({ navigation, route }) => {
                             <View style={styles.totalLeft}>
                                 <Text style={styles.totalText}>Sản phẩm</Text>
                                 <Text style={styles.totalText}>Vận chuyển</Text>
-                                <Text style={styles.totalText}>Phí đảm bảo</Text>
                             </View>
 
                             <View style={styles.totalRight}>
                                 <Text style={styles.totalText}>{formattedProductPrice}đ</Text>
                                 <Text style={styles.totalText}>{formattedShippingPrice}đ</Text>
-                                <Text style={styles.totalText}>{formattedGuaranteeFee}đ</Text>
                             </View>
                         </View>
                         <View style={styles.totalPrice}>

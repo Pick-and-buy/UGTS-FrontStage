@@ -178,13 +178,13 @@ const UpdateAddress = ({ navigation, route }) => {
                         </View>
 
                         {/* Street Input */}
-                        <TextInput
+                        {/* <TextInput
                             style={styles.input}
                             placeholder="Đường/Ngõ"
                             placeholderTextColor={'#ccc'}
                             onChangeText={handleChange('street')}
                             onBlur={handleBlur('street')}
-                            value={values.street} />
+                            value={values.street} /> */}
 
                         {/* Address Input */}
                         <TextInput

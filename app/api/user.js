@@ -44,8 +44,8 @@ export const updateAddress = async (userId, address) => {
       province: address.city,
       district: address.province,
       street: address.district,
-      addressLine1: address.street,
-      addressLine2: address.address
+      // addressLine1: address.street,
+      addressLine: address.address
     });
     return response.data;
   } catch (error) {
