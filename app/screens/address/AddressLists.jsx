@@ -65,7 +65,7 @@ const AddressLists = ({ navigation, route }) => {
                 </Text>
             </View>
             <View style={styles.addAddressContainer}>
-                <TouchableOpacity style={styles.addAddress} onPress={() => navigation.navigate("")}>
+                <TouchableOpacity style={styles.addAddress} onPress={() => navigation.navigate("create-address", user)}>
                     <View style={styles.addAddressLeft}>
                         <AntDesign name="plus" size={20} color="gray" />
                         <Text style={{ fontSize: 16, marginLeft: 6 }}>Thêm địa chỉ</Text>

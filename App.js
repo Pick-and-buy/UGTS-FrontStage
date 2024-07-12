@@ -40,6 +40,7 @@ import AddressLists from './app/screens/address/AddressLists';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import UpdateAddress from './app/screens/address/UpdateAddress';
 import TodoTask from './app/screens/todoTask/TodoTask';
+import CreateAddress from './app/screens/address/CreateAddress';
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [login, setLogin] = useState(null);
@@ -254,6 +255,11 @@ export default function App() {
             <Stack.Screen
               name='address-lists'
               component={AddressLists}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name='create-address'
+              component={CreateAddress}
               options={{ headerShown: false }}
             />
             <Stack.Screen

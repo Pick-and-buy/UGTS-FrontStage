@@ -37,7 +37,23 @@ export const updateProfile = async (userId, profile) => {
   }
 };
 
-export const updateAddress = async (userId, address,addressId) => {
+export const createAddress = async (userId, address) => {
+  try {
+    const response = await axiosInstance.post(`/users/address?userId=${userId}`, {
+      country: address.country,
+      province: address.city,
+      district: address.province,
+      street: address.district,
+      addressLine: address.address
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error create user address:', error);
+    throw error;
+  }
+};
+
+export const updateAddress = async (userId, address, addressId) => {
   try {
     const response = await axiosInstance.put(`/users/address?userId=${userId}&addressId=${addressId}`, {
       country: address.country,
