@@ -9,19 +9,19 @@ import dvhcvn from '../../constants/uidata';
 import { updateAddress } from '../../api/user';
 
 const UpdateAddress = ({ navigation, route }) => {
-    const user = route.params;
+    const { user, addressId } = route.params;
     const [selectedCountry, setSelectedCountry] = useState('Việt Nam');
     const [selectedCity, setSelectedCity] = useState('');
     const [selectedProvince, setSelectedProvince] = useState('');
     const [selectedDistrict, setSelectedDistrict] = useState('');
     const [isEnabled, setIsEnabled] = useState(false);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-
+    // console.log(addressId);
     const handleSubmit = async (values, { setSubmitting, setErrors }) => {
         // console.log(values.country);
 
         try {
-            await updateAddress(user?.result?.id, values);
+            await updateAddress(user?.result?.id, values, addressId);
             navigation.goBack();
         } catch (err) {
             const errorMessage = err.response?.data?.message || err.message || 'Cập nhật thông tin không thành công. Vui lòng thử lại.';

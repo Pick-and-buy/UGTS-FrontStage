@@ -268,7 +268,7 @@ const Profile = ({ navigation }) => {
                     borderRadius: 12,
                   }}
                 >
-                  <ProfileTile title={"Địa chỉ"} icon={"location-pin"} font={4} isDivider={true} onPress={() => navigation.navigate("address-lists", user)} />
+                  <ProfileTile title={"Địa chỉ"} icon={"location-pin"} font={4} isDivider={true} onPress={() => navigation.navigate("address-lists")} />
                   <ProfileTile title={"Danh sách thẻ tín dụng"} icon={"credit-card"} font={3} isDivider={true} />
                   <ProfileTile title={"Thiết lập thông báo"} icon={"notifications"} font={1} isDivider={true} />
                   <ProfileTile
