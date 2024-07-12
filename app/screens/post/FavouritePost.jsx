@@ -12,11 +12,22 @@ const Post = ({ post }) => {
     // console.log(product.id);
     const navigation = useNavigation();
     // console.log(post);
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('vi-VN', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(price);
+    }
+
+    // Format the price using the helper function
+    const formattedPrice = formatPrice(post?.product?.price);
+
+
     return (
         <View style={styles.container}>
             <GestureHandlerRootView>
                 <TouchableOpacity style={styles.wrapper}
-                    onPress={() => navigation.navigate('post-details', { postId: post.id, type:"buyer" })}
+                    onPress={() => navigation.navigate('post-details', { postId: post.id, type: "buyer" })}
                 >
                     <Image source={{ uri: post?.product?.images[0]?.imageUrl }} style={styles.image} />
                     <Ionicons
@@ -33,7 +44,7 @@ const Post = ({ post }) => {
                         <Text numberOfLines={1} style={styles.title}>{post?.product?.name}</Text>
                         <Text style={styles.price}>
                             <Text style={styles.currency}>đ</Text>
-                            {post?.product?.price}
+                            {formattedPrice}
                         </Text>
                         <View style={styles.numberLiked}>
                             <Ionicons
