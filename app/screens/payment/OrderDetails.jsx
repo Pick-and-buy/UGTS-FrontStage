@@ -7,23 +7,21 @@ import { G, Line, Svg } from "react-native-svg";
 import { getUserByToken } from "../../api/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RadioButton } from 'react-native-paper';
-import { format, addDays } from 'date-fns'; // Import necessary functions from date-fns
+import { format, addDays } from 'date-fns';
 import { order } from '../../api/order';
 
 const OrderDetails = ({ navigation, route }) => {
-    const postDetails = route.params;
+    const postDetails = route.params.postDetails;
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [checked, setChecked] = useState('VNPay');
     const [productPrice, setProductPrice] = useState(0);
     const [shippingPrice, setShippingPrice] = useState(0);
-    const [guaranteeFee, setGuaranteeFee] = useState(0);
     const [deliveryDateFrom, setDeliveryDateFrom] = useState(null);
     const [deliveryDateTo, setDeliveryDateTo] = useState(null);
-    // console.log(postDetails?.id);
-    // console.log(new Date());
-    // console.log(format(new Date(), 'yyyy-MM-dd HH:mm:ss'));
+    const [selectedAddress, setSelectedAddress] = useState(null);
+    // console.log(selectedAddress);
     useEffect(() => {
         const initialize = async () => {
             await checkToken();
@@ -38,12 +36,31 @@ const OrderDetails = ({ navigation, route }) => {
         initialize();
     }, [isAuthenticated]);
 
+    useEffect(() => {
+        if (route.params?.selectedAddress) {
+            handleSelectAddress(route.params.selectedAddress);
+            setSelectedAddress(route.params.selectedAddress);
+        }
+    }, [route.params?.selectedAddress]);
+
+    const handleSelectAddress = (selectedAddress) => {
+        setUser((prevUser) => ({
+            ...prevUser,
+            result: {
+                ...prevUser.result,
+                address: prevUser.result.address.map((address) =>
+                    address.id === selectedAddress.id ? { ...address, default: true } : { ...address, default: false }
+                ),
+            },
+        }));
+    };
+
     const handleOrder = async () => {
         console.log('Selected payment method:', checked);
         try {
-            await order(checked, deliveryDateFrom, deliveryDateTo, postDetails?.id);
-            console.log('Submit order successfully!')
-            navigation.navigate('bottom-navigation')
+            await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id);
+            console.log('Submit order successfully!');
+            navigation.navigate('bottom-navigation');
         } catch (error) {
             console.error('Submit order', error);
         }
@@ -64,16 +81,14 @@ const OrderDetails = ({ navigation, route }) => {
     };
 
     const calculatePrices = () => {
-        // Example calculations, replace with your actual logic based on fetched data
         setProductPrice(postDetails?.product?.price || 0);
-        setShippingPrice(42500); // Example shipping price
-        setGuaranteeFee(500000); // Example guarantee fee
+        setShippingPrice(42500);
     };
 
     const calculateDeliveryDate = () => {
-        const currentDate = new Date(); // Get current date
-        const deliveryFrom = addDays(currentDate, 3); // Add 3 days to current date
-        const deliveryTo = addDays(currentDate, 6)
+        const currentDate = new Date();
+        const deliveryFrom = addDays(currentDate, 3);
+        const deliveryTo = addDays(currentDate, 6);
         setDeliveryDateFrom(deliveryFrom);
         setDeliveryDateTo(deliveryTo);
     };
@@ -96,25 +111,29 @@ const OrderDetails = ({ navigation, route }) => {
                 <Text style={styles.headerText}>Tổng quan đơn hàng</Text>
             </View>
             <ScrollView style={styles.wrapper} showsVerticalScrollIndicator={false}>
-                <TouchableOpacity style={styles.address} onPress={() => navigation.navigate("address-lists", user)}>
+                <TouchableOpacity
+                    style={styles.address}
+                    onPress={() => navigation.navigate('address-lists', {
+                        user,
+                        postDetails: postDetails,
+                        onSelectAddress: handleSelectAddress
+                    })}
+                >
                     <View style={styles.ownerAddress}>
                         <SimpleLineIcons name="location-pin" size={20} color="black" />
                         <Text style={styles.ownerName}>
                             {user?.result?.firstName} {user?.result?.lastName} {user?.result?.phoneNumber}
                         </Text>
                     </View>
-                    <View style={styles.locationDetails}>
-                        <Text style={styles.locationText}>
-                            {user?.result?.address?.addressLine2}
-                        </Text>
-                        <Text style={styles.locationText}>
-                            {user?.result?.address?.addressLine1},
-                            {user?.result?.address?.street},
-                            {user?.result?.address?.district},
-                            {user?.result?.address?.province},
-                            {user?.result?.address?.country}
-                        </Text>
-                    </View>
+                    {user?.result?.address?.map((address, index) => (
+                        address.default && (
+                            <View key={index} style={styles.locationDetails}>
+                                <Text style={styles.locationText}>
+                                    {address.addressLine}, {address.street}, {address.district}, {address.province}, {address.country}
+                                </Text>
+                            </View>
+                        )
+                    ))}
                     <FontAwesome6
                         name="angle-right" size={20}
                         style={{ position: 'absolute', right: 0, top: 10 }}

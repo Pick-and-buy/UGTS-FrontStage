@@ -28,7 +28,7 @@ const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6
 
 const PostDetail = ({ navigation, route }) => {
     const { postId } = route.params;
-    const [postDetails, setPostDetails] = useState([]);
+    const [postDetails, setPostDetails] = useState();
     const [isLoading, setIsLoading] = useState(true);
     const [isLiked, setIsLiked] = useState(false);
     const [userId, setUserId] = useState(null);
@@ -168,7 +168,7 @@ const PostDetail = ({ navigation, route }) => {
 
     const handlePress = () => {
         if (isAuthenticated) {
-            navigation.navigate("order-details", postDetails);
+            navigation.navigate("order-details", {postDetails:postDetails});
         } else {
             Alert.alert(
                 "Đăng nhập",

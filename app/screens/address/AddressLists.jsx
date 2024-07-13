@@ -34,7 +34,16 @@ const AddressLists = ({ navigation, route }) => {
     };
 
     const AddressItem = ({ item }) => (
-        <View style={styles.addressItem}>
+        <TouchableOpacity
+            style={styles.addressItem}
+            onPress={() => {
+                navigation.navigate('order-details', {
+                    selectedAddress: item,
+                    postDetails: route.params.postDetails
+                });
+                route.params.onSelectAddress(item);
+            }}
+        >
             <View style={styles.addressHeader}>
                 <Text style={styles.addressName}>{user?.result?.firstName} {user?.result?.lastName}</Text>
                 <TouchableOpacity onPress={() => navigation.navigate("update-address", { user, address: item })}>
@@ -56,8 +65,7 @@ const AddressLists = ({ navigation, route }) => {
                     <Text style={styles.addressDefaultText}>Mặc định</Text>
                 </View>
             }
-
-        </View>
+        </TouchableOpacity>
     );
 
     return (

@@ -48,8 +48,9 @@ const styles = StyleSheet.create({
         marginLeft: 6
     },
     locationDetails: {
-        width: "100%",
-        marginLeft: "7%"
+        width: "85%",
+        marginLeft: "7%",
+        marginTop:6
     },
     locationText: {
         color: COLORS.gray
@@ -57,6 +58,7 @@ const styles = StyleSheet.create({
     slanted: {
         height: 20,
         overflow: 'hidden',
+        marginTop: -10
     },
     information: {
         width: "100%",
