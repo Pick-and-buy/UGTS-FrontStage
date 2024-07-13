@@ -79,6 +79,18 @@ export const deleteAddress = async (addressId) => {
   }
 };
 
+export const setDefaultAddress = async (userId, addressId) => {
+  try {
+    const response = await axiosInstance.put(`/users/address/default?userId=${userId}&addressId=${addressId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error set default user address:', error);
+    throw error;
+  }
+};
+
+
+
 export const sendImageToAPI = async (imageUri, userId, authToken) => {
   if (!imageUri) return;
 

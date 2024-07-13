@@ -6,7 +6,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { COLORS } from '../../constants/theme';
 import styles from '../css/updateAddress.style';
 import dvhcvn from '../../constants/uidata';
-import { deleteAddress, updateAddress } from '../../api/user';
+import { deleteAddress, setDefaultAddress, updateAddress } from '../../api/user';
 
 const UpdateAddress = ({ navigation, route }) => {
     const { user, addressId } = route.params;
@@ -22,6 +22,9 @@ const UpdateAddress = ({ navigation, route }) => {
 
         try {
             await updateAddress(user?.result?.id, values, addressId);
+            if (isEnabled && addressId) {
+                await setDefaultAddress(user?.result?.id, addressId);
+            }
             navigation.goBack();
         } catch (err) {
             const errorMessage = err.response?.data?.message || err.message || 'Cập nhật thông tin không thành công. Vui lòng thử lại.';
@@ -102,10 +105,10 @@ const UpdateAddress = ({ navigation, route }) => {
                 <Text style={styles.headerText}>
                     Chỉnh sửa địa chỉ
                 </Text>
-                <TouchableOpacity 
+                <TouchableOpacity
                     style={{ alignSelf: 'flex-end', marginBottom: 2, marginRight: "3%" }}
                     onPress={handleDeleteAddress}
-                    >
+                >
                     <Ionicons
                         name="trash-outline" size={24} color="black" />
                 </TouchableOpacity>

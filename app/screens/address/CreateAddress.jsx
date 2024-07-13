@@ -6,7 +6,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { COLORS } from '../../constants/theme';
 import styles from '../css/createAddress.style';
 import dvhcvn from '../../constants/uidata';
-import { createAddress } from '../../api/user';
+import { createAddress, setDefaultAddress } from '../../api/user';
 
 const CreateAddress = ({ navigation, route }) => {
     const user = route.params;
@@ -21,7 +21,11 @@ const CreateAddress = ({ navigation, route }) => {
         // console.log(values.country);
 
         try {
-            await createAddress(user?.result?.id, values);
+            const response = await createAddress(user?.result?.id, values);
+            const addressId = response?.result?.id;
+            if (isEnabled && addressId) {
+                await setDefaultAddress(user?.result?.id, addressId);
+            }
             navigation.goBack();
         } catch (err) {
             const errorMessage = err.response?.data?.message || err.message || 'Tạo thông tin địa chỉ không thành công. Vui lòng thử lại.';
