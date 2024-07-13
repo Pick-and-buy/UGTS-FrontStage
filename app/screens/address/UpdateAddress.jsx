@@ -24,9 +24,9 @@ const UpdateAddress = ({ navigation, route }) => {
             setSelectedDistrict(address.street);
             setIsEnabled(address.default);
 
-            console.log(address.province);
-            console.log(address.district);
-            console.log(address.street);
+            // console.log(address.province);
+            // console.log(address.district);
+            // console.log(address.street);
 
         }
     }, [address]);

@@ -11,7 +11,7 @@ const Tab = createMaterialTopTabNavigator();
 const HomeTab = () => {
     return (
         <Tab.Navigator
-            initialRouteName="follow"
+            initialRouteName="explore"
             screenOptions={{
                 tabBarActiveTintColor: COLORS.primary,
                 tabBarInactiveTintColor: COLORS.secondary,
@@ -24,8 +24,8 @@ const HomeTab = () => {
             style={styles.container}
         >
             <Tab.Screen
-                name="follow"
-                component={HomeFollow}
+                name="explore"
+                component={HomeExplore}
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <View style={{ width: 100, marginLeft: -30 }}>
@@ -37,13 +37,13 @@ const HomeTab = () => {
                 }}
             />
             <Tab.Screen
-                name="explore"
-                component={HomeExplore}
+                name="follow"
+                component={HomeFollow}
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <View style={{ width: 100, marginLeft: -30 }}>
                             <Text style={focused ? styles.tabActive : styles.tab}>
-                                Khám Phá
+                                Đang theo dõi
                             </Text>
                         </View>
                     ),
