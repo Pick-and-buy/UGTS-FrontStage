@@ -104,6 +104,13 @@ const OrderDetails = ({ navigation, route }) => {
     const formattedShippingPrice = formatPrice(shippingPrice);
     const formattedTotalPrice = formatPrice(productPrice + shippingPrice);
 
+    const maskPhoneNumber = (phoneNumber, regionCode) => {
+        if (!phoneNumber) return '';
+        const visibleDigits = phoneNumber.slice(0, 2) + '******' + phoneNumber.slice(-2);
+        return `(${regionCode}) ${visibleDigits}`;
+    };
+
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -122,16 +129,19 @@ const OrderDetails = ({ navigation, route }) => {
                     {user?.result?.address?.length > 0 ? (
                         user.result.address.map((address, index) => (
                             address.default && (
-                                <><View style={styles.ownerAddress}>
-                                    <SimpleLineIcons name="location-pin" size={20} color="black" />
-                                    <Text style={styles.ownerName}>
-                                        {user?.result?.firstName} {user?.result?.lastName} {user?.result?.phoneNumber}
-                                    </Text>
-                                </View><View key={index} style={styles.locationDetails}>
+                                <View key={index}>
+                                    <View style={styles.ownerAddress}>
+                                        <SimpleLineIcons name="location-pin" size={20} color="black" />
+                                        <Text style={styles.ownerName}>
+                                            {user?.result?.firstName} {user?.result?.lastName} {maskPhoneNumber(user?.result?.phoneNumber, '+84')}
+                                        </Text>
+                                    </View>
+                                    <View style={styles.locationDetails}>
                                         <Text style={styles.locationText}>
                                             {address.addressLine}, {address.street}, {address.district}, {address.province}, {address.country}
                                         </Text>
-                                    </View></>
+                                    </View>
+                                </View>
                             )
                         ))
                     ) : (

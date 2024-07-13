@@ -168,7 +168,7 @@ const PostDetail = ({ navigation, route }) => {
 
     const handlePress = () => {
         if (isAuthenticated) {
-            navigation.navigate("order-details", {postDetails:postDetails});
+            navigation.navigate("order-details", { postDetails: postDetails });
         } else {
             Alert.alert(
                 "Đăng nhập",
@@ -194,9 +194,9 @@ const PostDetail = ({ navigation, route }) => {
         <SafeAreaView style={styles.container}>
             <View style={styles.wrapper}>
                 <View style={styles.header}>
-                    <Feather name="chevron-left" size={30} color={COLORS.primary} onPress={() => navigation.goBack()} />
+                    <Feather style={{ marginLeft: "2%" }} name="chevron-left" size={30} color={COLORS.primary} onPress={() => navigation.goBack()} />
                     <Text numberOfLines={1} style={styles.headerText}>{postDetails?.product?.name}</Text>
-                    <AntDesign name="sharealt" size={25} color={COLORS.primary} />
+                    <AntDesign style={{ marginRight: "2%" }} name="sharealt" size={25} color={COLORS.primary} />
                 </View>
                 <ScrollView contentContainerStyle={styles.contentContainer}
                     showsVerticalScrollIndicator={false}
@@ -213,7 +213,7 @@ const PostDetail = ({ navigation, route }) => {
                                 color={isLiked ? "red" : "gray"}
                             />
                         </Pressable>
-                        <Text numberOfLines={3} style={[styles.headerText, { width: "85%" }]}>{postDetails?.product?.name}</Text>
+                        <Text numberOfLines={3} style={[styles.headerText, { width: "85%", textAlign: "left" }]}>{postDetails?.product?.name}</Text>
                         <View style={styles.label}>
                             <Text style={styles.keyword}>Túi xách</Text>
 
