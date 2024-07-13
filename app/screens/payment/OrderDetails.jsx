@@ -119,21 +119,26 @@ const OrderDetails = ({ navigation, route }) => {
                         onSelectAddress: handleSelectAddress
                     })}
                 >
-                    <View style={styles.ownerAddress}>
-                        <SimpleLineIcons name="location-pin" size={20} color="black" />
-                        <Text style={styles.ownerName}>
-                            {user?.result?.firstName} {user?.result?.lastName} {user?.result?.phoneNumber}
-                        </Text>
-                    </View>
-                    {user?.result?.address?.map((address, index) => (
-                        address.default && (
-                            <View key={index} style={styles.locationDetails}>
-                                <Text style={styles.locationText}>
-                                    {address.addressLine}, {address.street}, {address.district}, {address.province}, {address.country}
-                                </Text>
-                            </View>
-                        )
-                    ))}
+                    {user?.result?.address?.length > 0 ? (
+                        user.result.address.map((address, index) => (
+                            address.default && (
+                                <><View style={styles.ownerAddress}>
+                                    <SimpleLineIcons name="location-pin" size={20} color="black" />
+                                    <Text style={styles.ownerName}>
+                                        {user?.result?.firstName} {user?.result?.lastName} {user?.result?.phoneNumber}
+                                    </Text>
+                                </View><View key={index} style={styles.locationDetails}>
+                                        <Text style={styles.locationText}>
+                                            {address.addressLine}, {address.street}, {address.district}, {address.province}, {address.country}
+                                        </Text>
+                                    </View></>
+                            )
+                        ))
+                    ) : (
+                        <View style={styles.locationDetails}>
+                            <Text style={styles.locationText}>Thêm địa chỉ để tiếp tục mua hàng</Text>
+                        </View>
+                    )}
                     <FontAwesome6
                         name="angle-right" size={20}
                         style={{ position: 'absolute', right: 0, top: 10 }}
