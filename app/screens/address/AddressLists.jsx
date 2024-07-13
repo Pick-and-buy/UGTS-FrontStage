@@ -10,12 +10,13 @@ import { getUserByToken } from "../../api/user";
 const AddressLists = ({ navigation, route }) => {
     const [user, setUser] = useState(null);
     const [addresses, setAddress] = useState(null);
+    const { type } = route.params; // Extract the type from route.params
 
     const fetchUserData = async () => {
         try {
             const userData = await getUserByToken();
             setUser(userData);
-            setAddress(userData?.result.address);
+            setAddress(userData?.result?.address);
         } catch (error) {
             console.error('Fetching user data failed in address lists:', error);
         }
@@ -33,40 +34,56 @@ const AddressLists = ({ navigation, route }) => {
         return `(${regionCode}) ${visibleDigits}`;
     };
 
-    const AddressItem = ({ item }) => (
-        <TouchableOpacity
-            style={styles.addressItem}
-            onPress={() => {
-                navigation.navigate('order-details', {
-                    selectedAddress: item,
-                    postDetails: route.params.postDetails
-                });
-                route.params.onSelectAddress(item);
-            }}
-        >
-            <View style={styles.addressHeader}>
-                <Text style={styles.addressName}>{user?.result?.firstName} {user?.result?.lastName}</Text>
-                <TouchableOpacity onPress={() => navigation.navigate("update-address", { user, address: item })}>
-                    <Text style={styles.editText}>Chỉnh sửa</Text>
-                </TouchableOpacity>
-            </View>
-            <Text style={styles.addressPhone}>
-                {maskPhoneNumber(user?.result?.phoneNumber, '+84')}
-            </Text>
-            <Text style={styles.addressDetails}>
-                {item.addressLine}
-                ,{item.street}
-                ,{item.district}
-                ,{item.province}
-                ,{item.country}
-            </Text>
-            {
-                item?.default && <View style={styles.addressDefault}>
-                    <Text style={styles.addressDefaultText}>Mặc định</Text>
+    const AddressItem = ({ item }) => {
+        const content = (
+            <>
+                <View style={styles.addressHeader}>
+                    <Text style={styles.addressName}>{user?.result?.firstName} {user?.result?.lastName}</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate("update-address", { user, address: item })}>
+                        <Text style={styles.editText}>Chỉnh sửa</Text>
+                    </TouchableOpacity>
                 </View>
-            }
-        </TouchableOpacity>
-    );
+                <Text style={styles.addressPhone}>
+                    {maskPhoneNumber(user?.result?.phoneNumber, '+84')}
+                </Text>
+                <Text style={styles.addressDetails}>
+                    {item.addressLine}
+                    ,{item.street}
+                    ,{item.district}
+                    ,{item.province}
+                    ,{item.country}
+                </Text>
+                {
+                    item?.default && <View style={styles.addressDefault}>
+                        <Text style={styles.addressDefaultText}>Mặc định</Text>
+                    </View>
+                }
+            </>
+        );
+
+        if (type === 'order') {
+            return (
+                <TouchableOpacity
+                    style={styles.addressItem}
+                    onPress={() => {
+                        navigation.navigate('order-details', {
+                            selectedAddress: item,
+                            postDetails: route.params.postDetails
+                        });
+                        route.params.onSelectAddress(item);
+                    }}
+                >
+                    {content}
+                </TouchableOpacity>
+            );
+        } else {
+            return (
+                <View style={styles.addressItem}>
+                    {content}
+                </View>
+            );
+        }
+    };
 
     return (
         <SafeAreaView style={styles.container}>

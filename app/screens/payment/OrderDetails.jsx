@@ -123,7 +123,8 @@ const OrderDetails = ({ navigation, route }) => {
                     onPress={() => navigation.navigate('address-lists', {
                         user,
                         postDetails: postDetails,
-                        onSelectAddress: handleSelectAddress
+                        onSelectAddress: handleSelectAddress,
+                        type:'order'
                     })}
                 >
                     {user?.result?.address?.length > 0 ? (
