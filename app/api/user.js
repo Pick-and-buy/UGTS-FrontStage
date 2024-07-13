@@ -69,6 +69,16 @@ export const updateAddress = async (userId, address, addressId) => {
   }
 };
 
+export const deleteAddress = async (addressId) => {
+  try {
+    const response = await axiosInstance.delete(`/users/address?addressId=${addressId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error delete user address:', error);
+    throw error;
+  }
+};
+
 export const sendImageToAPI = async (imageUri, userId, authToken) => {
   if (!imageUri) return;
 

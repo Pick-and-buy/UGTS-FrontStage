@@ -9,7 +9,7 @@ import dvhcvn from '../../constants/uidata';
 import { createAddress } from '../../api/user';
 
 const CreateAddress = ({ navigation, route }) => {
-    const  user = route.params;
+    const user = route.params;
     const [selectedCountry, setSelectedCountry] = useState('Việt Nam');
     const [selectedCity, setSelectedCity] = useState('');
     const [selectedProvince, setSelectedProvince] = useState('');
