@@ -76,6 +76,18 @@ const styles = StyleSheet.create({
         color: '#888',
         marginTop: 4,
     },
+    addressDefault: {
+        backgroundColor: '#eee',
+        paddingVertical: 2,
+        borderRadius: 4,
+        width: "22%",
+        justifyContent: 'center',
+        alignItems: "center",
+        marginTop: 10
+    },
+    addressDefaultText: {
+        color: COLORS.black
+    }
 });
 
 export default styles;

@@ -9,11 +9,11 @@ import dvhcvn from '../../constants/uidata';
 import { deleteAddress, setDefaultAddress, updateAddress } from '../../api/user';
 
 const UpdateAddress = ({ navigation, route }) => {
-    const { user, addressId } = route.params;
+    const { user, address } = route.params;
     const [selectedCountry, setSelectedCountry] = useState('Việt Nam');
-    const [selectedCity, setSelectedCity] = useState('');
-    const [selectedProvince, setSelectedProvince] = useState('');
-    const [selectedDistrict, setSelectedDistrict] = useState('');
+    const [selectedCity, setSelectedCity] = useState(address?.province);
+    const [selectedProvince, setSelectedProvince] = useState(address?.district);
+    const [selectedDistrict, setSelectedDistrict] = useState(address?.street);
     const [isEnabled, setIsEnabled] = useState(false);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     // console.log(addressId);
@@ -21,9 +21,9 @@ const UpdateAddress = ({ navigation, route }) => {
         // console.log(values.country);
 
         try {
-            await updateAddress(user?.result?.id, values, addressId);
-            if (isEnabled && addressId) {
-                await setDefaultAddress(user?.result?.id, addressId);
+            await updateAddress(user?.result?.id, values, address?.id);
+            if (isEnabled && address?.id) {
+                await setDefaultAddress(user?.result?.id, address?.id);
             }
             navigation.goBack();
         } catch (err) {
@@ -37,7 +37,7 @@ const UpdateAddress = ({ navigation, route }) => {
 
     const handleDeleteAddress = async () => {
         try {
-            await deleteAddress(addressId);
+            await deleteAddress(address?.id);
             navigation.goBack();
         } catch (error) {
             console.log("Delete address failed !");
@@ -119,11 +119,11 @@ const UpdateAddress = ({ navigation, route }) => {
             <Formik
                 initialValues={{
                     country: selectedCountry,
-                    city: '',
-                    province: '',
-                    district: '',
-                    street: '',
-                    address: ''
+                    city: selectedProvince,
+                    province: selectedDistrict,
+                    district: selectedDistrict,
+                    // street: '',
+                    address: address?.addressLine
                 }}
                 onSubmit={handleSubmit}
             >
@@ -211,7 +211,6 @@ const UpdateAddress = ({ navigation, route }) => {
                             onChangeText={handleChange('address')}
                             onBlur={handleBlur('address')}
                             value={values.address} />
-
                         {/* Submit Button */}
                     </View>
                         <View style={styles.setting}>

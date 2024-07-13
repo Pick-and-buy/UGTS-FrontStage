@@ -37,7 +37,7 @@ const AddressLists = ({ navigation, route }) => {
         <View style={styles.addressItem}>
             <View style={styles.addressHeader}>
                 <Text style={styles.addressName}>{user?.result?.firstName} {user?.result?.lastName}</Text>
-                <TouchableOpacity onPress={() => navigation.navigate("update-address", { user, addressId: item?.id })}>
+                <TouchableOpacity onPress={() => navigation.navigate("update-address", { user, address: item })}>
                     <Text style={styles.editText}>Chỉnh sửa</Text>
                 </TouchableOpacity>
             </View>
@@ -51,6 +51,12 @@ const AddressLists = ({ navigation, route }) => {
                 ,{item.province}
                 ,{item.country}
             </Text>
+            {
+                item?.default && <View style={styles.addressDefault}>
+                    <Text style={styles.addressDefaultText}>Mặc định</Text>
+                </View>
+            }
+
         </View>
     );
 
