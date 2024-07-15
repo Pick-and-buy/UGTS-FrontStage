@@ -12,7 +12,7 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
 import styles from "../css/buyer.style";
-const Buyer = () => {
+const Buyer = ({navigation}) => {
 
 
     
@@ -23,7 +23,7 @@ const Buyer = () => {
     ];
 
     const renderItem = ({ item }) => (
-        <View style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={()=> navigation.navigate("buyer-order-details")}>
             <Image source={{ uri: item.image }} style={styles.image} />
             <View style={styles.info}>
                 <Text style={styles.itemTitle}>{item.title}</Text>
@@ -33,7 +33,7 @@ const Buyer = () => {
             <View style={styles.statusButton}>
                 <Text style={styles.statusText}>{item.status}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 
     return (

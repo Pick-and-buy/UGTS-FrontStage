@@ -42,6 +42,7 @@ import UpdateAddress from './app/screens/address/UpdateAddress';
 import TodoTask from './app/screens/todoTask/TodoTask';
 import CreateAddress from './app/screens/address/CreateAddress';
 import OrderSuccessfully from './app/screens/payment/OrderSuccessfully';
+import BuyerOrderDetails from './app/screens/payment/BuyerOrderDetails';
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [login, setLogin] = useState(null);
@@ -256,6 +257,11 @@ export default function App() {
             <Stack.Screen
               name='order-successfully'
               component={OrderSuccessfully}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name='buyer-order-details'
+              component={BuyerOrderDetails}
               options={{ headerShown: false }}
             />
             <Stack.Screen
