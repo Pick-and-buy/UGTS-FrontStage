@@ -9,8 +9,9 @@ const styles = StyleSheet.create({
     },
     card: {
         width: "96%",
-        height: 100,
+        // height: 120,
         flexDirection: 'row',
+        flexWrap: "wrap",
         marginHorizontal: "auto",
         alignItems: 'center',
         backgroundColor: '#fff',
@@ -28,6 +29,7 @@ const styles = StyleSheet.create({
     },
     info: {
         flex: 1,
+        // width: "66%",
     },
     itemTitle: {
         fontSize: 16,
@@ -41,14 +43,34 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#4CAF50',
     },
-    statusButton: {
-        marginLeft: 8,
-        paddingHorizontal: 25,
-        paddingVertical: 8,
-        borderRadius: 20,
-        backgroundColor: COLORS.primary,
+    buttonWrapper: {
+        width: "100%",
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        marginTop:10,
     },
-    statusText: {
+    cancelBtn: {
+        borderWidth: 1,
+        borderColor: COLORS.black,
+        paddingHorizontal: 20,
+        paddingVertical: 5,
+        borderRadius: 5,
+        marginRight: 8,
+        
+    },
+    primaryBtn: {
+        backgroundColor: COLORS.primary,
+        paddingHorizontal: 20,
+        paddingVertical: 6,
+        borderRadius: 5,
+    },
+    cancelBtnText: {
+        color: COLORS.black,
+        fontSize: 12,
+        fontWeight: '400',
+    },
+    primaryBtnText: {
         color: '#fff',
         fontSize: 12,
         fontWeight: '400',
