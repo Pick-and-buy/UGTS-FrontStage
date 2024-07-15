@@ -27,8 +27,8 @@ import moment from "moment";
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
 const PostDetail = ({ navigation, route }) => {
-    const { postId, type } = route.params;
-    const [postDetails, setPostDetails] = useState([]);
+    const { postId } = route.params;
+    const [postDetails, setPostDetails] = useState();
     const [isLoading, setIsLoading] = useState(true);
     const [isLiked, setIsLiked] = useState(false);
     const [userId, setUserId] = useState(null);
@@ -40,6 +40,7 @@ const PostDetail = ({ navigation, route }) => {
     const data = postDetails?.product?.images || [];
     const [modalVisible, setModalVisible] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
+    const [type, setType] = useState('buyer');
 
     // console.log(postId);
     useEffect(() => {
@@ -57,8 +58,13 @@ const PostDetail = ({ navigation, route }) => {
     useEffect(() => {
         if (userId) {
             checkIfPostIsLiked();
+            if (postDetails?.user?.id === userId) {
+                setType("seller");
+            } else {
+                setType("buyer");
+            }
         }
-    }, [userId]);
+    }, [userId, postDetails]);
 
     const checkAuthentication = async () => {
         try {
@@ -160,16 +166,37 @@ const PostDetail = ({ navigation, route }) => {
         setRefreshing(false);
     };
 
+    const handlePress = () => {
+        if (isAuthenticated) {
+            navigation.navigate("order-details", { postDetails: postDetails });
+        } else {
+            Alert.alert(
+                "Đăng nhập",
+                "Bạn cần đăng nhập để thêm sản phẩm vào danh mục yêu thích.",
+                [
+                    {
+                        text: "Cancel",
+                        style: "cancel"
+                    },
+                    {
+                        text: "Đăng nhập",
+                        onPress: () => navigation.navigate('login-navigation')
+                    }
+                ]
+            );
+            return;
+        }
+    };
+
     // Format the price using the helper function
     const formattedPrice = formatPrice(postDetails?.product?.price);
-
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.wrapper}>
                 <View style={styles.header}>
-                    <Feather name="chevron-left" size={30} color={COLORS.primary} onPress={() => navigation.goBack()} />
+                    <Feather style={{ marginLeft: "2%" }} name="chevron-left" size={30} color={COLORS.primary} onPress={() => navigation.goBack()} />
                     <Text numberOfLines={1} style={styles.headerText}>{postDetails?.product?.name}</Text>
-                    <AntDesign name="sharealt" size={25} color={COLORS.primary} />
+                    <AntDesign style={{ marginRight: "2%" }} name="sharealt" size={25} color={COLORS.primary} />
                 </View>
                 <ScrollView contentContainerStyle={styles.contentContainer}
                     showsVerticalScrollIndicator={false}
@@ -186,7 +213,7 @@ const PostDetail = ({ navigation, route }) => {
                                 color={isLiked ? "red" : "gray"}
                             />
                         </Pressable>
-                        <Text numberOfLines={3} style={[styles.headerText, { width: "85%" }]}>{postDetails?.product?.name}</Text>
+                        <Text numberOfLines={3} style={[styles.headerText, { width: "85%", textAlign: "left" }]}>{postDetails?.product?.name}</Text>
                         <View style={styles.label}>
                             <Text style={styles.keyword}>Túi xách</Text>
 
@@ -490,7 +517,7 @@ const PostDetail = ({ navigation, route }) => {
                 </ScrollView>
                 <View style={styles.bottomBtn}>
                     {type === "buyer" && (
-                        <TouchableOpacity style={styles.button}>
+                        <TouchableOpacity style={styles.button} onPress={handlePress}>
                             <Text style={styles.buttonText}>Mua ngay</Text>
                         </TouchableOpacity>
                     )

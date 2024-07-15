@@ -81,7 +81,36 @@ const styles = StyleSheet.create({
     },
     subContent3: {
         textAlign: 'center',
-    }
+        marginBottom:20
+    },
+    subContent4: {
+        textAlign: 'center',
+        marginBottom:20
+    },
+    subContent5: {
+        textAlign: 'center',
+        marginBottom:20
+    },
+    subContent6: {
+        textAlign: 'center',
+        marginBottom:20
+    },
+    subContent7: {
+        textAlign: 'center',
+        marginBottom:20
+    },
+    subContent8: {
+        textAlign: 'center',
+        marginBottom:20
+    },
+    subContent9: {
+        textAlign: 'center',
+        marginBottom:20
+    },
+    subContent10: {
+        textAlign: 'center',
+        marginBottom:20
+    },
 });
 
 export default styles;

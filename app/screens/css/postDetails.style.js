@@ -13,17 +13,19 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "10%",
         flexDirection: "row",
-        justifyContent: "space-around",
+        justifyContent: "space-between",
         alignItems: "flex-end",
         backgroundColor: COLORS.white,
         paddingBottom: 12,
         ...SHADOWS.medium
     },
     headerText: {
+        // flex:1,
         color: COLORS.black,
         fontSize: 20,
         width: "65%",
-        marginBottom: 4
+        marginBottom: 4,
+        textAlign: "center",
     },
     contentContainer: {
         paddingBottom: "10%",
