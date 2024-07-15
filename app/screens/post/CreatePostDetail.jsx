@@ -8,9 +8,10 @@ import {
   TextInput,
   Dimensions,
   FlatList,
+  ImageBackground,
   Button,
 } from "react-native";
-import { FontAwesome, Ionicons, AntDesign, Feather } from '@expo/vector-icons';
+import { FontAwesome, AntDesign, MaterialIcons, FontAwesome6, Ionicons } from '@expo/vector-icons';
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { NavigationContaine, useNavigation } from '@react-navigation/native';
 import { COLORS } from "../../constants/theme";
@@ -19,58 +20,106 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Dropdown } from 'react-native-element-dropdown';
 import { callFetchListBrands } from "../../api/brand";
-
+import { createPost } from "../../api/post";
+import { getAllCategories, getAllCategoriesByBrandLineName } from "../../api/category";
+import { getAllBrandLines, getAllBrandLinesByBrandName } from "../../api/brandLine";
+import * as ImagePicker from "expo-image-picker";
 
 const CreatePostDetail = () => {
 
   const navigation = useNavigation();
-  const [listBrandName, setListBrandName] = useState(false);
+
+  const [listBrandName, setListBrandName] = useState([]);
+  const [listCategory, setListCategory] = useState([]);
+  const [listBrandLines, setListBrandLines] = useState([]);
+
+  const [images, setImages] = useState([null, null, null, null, null]);
+
+  const [selectedBrand, setSelectedBrand] = useState(null);
+  const [selectedBrandLine, setSelectedBrandLine] = useState(null);
+
   const [loader, setLoader] = useState(false);
 
   useEffect(() => {
-    fetchAllBrand();
+    fetchAllBrands();
   }, [])
 
-  const fetchAllBrand = async () => {
+  //Get Brand Lines by brandName
+  useEffect(() => {
+    if (selectedBrand) {
+      fetchAllBrandLines(selectedBrand);
+    }
+  }, [selectedBrand])
+
+  //Get Categories by Brand Line Name
+  useEffect(() => {
+    if (selectedBrandLine) {
+      fetchAllCategories(selectedBrandLine);
+    }
+  }, [selectedBrandLine])
+
+  const fetchAllBrands = async () => {
     setLoader(true);
-    // const res = await callFetchListBrands();
-    // console.log(res.data.result);
-    // if (res && res.data && res.data.result) {
-    //   // const brand = res.data.result.map(item => {
-    //   //   return {
-    //   //     label: item,
-    //   //     value: item
-    //   //   }
-    //   // })
-    //   // setListBrandName(brand)
-    // }
+    const res = await callFetchListBrands();
+    if (res && res.data && res?.data?.result) {
+      const brand = res?.data?.result.map(item => {
+        return {
+          label: item.name,
+          value: item.name
+        }
+      })
+      setListBrandName(brand)
+    }
     setLoader(false);
   }
 
+  const fetchAllCategories = async (brandLineName) => {
+    setLoader(true);
+    let query = `brandLineName=${brandLineName}`;
+    const res = await getAllCategoriesByBrandLineName(query);
+
+    if (res && res.data && res?.data?.result) {
+      const category = res?.data?.result.map(item => {
+        return {
+          label: item.categoryName,
+          value: item.categoryName,
+        }
+      })
+      setListCategory(category)
+    }
+    setLoader(false);
+  }
+
+  const fetchAllBrandLines = async (brandName) => {
+    setLoader(true);
+    let query = `brandName=${brandName}`;
+    const res = await getAllBrandLinesByBrandName(query);
+
+    if (res && res.data && res?.data?.result) {
+      const brandLine = res?.data?.result.map(item => {
+        return {
+          label: item.lineName,
+          value: item.lineName
+        }
+      })
+      setListBrandLines(brandLine)
+    }
+    setLoader(false);
+  }
 
   const validationSchema = Yup.object().shape({
-    brandName: Yup.string().required('Please select an option'),
-    price: Yup.string().matches(/^\d{5}$/, 'Price có ít nhất 5 số').required('Vui lòng nhập Giá Tiền').typeError("Có vẻ như đó không phải là Giá Tiền"),
-    //fee: Yup.string().matches(/^\d{5}$/, 'Price có ít nhất 5 số').required('Vui lòng nhập Tiền Hoa Hồng').typeError("Có vẻ như đó không phải là Tiền Hoa Hồng"),
-    //saleProfit: Yup.string().matches(/^\d{5}$/, 'Price có ít nhất 5 số').required('Vui lòng nhập Lợi Nhuận').typeError("Có vẻ như đó không phải là Giá Tiền"),
+    brandName: Yup.string().required('Hãy chọn thương hiệu'),
+    brandLineName: Yup.string().required('Hãy chọn dòng thương hiệu'),
+    condition: Yup.string().required('Hãy chọn trạng thái sản phẩm'),
+    category: Yup.string().required('Hãy chọn thể loại'),
   });
 
-  const dataBrandName = [
-    { label: 'Marmont 1', value: 'Marmont 1' },
-    { label: 'Marmont 2', value: 'Marmont 2' },
-    { label: 'Marmont 3', value: 'Marmont 3' },
-  ];
-
   const dataProductCondition = [
-    { label: 'used 1', value: 'used 1' },
-    { label: 'used 2', value: 'used 2' },
-    { label: 'used 3', value: 'used 3' },
-  ];
-
-  const dataCategory = [
-    { label: 'HandBags 1', value: 'HandBags 1' },
-    { label: 'HandBags 2', value: 'HandBags 2' },
-    { label: 'HandBags 3', value: 'HandBags 3' },
+    { label: 'BRAND_NEW', value: 'BRAND_NEW' },
+    { label: 'EXCELLENT', value: 'EXCELLENT' },
+    { label: 'VERY_GOOD', value: 'VERY_GOOD' },
+    { label: 'GOOD', value: 'GOOD' },
+    { label: 'FAIR', value: 'FAIR' },
   ];
 
   const dataSize = [
@@ -79,29 +128,133 @@ const CreatePostDetail = () => {
     { label: 'big', value: 'big' },
   ];
 
-  const dataShippingMethod = [
-    { label: 'J&T Express', value: 'J&T Express' },
-    { label: 'Giao Hàng Nhanh', value: 'Giao Hàng Nhanh' },
-    { label: 'Viettel Post', value: 'Viettel Post' },
-    { label: 'Giao Hàng Tiết Kiệm', value: 'Giao Hàng Tiết Kiệm' },
-  ];
-
-  const dataShippingTime = [
-    { label: '1 ngày', value: '1' },
-    { label: '2 ngày', value: '2' },
-    { label: '3 ngày', value: '3' },
-    { label: '4 ngày', value: '4' },
-  ];
-
   const handleCreatePost = async (values, actions) => {
-    const { title, brandName, productName, brandLineName, condition, category, exteriorColor,
-      interiorColor, size, width, height, length, referenceCode, manufactureYear, material, accessories, dateCode,
-      serialNumber, purchasedPlace, story, description, price,
-      // dataShippingMethod, dataShippingTime, shippingAddress, fee, saleProfit,
-    } = values;
+    try {
+      let { title, brandName, productName, brandLineName, condition, category, exteriorMaterial,
+        interiorMaterial, size, width, height, length, referenceCode, manufactureYear, color, accessories, dateCode,
+        serialNumber, purchasedPlace, story, description, price,
+        // dataShippingMethod, dataShippingTime, shippingAddress, fee, saleProfit,
+      } = values;
+      console.log(values);
+      const formData = new FormData();
 
+      const request = {
+        title: title,
+        description: description,
+        brand: { name: brandName },
+        brandLine: { lineName: brandLineName },
+        category: { categoryName: category },
+        product: {
+          name: productName,
+          price: price,
+          color: color,
+          size: size,
+          width: width,
+          height: height,
+          length: length,
+          referenceCode: referenceCode,
+          manufactureYear: manufactureYear,
+          exteriorMaterial: exteriorMaterial,
+          interiorMaterial: interiorMaterial,
+          accessories: accessories,
+          dateCode: dateCode,
+          serialNumber: serialNumber,
+          purchasedPlace: purchasedPlace,
+          story: story,
+        },
+        condition: condition,
+      };
 
-    console.log(values);
+      formData.append('request', JSON.stringify(request));
+      console.log('>>> check images: ', images);
+      images.forEach((image, index) => {
+        const fileName = image.split('/').pop();
+        formData.append('productImage', {
+          uri: image,
+          type: 'image/jpeg',
+          name: fileName,
+        });
+      });
+
+      await createPost(formData);
+      navigation.navigate('Home')
+      setImages([]);
+      // actions.resetForm({
+      //   title: '',
+      //   brandName: '',
+      //   productName: '',
+      //   brandLineName: '',
+      //   condition: '',
+      //   category: '',
+      //   exteriorMaterial: '',
+      //   interiorMaterial: '',
+      //   size: '',
+      //   width: '',
+      //   height: '',
+      //   length: '',
+      //   referenceCode: '',
+      //   manufactureYear: '',
+      //   color: '',
+      //   accessories: '',
+      //   dateCode: '',
+      //   serialNumber: '',
+      //   purchasedPlace: '',
+      //   story: '',
+      //   description: '',
+      //   price: '',
+      // })
+
+    } catch (error) {
+      console.error('ERROR handle create post: ', error);
+    }
+  }
+
+  //Upload Image
+  const onGalleryMultiplePress = async (index) => {
+    try {
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        aspect: [1, 1],
+        allowsMultipleSelection: true,  // allow multiple images
+      });
+      if (!result.canceled) {
+        const newImages = result?.assets?.map(asset => asset.uri);
+        const updatedImages = [...newImages, ...images].slice(0, 5);
+        setImages(updatedImages);
+      }
+    } catch (error) {
+      console.error('Error Upload Image: ', error);
+    }
+  }
+
+  const uploadImageCamera = async (index) => {
+    try {
+      await ImagePicker.requestCameraPermissionsAsync();
+      let result = await ImagePicker.launchCameraAsync({
+        // Use the front camera and allows editing photo frames at 1:1 ratio
+        cameraType: ImagePicker.CameraType.back,
+        allowsEditing: true,
+        aspect: [1, 1],
+      });
+      console.log('>>> check result: ', result);
+      if (!result.canceled) {
+        //save images
+        const newImages = result?.assets?.map(asset => asset.uri);
+        const updatedImages = [...newImages, ...images].slice(0, 5);
+        setImages(updatedImages);
+      }
+    } catch (error) {
+      console.error('Error Upload Image: ', error);
+    }
+  };
+
+  //Remove Image
+  const removeImage = (index) => {
+    const newImages = [...images];
+    newImages.splice(index, 1);
+    newImages.push("")
+    setImages(newImages);
   }
 
   return (
@@ -109,10 +262,9 @@ const CreatePostDetail = () => {
       <Formik
         initialValues={{
           title: '', productName: '', brandName: '', brandLineName: '', condition: '',
-          category: '', exteriorColor: '', interiorColor: '', size: '', width: '',
-          height: '', length: '', referenceCode: '', manufactureYear: '', material: '',
+          category: '', exteriorMaterial: '', interiorMaterial: '', size: '', width: '',
+          height: '', length: '', referenceCode: '', manufactureYear: '', color: '',
           accessories: '', dateCode: '', serialNumber: '', purchasedPlace: '', story: '', description: '', price: '',
-          // dataShippingMethod: '', dataShippingTime: '', shippingAddress: '', fee: '', saleProfit: '',
         }}
         validationSchema={validationSchema}
         onSubmit={handleCreatePost}
@@ -121,22 +273,47 @@ const CreatePostDetail = () => {
           <View style={styles.container}>
             {/* Header */}
             <View style={styles.headerContainer}>
-              <Feather onPress={() => navigation.goBack()} name="x" size={35} color={COLORS.primary} />
-              <Text style={styles.textName}>Thông Tin Sản Phẩm</Text>
+            <FontAwesome6 name="xmark" size={30} color={COLORS.primary} />
+              <Text style={[styles.textName, { marginLeft: 50 }]}>Thông Tin Sản Phẩm</Text>
             </View>
             <View style={styles.shadow}>{/* Tạo Khoảng Trống */}</View>
 
             {/* Image Upload */}
             <View style={styles.imageUploadContaniner}>
-              <View style={styles.imageUpload}>
-                <View style={styles.image}>
-                  <FontAwesome name="camera" size={20} color={COLORS.gray} />
-                  <Text style={{ marginTop: 5, color: COLORS.gray }}>Ảnh</Text>
-                </View>
-                <View style={styles.image}></View>
-                <View style={styles.image}></View>
-                <View style={styles.image}></View>
-                <View style={styles.image}></View>
+              <View
+                style={styles.imageUpload}>
+                <FlatList
+                  data={images}
+                  keyExtractor={(item, index) => index.toString()}
+                  horizontal
+                  renderItem={({ item, index }) => (
+                    item === null || item === "" ?
+                      (
+                        <View key={index} style={styles.image} >
+                          <TouchableOpacity onPress={() => uploadImageCamera(index)}>
+                            <View style={{ position: 'absolute', top: 3, left: 1 }}>
+                              <Text style={{ color: COLORS.gray }}>{index + 1}</Text>
+                            </View>
+                            <FontAwesome style={{ marginTop: 20, marginHorizontal: 20 }} name="camera" size={26} color={COLORS.gray} />
+                            <Text style={{ marginTop: 10, color: COLORS.gray, textAlign: 'center' }}>Ảnh</Text>
+                          </TouchableOpacity>
+                        </View>
+                      )
+                      :
+                      (
+                        <View key={index}>
+                          <ImageBackground
+                            source={{ uri: item }}
+                            style={styles.image} >
+                            <TouchableOpacity onPress={() => removeImage(index)}>
+
+                              <FontAwesome6 style={styles.xmark} name="xmark" size={20} color="white" />
+                            </TouchableOpacity>
+                          </ImageBackground>
+                        </View>
+                      )
+                  )}
+                />
               </View>
               <View style={{ marginTop: 35, flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10 }}>
                 <Text style={{ fontSize: 16 }}>Thông tin sản phẩm</Text>
@@ -147,8 +324,10 @@ const CreatePostDetail = () => {
                   <AntDesign name="questioncircle" size={20} color="black" />
                   <Text>Quy tắc</Text>
                 </TouchableOpacity>
+
               </View>
             </View>
+            <View style={styles.shadow}></View>
 
             {/* Product Information */}
             <View style={styles.productContainer}>
@@ -203,13 +382,13 @@ const CreatePostDetail = () => {
                 <Text style={styles.label}>Nhãn Hàng</Text>
                 <Dropdown
                   style={styles.dropdown}
-                  data={dataBrandName}
+                  data={listBrandName}
                   labelField="label"
                   valueField="value"
-                  placeholder="Chọn Nhãn Hàng"
                   value={values.brandName}
                   onChange={(item) => {
                     setFieldValue('brandName', item.value);
+                    setSelectedBrand(item.value);
                   }}
                 />
                 {touched.brandName && errors.brandName && (
@@ -219,44 +398,21 @@ const CreatePostDetail = () => {
               <View style={styles.shadow}></View>
 
               {/* Brand Line */}
-              <View style={{ marginHorizontal: 5 }}>
-                <View>
-                  <Text style={{ fontSize: 16 }}>Dòng Thương Hiệu</Text>
-                </View>
-                <View style={{ height: 40 }}>
-                  <TextInput
-                    value={values.brandLineName}
-                    placeholder="Nhập dòng thương hiệu"
-                    style={styles.inputProduct}
-                    onFocus={() => {
-                      setFieldTouched("brandLineName");
-                    }}
-                    onBlur={() => {
-                      setFieldTouched("brandLineName", "");
-                    }}
-                    onChangeText={handleChange("brandLineName")}
-                    autoCorrect={false}
-                  />
-                </View>
-              </View>
-              <View style={styles.shadow}></View>
-
-              {/* Trạng Thái Sản Phẩm */}
               <View style={styles.dropdownContainer}>
-                <Text style={styles.label}>Trạng Thái Sản Phẩm</Text>
+                <Text style={styles.label}>Dòng Thương Hiệu</Text>
                 <Dropdown
                   style={styles.dropdown}
-                  data={dataProductCondition}
+                  data={listBrandLines}
                   labelField="label"
                   valueField="value"
-                  placeholder="Trạng Thái Sản Phẩm"
-                  value={values.condition}
+                  value={values.brandLineName}
                   onChange={(item) => {
-                    setFieldValue('condition', item.value);
+                    setFieldValue('brandLineName', item.value);
+                    setSelectedBrandLine(item.value);
                   }}
                 />
-                {touched.condition && errors.condition && (
-                  <Text style={styles.errorText}>{errors.condition}</Text>
+                {touched.brandLineName && errors.brandLineName && (
+                  <Text style={styles.errorText}>{errors.brandLineName}</Text>
                 )}
               </View>
               <View style={styles.shadow}></View>
@@ -266,10 +422,9 @@ const CreatePostDetail = () => {
                 <Text style={styles.label}>Thể Loại</Text>
                 <Dropdown
                   style={styles.dropdown}
-                  data={dataCategory}
+                  data={listCategory}
                   labelField="label"
                   valueField="value"
-                  placeholder="Thể Loại"
                   value={values.category}
                   onChange={(item) => {
                     setFieldValue('category', item.value);
@@ -281,49 +436,22 @@ const CreatePostDetail = () => {
               </View>
               <View style={styles.shadow}></View>
 
-              {/* Exterior Color */}
-              <View style={styles.viewContainer}>
-                <View style={styles.textCenter}>
-                  <Text style={{ fontSize: 16 }}>Màu Sắc Bên Ngoài: </Text>
-                </View>
-                <View style={[styles.textCenter, { width: "60%" }]}>
-                  <TextInput
-                    value={values.exteriorColor}
-                    placeholder="Nhập màu sắc bên ngoài"
-                    style={styles.inputProduct}
-                    onFocus={() => {
-                      setFieldTouched("exteriorColor");
-                    }}
-                    onBlur={() => {
-                      setFieldTouched("exteriorColor", "");
-                    }}
-                    onChangeText={handleChange("exteriorColor")}
-                    autoCorrect={false}
-                  />
-                </View>
-              </View>
-              <View style={styles.shadow}></View>
-
-              {/* Interior Color */}
-              <View style={styles.viewContainer}>
-                <View style={styles.textCenter}>
-                  <Text style={{ fontSize: 16 }}>Màu Sắc Bên Trong: </Text>
-                </View>
-                <View style={[styles.textCenter, { width: "60%" }]}>
-                  <TextInput
-                    value={values.interiorColor}
-                    placeholder="Nhập màu sắc bên trong"
-                    style={styles.inputProduct}
-                    onFocus={() => {
-                      setFieldTouched("interiorColor");
-                    }}
-                    onBlur={() => {
-                      setFieldTouched("interiorColor", "");
-                    }}
-                    onChangeText={handleChange("interiorColor")}
-                    autoCorrect={false}
-                  />
-                </View>
+              {/* Trạng Thái Sản Phẩm */}
+              <View style={styles.dropdownContainer}>
+                <Text style={styles.label}>Trạng Thái Sản Phẩm</Text>
+                <Dropdown
+                  style={styles.dropdown}
+                  data={dataProductCondition}
+                  labelField="label"
+                  valueField="value"
+                  value={values.condition}
+                  onChange={(item) => {
+                    setFieldValue('condition', item.value);
+                  }}
+                />
+                {touched.condition && errors.condition && (
+                  <Text style={styles.errorText}>{errors.condition}</Text>
+                )}
               </View>
               <View style={styles.shadow}></View>
 
@@ -335,7 +463,6 @@ const CreatePostDetail = () => {
                   data={dataSize}
                   labelField="label"
                   valueField="value"
-                  placeholder="Kích Thước"
                   value={values.size}
                   onChange={(item) => {
                     setFieldValue('size', item.value);
@@ -344,6 +471,52 @@ const CreatePostDetail = () => {
                 {touched.size && errors.size && (
                   <Text style={styles.errorText}>{errors.size}</Text>
                 )}
+              </View>
+              <View style={styles.shadow}></View>
+
+              {/* Exterior Material */}
+              <View style={styles.viewContainer}>
+                <View style={styles.textCenter}>
+                  <Text style={{ fontSize: 16 }}>Chất Liệu Bên Ngoài: </Text>
+                </View>
+                <View style={[styles.textCenter, { width: "60%" }]}>
+                  <TextInput
+                    value={values.exteriorMaterial}
+                    placeholder="Nhập chất liệu bên ngoài"
+                    style={styles.inputProduct}
+                    onFocus={() => {
+                      setFieldTouched("exteriorMaterial");
+                    }}
+                    onBlur={() => {
+                      setFieldTouched("exteriorMaterial", "");
+                    }}
+                    onChangeText={handleChange("exteriorMaterial")}
+                    autoCorrect={false}
+                  />
+                </View>
+              </View>
+              <View style={styles.shadow}></View>
+
+              {/* Interior Material */}
+              <View style={styles.viewContainer}>
+                <View style={styles.textCenter}>
+                  <Text style={{ fontSize: 16 }}>Chất Liệu Bên Trong: </Text>
+                </View>
+                <View style={[styles.textCenter, { width: "60%" }]}>
+                  <TextInput
+                    value={values.interiorMaterial}
+                    placeholder="Nhập chất liệu bên trong"
+                    style={styles.inputProduct}
+                    onFocus={() => {
+                      setFieldTouched("interiorMaterial");
+                    }}
+                    onBlur={() => {
+                      setFieldTouched("interiorMaterial", "");
+                    }}
+                    onChangeText={handleChange("interiorMaterial")}
+                    autoCorrect={false}
+                  />
+                </View>
               </View>
               <View style={styles.shadow}></View>
 
@@ -466,23 +639,23 @@ const CreatePostDetail = () => {
               </View>
               <View style={styles.shadow}></View>
 
-              {/* material */}
+              {/* color */}
               <View style={styles.viewContainer}>
                 <View style={styles.textCenter}>
-                  <Text style={{ fontSize: 16 }}>Chất Liệu</Text>
+                  <Text style={{ fontSize: 16 }}>Màu Sắc</Text>
                 </View>
                 <View style={[styles.textCenter, { width: "80%" }]}>
                   <TextInput
-                    value={values.material}
-                    placeholder="Nhập chất liệu của sản phẩm"
+                    value={values.color}
+                    placeholder="Nhập màu sắc của sản phẩm"
                     style={styles.inputProduct}
                     onFocus={() => {
-                      setFieldTouched("material");
+                      setFieldTouched("color");
                     }}
                     onBlur={() => {
-                      setFieldTouched("material", "");
+                      setFieldTouched("color", "");
                     }}
-                    onChangeText={handleChange("material")}
+                    onChangeText={handleChange("color")}
                     autoCorrect={false}
                   />
                 </View>
@@ -515,12 +688,12 @@ const CreatePostDetail = () => {
               {/* Date Code */}
               <View style={styles.viewContainer}>
                 <View style={styles.textCenter}>
-                  <Text style={{ fontSize: 16 }}>Hạn sử dụng</Text>
+                  <Text style={{ fontSize: 16 }}>Date Code</Text>
                 </View>
                 <View style={[styles.textCenter, { width: "70%" }]}>
                   <TextInput
                     value={values.dateCode}
-                    placeholder="Nhập hạn sử dụng (nếu có)"
+                    placeholder="Nhập Date Code (nếu có)"
                     style={styles.inputProduct}
                     onFocus={() => {
                       setFieldTouched("dateCode");
@@ -670,66 +843,6 @@ const CreatePostDetail = () => {
             </View>
 
             <View style={{ marginVertical: 20 }}>
-              {/* Phương thức vận chuyển */}
-              {/* <View style={styles.dropdownContainer}>
-                <Dropdown
-                  style={styles.dropdown}
-                  data={dataShippingMethod}
-                  labelField="label"
-                  valueField="value"
-                  placeholder="Phương Thức Vận Chuyển"
-                  value={values.shippingMethod}
-                  onChange={(item) => {
-                    setFieldValue('shippingMethod', item.value);
-                  }}
-                />
-                {touched.shippingMethod && errors.shippingMethod && (
-                  <Text style={styles.errorText}>{errors.shippingMethod}</Text>
-                )}
-              </View> */}
-
-              {/* Thời gian vận chuyển */}
-              {/* <View style={styles.dropdownContainer}>
-                <Dropdown
-                  style={styles.dropdown}
-                  data={dataShippingTime}
-                  labelField="label"
-                  valueField="value"
-                  placeholder="Thời Gian Vận Chuyển"
-                  value={values.shippingTime}
-                  onChange={(item) => {
-                    setFieldValue('shippingTime', item.value);
-                  }}
-                />
-                {touched.shippingTime && errors.shippingTime && (
-                  <Text style={styles.errorText}>{errors.shippingTime}</Text>
-                )}
-              </View>
-              <View style={styles.shadow}></View> */}
-
-              {/* Khu Vực Xuất Hàng */}
-              {/* <View style={styles.viewContainer}>
-                <View style={styles.textCenter}>
-                  <Text style={{ fontSize: 16 }}>Khu Vực Xuất Hàng:</Text>
-                </View>
-                <View style={[styles.textCenter, { width: "60%" }]}>
-                  <TextInput
-                    value={values.shippingAddress}
-                    placeholder="Nhập địa chỉ"
-                    style={styles.inputProduct}
-                    onFocus={() => {
-                      setFieldTouched("shippingAddress");
-                    }}
-                    onBlur={() => {
-                      setFieldTouched("shippingAddress", "");
-                    }}
-                    onChangeText={handleChange("shippingAddress")}
-                    autoCorrect={false}
-                  />
-                </View>
-              </View>
-              <View style={styles.shadow}></View> */}
-
               {/* price */}
               <View style={styles.viewContainer}>
                 <View style={styles.textCenter}>
@@ -754,68 +867,20 @@ const CreatePostDetail = () => {
               </View>
               {touched.price && errors.price && <Text style={styles.errorMessage}>{errors.price}</Text>}
               <View style={styles.shadow}></View>
-
-              {/* fee */}
-              {/* <View style={styles.viewContainer}>
-                <View style={styles.textCenter}>
-                  <Text style={{ fontSize: 16 }}>Tiền Hoa Hồng:</Text>
-                </View>
-                <View style={[styles.textCenter, { width: "70%" }]}>
-                  <TextInput
-                    keyboardType='number-pad'
-                    value={values.fee}
-                    placeholder="Nhập tiền hoa hồng"
-                    style={styles.inputProduct}
-                    onFocus={() => {
-                      setFieldTouched("fee");
-                    }}
-                    onBlur={() => {
-                      setFieldTouched("fee", "");
-                    }}
-                    onChangeText={handleChange("fee")}
-                    autoCorrect={false}
-                  />
-                </View>
-              </View>
-              {touched.fee && errors.fee && <Text style={styles.errorMessage}>{errors.fee}</Text>}
-              <View style={styles.shadow}></View> */}
-
-              {/* sales profit */}
-              {/* <View style={styles.viewContainer}>
-                <View style={styles.textCenter}>
-                  <Text style={{ fontSize: 16 }}>Lợi Nhuận Bán Hàng:</Text>
-                </View>
-                <View style={[styles.textCenter, { width: "60%" }]}>
-                  <TextInput
-                    keyboardType='number-pad'
-                    value={values.saleProfit}
-                    placeholder="Lợi Nhuận"
-                    style={styles.inputProduct}
-                    onFocus={() => {
-                      setFieldTouched("saleProfit");
-                    }}
-                    onBlur={() => {
-                      setFieldTouched("saleProfit", "");
-                    }}
-                    onChangeText={handleChange("saleProfit")}
-                    autoCorrect={false}
-                  />
-                </View>
-              </View>
-              {touched.saleProfit && errors.saleProfit && <Text style={styles.errorMessage}>{errors.saleProfit}</Text>}
-              <View style={styles.shadow}></View> */}
-
             </View>
 
             <View style={{ marginTop: 50 }}>
-              <Button onPress={handleSubmit} title="Submit" />
+              <Button
+                onPress={handleSubmit}
+                title="Submit"
+              />
             </View>
           </View>
         )}
       </Formik>
     </ScrollView>
   );
-};
+}
 
 
 export default CreatePostDetail;

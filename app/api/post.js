@@ -1,4 +1,5 @@
 import axiosInstance from './axiosInstance';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const getAllPosts = async () => {
   try {
@@ -45,6 +46,36 @@ export const postComment = async (userId, postId, commentContent) => {
     throw error;
   }
 }
+
+export const callFetchPostByBrandName = (query) => {
+  return axiosInstance.get(`/posts/brands?${query}`)
+}
+
+export const createPost = async (formData) => {
+  try {
+    const token = await getAuthToken();
+    const response = await fetch('http://192.168.1.9:8080/api/v1/posts', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data'
+      },
+      body: formData,
+    });
+    return response;
+  } catch (error) {
+    console.error('Error Create Post:', error);
+  }
+}
+
+const getAuthToken = async () => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    return token;
+  } catch (error) {
+    console.error("Error retrieving token: ", error);
+  }
+};
 
 export const searchPostsByTitle = async (title) => {
   try {
