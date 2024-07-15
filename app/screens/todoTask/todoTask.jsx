@@ -7,28 +7,30 @@ import {
     Image,
     TextInput,
     FlatList,
+    SafeAreaView,
 } from "react-native";
-import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
 import { NavigationContaine, useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS, SIZES } from "../../constants/theme";
+import styles from "../css/todoTask.style";
+import TodoTaskTab from "../../navigation/TodoTaskTab";
 
-const TodoTask = () => {
 
-    const navigation = useNavigation();
+const TodoTask = ({ navigation }) => {
 
-    useEffect(() => {
-        // console.log("List product By Brand <ProductListItemByBrand>: ", listItem);
-    }, [])
-    
     return (
-        <View>
-            <Text>ok</Text>
-        </View>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.header}>
+                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                    <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
+                </TouchableOpacity>
+                <Text style={styles.title}>Danh sách việc cần làm</Text>
+            </View>
+            <TodoTaskTab />
+        </SafeAreaView>
     );
 }
 
 export default TodoTask;
-
-const styles = StyleSheet.create({})
 

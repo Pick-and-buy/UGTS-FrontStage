@@ -3,15 +3,16 @@ import React from 'react';
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { COLORS } from "../constants/theme";
 import HomeFollow from '../screens/home/HomeFollow';
-import HomeExplore from '../screens/home/HomeExplore';
-import styles from "./HomeTab.style";
+import Buyer from '../screens/todoTask/Buyer';
+import Seller from '../screens/todoTask/Seller';
+import styles from "./TodoTaskTab.style";
 
 const Tab = createMaterialTopTabNavigator();
 
-const HomeTab = () => {
+const TodoTaskTab = () => {
     return (
         <Tab.Navigator
-            initialRouteName="explore"
+            initialRouteName="buyer"
             screenOptions={{
                 tabBarActiveTintColor: COLORS.primary,
                 tabBarInactiveTintColor: COLORS.secondary,
@@ -24,26 +25,26 @@ const HomeTab = () => {
             style={styles.container}
         >
             <Tab.Screen
-                name="explore"
-                component={HomeExplore}
+                name="buyer"
+                component={Buyer}
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <View style={{ width: 100, marginLeft: -30 }}>
                             <Text style={focused ? styles.tabActive : styles.tab}>
-                                Dành Cho Bạn
+                                Mua
                             </Text>
                         </View>
                     ),
                 }}
             />
             <Tab.Screen
-                name="follow"
-                component={HomeFollow}
+                name="seller"
+                component={Seller}
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <View style={{ width: 100, marginLeft: -30 }}>
                             <Text style={focused ? styles.tabActive : styles.tab}>
-                                Đang theo dõi
+                                Bán
                             </Text>
                         </View>
                     ),
@@ -53,4 +54,4 @@ const HomeTab = () => {
     );
 }
 
-export default HomeTab;
+export default TodoTaskTab;

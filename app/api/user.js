@@ -14,10 +14,10 @@ export const getUserByToken = async () => {
 
 export const getAuthToken = async () => {
   try {
-      const token = await AsyncStorage.getItem('token');
-      return token;
+    const token = await AsyncStorage.getItem('token');
+    return token;
   } catch (error) {
-      console.error("Error retrieving token: ", error);
+    console.error("Error retrieving token: ", error);
   }
 };
 
@@ -36,6 +36,60 @@ export const updateProfile = async (userId, profile) => {
     throw error;
   }
 };
+
+export const createAddress = async (userId, address) => {
+  try {
+    const response = await axiosInstance.post(`/users/address?userId=${userId}`, {
+      country: address.country,
+      province: address.city,
+      district: address.province,
+      street: address.district,
+      addressLine: address.address
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error create user address:', error);
+    throw error;
+  }
+};
+
+export const updateAddress = async (userId, address, addressId) => {
+  try {
+    const response = await axiosInstance.put(`/users/address?userId=${userId}&addressId=${addressId}`, {
+      country: address.country,
+      province: address.city,
+      district: address.province,
+      street: address.district,
+      addressLine: address.address
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating user address:', error);
+    throw error;
+  }
+};
+
+export const deleteAddress = async (addressId) => {
+  try {
+    const response = await axiosInstance.delete(`/users/address?addressId=${addressId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error delete user address:', error);
+    throw error;
+  }
+};
+
+export const setDefaultAddress = async (userId, addressId) => {
+  try {
+    const response = await axiosInstance.put(`/users/address/default?userId=${userId}&addressId=${addressId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error set default user address:', error);
+    throw error;
+  }
+};
+
+
 
 export const sendImageToAPI = async (imageUri, userId, authToken) => {
   if (!imageUri) return;

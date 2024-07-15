@@ -54,7 +54,7 @@ export const callFetchPostByBrandName = (query) => {
 export const createPost = async (formData) => {
   try {
     const token = await getAuthToken();
-    const response = await fetch('http://192.168.1.9:8080/api/v1/posts', {
+    const response = await fetch('http://192.168.11.100:8080/api/v1/posts', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
