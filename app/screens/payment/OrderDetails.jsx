@@ -58,9 +58,9 @@ const OrderDetails = ({ navigation, route }) => {
     const handleOrder = async () => {
         console.log('Selected payment method:', checked);
         try {
-            await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id);
+            const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id);
             console.log('Submit order successfully!');
-            navigation.navigate('bottom-navigation');
+            navigation.navigate('order-successfully', { orderInfo: response.result });
         } catch (error) {
             console.error('Submit order', error);
         }
@@ -124,7 +124,7 @@ const OrderDetails = ({ navigation, route }) => {
                         user,
                         postDetails: postDetails,
                         onSelectAddress: handleSelectAddress,
-                        type:'order'
+                        type: 'order'
                     })}
                 >
                     {user?.result?.address?.length > 0 ? (
