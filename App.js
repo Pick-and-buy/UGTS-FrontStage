@@ -43,6 +43,7 @@ import TodoTask from './app/screens/todoTask/TodoTask';
 import CreateAddress from './app/screens/address/CreateAddress';
 import OrderSuccessfully from './app/screens/payment/OrderSuccessfully';
 import BuyerOrderDetails from './app/screens/payment/BuyerOrderDetails';
+import PostsOfFollowedUser from './app/screens/post/PostsOfFollowedUser';
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [login, setLogin] = useState(null);
@@ -227,6 +228,11 @@ export default function App() {
             <Stack.Screen
               name='news-navigation'
               component={News}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name='post-of-followed-user'
+              component={PostsOfFollowedUser}
               options={{ headerShown: false }}
             />
             <Stack.Screen

@@ -5,19 +5,21 @@ import {
     Text,
     FlatList,
     ActivityIndicator,
+    TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { getListsFollowing, getUserByToken } from "../../api/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Post from "../post/Post";
 import { COLORS } from "../../constants/theme";
+
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
+
 const HomeExplore = ({ navigation }) => {
     const [user, setUser] = useState(null);
     const [followings, setFollowings] = useState([]);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [numColumns, setNumColumns] = useState(3); // State for number of columns
 
     const fetchUserData = async () => {
         try {
@@ -51,12 +53,15 @@ const HomeExplore = ({ navigation }) => {
     }, [user]);
 
     const fetchFollowings = async () => {
+        setLoading(true);
         try {
             const response = await getListsFollowing(user?.result?.id);
             const data = transformData(response.result);
             setFollowings(data);
         } catch (error) {
             console.error('Error fetching followings:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -85,8 +90,13 @@ const HomeExplore = ({ navigation }) => {
 
     const UserProfile = ({ user }) => (
         <View style={styles.userContainer}>
-            <Image source={{ uri: user.avatar ? user.avatar : profile }} style={styles.avatar} />
-            <Text style={styles.userName}>{user.username}</Text>
+            <View style={styles.userInfo}>
+                <Image source={{ uri: user.avatar ? user.avatar : profile }} style={styles.avatar} />
+                <Text style={styles.userName}>{user?.lastName} {user?.firstName}</Text>
+            </View>
+            <TouchableOpacity onPress={() => navigation.navigate('post-of-followed-user', user)}>
+                <Text style={styles.viewAll}>Xem tất cả</Text>
+            </TouchableOpacity>
         </View>
     );
 
@@ -97,12 +107,12 @@ const HomeExplore = ({ navigation }) => {
             keyExtractor={item => item.id}
             renderItem={({ item }) => (
                 <View style={styles.posts}>
-                    <UserProfile user={item}/>
+                    <UserProfile user={item} />
                     {loading ? (
                         <ActivityIndicator size="large" color={COLORS.primary} />
                     ) : (
                         <View style={styles.row}>
-                            {item.createdPosts.map(post => (
+                            {item.createdPosts.slice(0, 6).map(post => (
                                 <Post key={post.id} post={post} />
                             ))}
                         </View>
@@ -118,12 +128,11 @@ export default HomeExplore;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 20,
     },
     posts: {
         width: '98%',
         marginHorizontal: "auto",
-        marginTop:15
+        marginTop: 15
     },
     row: {
         width: "100%",
@@ -133,12 +142,16 @@ const styles = StyleSheet.create({
         alignItems: "center",
         gap: 6,
         marginHorizontal: "auto",
-
     },
     userContainer: {
         flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom:6
+        marginBottom: 6
+    },
+    userInfo: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     avatar: {
         width: 25,
@@ -149,5 +162,9 @@ const styles = StyleSheet.create({
     userName: {
         fontSize: 18,
         fontWeight: 'bold',
+    },
+    viewAll: {
+        fontSize: 16,
+        color: COLORS.primary,
     },
 });

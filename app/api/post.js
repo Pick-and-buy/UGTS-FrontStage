@@ -142,5 +142,14 @@ export const getBrandLinesByBrandName = async (brandName) => {
     throw error;
   }
 }
+export const getPostsOfFollowedUser = async (followedUserId) => {
+  try {
+    const response = axiosInstance.get(`/posts/followedUser?followedUserId=${followedUserId}`);
+    return response;
+  } catch (error) {
+    logger.error('Error get all post of followed user :', error);
+    throw error;
+  }
+}
 
 
