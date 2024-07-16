@@ -6,6 +6,7 @@ import {
     FlatList,
     ActivityIndicator,
     TouchableOpacity,
+    RefreshControl,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { getListsFollowing, getUserByToken } from "../../api/user";
@@ -20,6 +21,7 @@ const HomeExplore = ({ navigation }) => {
     const [followings, setFollowings] = useState([]);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
 
     const fetchUserData = async () => {
         try {
@@ -88,6 +90,12 @@ const HomeExplore = ({ navigation }) => {
         }));
     };
 
+    const handleRefresh = async () => {
+        setRefreshing(true);
+        await fetchFollowings();
+        setRefreshing(false);
+    };
+
     const UserProfile = ({ user }) => (
         <View style={styles.userContainer}>
             <View style={styles.userInfo}>
@@ -119,6 +127,13 @@ const HomeExplore = ({ navigation }) => {
                     )}
                 </View>
             )}
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={handleRefresh}
+                    colors={[COLORS.primary]}
+                />
+            }
         />
     );
 };
