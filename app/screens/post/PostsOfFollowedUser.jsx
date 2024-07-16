@@ -1,20 +1,21 @@
-import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { Feather, AntDesign, MaterialIcons, MaterialCommunityIcons, SimpleLineIcons, Ionicons, Entypo } from '@expo/vector-icons';
 import styles from '../css/postsOfFollowedUser.style';
 import { COLORS } from '../../constants/theme';
 import Post from './Post';
 import { ActivityIndicator } from 'react-native-paper';
 import { getPostsOfFollowedUser } from '../../api/post';
+
 const PostsOfFollowedUser = ({ navigation, route }) => {
   const user = route.params;
   const [loading, setLoading] = useState(true);
-  const [posts, setPosts] = useState(true);
-  // console.log(posts);
+  const [posts, setPosts] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     fetchPosts();
-  }, [])
+  }, []);
 
   const fetchPosts = async () => {
     setLoading(true);
@@ -29,8 +30,23 @@ const PostsOfFollowedUser = ({ navigation, route }) => {
     }
   };
 
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await fetchPosts();
+    setRefreshing(false);
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+          colors={[COLORS.primary]}
+        />
+      }
+    >
       <View style={styles.wrapper}>
         <TouchableOpacity style={styles.header}>
           <MaterialCommunityIcons name="keyboard-backspace" size={32} color="black" onPress={() => navigation.goBack()} />
@@ -48,8 +64,8 @@ const PostsOfFollowedUser = ({ navigation, route }) => {
           </View>
         )}
       </View>
-    </SafeAreaView>
-  )
-}
+    </ScrollView>
+  );
+};
 
-export default PostsOfFollowedUser
+export default PostsOfFollowedUser;
