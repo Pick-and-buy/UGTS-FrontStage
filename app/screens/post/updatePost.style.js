@@ -12,8 +12,14 @@ const styles = StyleSheet.create({
     },
     viewContainer: {
         flexDirection: 'row',
-        marginHorizontal: 5,
+        marginHorizontal: 10,
         width: "100%",
+    },
+    left: {
+        flex: 1,
+    },
+    right: {
+        flex: 1,
     },
     //error message
     errorMessage: {
@@ -109,6 +115,17 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         fontSize: 16,
     },
+
+    leftText: {
+        fontSize: 16,
+        marginVertical: 5,
+    },
+
+    rightText: {
+        fontSize: 16,
+        color: COLORS.blue,
+        marginVertical: 5,
+    },
     //Brand Name: Tên Nhãn Hiệu
     dropdownContainer: {
         paddingHorizontal: 10,
@@ -159,7 +176,7 @@ const styles = StyleSheet.create({
     productDescriptionContainer: {
         marginBottom: 20,
         width: "95%",
-        height: 100,
+        height: 200,
         backgroundColor: COLORS.lightWhite,
         marginLeft: 10,
     },

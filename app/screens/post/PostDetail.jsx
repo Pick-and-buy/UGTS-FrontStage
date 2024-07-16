@@ -523,7 +523,9 @@ const PostDetail = ({ navigation, route }) => {
                     )
                     }
                     {type === "seller" && (
-                        <TouchableOpacity style={styles.button}>
+                        <TouchableOpacity style={styles.button}
+                            onPress={() => navigation.navigate('update-post', { postId: postId })}
+                        >
                             <Text style={styles.buttonText}>Chỉnh sửa</Text>
                         </TouchableOpacity>
                     )

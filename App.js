@@ -43,6 +43,8 @@ import TodoTask from './app/screens/todoTask/TodoTask';
 import CreateAddress from './app/screens/address/CreateAddress';
 import OrderSuccessfully from './app/screens/payment/OrderSuccessfully';
 import BuyerOrderDetails from './app/screens/payment/BuyerOrderDetails';
+import UpdatePost from './app/screens/post/UpdatePost';
+
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [login, setLogin] = useState(null);
@@ -277,6 +279,11 @@ export default function App() {
             <Stack.Screen
               name='update-address'
               component={UpdateAddress}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name='update-post'
+              component={UpdatePost}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

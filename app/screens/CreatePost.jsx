@@ -151,8 +151,8 @@ const CreatePost = () => {
         title: title,
         description: description,
         brand: { name: brandName },
-        brandLine: { lineName: brandLineName},
-        category: { categoryName: category},
+        brandLine: { lineName: brandLineName },
+        category: { categoryName: category },
         product: {
           name: productName,
           price: calculatedPrice,
@@ -855,8 +855,8 @@ const CreatePost = () => {
                   </View>
                 </View>
                 {touched.price && errors.price && (
-                    <Text style={[styles.errorText, {marginLeft: 5, marginTop: 5}]}>{errors.price}</Text>
-                  )}
+                  <Text style={[styles.errorText, { marginLeft: 5, marginTop: 5 }]}>{errors.price}</Text>
+                )}
                 <View style={styles.shadow}></View>
 
                 {/* Fee */}
@@ -869,22 +869,30 @@ const CreatePost = () => {
               </View>
 
               {/* Thành Tiền */}
-              <View style={{marginTop: -20}}>
+              <View style={{ marginTop: -20 }}>
                 <View style={styles.viewContainer}>
                   <View style={styles.textCenter}>
-                    <Text style={{ fontSize: 16 }}>Tiền: <Text style={{color: 'red', paddingLeft: 25}}>{total}</Text></Text>
+                    <Text style={{ fontSize: 16 }}>Tiền: <Text style={{ color: 'red', paddingLeft: 25 }}>{total}</Text></Text>
                   </View>
 
                 </View>
                 <View style={styles.shadow}></View>
               </View>
 
-              <View>
+              {/* <View>
                 <Button
                   title={"Đăng Bài"}
                   onPress={handleSubmit}
                   isValid={true}
                 />
+              </View> */}
+
+              <View style={{ marginTop: 30 }}>
+                <TouchableOpacity style={styles.button}
+                  onPress={handleSubmit}
+                >
+                  <Text style={styles.buttonText}>Đăng Bài</Text>
+                </TouchableOpacity>
               </View>
             </View>
           )
