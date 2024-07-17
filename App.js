@@ -45,6 +45,11 @@ import OrderSuccessfully from './app/screens/payment/OrderSuccessfully';
 import BuyerOrderDetails from './app/screens/payment/BuyerOrderDetails';
 import PostsOfFollowedUser from './app/screens/post/PostsOfFollowedUser';
 import IDRecognition from './app/screens/verify/IDRecognition';
+import GetIDScreen from './app/screens/verify/Onboarding/GetIDScreen';
+import TakeSelfieScreen from './app/screens/verify/Onboarding/TakeSelfieScreen';
+import ScanIDScreen from './app/screens/verify/ScanIDScreen';
+import FaceMatch from './app/screens/verify/FaceMatch';
+import ScanBackIDScreen from './app/screens/verify/ScanBackIDScreen';
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [login, setLogin] = useState(null);
@@ -289,6 +294,32 @@ export default function App() {
             <Stack.Screen
               name='IDRecognition'
               component={IDRecognition}
+              options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+              name="GetID"
+              component={GetIDScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="TakeSelfie"
+              component={TakeSelfieScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ScanID"
+              component={ScanIDScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ScanBackID"
+              component={ScanBackIDScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="FaceMatch"
+              component={FaceMatch}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>
