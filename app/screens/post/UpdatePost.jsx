@@ -29,6 +29,7 @@ const UpdatePost = ({ route }) => {
     const navigation = useNavigation();
 
     const [images, setImages] = useState([null, null, null, null, null, null, null, null, null, null]);
+    const [imagesView, setImagesView] = useState([null]);
 
     const [selectedBrand, setSelectedBrand] = useState(null);
     const [selectedBrandLine, setSelectedBrandLine] = useState(null);
@@ -70,10 +71,10 @@ const UpdatePost = ({ route }) => {
             newImages.push(item.imageUrl)
         });
 
-        while (newImages.length < 10) {
+        while (newImages.length < 5) {
             newImages.push("")
         }
-        setImages(newImages);
+        setImagesView(newImages);
     }
 
     useEffect(() => {
@@ -102,8 +103,7 @@ const UpdatePost = ({ route }) => {
             formData.append('request', JSON.stringify(request));
 
             const filteredImages = images.filter(image => image && image !== "");
-            console.log('>>> check filtered images: ', filteredImages);
-            
+
             if (filteredImages.length === 0) {
                 console.warn('Ảnh không được để trống!')
                 return;
@@ -194,29 +194,12 @@ const UpdatePost = ({ route }) => {
                     brandLineName: postDetails?.product?.brandLine?.lineName || '',
                     condition: postDetails?.product?.condition || '',
                     category: postDetails?.product?.category?.categoryName || '',
-                    // exteriorMaterial: postDetails?.product?.exteriorMaterial || '',
-                    // interiorMaterial: postDetails?.product?.interiorMaterial || '',
-                    // size: postDetails?.product?.size || '',
-                    // width: postDetails?.product?.width || '',
-                    // height: postDetails?.product?.height || '',
-                    // length: postDetails?.product?.length || '',
-                    // referenceCode: postDetails?.product?.referenceCode || '',
-                    // manufactureYear: postDetails?.product?.manufactureYear || '',
-                    // color: postDetails?.product?.color || '',
-                    // accessories: postDetails?.product?.accessories || '',
-                    // dateCode: postDetails?.product?.dateCode || '',
-                    // serialNumber: postDetails?.product?.serialNumber || '',
-                    // purchasedPlace: postDetails?.product?.purchasedPlace || '',
                     description: postDetails?.description || '',
                 }}
                 validationSchema={validationSchema}
                 onSubmit={handleUpdatePost}
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue, setFieldTouched, setValues }) => {
-
-                    const total = values.price ? parseInt(values.price, 10) - parseInt(formattedFee, 10) : '';
-                    // Format the price using the helper function
-                    const formattedTotal = formatPrice(total);
 
                     return (
                         <View style={styles.container}>
@@ -259,6 +242,39 @@ const UpdatePost = ({ route }) => {
                                                             <TouchableOpacity onPress={() => removeImage(index)}>
                                                                 <FontAwesome6 style={styles.xmark} name="xmark" size={20} color="white" />
                                                             </TouchableOpacity>
+                                                        </ImageBackground>
+                                                    </View>
+                                                )
+                                        )}
+                                    />
+                                </View>
+
+                                {/* Image View */}
+                                <View
+                                    style={[styles.imageUpload, { marginTop: 20 }]}>
+                                    <FlatList
+                                        data={imagesView}
+                                        keyExtractor={(item, index) => index.toString()}
+                                        horizontal
+                                        renderItem={({ item, index }) => (
+                                            item === null || item === "" ?
+                                                (
+                                                    <View key={index} style={styles.image} >
+                                                        <View>
+                                                            <View style={{ position: 'absolute', top: 3, left: 1 }}>
+                                                                <Text style={{ color: COLORS.gray }}>{index + 1}</Text>
+                                                            </View>
+                                                            <FontAwesome style={{ marginTop: 20, marginHorizontal: 20 }} name="camera" size={26} color={COLORS.gray} />
+                                                            <Text style={{ marginTop: 10, color: COLORS.gray, textAlign: 'center' }}>Xem Ảnh</Text>
+                                                        </View>
+                                                    </View>
+                                                )
+                                                :
+                                                (
+                                                    <View key={index}>
+                                                        <ImageBackground
+                                                            source={{ uri: item }}
+                                                            style={styles.image} >
                                                         </ImageBackground>
                                                     </View>
                                                 )
