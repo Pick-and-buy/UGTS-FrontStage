@@ -6,10 +6,8 @@ import {
     TouchableOpacity,
     Image,
     TextInput,
-    Dimensions,
     FlatList,
     ImageBackground,
-    // Button,
 } from "react-native";
 import { FontAwesome, AntDesign, MaterialIcons, FontAwesome6, Ionicons } from '@expo/vector-icons';
 import React, { useState, useRef, useContext, useEffect } from "react";
@@ -18,11 +16,7 @@ import { COLORS } from "../../constants/theme";
 import styles from '../post/updatePost.style';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Dropdown } from 'react-native-element-dropdown';
-import { callFetchListBrands } from "../../api/brand";
 import { updatePost, getPostDetails } from "../../api/post";
-import { getAllCategoriesByBrandLineName } from "../../api/category";
-import { getAllBrandLinesByBrandName } from "../../api/brandLine";
 import * as ImagePicker from "expo-image-picker";
 import Button from "../../components/Button";
 
@@ -34,7 +28,7 @@ const UpdatePost = ({ route }) => {
 
     const navigation = useNavigation();
 
-    const [images, setImages] = useState([null, null, null, null, null]);
+    const [images, setImages] = useState([null, null, null, null, null, null, null, null, null, null]);
 
     const [selectedBrand, setSelectedBrand] = useState(null);
     const [selectedBrandLine, setSelectedBrandLine] = useState(null);
@@ -76,7 +70,7 @@ const UpdatePost = ({ route }) => {
             newImages.push(item.imageUrl)
         });
 
-        while (newImages.length < 5) {
+        while (newImages.length < 10) {
             newImages.push("")
         }
         setImages(newImages);
@@ -89,12 +83,6 @@ const UpdatePost = ({ route }) => {
 
     const validationSchema = Yup.object().shape({
         title: Yup.string().required('Hãy nhập tiêu đề bài đăng'),
-        // productName: Yup.string().required('Hãy nhập tên sản phẩm'),
-        // brandName: Yup.string().required('Hãy chọn thương hiệu'),
-        // condition: Yup.string().required('Hãy chọn trạng thái sản phẩm'),
-        // brandLineName: Yup.string().required('Hãy chọn dòng thương hiệu'),
-        // category: Yup.string().required('Hãy chọn thể loại'),
-        // price: Yup.string().required('Hãy nhập giá tiền'),
     });
 
     const handleUpdatePost = async (values, actions) => {
@@ -112,20 +100,28 @@ const UpdatePost = ({ route }) => {
             };
 
             formData.append('request', JSON.stringify(request));
-            console.log('>>> check image: ', );
-            images.forEach((image, index) => {
-                if (image) {
-                    const fileName = image.split('/').pop();
-                    formData.append('productImages', {
-                        uri: image,
-                        type: 'image/jpeg',
-                        name: fileName,
-                    });
-                }
-            });
+
+            const filteredImages = images.filter(image => image && image !== "");
+            console.log('>>> check filtered images: ', filteredImages);
+            
+            if (filteredImages.length === 0) {
+                console.warn('Ảnh không được để trống!')
+                return;
+            } else {
+                filteredImages.forEach((image, index) => {
+                    if (image) {
+                        const fileName = image.split('/').pop();
+                        formData.append('productImages', {
+                            uri: image,
+                            type: 'image/jpeg',
+                            name: fileName,
+                        });
+                    }
+                });
+            }
+
             await updatePost(queryId, formData);
-            // navigation.navigate('Home')
-            // setImages([null, null, null, null, null]);
+            navigation.goBack();
 
         } catch (error) {
             console.error('ERROR handle create post: ', error);
@@ -724,7 +720,7 @@ const UpdatePost = ({ route }) => {
                                     <Text style={styles.buttonText}>Cập Nhật</Text>
                                 </TouchableOpacity>
                             </View>
-                          
+
                         </View>
                     )
                 }}
