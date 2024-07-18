@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-na
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import FormData from 'form-data';
+import { COLORS } from '../../constants/theme';
 
 const ScanIDScreen = ({ navigation }) => {
     // const [image, setImage] = useState(null);
@@ -75,12 +76,12 @@ const ScanIDScreen = ({ navigation }) => {
             <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                 <Ionicons name="arrow-back" size={24} color="black" />
             </TouchableOpacity>
-            <Image source={{ uri: 'https://img.freepik.com/premium-vector/plastic-id-card-personal-identity-card-driver-license-identification-verification_349999-510.jpg' }} style={styles.image} />
+            <Image source={require("../../../assets/images/id card.png")} style={styles.image} />
             <Text style={styles.title}>Scan your ID document</Text>
             <Text style={styles.description}>
                 A 60 second timer is going to start. Please make sure that all information is within the borders of the scanner.
             </Text>
-            <TouchableOpacity onPress={startIdentification}>
+            <TouchableOpacity onPress={startIdentification} style={styles.btn}>
                 <Text style={styles.next}>Start Identification</Text>
             </TouchableOpacity>
         </View>
@@ -101,8 +102,8 @@ const styles = StyleSheet.create({
         left: 20,
     },
     image: {
-        width: 200,
-        height: 200,
+        width: 250,
+        height: 250,
         marginBottom: 30,
     },
     title: {
@@ -116,10 +117,21 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: 20,
     },
+    btn: {
+        width: "50%",
+        backgroundColor: COLORS.primary,
+        paddingVertical: 4,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        marginTop: 50
+    },
     next: {
         fontSize: 18,
-        color: '#000',
+        color: COLORS.white,
         padding: 10,
+        fontWeight: "bold"
+
     },
 });
 
