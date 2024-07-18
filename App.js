@@ -51,6 +51,7 @@ import ScanIDScreen from './app/screens/verify/Onboarding/ScanIDScreen';
 import FaceMatch from './app/screens/verify/FaceMatch';
 import ScanBackIDScreen from './app/screens/verify/ScanBackIDScreen';
 import ScanFontIDScreen from './app/screens/verify/ScanFontIDScreen';
+import Notification from './app/screens/notification/Notification';
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [login, setLogin] = useState(null);
@@ -326,6 +327,11 @@ export default function App() {
             <Stack.Screen
               name="FaceMatch"
               component={FaceMatch}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="notification"
+              component={Notification}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

@@ -31,6 +31,8 @@ const Header = () => {
         }
     };
 
+    
+
     return (
         <SafeAreaView>
             <View style={styles.container}>
@@ -54,10 +56,11 @@ const Header = () => {
                     <View style={styles.option}>
                         <View style={styles.optionItem}>
                             <Ionicons
-                                onPress={() => console.warn('Thông báo')}
+                                onPress={() => navigation.navigate("notification")}
                                 name="notifications"
                                 size={24}
                                 color="#AFAFAE" />
+                                <View style={styles.notificationDot}/>
                         </View>
                         <View style={styles.optionItem}>
                             <Ionicons
