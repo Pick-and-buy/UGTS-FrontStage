@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Alert } from 'react-native';
+import { View, Alert, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import FormData from 'form-data';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const ScanBackIDScreen = ({ navigation, route }) => {
     const frontImageUri = route.params.imageUri;
     const [image, setImage] = useState(null);
-    // console.log("image uri font:", frontImageUri);
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         startIdentification();
     }, []);
@@ -27,6 +29,7 @@ const ScanBackIDScreen = ({ navigation, route }) => {
 
         if (!result.canceled) {
             setImage(result.assets[0].uri);
+            setLoading(true);
             uploadImage(result.assets[0].uri);
             console.log(result.assets[0].uri);
         }
@@ -41,20 +44,20 @@ const ScanBackIDScreen = ({ navigation, route }) => {
                 name: 'image.jpg',
             });
 
-            // Make the POST request using fetch
             const response = await fetch('https://api.fpt.ai/vision/idr/vnm', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'api-key': '',
+                    'api-key': 'NuQBfzczBYurMfXcN4GJBN12uaO6tBE2',
                 },
                 body: formData,
             });
 
             const result = await response.json();
             console.log(result);
+            setLoading(false);
             if (result.errorCode === 0 && result.errorMessage === "") {
-                navigation.navigate("FaceMatch", { frontImageUri: frontImageUri })
+                navigation.navigate("FaceMatch", { frontImageUri: frontImageUri });
             } else {
                 Alert.alert(
                     "Nhận diện ID thất bại",
@@ -71,13 +74,32 @@ const ScanBackIDScreen = ({ navigation, route }) => {
                 );
             }
         } catch (error) {
+            setLoading(false);
             console.error('Error uploading image:', error);
         }
     };
 
     return (
-        <View></View>
+        <View style={styles.container}>
+            <Spinner
+                visible={loading}
+                textContent={'Loading...'}
+                textStyle={styles.spinnerTextStyle}
+            />
+        </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+    },
+    spinnerTextStyle: {
+        color: '#FFF',
+    },
+});
 
 export default ScanBackIDScreen;

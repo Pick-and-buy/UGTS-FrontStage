@@ -47,9 +47,10 @@ import PostsOfFollowedUser from './app/screens/post/PostsOfFollowedUser';
 import IDRecognition from './app/screens/verify/IDRecognition';
 import GetIDScreen from './app/screens/verify/Onboarding/GetIDScreen';
 import TakeSelfieScreen from './app/screens/verify/Onboarding/TakeSelfieScreen';
-import ScanIDScreen from './app/screens/verify/ScanIDScreen';
+import ScanIDScreen from './app/screens/verify/Onboarding/ScanIDScreen';
 import FaceMatch from './app/screens/verify/FaceMatch';
 import ScanBackIDScreen from './app/screens/verify/ScanBackIDScreen';
+import ScanFontIDScreen from './app/screens/verify/ScanFontIDScreen';
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [login, setLogin] = useState(null);
@@ -315,6 +316,11 @@ export default function App() {
             <Stack.Screen
               name="ScanBackID"
               component={ScanBackIDScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ScanFontID"
+              component={ScanFontIDScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen

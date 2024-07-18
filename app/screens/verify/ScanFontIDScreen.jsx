@@ -1,17 +1,22 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useState, useEffect } from 'react';
+import { View, Alert, ActivityIndicator, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import FormData from 'form-data';
+import Spinner from 'react-native-loading-spinner-overlay';
 import { COLORS } from '../../constants/theme';
 
-const ScanIDScreen = ({ navigation }) => {
-    // const [image, setImage] = useState(null);
+const ScanFontIDScreen = ({ navigation }) => {
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        startIdentification();
+    }, []);
 
     const startIdentification = async () => {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
         if (status !== 'granted') {
             Alert.alert('Permission Denied', 'Camera access is needed to take photos.');
+            navigation.goBack();
             return;
         }
 
@@ -23,9 +28,11 @@ const ScanIDScreen = ({ navigation }) => {
         });
 
         if (!result.canceled) {
-            // setImage(result.assets[0].uri);
+            setLoading(true);
             uploadImage(result.assets[0].uri);
             console.log(result.assets[0].uri);
+        } else {
+            navigation.goBack();
         }
     };
 
@@ -42,13 +49,14 @@ const ScanIDScreen = ({ navigation }) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'api-key': '',
+                    'api-key': 'NuQBfzczBYurMfXcN4GJBN12uaO6tBE2',
                 },
                 body: formData,
             });
 
             const result = await response.json();
             console.log(result);
+            setLoading(false);
             if (result.errorCode === 0 && result.errorMessage === "") {
                 navigation.navigate("ScanBackID", { imageUri: imageUri });
             } else {
@@ -58,32 +66,31 @@ const ScanIDScreen = ({ navigation }) => {
                     [
                         {
                             text: "Thoát",
+                            onPress: () => navigation.goBack(),
                         },
                         {
                             text: "Thử lại",
-                            onPress: startIdentification
+                            onPress: startIdentification,
                         }
                     ]
                 );
             }
         } catch (error) {
+            setLoading(false);
             console.error('Error uploading image:', error);
+            Alert.alert('Error', 'An error occurred while uploading the image. Please try again.', [
+                { text: 'OK', onPress: () => navigation.goBack() },
+            ]);
         }
     };
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-                <Ionicons name="arrow-back" size={24} color="black" />
-            </TouchableOpacity>
-            <Image source={require("../../../assets/images/id card.png")} style={styles.image} />
-            <Text style={styles.title}>Scan your ID document</Text>
-            <Text style={styles.description}>
-                A 60 second timer is going to start. Please make sure that all information is within the borders of the scanner.
-            </Text>
-            <TouchableOpacity onPress={startIdentification} style={styles.btn}>
-                <Text style={styles.next}>Start Identification</Text>
-            </TouchableOpacity>
+            <Spinner
+                visible={loading}
+                textContent={'Loading...'}
+                textStyle={styles.spinnerTextStyle}
+            />
         </View>
     );
 };
@@ -91,48 +98,13 @@ const ScanIDScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
         justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: '#fff',
-        padding: 20,
     },
-    backButton: {
-        position: 'absolute',
-        top: 50,
-        left: 20,
-    },
-    image: {
-        width: 250,
-        height: 250,
-        marginBottom: 30,
-    },
-    title: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        marginBottom: 10,
-        textAlign: 'center',
-    },
-    description: {
-        fontSize: 16,
-        textAlign: 'center',
-        marginBottom: 20,
-    },
-    btn: {
-        width: "50%",
-        backgroundColor: COLORS.primary,
-        paddingVertical: 4,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 10,
-        marginTop: 50
-    },
-    next: {
-        fontSize: 18,
-        color: COLORS.white,
-        padding: 10,
-        fontWeight: "bold"
-
+    spinnerTextStyle: {
+        color: '#FFF',
     },
 });
 
-export default ScanIDScreen;
+export default ScanFontIDScreen;

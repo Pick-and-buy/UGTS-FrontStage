@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Alert } from 'react-native';
+import { View, Alert, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const FaceMatch = ({ navigation, route }) => {
     const frontImageUri = route.params.frontImageUri;
-    // console.log("image uri font in face match:", frontImageUri);
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         takePhoto();
     }, []);
@@ -26,6 +28,7 @@ const FaceMatch = ({ navigation, route }) => {
         if (!result.canceled) {
             const newImageUri = result.assets[0].uri;
             const updatedImages = [frontImageUri, newImageUri];
+            setLoading(true);
             uploadImages(updatedImages);
         }
     };
@@ -46,23 +49,41 @@ const FaceMatch = ({ navigation, route }) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'api-key': '', // Replace with your API key
+                    'api-key': 'NuQBfzczBYurMfXcN4GJBN12uaO6tBE2', // Replace with your API key
                 },
                 body: formData,
             });
 
             const result = await response.json();
             console.log(result);
+            setLoading(false);
         } catch (error) {
+            setLoading(false);
             console.error('Error uploading images:', error);
         }
     };
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            {/* The camera will start automatically, no need for a button */}
+        <View style={styles.container}>
+            <Spinner
+                visible={loading}
+                textContent={'Loading...'}
+                textStyle={styles.spinnerTextStyle}
+            />
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+    },
+    spinnerTextStyle: {
+        color: '#FFF',
+    },
+});
 
 export default FaceMatch;
