@@ -43,6 +43,12 @@ const OrderDetails = ({ navigation, route }) => {
         }
     }, [route.params?.selectedAddress]);
 
+    useEffect(() => {
+        navigation.setOptions({
+            onSelectAddress: handleSelectAddress
+        });
+    }, [navigation, handleSelectAddress]);
+
     const handleSelectAddress = (selectedAddress) => {
         setUser((prevUser) => ({
             ...prevUser,
@@ -110,6 +116,8 @@ const OrderDetails = ({ navigation, route }) => {
         return `(${regionCode}) ${visibleDigits}`;
     };
 
+    console.log('>>> check user address: ', user?.result?.address);
+    console.log('>>> check address: ', route.params?.selectedAddress);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -123,7 +131,7 @@ const OrderDetails = ({ navigation, route }) => {
                     onPress={() => navigation.navigate('address-lists', {
                         user,
                         postDetails: postDetails,
-                        onSelectAddress: handleSelectAddress,
+                        // onSelectAddress: handleSelectAddress,
                         type: 'order'
                     })}
                 >

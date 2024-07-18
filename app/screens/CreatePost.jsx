@@ -65,7 +65,7 @@ const CreatePost = () => {
     setLoader(true);
     const res = await callFetchListBrands();
     if (res && res.data && res?.data?.result) {
-      const brand = res?.data?.result.map(item => {
+      const brand = res?.data?.result?.brands.map(item => {
         return {
           label: item.name,
           value: item.name

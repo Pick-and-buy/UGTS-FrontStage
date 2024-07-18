@@ -252,13 +252,13 @@ const styles = StyleSheet.create({
         fontWeight: '500',
     },
     bottomBtn: {
-        width: "96%",
+        width: "100%",
         flexDirection: 'row',
         height: "10%",
         backgroundColor: '#fff',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: -5 },
-        shadowOpacity: 1,
+        shadowOpacity: 0.1,
         shadowRadius: 5,
         elevation: 10,
         zIndex: 999,
@@ -276,7 +276,8 @@ const styles = StyleSheet.create({
         borderColor: COLORS.gray2,
         marginHorizontal: "auto",
         marginVertical: 'auto',
-        borderRadius: 8
+        borderRadius: 8,
+        marginRight: 5,
     },
     buttonText: {
         color: 'white',
@@ -292,6 +293,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginHorizontal: "auto",
         marginVertical: 'auto',
+        marginLeft: 5,
     },
     changeAddressBtnText: {
         color: COLORS.black,

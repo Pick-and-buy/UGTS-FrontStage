@@ -48,7 +48,7 @@ const AddressLists = ({ navigation, route }) => {
                 </Text>
                 <Text style={styles.addressDetails}>
                     {item.addressLine}
-                    ,{item.street}
+                    {item.street}
                     ,{item.district}
                     ,{item.province}
                     ,{item.country}
@@ -61,28 +61,78 @@ const AddressLists = ({ navigation, route }) => {
             </>
         );
 
-        if (type === 'order') {
+        // if (type === 'order') {
+        //     return (
+        //         <TouchableOpacity
+        //             style={styles.addressItem}
+        //             onPress={() => {
+        //                 navigation.navigate('order-details', {
+        //                     selectedAddress: item,
+        //                     postDetails: route.params.postDetails
+        //                 });
+        //                 route.params.onSelectAddress(item);
+        //             }}
+        //         >
+        //             {content}
+        //         </TouchableOpacity>
+        //     );
+        // } else {
+        //     return (
+        //         <View style={styles.addressItem}>
+        //             {content}
+        //         </View>
+        //     );
+        // }
+
+        // if (type === 'order-success') {
+        //     return (
+        //         <TouchableOpacity
+        //             style={styles.addressItem}
+        //             onPress={() => {
+        //                 navigation.navigate('buyer-order-details', {
+        //                     selectedAddress: item,
+        //                     postDetails: route.params.postDetails
+        //                 });
+        //                 route.params.onSelectAddress(item);
+        //             }}
+        //         >
+        //             {content}
+        //         </TouchableOpacity>
+        //     );
+        // }
+        // else {
+        //     return (
+        //         <View style={styles.addressItem}>
+        //             {content}
+        //         </View>
+        //     );
+        // }
+
+        const handlePress = () => {
+            if (type === 'order-success') {
+                navigation.navigate('buyer-order-details', {
+                    selectedAddress: item,
+                    postDetails: route.params.postDetails
+                });
+                route.params.onSelectAddress(item);
+            } else if (type === 'order') {
+                navigation.navigate('order-details', {
+                    selectedAddress: item,
+                    postDetails: route.params.postDetails
+                });
+                route.params.onSelectAddress(item);
+            }
+        };
+
+        if (type === 'order-success' || type === 'order') {
             return (
-                <TouchableOpacity
-                    style={styles.addressItem}
-                    onPress={() => {
-                        navigation.navigate('order-details', {
-                            selectedAddress: item,
-                            postDetails: route.params.postDetails
-                        });
-                        route.params.onSelectAddress(item);
-                    }}
-                >
+                <TouchableOpacity style={styles.addressItem} onPress={handlePress}>
                     {content}
                 </TouchableOpacity>
             );
-        } else {
-            return (
-                <View style={styles.addressItem}>
-                    {content}
-                </View>
-            );
         }
+
+
     };
 
     return (
