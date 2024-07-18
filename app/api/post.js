@@ -54,7 +54,7 @@ export const callFetchPostByBrandName = (query) => {
 export const createPost = async (formData) => {
   try {
     const token = await getAuthToken();
-    const response = await fetch('http://192.168.1.9:8080/api/v1/posts', {
+    const response = await fetch('http://10.0.2.2:8080/api/v1/posts', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -139,6 +139,15 @@ export const getBrandLinesByBrandName = async (brandName) => {
     return response;
   } catch (error) {
     logger.error('Error get all brand line :', error);
+    throw error;
+  }
+}
+export const getPostsOfFollowedUser = async (followedUserId) => {
+  try {
+    const response = axiosInstance.get(`/posts/followedUser?followedUserId=${followedUserId}`);
+    return response;
+  } catch (error) {
+    logger.error('Error get all post of followed user :', error);
     throw error;
   }
 }

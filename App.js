@@ -43,6 +43,14 @@ import TodoTask from './app/screens/todoTask/TodoTask';
 import CreateAddress from './app/screens/address/CreateAddress';
 import OrderSuccessfully from './app/screens/payment/OrderSuccessfully';
 import BuyerOrderDetails from './app/screens/payment/BuyerOrderDetails';
+import PostsOfFollowedUser from './app/screens/post/PostsOfFollowedUser';
+import IDRecognition from './app/screens/verify/IDRecognition';
+import GetIDScreen from './app/screens/verify/Onboarding/GetIDScreen';
+import TakeSelfieScreen from './app/screens/verify/Onboarding/TakeSelfieScreen';
+import ScanIDScreen from './app/screens/verify/Onboarding/ScanIDScreen';
+import FaceMatch from './app/screens/verify/FaceMatch';
+import ScanBackIDScreen from './app/screens/verify/ScanBackIDScreen';
+import ScanFontIDScreen from './app/screens/verify/ScanFontIDScreen';
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [login, setLogin] = useState(null);
@@ -230,6 +238,11 @@ export default function App() {
               options={{ headerShown: false }}
             />
             <Stack.Screen
+              name='post-of-followed-user'
+              component={PostsOfFollowedUser}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
               name='slider-navigation'
               component={Slider}
               options={{ headerShown: false }}
@@ -277,6 +290,42 @@ export default function App() {
             <Stack.Screen
               name='update-address'
               component={UpdateAddress}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name='IDRecognition'
+              component={IDRecognition}
+              options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+              name="GetID"
+              component={GetIDScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="TakeSelfie"
+              component={TakeSelfieScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ScanID"
+              component={ScanIDScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ScanBackID"
+              component={ScanBackIDScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ScanFontID"
+              component={ScanFontIDScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="FaceMatch"
+              component={FaceMatch}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>
