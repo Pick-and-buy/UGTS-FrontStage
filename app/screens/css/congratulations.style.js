@@ -9,12 +9,15 @@ const styles = StyleSheet.create({
     },
     title: {
         marginVertical: 20,
-        marginHorizontal: 80,
+        // marginHorizontal: 80,
         fontSize: 35,
         color: COLORS.primary,
     },
     content: {
-
+        width: "90%",
+        marginHorizontal: "auto",
+        textAlign: "center",
+        fontSize: 16
     },
     btnStyle: {
         height: 60,
@@ -24,15 +27,16 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 12,
-        marginLeft: "6%",
+        marginHorizontal: "auto",
         top: "12%"
-    }, 
+    },
     btnTxt: {
         fontFamily: "bold",
         color: COLORS.white,
         fontSize: 18,
         justifyContent: "center",
         alignItems: "center",
+
     },
 });
 

@@ -57,6 +57,12 @@ const FaceMatch = ({ navigation, route }) => {
             const result = await response.json();
             console.log(result);
             setLoading(false);
+            navigation.navigate("congrats-navigation", {
+                title: "HOÀN THÀNH!",
+                content: "Xác minh người dùng thành công tài khoản của bạn đã sẵn sàng để sử dụng!",
+                routerName: "bottom-navigation",
+                btnTxt: "Mua sắm ngay!",
+            })
         } catch (error) {
             setLoading(false);
             console.error('Error uploading images:', error);
