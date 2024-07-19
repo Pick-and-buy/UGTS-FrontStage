@@ -5,10 +5,8 @@ import { Feather, AntDesign, MaterialIcons, MaterialCommunityIcons, SimpleLineIc
 import { COLORS } from "../../constants/theme";
 import { G, Line, Svg } from "react-native-svg";
 import { getUserByToken } from "../../api/user";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { RadioButton } from 'react-native-paper';
 import { format, addDays } from 'date-fns';
-import { order } from '../../api/order';
+import { updateOrderBuyer } from '../../api/order';
 
 const BuyerOrderDetails = ({ navigation, route }) => {
   const orderInfo = route.params.orderInfo;
@@ -66,7 +64,6 @@ const BuyerOrderDetails = ({ navigation, route }) => {
   const shippingPrice = formatPrice(42500);
   const totalPrice = formatPrice(orderInfo?.post?.product?.price + 42500);
 
-
   const copiedOrderId = () => {
     Clipboard.setString(orderInfo?.id);
     Alert.alert('>>> check copiedText: ', orderInfo.id)
@@ -74,26 +71,19 @@ const BuyerOrderDetails = ({ navigation, route }) => {
 
   useEffect(() => {
     if (route.params?.selectedAddress) {
-      handleSelectAddress(route.params.selectedAddress);
       setSelectedAddress(route.params.selectedAddress);
+      handleUpdateOrder();
     }
   }, [route.params?.selectedAddress]);
 
-  console.log('>> check selected Address: ', route.params?.selectedAddress);
-
-
-  const handleSelectAddress = (selectedAddress) => {
-    setUser((prevUser) => ({
-        ...prevUser,
-        result: {
-            ...prevUser.result,
-            address: prevUser.result.address.map((address) =>
-                address.id === selectedAddress.id ? { ...address, default: true } : { ...address, default: false }
-            ),
-        },
-    }));
+  const handleUpdateOrder = async () => {
+    try {
+      await updateOrderBuyer(orderInfo, selectedAddress);
+      alert('Update Order Successfully')
+    } catch (error) {
+      console.error('Submit update buyer order', error);
+    }
   };
-  // console.log('>>> check user: ', user);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -118,7 +108,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
                 )
                 :
                 (
-                  `${orderInfo?.orderDetails?.address?.street}, ${orderInfo?.orderDetails?.address?.district}, ${orderInfo?.orderDetails?.address?.province}, ${orderInfo?.orderDetails?.address?.country}`
+                  `${orderInfo?.orderDetails?.address?.addressLine}, ${orderInfo?.orderDetails?.address?.street}, ${orderInfo?.orderDetails?.address?.district}, ${orderInfo?.orderDetails?.address?.province}, ${orderInfo?.orderDetails?.address?.country}`
                 )
               }
             </Text>
@@ -262,10 +252,8 @@ const BuyerOrderDetails = ({ navigation, route }) => {
       <View style={styles.bottomBtn}>
         <TouchableOpacity style={styles.changeAddressBtn}
           onPress={() => navigation.navigate('address-lists', {
-            user,
-            postDetails: postDetails,
-            onSelectAddress: handleSelectAddress,
-            type: 'order-success'
+            orderInfo,
+            type: 'buyer-change-address'
           })}
 
         >
