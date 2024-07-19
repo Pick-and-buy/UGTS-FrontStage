@@ -214,3 +214,28 @@ export const checkIfFollowing = async (userIdLogged, userOfPostId) => {
     throw error;
   }
 };
+
+
+
+export const pushNotifications = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`/push-notifications/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error push notifications:', error);
+    throw error;
+  }
+};
+
+export const getNotificationsByUserId = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`/notifications/${userId}`);
+    // console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error get notifications:', error);
+    throw error;
+  }
+};
+
+

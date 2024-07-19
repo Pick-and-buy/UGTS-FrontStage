@@ -1,42 +1,35 @@
+import React, { useState } from "react";
 import {
     StyleSheet,
-    ScrollView,
     Text,
     View,
-    TouchableOpacity,
-    Image,
     TextInput,
-    Dimensions,
     SafeAreaView,
 } from "react-native";
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
-import React, { useState } from "react";
-import { COLORS, SIZES } from "../../constants/theme";
 import { useNavigation } from '@react-navigation/native';
 import styles from "../../screens/css/homeHeader.style";
+import { useNotifications } from "../../context/NotificationContext";
+import { useUser } from '../../context/UserContext';
+
 const Header = () => {
     const navigation = useNavigation();
     const [searchQuery, setSearchQuery] = useState('');
-
+    const { notifications } = useNotifications();
     const handleSearchChange = (text) => {
         setSearchQuery(text);
     };
 
     const handleSearchSubmit = () => {
         if (searchQuery.trim() !== '') {
-            // Navigate to the Search screen with query parameter
             navigation.navigate('Search', { query: searchQuery });
             setSearchQuery(''); // Clear input after navigation
-            // Keyboard.dismiss(); // Close keyboard after submission
         }
     };
-
-    
 
     return (
         <SafeAreaView>
             <View style={styles.container}>
-                {/* Search */}
                 <View style={styles.options}>
                     <View style={styles.search}>
                         <FontAwesome
@@ -47,7 +40,7 @@ const Header = () => {
                         <TextInput
                             value={searchQuery}
                             onChangeText={handleSearchChange}
-                            onSubmitEditing={handleSearchSubmit} // Listen for submit event
+                            onSubmitEditing={handleSearchSubmit}
                             placeholder="Nhập sản phẩm bạn muốn tìm kiếm"
                             placeholderTextColor="#AFAFAE"
                             style={styles.textInput}
@@ -60,7 +53,7 @@ const Header = () => {
                                 name="notifications"
                                 size={24}
                                 color="#AFAFAE" />
-                                <View style={styles.notificationDot}/>
+                            {notifications.length > 0 && <View style={styles.notificationDot} />}
                         </View>
                         <View style={styles.optionItem}>
                             <Ionicons
@@ -74,6 +67,6 @@ const Header = () => {
             </View>
         </SafeAreaView>
     );
-}
+};
 
 export default Header;
