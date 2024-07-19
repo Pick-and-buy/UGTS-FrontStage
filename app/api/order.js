@@ -46,3 +46,27 @@ export const updateOrderBuyer = async (orderInfo, selectedAddress) => {
         throw error;
     }
 };
+
+export const cancelOrderBuyer = async (orderInfo, selectedAddress) => {
+    try {
+
+        const response = await axiosInstance.put(`/orders/details?orderId=${orderInfo.id}`, {
+            orderStatus: "CANCELLED",
+            firstName: orderInfo?.orderDetails?.firstName,
+            lastName: orderInfo?.orderDetails?.lastName,
+            email: orderInfo?.orderDetails?.email,
+            phoneNumber: orderInfo?.orderDetails?.phoneNumber,
+            address: {
+                street: selectedAddress?.street,
+                district: selectedAddress?.district,
+                province: selectedAddress?.province,
+                country: selectedAddress?.country,
+                addressLine: selectedAddress?.addressLine
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error cancel order:', error);
+        throw error;
+    }
+};

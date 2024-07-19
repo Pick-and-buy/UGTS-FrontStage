@@ -6,7 +6,7 @@ import { COLORS } from "../../constants/theme";
 import { G, Line, Svg } from "react-native-svg";
 import { getUserByToken } from "../../api/user";
 import { format, addDays } from 'date-fns';
-import { updateOrderBuyer } from '../../api/order';
+import { cancelOrderBuyer, updateOrderBuyer } from '../../api/order';
 
 const BuyerOrderDetails = ({ navigation, route }) => {
   const orderInfo = route.params.orderInfo;
@@ -84,6 +84,30 @@ const BuyerOrderDetails = ({ navigation, route }) => {
       console.error('Submit update buyer order', error);
     }
   };
+
+  const handleCancelOrder = async () => {
+    try {
+      Alert.alert(
+        "Hủy đơn hàng",
+        "Bạn có chắc chắn muốn hủy đơn hàng không?",
+        [
+          {
+            text: "Hủy",
+          },
+          {
+            text: "Xác Nhận",
+            onPress: async () => {
+              await cancelOrderBuyer(orderInfo, selectedAddress);
+            },
+          }
+        ]
+      );
+    } catch (error) {
+      console.error('Submit cancel buyer order: ', error);
+    }
+  };
+
+  console.log('>>>> check order: ', orderInfo.id);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -259,7 +283,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
         >
           <Text style={styles.changeAddressBtnText}>Thay đổi địa chỉ</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => { }}>
+        <TouchableOpacity style={styles.button} onPress={handleCancelOrder}>
           <Text style={styles.buttonText}>Hủy đơn hàng</Text>
         </TouchableOpacity>
       </View>
