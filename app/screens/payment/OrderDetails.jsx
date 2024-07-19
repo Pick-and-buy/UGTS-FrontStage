@@ -78,6 +78,9 @@ const OrderDetails = ({ navigation, route }) => {
         try {
             const userData = await getUserByToken();
             setUser(userData);
+            // Set the default address
+            const defaultAddress = userData.result.address.find(address => address.default);
+            setSelectedAddress(defaultAddress);
         } catch (error) {
             console.error('Fetching user data failed:', error);
         }
