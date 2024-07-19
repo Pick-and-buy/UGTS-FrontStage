@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginTop: 10,
         ...SHADOWS.medium,
+        // backgroundColor:"#e6f2ff"
     },
     image: {
         width: 45,

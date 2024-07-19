@@ -237,5 +237,14 @@ export const getNotificationsByUserId = async (userId) => {
     throw error;
   }
 };
+export const updateNotificationsReadStatus = async (notificationId) => {
+  try {
+    const response = await axiosInstance.patch(`/notifications/read/${notificationId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error update notifications read:', error);
+    throw error;
+  }
+};
 
 

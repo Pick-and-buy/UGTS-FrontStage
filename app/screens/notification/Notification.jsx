@@ -3,7 +3,7 @@ import { View, Text, SafeAreaView, TouchableOpacity, Image, FlatList } from 'rea
 import { MaterialIcons } from '@expo/vector-icons';
 import styles from '../css/notification.style';
 import { useUser } from '../../context/UserContext';
-import { getNotificationsByUserId } from '../../api/user';
+import { getNotificationsByUserId, updateNotificationsReadStatus } from '../../api/user';
 
 const Notification = ({ navigation, route }) => {
     const { user } = useUser();
@@ -26,11 +26,21 @@ const Notification = ({ navigation, route }) => {
         }
     };
 
+    const handleNotificationRead = async (notificationId) => {
+        try {
+            const rs = await updateNotificationsReadStatus(notificationId);
+            console.log(rs);
+            fetchNotifications();
+        } catch (error) {
+            console.error('Error fetching notifications read:', error);
+        }
+    }
+
     const renderNotificationItem = ({ item }) => {
         const notificationTextStyle = item.read ? styles.readNotificationText : styles.unreadNotificationText;
 
         return (
-            <View style={styles.notificationItem}>
+            <TouchableOpacity style={styles.notificationItem} onPress={() => handleNotificationRead(item.notificationId)}>
                 <Image
                     source={{ uri: 'https://timbaby.net/wp-content/uploads/2022/11/anh-gai-xinh-2k5.jpg' }}
                     style={styles.image}
@@ -39,7 +49,7 @@ const Notification = ({ navigation, route }) => {
                     <Text numberOfLines={2} style={notificationTextStyle}>{item.message}</Text>
                     <Text style={styles.timestamp}>{item.timestamp}</Text>
                 </View>
-            </View>
+            </TouchableOpacity>
         );
     };
 
@@ -53,7 +63,7 @@ const Notification = ({ navigation, route }) => {
             </View>
 
             <FlatList
-                data={notifications}
+                data={notifications.reverse()}
                 renderItem={renderNotificationItem}
                 keyExtractor={(item) => item.notificationId}
                 contentContainerStyle={styles.notificationList}
