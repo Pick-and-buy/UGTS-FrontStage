@@ -5,9 +5,27 @@ import { COLORS } from '../../constants/theme';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 import styles from '../css/addressLists.style';
+import { getUserByToken } from '../../api/user';
 
 const AddressLists = ({ navigation, route }) => {
-    const { user, type, postDetails } = route.params;
+    const { type, postDetails } = route.params;
+    const [user, setUser] = useState(null);
+    
+    const fetchUserData = async () => {
+        try {
+            const userData = await getUserByToken();
+            setUser(userData);
+        } catch (error) {
+            console.error('Fetching user data failed in address lists:', error);
+        }
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchUserData();
+        }, [])
+    );
+
 
     const maskPhoneNumber = (phoneNumber, regionCode) => {
         if (!phoneNumber) return '';

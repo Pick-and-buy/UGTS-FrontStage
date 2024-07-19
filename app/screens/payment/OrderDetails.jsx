@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Image, SafeAreaView, TouchableOpacity, ScrollView } from "react-native";
 import styles from "../css/orderDetails.style";
 import { Feather, AntDesign, MaterialIcons, MaterialCommunityIcons, SimpleLineIcons, FontAwesome6 } from '@expo/vector-icons';
@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RadioButton } from 'react-native-paper';
 import { format, addDays } from 'date-fns';
 import { order } from '../../api/order';
+import { useFocusEffect } from '@react-navigation/native';
 
 const OrderDetails = ({ navigation, route }) => {
     const postDetails = route.params.postDetails;
@@ -127,7 +128,6 @@ const OrderDetails = ({ navigation, route }) => {
                 <TouchableOpacity
                     style={styles.address}
                     onPress={() => navigation.navigate('address-lists', {
-                        user,
                         postDetails: postDetails,
                         type: 'order'
                     })}
