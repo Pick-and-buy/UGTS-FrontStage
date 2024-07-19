@@ -37,6 +37,12 @@ const OrderDetails = ({ navigation, route }) => {
     }, [isAuthenticated]);
 
     useEffect(() => {
+        navigation.setOptions({
+            onSelectAddress: handleSelectAddress
+        });
+    }, [navigation]);
+
+    useEffect(() => {
         if (route.params?.selectedAddress) {
             handleSelectAddress(route.params.selectedAddress);
             setSelectedAddress(route.params.selectedAddress);
@@ -123,7 +129,6 @@ const OrderDetails = ({ navigation, route }) => {
                     onPress={() => navigation.navigate('address-lists', {
                         user,
                         postDetails: postDetails,
-                        onSelectAddress: handleSelectAddress,
                         type: 'order'
                     })}
                 >

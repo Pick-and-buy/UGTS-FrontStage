@@ -10,6 +10,7 @@ import { createAddress, setDefaultAddress } from '../../api/user';
 
 const CreateAddress = ({ navigation, route }) => {
     const user = route.params;
+    // console.log(user?.result?.id);
     const [selectedCountry, setSelectedCountry] = useState('Việt Nam');
     const [selectedCity, setSelectedCity] = useState('');
     const [selectedProvince, setSelectedProvince] = useState('');
