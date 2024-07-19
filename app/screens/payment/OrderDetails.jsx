@@ -45,6 +45,7 @@ const OrderDetails = ({ navigation, route }) => {
 
     useEffect(() => {
         if (route.params?.selectedAddress) {
+            setUser(route.params.user)
             handleSelectAddress(route.params.selectedAddress);
             setSelectedAddress(route.params.selectedAddress);
         }

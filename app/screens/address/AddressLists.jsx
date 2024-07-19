@@ -63,7 +63,8 @@ const AddressLists = ({ navigation, route }) => {
                     onPress={() => {
                         navigation.navigate('order-details', {
                             selectedAddress: item,
-                            postDetails
+                            postDetails,
+                            user
                         });
                     }}
                 >
