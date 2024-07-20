@@ -8,7 +8,7 @@ const ScanBackIDScreen = ({ navigation, route }) => {
     const { frontImageUri, fontData } = route.params;
     const [image, setImage] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [backData, setBackData] = useState();
+
     useEffect(() => {
         Alert.alert(
             "Chú ý",
@@ -44,7 +44,7 @@ const ScanBackIDScreen = ({ navigation, route }) => {
             setImage(result.assets[0].uri);
             setLoading(true);
             uploadImage(result.assets[0].uri);
-            console.log(result.assets[0].uri);
+            // console.log(result.assets[0].uri);
         }
     };
 
@@ -68,10 +68,10 @@ const ScanBackIDScreen = ({ navigation, route }) => {
 
             const result = await response.json();
             // console.log(result);
-            setBackData(result);
+
             setLoading(false);
             if (result.errorCode === 0 && result.errorMessage === "") {
-                navigation.navigate("FaceMatch", { frontImageUri: frontImageUri, fontData: fontData, backData: backData });
+                navigation.navigate("FaceMatch", { frontImageUri: frontImageUri, fontData: fontData, backData: result });
             } else {
                 Alert.alert(
                     "Nhận diện ID thất bại",

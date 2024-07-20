@@ -8,8 +8,8 @@ import { verifyInformation } from '../../api/user';
 const FaceMatch = ({ navigation, route }) => {
     const { frontImageUri, fontData, backData } = route.params;
     const [loading, setLoading] = useState(false);
-    const [faceMatchData, setFaceMatchData] = useState();
     const { user } = useUser();
+
     useEffect(() => {
         Alert.alert(
             "Chú ý",
@@ -50,7 +50,6 @@ const FaceMatch = ({ navigation, route }) => {
     };
 
     const uploadImages = async (imageUris) => {
-        console.log(imageUris);
         try {
             const formData = new FormData();
             imageUris.forEach((uri, index) => {
@@ -72,16 +71,20 @@ const FaceMatch = ({ navigation, route }) => {
 
             const result = await response.json();
             // console.log(result);
-            setFaceMatchData(result);
-            setLoading(false);
-            if (faceMatchData?.data?.isMatch === true && faceMatchData?.data?.similarity >= 80) {
-                await verifyInformation(user, fontData, backData, faceMatchData);
+
+
+            if (result?.data?.isMatch === true && result?.data?.similarity >= 80.00) {
+                // console.log(">>>user: ", user);
+                // console.log(">>>fontData: ", fontData.data[0].address);
+                // console.log(">>>backData: ", backData.data);
+                // console.log(">>>faceMatchData: ", result.data);
+                await verifyInformation(user, fontData, backData, result);
                 navigation.navigate("congrats-navigation", {
                     title: "HOÀN THÀNH!",
                     content: "Xác minh người dùng thành công tài khoản của bạn đã sẵn sàng để sử dụng!",
                     routerName: "bottom-navigation",
                     btnTxt: "Mua sắm ngay!",
-                })
+                });
             } else {
                 Alert.alert(
                     "Nhận diện khuôn mặt thất bại",
@@ -93,15 +96,16 @@ const FaceMatch = ({ navigation, route }) => {
                         },
                         {
                             text: "Thử lại",
-                            onPress: takePhoto
+                            onPress: takePhoto,
                         }
                     ]
                 );
             }
 
         } catch (error) {
-            setLoading(false);
             console.error('Error uploading images:', error);
+        } finally {
+            setLoading(false);
         }
     };
 

@@ -250,20 +250,22 @@ export const updateNotificationsReadStatus = async (notificationId) => {
 
 export const verifyInformation = async (user, fontData, backData, faceMatchData) => {
   try {
+
     const response = await axiosInstance.post(`/verify-information`, {
-      userId: user?.id,
-      cardId: fontData?.data?.id,
-      name: fontData?.data?.name,
-      dob: fontData?.data?.dob,
-      nationality: fontData?.data?.nationality,
-      home: fontData?.data?.home,
-      address: fontData?.data?.address,
-      doe: fontData?.data?.doe,
-      features: backData?.data?.features,
-      issueDate: backData?.data?.issue_date,
-      issueLoc: backData?.data?.issue_loc,
+      userId: user?.result?.id,
+      cardId: fontData?.data[0]?.id,
+      name: fontData?.data[0]?.name,
+      dob: fontData?.data[0]?.dob,
+      nationality: fontData?.data[0]?.nationality,
+      home: fontData?.data[0]?.home,
+      address: fontData?.data[0]?.address,
+      doe: fontData?.data[0]?.doe,
+      features: backData?.data[0]?.features,
+      issueDate: backData?.data[0]?.issue_date,
+      issueLoc: backData?.data[0]?.issue_loc,
       isMatch: faceMatchData?.data?.isMatch
     });
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Error verify information :', error);

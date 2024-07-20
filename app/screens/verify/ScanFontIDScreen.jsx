@@ -7,8 +7,6 @@ import { COLORS } from '../../constants/theme';
 
 const ScanFontIDScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
-    const [fontData, setFontData] = useState();
-
     useEffect(() => {
         Alert.alert(
             "Chú ý",
@@ -45,7 +43,7 @@ const ScanFontIDScreen = ({ navigation }) => {
         if (!result.canceled) {
             setLoading(true);
             uploadImage(result.assets[0].uri);
-            console.log(result.assets[0].uri);
+            // console.log(result.assets[0].uri);
         } else {
             navigation.goBack();
         }
@@ -71,10 +69,9 @@ const ScanFontIDScreen = ({ navigation }) => {
 
             const result = await response.json();
             // console.log(result);
-            setFontData(result);
             setLoading(false);
             if (result.errorCode === 0 && result.errorMessage === "") {
-                navigation.navigate("ScanBackID", { imageUri: imageUri, fontData: fontData });
+                navigation.navigate("ScanBackID", { frontImageUri: imageUri, fontData: result });
             } else {
                 Alert.alert(
                     "Nhận diện ID thất bại",
