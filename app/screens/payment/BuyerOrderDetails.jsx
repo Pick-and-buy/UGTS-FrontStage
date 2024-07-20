@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { StyleSheet, View, Text, Image, SafeAreaView, TouchableOpacity, ScrollView, Alert, Clipboard } from "react-native";
 import styles from "../css/buyerOrderDetails.style";
+import { useFocusEffect } from '@react-navigation/native';
 import { Feather, AntDesign, MaterialIcons, MaterialCommunityIcons, SimpleLineIcons, Ionicons, Entypo } from '@expo/vector-icons';
 import { COLORS } from "../../constants/theme";
 import { G, Line, Svg } from "react-native-svg";
@@ -69,16 +70,18 @@ const BuyerOrderDetails = ({ navigation, route }) => {
     Alert.alert('>>> check copiedText: ', orderInfo.id)
   };
 
-  useEffect(() => {
-    if (route.params?.selectedAddress) {
-      setSelectedAddress(route.params.selectedAddress);
-      handleUpdateOrder();
-    }
-  }, [route.params?.selectedAddress]);
+  useFocusEffect(
+    useCallback(() => {
+      if (route.params?.selectedAddress) {
+        setSelectedAddress(route.params.selectedAddress);
+        handleUpdateOrder(route.params.selectedAddress);
+      }
+    }, [route.params?.selectedAddress])
+  );
 
-  const handleUpdateOrder = async () => {
+  const handleUpdateOrder = async (newAddress) => {
     try {
-      await updateOrderBuyer(orderInfo, selectedAddress);
+      await updateOrderBuyer(orderInfo, newAddress || selectedAddress);
       alert('Update Order Successfully')
     } catch (error) {
       console.error('Submit update buyer order', error);
