@@ -70,3 +70,13 @@ export const cancelOrderBuyer = async (orderInfo, selectedAddress) => {
         throw error;
     }
 };
+
+export const callFetchListOrders = async () => {
+    try {
+      const response = await axiosInstance.get('/orders');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching List Orders:', error);
+        throw error;
+    }
+  }
