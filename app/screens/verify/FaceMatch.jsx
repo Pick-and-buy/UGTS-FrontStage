@@ -89,6 +89,7 @@ const FaceMatch = ({ navigation, route }) => {
                     [
                         {
                             text: "Thoát",
+                            onPress: () => navigation.goBack(),
                         },
                         {
                             text: "Thử lại",
