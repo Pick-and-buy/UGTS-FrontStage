@@ -515,7 +515,10 @@ const PostDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                 </ScrollView>
-                <View style={styles.bottomBtn}>
+
+                {
+                    !postDetails?.isAvailable && (
+                        <View style={styles.bottomBtn}>
                     {type === "buyer" && (
                         <TouchableOpacity style={styles.button} onPress={handlePress}>
                             <Text style={styles.buttonText}>Mua ngay</Text>
@@ -528,10 +531,14 @@ const PostDetail = ({ navigation, route }) => {
                         >
                             <Text style={styles.buttonText}>Chỉnh sửa</Text>
                         </TouchableOpacity>
-                    )
-                    }
+                            )
+                            }
 
-                </View>
+                        </View>
+
+                    )
+                }
+
             </View>
         </SafeAreaView>
     );

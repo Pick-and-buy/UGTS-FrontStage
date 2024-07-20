@@ -56,15 +56,19 @@ const HomeFollow = ({ navigation }) => {
         >
             <Slider navigation={navigation} />
             <Brands />
-            {loading ? (
-                <ActivityIndicator size="large" color={COLORS.primary} />
-            ) : (
-                <View style={styles.row}>
-                    {posts.map(post => (
-                        <Post key={post.id} post={post}/>
-                    ))}
-                </View>
-            )}
+
+            <View style={styles.posts}>
+                <Text style={styles.heading}>Bài đăng</Text>
+                {loading ? (
+                    <ActivityIndicator size="large" color={COLORS.primary} />
+                ) : (
+                    <View style={styles.row}>
+                        {posts.map(post => (
+                            <Post key={post.id} post={post} />
+                        ))}
+                    </View>
+                )}
+            </View>
         </ScrollView>
     );
 };
@@ -76,14 +80,24 @@ const styles = StyleSheet.create({
         width: '100%',
         marginBottom: "8%",
     },
+    posts: {
+        width: '98%',
+        marginTop: "-10%",
+        marginHorizontal: "auto",
+    },
     row: {
-        width: "98%",
+        width: "100%",
         justifyContent: "flex-start",
         flexDirection: "row",
         flexWrap: "wrap",
         alignItems: "center",
         gap: 6,
         marginHorizontal: "auto",
-        marginTop: "-8%",
+
     },
+    heading: {
+        fontSize: 18,
+        marginBottom: 8,
+        fontWeight: 'bold',
+    }
 });
