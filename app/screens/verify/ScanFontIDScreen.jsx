@@ -7,9 +7,24 @@ import { COLORS } from '../../constants/theme';
 
 const ScanFontIDScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
+    const [fontData, setFontData] = useState();
 
     useEffect(() => {
-        startIdentification();
+        Alert.alert(
+            "Chú ý",
+            "Hãy chuẩn bị CCCD mặt trước để bắt đầu xác thực.",
+            [
+                {
+                    text: "Thoát",
+                    onPress: () => navigation.goBack(),
+                },
+                {
+                    text: "Đồng ý",
+                    onPress: startIdentification,
+                }
+            ]
+        );
+
     }, []);
 
     const startIdentification = async () => {
@@ -55,10 +70,11 @@ const ScanFontIDScreen = ({ navigation }) => {
             });
 
             const result = await response.json();
-            console.log(result);
+            // console.log(result);
+            setFontData(result);
             setLoading(false);
             if (result.errorCode === 0 && result.errorMessage === "") {
-                navigation.navigate("ScanBackID", { imageUri: imageUri });
+                navigation.navigate("ScanBackID", { imageUri: imageUri, fontData: fontData });
             } else {
                 Alert.alert(
                     "Nhận diện ID thất bại",

@@ -2,13 +2,29 @@ import React, { useState, useEffect } from 'react';
 import { View, Alert, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { useUser } from '../../context/UserContext'
+import { verifyInformation } from '../../api/user';
 
 const FaceMatch = ({ navigation, route }) => {
-    const frontImageUri = route.params.frontImageUri;
+    const { frontImageUri, fontData, backData } = route.params;
     const [loading, setLoading] = useState(false);
-
+    const [faceMatchData, setFaceMatchData] = useState();
+    const { user } = useUser();
     useEffect(() => {
-        takePhoto();
+        Alert.alert(
+            "Chú ý",
+            "Chụp cận cảnh khuôn mặt của bạn ở nơi đủ ánh sáng để xác thực được chính xác nhất.",
+            [
+                {
+                    text: "Thoát",
+                    onPress: () => navigation.goBack(),
+                },
+                {
+                    text: "Đồng ý",
+                    onPress: takePhoto,
+                }
+            ]
+        );
     }, []);
 
     const takePhoto = async () => {
@@ -55,14 +71,33 @@ const FaceMatch = ({ navigation, route }) => {
             });
 
             const result = await response.json();
-            console.log(result);
+            // console.log(result);
+            setFaceMatchData(result);
             setLoading(false);
-            navigation.navigate("congrats-navigation", {
-                title: "HOÀN THÀNH!",
-                content: "Xác minh người dùng thành công tài khoản của bạn đã sẵn sàng để sử dụng!",
-                routerName: "bottom-navigation",
-                btnTxt: "Mua sắm ngay!",
-            })
+            if (faceMatchData?.data?.isMatch === true && faceMatchData?.data?.similarity >= 80) {
+                await verifyInformation(user, fontData, backData, faceMatchData);
+                navigation.navigate("congrats-navigation", {
+                    title: "HOÀN THÀNH!",
+                    content: "Xác minh người dùng thành công tài khoản của bạn đã sẵn sàng để sử dụng!",
+                    routerName: "bottom-navigation",
+                    btnTxt: "Mua sắm ngay!",
+                })
+            } else {
+                Alert.alert(
+                    "Nhận diện khuôn mặt thất bại",
+                    "Hãy chụp lại ảnh và thử lại.",
+                    [
+                        {
+                            text: "Thoát",
+                        },
+                        {
+                            text: "Thử lại",
+                            onPress: takePhoto
+                        }
+                    ]
+                );
+            }
+
         } catch (error) {
             setLoading(false);
             console.error('Error uploading images:', error);

@@ -5,12 +5,25 @@ import FormData from 'form-data';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 const ScanBackIDScreen = ({ navigation, route }) => {
-    const frontImageUri = route.params.imageUri;
+    const { frontImageUri, fontData } = route.params;
     const [image, setImage] = useState(null);
     const [loading, setLoading] = useState(false);
-
+    const [backData, setBackData] = useState();
     useEffect(() => {
-        startIdentification();
+        Alert.alert(
+            "Chú ý",
+            "Hãy chuẩn bị CCCD mặt sau để tiếp tục xác thực.",
+            [
+                {
+                    text: "Thoát",
+                    onPress: () => navigation.goBack(),
+                },
+                {
+                    text: "Đồng ý",
+                    onPress: startIdentification,
+                }
+            ]
+        );
     }, []);
 
     const startIdentification = async () => {
@@ -54,14 +67,15 @@ const ScanBackIDScreen = ({ navigation, route }) => {
             });
 
             const result = await response.json();
-            console.log(result);
+            // console.log(result);
+            setBackData(result);
             setLoading(false);
             if (result.errorCode === 0 && result.errorMessage === "") {
-                navigation.navigate("FaceMatch", { frontImageUri: frontImageUri });
+                navigation.navigate("FaceMatch", { frontImageUri: frontImageUri, fontData: fontData, backData: backData });
             } else {
                 Alert.alert(
                     "Nhận diện ID thất bại",
-                    "Hãy kiểm tra lại ID của bạn và thử lại.",
+                    "Hãy kiểm tra lại mặt sau ID của bạn và thử lại.",
                     [
                         {
                             text: "Thoát",

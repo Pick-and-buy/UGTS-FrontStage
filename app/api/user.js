@@ -237,12 +237,36 @@ export const getNotificationsByUserId = async (userId) => {
     throw error;
   }
 };
+
 export const updateNotificationsReadStatus = async (notificationId) => {
   try {
     const response = await axiosInstance.patch(`/notifications/read/${notificationId}`);
     return response.data;
   } catch (error) {
     console.error('Error update notifications read:', error);
+    throw error;
+  }
+};
+
+export const verifyInformation = async (user, fontData, backData, faceMatchData) => {
+  try {
+    const response = await axiosInstance.post(`/verify-information`, {
+      userId: user?.id,
+      cardId: fontData?.data?.id,
+      name: fontData?.data?.name,
+      dob: fontData?.data?.dob,
+      nationality: fontData?.data?.nationality,
+      home: fontData?.data?.home,
+      address: fontData?.data?.address,
+      doe: fontData?.data?.doe,
+      features: backData?.data?.features,
+      issueDate: backData?.data?.issue_date,
+      issueLoc: backData?.data?.issue_loc,
+      isMatch: faceMatchData?.data?.isMatch
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error verify information :', error);
     throw error;
   }
 };

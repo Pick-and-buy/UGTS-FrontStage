@@ -44,7 +44,6 @@ import CreateAddress from './app/screens/address/CreateAddress';
 import OrderSuccessfully from './app/screens/payment/OrderSuccessfully';
 import BuyerOrderDetails from './app/screens/payment/BuyerOrderDetails';
 import PostsOfFollowedUser from './app/screens/post/PostsOfFollowedUser';
-import IDRecognition from './app/screens/verify/IDRecognition';
 import GetIDScreen from './app/screens/verify/Onboarding/GetIDScreen';
 import TakeSelfieScreen from './app/screens/verify/Onboarding/TakeSelfieScreen';
 import ScanIDScreen from './app/screens/verify/Onboarding/ScanIDScreen';
@@ -295,11 +294,6 @@ export default function App() {
                 <Stack.Screen
                   name='update-address'
                   component={UpdateAddress}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='IDRecognition'
-                  component={IDRecognition}
                   options={{ headerShown: false }}
                 />
 
