@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native'
 import styles from '../css/orderSuccessfully.style'
-import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Ionicons, FontAwesome } from '@expo/vector-icons';
 import { COLORS } from '../../constants/theme';
 import { format, addDays } from 'date-fns';
 
@@ -26,29 +26,29 @@ const CancelSuccessfully = ({ navigation, route }) => {
         fetchPhoneUserOder();
     })
 
-    const handleOrderDetail = async () => {
+    const handleHomePage = () => {
         // console.log('>>> check order infor: ', orderInfo);
-        navigation.navigate('buyer-order-details', { orderInfo: orderInfo });
+        navigation.navigate('Home');
+    }
+
+    const handleOrderDetails = () => {
+        navigation.navigate('order-details', { postDetails: orderInfo.post });
     }
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.wrapper}>
-                <TouchableOpacity style={styles.header}>
+                {/* <TouchableOpacity style={styles.header} onPress={handleOrderDetails}>
                     <MaterialCommunityIcons name="keyboard-backspace" size={32} color="black" />
-                </TouchableOpacity>
-                <View style={styles.notification}>
-                    <Ionicons name="checkmark-circle-sharp" size={100} color="#4BE289" />
-                    <Text style={styles.title}>Đặt hàng thành công</Text>
-                    <Text style={styles.subTitle}>
-                        Đơn hàng của bạn sẽ được vận chuyển dến: {orderInfo?.orderDetails?.firstName} {orderInfo?.orderDetails?.lastName} -
-                        {phoneUserOrder} - {orderInfo?.orderDetails?.address?.street}, {orderInfo?.orderDetails?.address?.district}, {orderInfo?.orderDetails?.address?.province}, {orderInfo?.orderDetails?.address?.country}
-                    </Text>
+                </TouchableOpacity> */}
+                <View style={[styles.notification, { marginBottom: 50, gap: 10 }]}>
+                    <Ionicons name="checkmark-circle-sharp" size={100} color={COLORS.primary} />
+                    <Text style={styles.title}>Hủy đơn hàng thành công</Text>
                 </View>
-                <TouchableOpacity style={styles.button} onPress={handleOrderDetail}>
-                    <Ionicons name="bag-handle" size={24} color={COLORS.primary} />
+                <TouchableOpacity style={styles.button} onPress={handleHomePage}>
+                    <FontAwesome name="home" size={26} color={COLORS.primary} />
                     <Text style={styles.btnText}>
-                        Xem chi tiết đơn hàng
+                        Chuyển đến trang chủ
                     </Text>
                 </TouchableOpacity>
                 <View style={styles.divider} />

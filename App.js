@@ -42,6 +42,7 @@ import UpdateAddress from './app/screens/address/UpdateAddress';
 import TodoTask from './app/screens/todoTask/TodoTask';
 import CreateAddress from './app/screens/address/CreateAddress';
 import OrderSuccessfully from './app/screens/payment/OrderSuccessfully';
+import CancelSuccessfully from './app/screens/payment/CancelSuccessfully';
 import BuyerOrderDetails from './app/screens/payment/BuyerOrderDetails';
 import UpdatePost from './app/screens/post/UpdatePost';
 
@@ -284,6 +285,11 @@ export default function App() {
             <Stack.Screen
               name='update-post'
               component={UpdatePost}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name='cancel-successfully'
+              component={CancelSuccessfully}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

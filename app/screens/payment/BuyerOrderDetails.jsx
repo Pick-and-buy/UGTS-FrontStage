@@ -101,6 +101,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
             text: "Xác Nhận",
             onPress: async () => {
               await cancelOrderBuyer(orderInfo, selectedAddress);
+              navigation.navigate('cancel-successfully', { orderInfo: orderInfo });
             },
           }
         ]

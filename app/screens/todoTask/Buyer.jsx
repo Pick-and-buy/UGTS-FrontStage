@@ -13,8 +13,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
 import styles from "../css/buyer.style";
 const Buyer = ({navigation}) => {
-
-
     
     const data = [
         { id: '1', title: 'Sneaker NIKE AIR', shop: 'Sneaker Shop', price: '$35', status: 'Process', image: 'https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/04/anh-con-gai-3.jpg' },
