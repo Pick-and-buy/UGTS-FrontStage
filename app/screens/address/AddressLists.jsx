@@ -72,6 +72,7 @@ const AddressLists = ({ navigation, route }) => {
                 </TouchableOpacity>
             );
         }
+
         if (type === 'buyer-change-address') {
             return (
                 <TouchableOpacity

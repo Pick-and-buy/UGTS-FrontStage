@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { COLORS } from '../../constants/theme';
 import { getComments, postComment } from '../../api/post';
 import moment from 'moment';
+const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
 const Comment = ({ visible, onClose, postId, isAuthenticated, user, navigation }) => {
     const userId = user?.id;
@@ -73,7 +74,7 @@ const Comment = ({ visible, onClose, postId, isAuthenticated, user, navigation }
 
     const renderComment = ({ item }) => (
         <View style={styles.commentContainer}>
-            <Image source={{ uri: item?.userImageUrl }} style={styles.avatar} />
+            <Image source={{ uri: item?.userImageUrl ? item?.userImageUrl : profile }} style={styles.avatar} />
             <View style={styles.commentTextContainer}>
                 <Text style={styles.userName}>{item?.username}</Text>
                 <Text style={styles.commentText}>{item?.commentContent}</Text>
@@ -105,7 +106,7 @@ const Comment = ({ visible, onClose, postId, isAuthenticated, user, navigation }
                         showsVerticalScrollIndicator={false}
                     />
                     <View style={styles.inputContainer}>
-                        <Image source={{ uri: user?.avatar }} style={styles.avatarSmall} />
+                        <Image source={{ uri: user?.avatar ? user?.avatar : profile}} style={styles.avatarSmall} />
                         <TextInput
                             style={styles.textInput}
                             placeholder="Thêm bình luận..."

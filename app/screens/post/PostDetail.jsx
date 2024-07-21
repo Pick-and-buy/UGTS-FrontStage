@@ -261,7 +261,7 @@ const PostDetail = ({ navigation, route }) => {
                         </Text>
                         {comments && comments.slice(0, showAllComments ? comments.length : 3).map((comment, index) => (
                             <View key={index} style={styles.commentContainer}>
-                                <Image source={{ uri: comment?.userImageUrl }} style={styles.avatarComment} />
+                                <Image source={{ uri: comment?.userImageUrl ? comment?.userImageUrl : profile }} style={styles.avatarComment} />
                                 <View style={styles.commentTextContainer}>
                                     <Text style={styles.userName}>{comment?.username}</Text>
                                     <Text style={styles.commentText}>{comment?.commentContent}</Text>
@@ -274,29 +274,33 @@ const PostDetail = ({ navigation, route }) => {
                             justifyContent: 'center',
                             alignItems: 'center',
                         }}>
-                            <TouchableOpacity
-                                style={{
-                                    width: '40%',
-                                    height: 30,
-                                    borderRadius: 5,
-                                    overflow: 'hidden',
-                                    backgroundColor: COLORS.white,
-                                    borderWidth: 1.5,
-                                    borderColor: COLORS.primary,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    marginBottom: 20,
-                                    marginTop: 10
-                                }}
-                                onPress={() => setModalVisible(true)}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 18,
-                                        // fontWeight: '500',
-                                        color: COLORS.primary,
-                                    }}>Bình luận</Text>
-                            </TouchableOpacity>
+                            {!postDetails?.isAvailable ? (
+                                <TouchableOpacity
+                                    style={styles.commentBtnActive}
+                                    onPress={() => setModalVisible(true)}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 18,
+                                            // fontWeight: '500',
+                                            color: COLORS.primary,
+                                        }}>Bình luận</Text>
+                                </TouchableOpacity>
+                            ) : (
+                                <View
+                                    style={styles.commentContainerUnActive}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 18,
+                                            // fontWeight: '500',
+                                            color: COLORS.gray,
+                                        }}>Bình luận</Text>
+                                </View>
+                            )
+
+                            }
+
                             <Comment
                                 visible={modalVisible}
                                 onClose={() => {

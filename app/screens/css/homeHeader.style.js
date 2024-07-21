@@ -43,8 +43,17 @@ const styles = StyleSheet.create({
         backgroundColor: '#F3F3F3',
         justifyContent: "center",
         alignItems: 'center',
-
+        position: 'relative',
     },
+    notificationDot:{
+        position: 'absolute',
+        width:10,
+        height:10,
+        borderRadius:50,
+        backgroundColor:"red",
+        top:0,
+        right:0,
+    }
 
 })
 

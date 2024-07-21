@@ -119,11 +119,37 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.white,
         // padding: 10,
         marginHorizontal: "auto",
-        marginTop:8
+        marginTop: 8
     },
     commentContainer: {
         flexDirection: 'row',
         paddingVertical: 8,
+    },
+    commentBtnActive: {
+        width: '40%',
+        height: 30,
+        borderRadius: 5,
+        overflow: 'hidden',
+        backgroundColor: COLORS.white,
+        borderWidth: 1.5,
+        borderColor: COLORS.primary,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+        marginTop: 10
+    },
+    commentContainerUnActive: {
+        width: '40%',
+        height: 30,
+        borderRadius: 5,
+        overflow: 'hidden',
+        backgroundColor: COLORS.white,
+        borderWidth: 1.5,
+        borderColor: COLORS.gray,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+        marginTop: 10
     },
     avatarComment: {
         width: 40,
@@ -145,13 +171,13 @@ const styles = StyleSheet.create({
         fontSize: 12,
     },
 
-    
+
     description: {
         width: "96%",
         backgroundColor: COLORS.white,
         // padding: 10,
         marginHorizontal: "auto",
-        marginTop:8
+        marginTop: 8
     },
     descriptionTitle: {
         fontWeight: "bold",
@@ -265,7 +291,7 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         elevation: 10,
         zIndex: 999,
-        backgroundColor:COLORS.white,
+        backgroundColor: COLORS.white,
     },
     button: {
         width:"96%",
@@ -274,9 +300,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: COLORS.primary,
         borderColor: COLORS.gray2,
-        marginHorizontal:"auto",
-        marginVertical:'auto',
-        borderRadius:8
+        marginHorizontal: "auto",
+        marginVertical: 'auto',
+        borderRadius: 8
     },
     buttonText: {
         color: 'white',

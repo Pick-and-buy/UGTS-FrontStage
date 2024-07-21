@@ -10,12 +10,12 @@ const ScanIDScreen = ({ navigation }) => {
                 <Ionicons name="arrow-back" size={24} color="black" />
             </TouchableOpacity>
             <Image source={require("../../../../assets/images/id card.png")} style={styles.image} />
-            <Text style={styles.title}>Scan your ID document</Text>
+            <Text style={styles.title}>Chụp ảnh CCCD của bạn</Text>
             <Text style={styles.description}>
-                A 60 second timer is going to start. Please make sure that all information is within the borders of the scanner.
+                Hãy đảm bảo rằng tất cả thông tin 2 mặt đều nằm trong phạm vi của máy ảnh.
             </Text>
             <TouchableOpacity onPress={() => navigation.navigate('ScanFontID')} style={styles.btn}>
-                <Text style={styles.next}>Start Identification</Text>
+                <Text style={styles.next}>BẮT ĐẦU XÁC MINH</Text>
             </TouchableOpacity>
         </View>
     );
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
         // width: "50%",
         backgroundColor: COLORS.primary,
         paddingVertical: 6,
-        paddingHorizontal:20,
+        paddingHorizontal: 20,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 10,

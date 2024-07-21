@@ -10,15 +10,15 @@ const TakeSelfieScreen = ({ navigation }) => {
                 <Ionicons name="arrow-back" size={24} color="black" />
             </TouchableOpacity>
             <Image source={require("../../../../assets/images/face recognition.png")} style={styles.image} />
-            <Text style={styles.title}>Take a selfie</Text>
+            <Text style={styles.title}>Chụp ảnh khuôn mặt</Text>
             <Text style={styles.description}>
-                Your face has to be well lit. Make sure you don't have any background lights.
+                Khuôn mặt của bạn phải được chiếu sáng tốt. Hãy chắc chắn rằng bạn không có bất kỳ đèn nền nào.
             </Text>
             <TouchableOpacity
                 onPress={() => navigation.navigate('ScanID')}
                 style={styles.btn}
             >
-                <Text style={styles.next}>Next</Text>
+                <Text style={styles.next}>TIẾP TỤC</Text>
             </TouchableOpacity>
         </View>
     );
