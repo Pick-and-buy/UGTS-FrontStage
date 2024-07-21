@@ -214,3 +214,63 @@ export const checkIfFollowing = async (userIdLogged, userOfPostId) => {
     throw error;
   }
 };
+
+
+
+export const pushNotifications = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`/push-notifications/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error push notifications:', error);
+    throw error;
+  }
+};
+
+export const getNotificationsByUserId = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`/notifications/${userId}`);
+    // console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error get notifications:', error);
+    throw error;
+  }
+};
+
+export const updateNotificationsReadStatus = async (notificationId) => {
+  try {
+    const response = await axiosInstance.patch(`/notifications/read/${notificationId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error update notifications read:', error);
+    throw error;
+  }
+};
+
+export const verifyInformation = async (user, fontData, backData, faceMatchData) => {
+  try {
+
+    const response = await axiosInstance.post(`/verify-information`, {
+      userId: user?.result?.id,
+      cardId: fontData?.data[0]?.id,
+      name: fontData?.data[0]?.name,
+      dob: fontData?.data[0]?.dob,
+      nationality: fontData?.data[0]?.nationality,
+      home: fontData?.data[0]?.home,
+      address: fontData?.data[0]?.address,
+      doe: fontData?.data[0]?.doe,
+      features: backData?.data[0]?.features,
+      issueDate: backData?.data[0]?.issue_date,
+      issueLoc: backData?.data[0]?.issue_loc,
+      isMatch: faceMatchData?.data?.isMatch
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error verify information :', error);
+    throw error;
+  }
+};
+
+

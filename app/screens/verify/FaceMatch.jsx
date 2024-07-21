@@ -2,13 +2,29 @@ import React, { useState, useEffect } from 'react';
 import { View, Alert, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { useUser } from '../../context/UserContext'
+import { verifyInformation } from '../../api/user';
 
 const FaceMatch = ({ navigation, route }) => {
-    const frontImageUri = route.params.frontImageUri;
+    const { frontImageUri, fontData, backData } = route.params;
     const [loading, setLoading] = useState(false);
+    const { user } = useUser();
 
     useEffect(() => {
-        takePhoto();
+        Alert.alert(
+            "Chú ý",
+            "Chụp cận cảnh khuôn mặt của bạn ở nơi đủ ánh sáng để xác thực được chính xác nhất.",
+            [
+                {
+                    text: "Thoát",
+                    onPress: () => navigation.goBack(),
+                },
+                {
+                    text: "Đồng ý",
+                    onPress: takePhoto,
+                }
+            ]
+        );
     }, []);
 
     const takePhoto = async () => {
@@ -34,7 +50,6 @@ const FaceMatch = ({ navigation, route }) => {
     };
 
     const uploadImages = async (imageUris) => {
-        console.log(imageUris);
         try {
             const formData = new FormData();
             imageUris.forEach((uri, index) => {
@@ -55,17 +70,42 @@ const FaceMatch = ({ navigation, route }) => {
             });
 
             const result = await response.json();
-            console.log(result);
-            setLoading(false);
-            navigation.navigate("congrats-navigation", {
-                title: "HOÀN THÀNH!",
-                content: "Xác minh người dùng thành công tài khoản của bạn đã sẵn sàng để sử dụng!",
-                routerName: "bottom-navigation",
-                btnTxt: "Mua sắm ngay!",
-            })
+            // console.log(result);
+
+
+            if (result?.data?.isMatch === true && result?.data?.similarity >= 80.00) {
+                // console.log(">>>user: ", user);
+                // console.log(">>>fontData: ", fontData.data[0].address);
+                // console.log(">>>backData: ", backData.data);
+                // console.log(">>>faceMatchData: ", result.data);
+                await verifyInformation(user, fontData, backData, result);
+                navigation.navigate("congrats-navigation", {
+                    title: "HOÀN THÀNH!",
+                    content: "Xác minh người dùng thành công tài khoản của bạn đã sẵn sàng để sử dụng!",
+                    routerName: "bottom-navigation",
+                    btnTxt: "Mua sắm ngay!",
+                });
+            } else {
+                Alert.alert(
+                    "Nhận diện khuôn mặt thất bại",
+                    "Hãy chụp lại ảnh và thử lại.",
+                    [
+                        {
+                            text: "Thoát",
+                            onPress: () => navigation.goBack(),
+                        },
+                        {
+                            text: "Thử lại",
+                            onPress: takePhoto,
+                        }
+                    ]
+                );
+            }
+
         } catch (error) {
-            setLoading(false);
             console.error('Error uploading images:', error);
+        } finally {
+            setLoading(false);
         }
     };
 

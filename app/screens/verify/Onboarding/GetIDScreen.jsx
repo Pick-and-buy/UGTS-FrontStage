@@ -10,15 +10,15 @@ const GetIDScreen = ({ navigation }) => {
                 <Ionicons name="arrow-back" size={24} color="black" />
             </TouchableOpacity>
             <Image source={require("../../../../assets/images/id-card-pass-svgrepo-com.png")} style={styles.image} />
-            <Text style={styles.title}>Get ID document ready</Text>
+            <Text style={styles.title}>Chuẩn bị sẵn CCCD</Text>
             <Text style={styles.description}>
-                Before you start, make sure your passport, driver's licence is with you. You will need to scan it during the process.
+                Trước khi bắt đầu, hãy đảm bảo rằng bạn đã chuẩn bị CCCD. Bạn sẽ cần phải quét nó trong quá trình này.
             </Text>
             <TouchableOpacity
                 onPress={() => navigation.navigate('TakeSelfie')}
                 style={styles.btn}
             >
-                <Text style={styles.next}>Next</Text>
+                <Text style={styles.next}>TIẾP TỤC</Text>
             </TouchableOpacity>
         </View>
     );
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: COLORS.white,
         padding: 10,
-        fontWeight:"bold"
+        fontWeight: "bold"
 
     },
 });
