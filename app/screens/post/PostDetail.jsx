@@ -519,23 +519,27 @@ const PostDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                 </ScrollView>
+
                 {
                     !postDetails?.isAvailable && (
                         <View style={styles.bottomBtn}>
-                            {type === "buyer" && (
-                                <TouchableOpacity style={styles.button} onPress={handlePress}>
-                                    <Text style={styles.buttonText}>Mua ngay</Text>
-                                </TouchableOpacity>
-                            )
-                            }
-                            {type === "seller" && (
-                                <TouchableOpacity style={styles.button}>
-                                    <Text style={styles.buttonText}>Chỉnh sửa</Text>
-                                </TouchableOpacity>
+                    {type === "buyer" && (
+                        <TouchableOpacity style={styles.button} onPress={handlePress}>
+                            <Text style={styles.buttonText}>Mua ngay</Text>
+                        </TouchableOpacity>
+                    )
+                    }
+                    {type === "seller" && (
+                        <TouchableOpacity style={styles.button}
+                            onPress={() => navigation.navigate('update-post', { postId: postId })}
+                        >
+                            <Text style={styles.buttonText}>Chỉnh sửa</Text>
+                        </TouchableOpacity>
                             )
                             }
 
                         </View>
+
                     )
                 }
 

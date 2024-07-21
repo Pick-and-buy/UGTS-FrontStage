@@ -32,10 +32,13 @@ const styles = StyleSheet.create({
     itemTitle: {
         fontSize: 16,
         fontWeight: 'bold',
+        marginBottom: 10,
+        marginTop: -10
     },
     shop: {
         fontSize: 14,
         color: '#8F8F8F',
+        marginBottom: 10,
     },
     price: {
         fontSize: 14,
