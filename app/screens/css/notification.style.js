@@ -21,6 +21,9 @@ const styles = StyleSheet.create({
         // top: 50,
         left: 10,
     },
+    checkAll: {
+        right: 10
+    },
     headerText: {
         fontSize: 20,
         fontWeight: "500",
