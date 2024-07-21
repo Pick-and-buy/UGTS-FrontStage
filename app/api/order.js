@@ -80,3 +80,13 @@ export const callFetchListOrders = async () => {
         throw error;
     }
   }
+
+  export const getOrderByOrderId = async (orderId) => {
+    try {
+      const response = await axiosInstance.get(`/orders/details?orderId=${orderId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching Order By OrderId: ', error);
+        throw error;
+    }
+  }

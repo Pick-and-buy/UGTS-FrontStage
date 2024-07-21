@@ -335,6 +335,11 @@ export default function App() {
                   component={Notification}
                   options={{ headerShown: false }}
                 />
+                <Stack.Screen
+                  name="cancel-successfully"
+                  component={CancelSuccessfully}
+                  options={{ headerShown: false }}
+                />
               </Stack.Navigator>
             </NavigationContainer>
           </NotificationProvider>

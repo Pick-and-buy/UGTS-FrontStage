@@ -10,10 +10,10 @@ import {
     SafeAreaView,
     ActivityIndicator,
 } from "react-native";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
 import styles from "../css/buyer.style";
-import { callFetchListOrders } from "../../api/order";
+import { callFetchListOrders, getOrderByOrderId } from "../../api/order";
 import { COLORS } from "../../constants/theme";
 
 const Buyer = ({ navigation }) => {
@@ -21,6 +21,7 @@ const Buyer = ({ navigation }) => {
     const orderStatus = ["Chờ xử lý", "Đang xử lý", "Giao hàng", "Hủy hàng", "Đã nhận hàng", "Trả lại"];
     const [listOrders, setListOrders] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedOrderStatus, setSelectedOrderStatus] = useState('All');
 
     useEffect(() => {
         fetchAllOrders();
@@ -46,28 +47,32 @@ const Buyer = ({ navigation }) => {
         }).format(price);
     };
 
-    const data = [
-        { id: '1', title: 'Sneaker NIKE AIR', shop: 'Sneaker Shop', price: '$35', status: 'Process', image: 'https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/04/anh-con-gai-3.jpg' },
-        { id: '2', title: 'ADIDAS For Men', shop: 'Adidas Shop', price: '$35', status: 'Process', image: 'https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/04/anh-con-gai-3.jpg' },
-        { id: '3', title: 'Spacy fresh crab', shop: 'Waroenk kita', price: '$35', status: 'Process', image: 'https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/04/anh-con-gai-3.jpg' },
-    ];
+    const dataStatus = [
+        { id: '1', value: 'All' },
+        { id: '2', value: 'Chờ xử lý' },
+        { id: '3', value: 'Đang xử lý' },
+        { id: '4', value: 'Giao hàng' },
+        { id: '5', value: 'Hủy hàng' },
+        { id: '6', value: 'Đã nhận hàng' },
+        { id: '7', value: 'Trả lại' },
+    ]
 
-    // const dataStatus = [
-    //     {label: 'Chờ xử lý', value: 'Chờ xử lý'},
-    //     {label: 'Đang xử lý', value: 'Đang xử lý'},
-    //     {label: 'Giao hàng', value: 'Giao hàng'},
-    //     {label: 'Hủy hàng', value: 'Hủy hàng'},
-    //     {label: 'Đã nhận hàng', value: 'Đã nhận hàng'},
-    //     {label: 'Trả lại', value: 'Trả lại'},
-    // ]
+    const handleOrderStatusPress = (orderStatusName) => {
+        setSelectedOrderStatus(orderStatusName);
+        if (orderStatusName === 'All') {
+            fetchAllOrders();
+        } 
+        //else {
+        //     fetchAllOrdersByOrderStatus(orderStatusName);
+        // }
+    };
 
     const renderItem = ({ item }) => (
-        // <TouchableOpacity style={styles.card} onPress={()=> navigation.navigate("buyer-order-details")}>
-        <TouchableOpacity style={styles.card}>
+         <TouchableOpacity style={styles.card} onPress={()=> navigation.navigate("buyer-order-details", { orderInfo: item })}>
             <Image source={{ uri: item?.post?.product?.images[0]?.imageUrl }} style={styles.image} />
             <View style={styles.info}>
                 <Text style={styles.itemTitle}>
-                    {item?.post?.title.length > 15 ? `${item?.post?.title.substring(0, 15)}...` : item?.post?.title}
+                    {item?.post?.title.length > 13 ? `${item?.post?.title.substring(0, 13)}...` : item?.post?.title}
                 </Text>
                 <Text style={styles.shop}>{item?.post?.user?.username}</Text>
                 <Text style={styles.price}>đ{formatPrice(item?.post?.product?.price)}</Text>
@@ -86,11 +91,52 @@ const Buyer = ({ navigation }) => {
                 )
                 :
                 (
-                    <FlatList
-                        data={listOrders}
-                        renderItem={renderItem}
-                        keyExtractor={item => item.id}
-                    />
+                    <View>
+                        <View>
+                            <View style={{
+                                flexDirection: "row",
+                                justifyContent: "flex-start",
+                                alignItems: "center",
+                                marginLeft: "3%",
+                                marginVertical: 10,
+                                gap: 5
+                            }}>
+                                <Text style={{ fontSize: 16, color: COLORS.black, fontWeight: "bold" }}>Order Status</Text>
+                                <AntDesign name="filter" size={16} color="black" />
+                            </View>
+                            <FlatList
+                                data={dataStatus}
+                                horizontal
+                                keyExtractor={(item) => item.value}
+                                renderItem={({ item }) => (
+                                    <TouchableOpacity
+                                        style={[
+                                            styles.orderStatusButton,
+                                            setSelectedOrderStatus === item.value && styles.selectedOrderStatusButton
+                                        ]}
+                                        onPress={() => handleOrderStatusPress(item.value)}
+                                    >
+                                        <Text
+                                            style={[
+                                                styles.orderStatusButtonText,
+                                                setSelectedOrderStatus === item.value && styles.selectedOrderStatusButtonText
+                                            ]}
+                                        >
+                                            {item.value}
+                                        </Text>
+                                    </TouchableOpacity>
+                                )}
+                                showsHorizontalScrollIndicator={false}
+                                contentContainerStyle={styles.orderStatusList}
+                            />
+                        </View>
+                        <FlatList
+                            data={listOrders}
+                            renderItem={renderItem}
+                            keyExtractor={item => item.id}
+                        />
+                    </View>
+
                 )
             }
         </View>
