@@ -101,10 +101,10 @@ export const callFetchListOrders = async () => {
     }
   }
 
-  export const cancelOrderSeller = async (orderInfo) => {
+  export const cancelOrderSeller = async (orderId) => {
     try {
 
-        const response = await axiosInstance.put(`/orders?orderId=${orderInfo.id}`, {
+        const response = await axiosInstance.put(`/orders?orderId=${orderId}`, {
             orderStatus: "CANCELLED",
         });
         return response.data;

@@ -9,6 +9,7 @@ import {
   FlatList,
   SafeAreaView,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
@@ -68,6 +69,29 @@ const Seller = () => {
     // }
   };
 
+  const handleCancelOrder = async (orderId) => {
+    try {
+      Alert.alert(
+        "Hủy đơn hàng",
+        "Bạn có chắc chắn muốn hủy đơn hàng không?",
+        [
+          {
+            text: "Hủy",
+          },
+          {
+            text: "Xác Nhận",
+            onPress: async () => {
+              await cancelOrderSeller(orderId);
+              fetchOrdersBySeller();
+            },
+          }
+        ]
+      );
+    } catch (error) {
+      console.error('Submit cancel buyer order: ', error);
+    }
+  };
+
   const renderItem = ({ item }) => (
     <View style={styles.card}>
       <Image source={{ uri: item?.post?.product?.images[0]?.imageUrl }} style={styles.image} />
@@ -78,10 +102,10 @@ const Seller = () => {
         {/* Username: name of buyer */}
         <Text style={styles.shop}>{item?.buyer?.username}</Text>
         <Text style={styles.price}>đ{formatPrice(item?.orderDetails?.price)}</Text>
-        
+
         {item?.orderDetails?.status === "PENDING" &&
           <View style={styles.buttonWrapper}>
-            <TouchableOpacity style={styles.cancelBtn}>
+            <TouchableOpacity style={styles.cancelBtn} onPress={() => handleCancelOrder(item?.id)}>
               <Text style={styles.cancelBtnText}>{"Hủy đơn"}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.primaryBtn}>
