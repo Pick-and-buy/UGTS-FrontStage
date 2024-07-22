@@ -13,7 +13,7 @@ import {
 import { AntDesign } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
 import styles from "../css/seller.style";
-import { callFetchListOrders, getOrderByOrderId } from "../../api/order";
+import { callFetchListOrders, cancelOrderSeller } from "../../api/order";
 import { getUserByToken } from "../../api/user";
 import { COLORS } from "../../constants/theme";
 
@@ -24,16 +24,17 @@ const Seller = () => {
   const [selectedOrderStatus, setSelectedOrderStatus] = useState('All');
 
   useEffect(() => {
-    fetchAllOrders();
-  }, []);
+    fetchOrdersBySeller();
+  }, [listOrdersSeller?.orderDetails?.status]);
 
-  const fetchAllOrders = async () => {
+  const fetchOrdersBySeller = async () => {
     setIsLoading(true);
     try {
       const res = await callFetchListOrders();
-      // const userData = await getUserByToken();  // Fetch user data
-      // const filteredOrders = res.result.filter(order => order.buyer.id === userData.result.id);
-      setListOrdersSeller(res.result);
+      const userData = await getUserByToken();  // Fetch user data
+      //Lọc tất cả order mà có id của người tạo bài post trùng với id của user đăng nhập
+      const filteredOrders = res.result.filter(order => order.post.user.id === userData.result.id);
+      setListOrdersSeller(filteredOrders);
     } catch (error) {
       console.error("Error fetching Orders:", error);
     }
@@ -57,6 +58,16 @@ const Seller = () => {
     { id: '7', value: 'Trả lại' },
   ]
 
+  const handleOrderStatusPress = (orderStatusName) => {
+    setSelectedOrderStatus(orderStatusName);
+    if (orderStatusName === 'All') {
+      fetchAllOrders();
+    }
+    //else {
+    //     fetchAllOrdersByOrderStatus(orderStatusName);
+    // }
+  };
+
   const renderItem = ({ item }) => (
     <View style={styles.card}>
       <Image source={{ uri: item?.post?.product?.images[0]?.imageUrl }} style={styles.image} />
@@ -67,6 +78,7 @@ const Seller = () => {
         {/* Username: name of buyer */}
         <Text style={styles.shop}>{item?.buyer?.username}</Text>
         <Text style={styles.price}>đ{formatPrice(item?.orderDetails?.price)}</Text>
+        
         {item?.orderDetails?.status === "PENDING" &&
           <View style={styles.buttonWrapper}>
             <TouchableOpacity style={styles.cancelBtn}>
@@ -95,16 +107,6 @@ const Seller = () => {
 
     </View>
   );
-
-  const handleOrderStatusPress = (orderStatusName) => {
-    setSelectedOrderStatus(orderStatusName);
-    if (orderStatusName === 'All') {
-      fetchAllOrders();
-    }
-    //else {
-    //     fetchAllOrdersByOrderStatus(orderStatusName);
-    // }
-  };
 
   return (
     <View style={styles.container}>

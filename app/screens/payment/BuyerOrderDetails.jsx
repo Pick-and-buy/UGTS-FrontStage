@@ -277,20 +277,28 @@ const BuyerOrderDetails = ({ navigation, route }) => {
           </View>
         </View>
       </ScrollView>
-      <View style={styles.bottomBtn}>
-        <TouchableOpacity style={styles.changeAddressBtn}
-          onPress={() => navigation.navigate('address-lists', {
-            orderInfo,
-            type: 'buyer-change-address'
-          })}
-
-        >
-          <Text style={styles.changeAddressBtnText}>Thay đổi địa chỉ</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleCancelOrder}>
-          <Text style={styles.buttonText}>Hủy đơn hàng</Text>
-        </TouchableOpacity>
-      </View>
+      {orderInfo?.orderDetails?.status === "CANCELLED" ? (
+        <View style={styles.bottomBtn}>
+          <TouchableOpacity style={styles.buyBtn}>
+            <Text style={styles.buyBtnText}>Mua Lại Sản Phẩm</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View style={styles.bottomBtn}>
+          <TouchableOpacity style={styles.changeAddressBtn}
+            onPress={() => navigation.navigate('address-lists', {
+              orderInfo,
+              type: 'buyer-change-address'
+            })}
+          >
+            <Text style={styles.changeAddressBtnText}>Thay đổi địa chỉ</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleCancelOrder}>
+            <Text style={styles.buttonText}>Hủy đơn hàng</Text>
+          </TouchableOpacity>
+        </View>
+      )
+      }
     </SafeAreaView>
   )
 }

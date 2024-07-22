@@ -100,3 +100,16 @@ export const callFetchListOrders = async () => {
         throw error;
     }
   }
+
+  export const cancelOrderSeller = async (orderInfo) => {
+    try {
+
+        const response = await axiosInstance.put(`/orders?orderId=${orderInfo.id}`, {
+            orderStatus: "CANCELLED",
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error cancel order:', error);
+        throw error;
+    }
+};

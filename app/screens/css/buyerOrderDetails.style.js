@@ -299,7 +299,24 @@ const styles = StyleSheet.create({
         color: COLORS.black,
         fontSize: 18,
         fontWeight: 'bold',
-    }
+    },
+    buyBtn: {
+        // width: "60%",
+        flex: 1,
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: COLORS.primary,
+        borderColor: COLORS.gray2,
+        marginHorizontal: "1%",
+        marginVertical: 'auto',
+        borderRadius: 8,
+    },
+    buyBtnText: {
+        color: COLORS.white,
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
 
 });
 
