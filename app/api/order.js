@@ -90,3 +90,13 @@ export const callFetchListOrders = async () => {
         throw error;
     }
   }
+
+  export const getOrdersByOrderStatus = async (orderStatus) => {
+    try {
+      const response = await axiosInstance.get(`/orders/status?orderStatus=${orderStatus}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching Orders By Order Status: ', error);
+        throw error;
+    }
+  }

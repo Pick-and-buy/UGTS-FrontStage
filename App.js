@@ -340,6 +340,11 @@ export default function App() {
                   component={CancelSuccessfully}
                   options={{ headerShown: false }}
                 />
+                <Stack.Screen
+                  name="update-post"
+                  component={UpdatePost}
+                  options={{ headerShown: false }}
+                />
               </Stack.Navigator>
             </NavigationContainer>
           </NotificationProvider>

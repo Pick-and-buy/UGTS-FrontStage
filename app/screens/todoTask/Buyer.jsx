@@ -13,13 +13,14 @@ import {
 import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
 import styles from "../css/buyer.style";
-import { callFetchListOrders, getOrderByOrderId } from "../../api/order";
+import { callFetchListOrders, getOrdersByOrderStatus } from "../../api/order";
+import { getUserByToken } from "../../api/user";
 import { COLORS } from "../../constants/theme";
 
 const Buyer = ({ navigation }) => {
 
     const orderStatus = ["Chờ xử lý", "Đang xử lý", "Giao hàng", "Hủy hàng", "Đã nhận hàng", "Trả lại"];
-    const [listOrders, setListOrders] = useState([]);
+    const [listOrdersBuyer, setListOrdersBuyer] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedOrderStatus, setSelectedOrderStatus] = useState('All');
 
@@ -31,8 +32,10 @@ const Buyer = ({ navigation }) => {
         setIsLoading(true);
         try {
             const res = await callFetchListOrders();
-            console.log('>>> check res order: ', res.result);
-            setListOrders(res.result);
+            const userData = await getUserByToken();  // Fetch user data
+            //Lọc tất cả order mà có id của người mua trùng với id của user đăng nhập
+            const filteredOrders = res.result.filter(order => order.buyer.id === userData.result.id);
+            setListOrdersBuyer(filteredOrders);
         } catch (error) {
             console.error("Error fetching Orders:", error);
         } finally {
@@ -61,21 +64,22 @@ const Buyer = ({ navigation }) => {
         setSelectedOrderStatus(orderStatusName);
         if (orderStatusName === 'All') {
             fetchAllOrders();
-        } 
+        }
         //else {
         //     fetchAllOrdersByOrderStatus(orderStatusName);
         // }
     };
 
     const renderItem = ({ item }) => (
-         <TouchableOpacity style={styles.card} onPress={()=> navigation.navigate("buyer-order-details", { orderInfo: item })}>
+        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("buyer-order-details", { orderInfo: item })}>
             <Image source={{ uri: item?.post?.product?.images[0]?.imageUrl }} style={styles.image} />
             <View style={styles.info}>
                 <Text style={styles.itemTitle}>
                     {item?.post?.title.length > 13 ? `${item?.post?.title.substring(0, 13)}...` : item?.post?.title}
                 </Text>
+                {/* Username: name of seller */}
                 <Text style={styles.shop}>{item?.post?.user?.username}</Text>
-                <Text style={styles.price}>đ{formatPrice(item?.post?.product?.price)}</Text>
+                <Text style={styles.price}>đ{formatPrice(item?.orderDetails?.price)}</Text>
             </View>
             <View style={styles.statusButton}>
                 <Text style={styles.statusText}>{item?.orderDetails?.status}</Text>
@@ -112,14 +116,14 @@ const Buyer = ({ navigation }) => {
                                     <TouchableOpacity
                                         style={[
                                             styles.orderStatusButton,
-                                            setSelectedOrderStatus === item.value && styles.selectedOrderStatusButton
+                                            selectedOrderStatus === item.value && styles.selectedOrderStatusButton
                                         ]}
                                         onPress={() => handleOrderStatusPress(item.value)}
                                     >
                                         <Text
                                             style={[
                                                 styles.orderStatusButtonText,
-                                                setSelectedOrderStatus === item.value && styles.selectedOrderStatusButtonText
+                                                selectedOrderStatus === item.value && styles.selectedOrderStatusButtonText
                                             ]}
                                         >
                                             {item.value}
@@ -130,11 +134,24 @@ const Buyer = ({ navigation }) => {
                                 contentContainerStyle={styles.orderStatusList}
                             />
                         </View>
-                        <FlatList
-                            data={listOrders}
-                            renderItem={renderItem}
-                            keyExtractor={item => item.id}
-                        />
+
+                        {listOrdersBuyer.length > 0 ? (
+                            <FlatList
+                                data={listOrdersBuyer}
+                                renderItem={renderItem}
+                                keyExtractor={item => item.id}
+                            />
+                        ) : (
+                            <View style={{
+                                width: '98%',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginHorizontal: 'auto',
+                                marginTop: 50
+                            }}>
+                                <Text style={{fontSize: 20}}>No orders found</Text>
+                            </View>
+                        )}
                     </View>
 
                 )
