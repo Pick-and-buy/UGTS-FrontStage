@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useUser } from './UserContext';
-import { pushNotifications } from '../api/user';
+import { getNotificationsByUserId } from '../api/user';
 
 const NotificationContext = createContext();
 
@@ -15,8 +15,8 @@ export const NotificationProvider = ({ children }) => {
     const fetchNotifications = async () => {
         try {
             if (user && user.id) {
-                const data = await pushNotifications(user.id);
-                setNotifications(data);
+                const data = await getNotificationsByUserId(user.id);
+                setNotifications(data.result);
                 console.log("Notifications fetched:", data);
             }
         } catch (error) {
@@ -26,10 +26,7 @@ export const NotificationProvider = ({ children }) => {
 
     useEffect(() => {
         if (user) {
-            fetchNotifications(); // Fetch notifications initially
-            const interval = setInterval(fetchNotifications, 1000); // Fetch notifications every second
-
-            return () => clearInterval(interval); // Clear interval on component unmount
+            fetchNotifications();
         }
     }, [user]);
 

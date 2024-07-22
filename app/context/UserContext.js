@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { getUserByToken } from "../api/user";
+import { useLogin } from './LoginContext';
 
 const UserContext = createContext();
 
@@ -10,36 +11,26 @@ export const useUser = () => {
 
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+    const { isAuthenticated } = useLogin();
+    // console.log("user in user context",user);
     const fetchUserData = async () => {
         try {
             const userData = await getUserByToken();
-            setUser(userData);
+            setUser(userData.result);
             // console.log("User data fetched:", userData);
         } catch (error) {
             console.error('Fetching user data failed:', error);
         }
     };
 
-    const checkToken = async () => {
-        const token = await AsyncStorage.getItem('token');
-        setIsAuthenticated(!!token);
-        // console.log("Token status:", !!token);
-    };
-
     useEffect(() => {
-        const initialize = async () => {
-            await checkToken();
-            if (isAuthenticated) {
-                await fetchUserData();
-            }
-        };
-        initialize();
+        if (isAuthenticated) {
+            fetchUserData();
+        }
     }, [isAuthenticated]);
 
     return (
-        <UserContext.Provider value={{ user, isAuthenticated }}>
+        <UserContext.Provider value={{ user }}>
             {children}
         </UserContext.Provider>
     );

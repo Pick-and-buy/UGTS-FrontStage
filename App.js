@@ -24,7 +24,7 @@ import Onboarding from './app/components/Onboarding';
 import PosterInformation from './app/screens/posterInformation/PosterInformation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Profile from './app/screens/Profile';
-import { LoginContext } from './app/context/LoginContext';
+import { LoginContext, LoginProvider } from './app/context/LoginContext';
 import ChangePassword from './app/screens/change password/ChangePassword';
 import UpdateProfile from './app/screens/profile/UpdateProfile';
 import CreatePostDetail from './app/screens/post/CreatePostDetail';
@@ -98,244 +98,246 @@ export default function App() {
   return (
     isAppFirstLaunched !== null && (
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <UserProvider>
-          <NotificationProvider>
-            <NavigationContainer>
-              <Stack.Navigator>
-                {isAppFirstLaunched && <Stack.Screen
-                  name='onboarding-navigation'
-                  component={Onboarding}
-                  options={{ headerShown: false }}
-                />}
+        <LoginProvider>
+          <UserProvider>
+            <NotificationProvider>
+              <NavigationContainer>
+                <Stack.Navigator>
+                  {isAppFirstLaunched && <Stack.Screen
+                    name='onboarding-navigation'
+                    component={Onboarding}
+                    options={{ headerShown: false }}
+                  />}
 
-                <Stack.Screen
-                  name='bottom-navigation'
-                  component={BottomTab}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='register-navigation'
-                  component={Register}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='register-infor-navigation'
-                  component={RegisterInformation}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='upload-photo-navigation'
-                  component={UploadPhoto}
-                  options={{ headerShown: false }}
-                />
+                  <Stack.Screen
+                    name='bottom-navigation'
+                    component={BottomTab}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='register-navigation'
+                    component={Register}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='register-infor-navigation'
+                    component={RegisterInformation}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='upload-photo-navigation'
+                    component={UploadPhoto}
+                    options={{ headerShown: false }}
+                  />
 
-                <Stack.Screen
-                  name='set-location-navigation'
-                  component={SetLocation}
-                  options={{ headerShown: false }}
-                />
+                  <Stack.Screen
+                    name='set-location-navigation'
+                    component={SetLocation}
+                    options={{ headerShown: false }}
+                  />
 
-                <Stack.Screen
-                  name='payment-method-navigation'
-                  component={PaymentMethod}
-                  options={{ headerShown: false }}
-                />
+                  <Stack.Screen
+                    name='payment-method-navigation'
+                    component={PaymentMethod}
+                    options={{ headerShown: false }}
+                  />
 
-                <Stack.Screen
-                  name='congrats-navigation'
-                  component={Congratulations}
-                  options={{ headerShown: false }}
-                />
+                  <Stack.Screen
+                    name='congrats-navigation'
+                    component={Congratulations}
+                    options={{ headerShown: false }}
+                  />
 
-                <Stack.Screen
-                  name='login-navigation'
-                  component={Login}
-                  options={{ headerShown: false }}
-                />
+                  <Stack.Screen
+                    name='login-navigation'
+                    component={Login}
+                    options={{ headerShown: false }}
+                  />
 
-                <Stack.Screen
-                  name='forgot-password-navigation'
-                  component={ViaMethodForgotPassword}
-                  options={{ headerShown: false }}
-                />
+                  <Stack.Screen
+                    name='forgot-password-navigation'
+                    component={ViaMethodForgotPassword}
+                    options={{ headerShown: false }}
+                  />
 
-                <Stack.Screen
-                  name='info-method-navigation'
-                  component={ForgotPasswordInformation}
-                  options={{ headerShown: false }}
-                />
+                  <Stack.Screen
+                    name='info-method-navigation'
+                    component={ForgotPasswordInformation}
+                    options={{ headerShown: false }}
+                  />
 
-                <Stack.Screen
-                  name='otp-navigation'
-                  component={OTPVerification}
-                  options={{ headerShown: false }}
-                />
+                  <Stack.Screen
+                    name='otp-navigation'
+                    component={OTPVerification}
+                    options={{ headerShown: false }}
+                  />
 
-                <Stack.Screen
-                  name='reset-password-navigation'
-                  component={ResetPassword}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='home-navigation'
-                  component={Home}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='profile-navigation'
-                  component={Profile}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='brand-detail'
-                  component={BrandDetail}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='post-details'
-                  component={PostDetail}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='poster-information'
-                  component={PosterInformation}
-                  options={{ headerShown: false }}
-                />
+                  <Stack.Screen
+                    name='reset-password-navigation'
+                    component={ResetPassword}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='home-navigation'
+                    component={Home}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='profile-navigation'
+                    component={Profile}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='brand-detail'
+                    component={BrandDetail}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='post-details'
+                    component={PostDetail}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='poster-information'
+                    component={PosterInformation}
+                    options={{ headerShown: false }}
+                  />
 
-                <Stack.Screen
-                  name='user-profile-details'
-                  component={UserProfile}
-                  options={{ headerShown: false }}
-                />
+                  <Stack.Screen
+                    name='user-profile-details'
+                    component={UserProfile}
+                    options={{ headerShown: false }}
+                  />
 
-                <Stack.Screen
-                  name='change-password'
-                  component={ChangePassword}
-                  options={{ headerShown: false }}
-                />
+                  <Stack.Screen
+                    name='change-password'
+                    component={ChangePassword}
+                    options={{ headerShown: false }}
+                  />
 
-                <Stack.Screen
-                  name='update-profile'
-                  component={UpdateProfile}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='todo-task'
-                  component={TodoTask}
-                  options={{ headerShown: false }}
-                />
+                  <Stack.Screen
+                    name='update-profile'
+                    component={UpdateProfile}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='todo-task'
+                    component={TodoTask}
+                    options={{ headerShown: false }}
+                  />
 
-                <Stack.Screen
-                  name='list-all-brand'
-                  component={ListBrands}
-                  options={{ headerShown: false }}
-                />
+                  <Stack.Screen
+                    name='list-all-brand'
+                    component={ListBrands}
+                    options={{ headerShown: false }}
+                  />
 
-                <Stack.Screen
-                  name='create-post-details'
-                  component={CreatePostDetail}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='news-navigation'
-                  component={News}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='post-of-followed-user'
-                  component={PostsOfFollowedUser}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='slider-navigation'
-                  component={Slider}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='search-navigation'
-                  component={Search}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='seller-profile-navigation'
-                  component={SellerProfile}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='lists-post-brand-line'
-                  component={ListsPostOfBrandLine}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='order-details'
-                  component={OrderDetails}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='order-successfully'
-                  component={OrderSuccessfully}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='buyer-order-details'
-                  component={BuyerOrderDetails}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='address-lists'
-                  component={AddressLists}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='create-address'
-                  component={CreateAddress}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='update-address'
-                  component={UpdateAddress}
-                  options={{ headerShown: false }}
-                />
+                  <Stack.Screen
+                    name='create-post-details'
+                    component={CreatePostDetail}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='news-navigation'
+                    component={News}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='post-of-followed-user'
+                    component={PostsOfFollowedUser}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='slider-navigation'
+                    component={Slider}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='search-navigation'
+                    component={Search}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='seller-profile-navigation'
+                    component={SellerProfile}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='lists-post-brand-line'
+                    component={ListsPostOfBrandLine}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='order-details'
+                    component={OrderDetails}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='order-successfully'
+                    component={OrderSuccessfully}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='buyer-order-details'
+                    component={BuyerOrderDetails}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='address-lists'
+                    component={AddressLists}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='create-address'
+                    component={CreateAddress}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='update-address'
+                    component={UpdateAddress}
+                    options={{ headerShown: false }}
+                  />
 
-                <Stack.Screen
-                  name="GetID"
-                  component={GetIDScreen}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="TakeSelfie"
-                  component={TakeSelfieScreen}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="ScanID"
-                  component={ScanIDScreen}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="ScanBackID"
-                  component={ScanBackIDScreen}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="ScanFontID"
-                  component={ScanFontIDScreen}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="FaceMatch"
-                  component={FaceMatch}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="notification"
-                  component={Notification}
-                  options={{ headerShown: false }}
-                />
-              </Stack.Navigator>
-            </NavigationContainer>
-          </NotificationProvider>
-        </UserProvider>
+                  <Stack.Screen
+                    name="GetID"
+                    component={GetIDScreen}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="TakeSelfie"
+                    component={TakeSelfieScreen}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="ScanID"
+                    component={ScanIDScreen}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="ScanBackID"
+                    component={ScanBackIDScreen}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="ScanFontID"
+                    component={ScanFontIDScreen}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="FaceMatch"
+                    component={FaceMatch}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="notification"
+                    component={Notification}
+                    options={{ headerShown: false }}
+                  />
+                </Stack.Navigator>
+              </NavigationContainer>
+            </NotificationProvider>
+          </UserProvider>
+        </LoginProvider>
       </GestureHandlerRootView>
     )
 
