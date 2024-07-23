@@ -12,7 +12,8 @@ import {
   Alert,
 } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
-import React, { useState, useEffect } from "react";
+import { useFocusEffect } from '@react-navigation/native';
+import React, { useState, useEffect, useCallback } from "react";
 import styles from "../css/seller.style";
 import { callFetchListOrders, cancelOrderSeller } from "../../api/order";
 import { getUserByToken } from "../../api/user";
@@ -24,9 +25,12 @@ const Seller = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedOrderStatus, setSelectedOrderStatus] = useState('All');
 
-  useEffect(() => {
-    fetchOrdersBySeller();
-  }, []);
+  //Sử dụng useFocusEffect và useCallback để mỗi khi redirect màn hình từ 1 trang khác về màn hình Seller thì sẽ tự động re-render dữ liệu
+  useFocusEffect(
+    useCallback(() => {
+      fetchOrdersBySeller();
+    }, [])
+  );
 
   const fetchOrdersBySeller = async () => {
     setIsLoading(true);
@@ -62,7 +66,7 @@ const Seller = ({ navigation }) => {
   const handleOrderStatusPress = (orderStatusName) => {
     setSelectedOrderStatus(orderStatusName);
     if (orderStatusName === 'All') {
-      fetchAllOrders();
+      fetchOrdersBySeller();
     }
     //else {
     //     fetchAllOrdersByOrderStatus(orderStatusName);
@@ -92,6 +96,10 @@ const Seller = ({ navigation }) => {
     }
   };
 
+  const handleSellerOrderDetail = (orderInfo) => {
+    navigation.navigate("seller-order-details", { orderInfo: orderInfo });
+}
+
   const renderItem = ({ item }) => (
     <View style={styles.card}>
       <Image source={{ uri: item?.post?.product?.images[0]?.imageUrl }} style={styles.image} />
@@ -108,7 +116,7 @@ const Seller = ({ navigation }) => {
             <TouchableOpacity style={styles.cancelBtn} onPress={() => handleCancelOrder(item?.id)}>
               <Text style={styles.cancelBtnText}>{"Hủy đơn"}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.primaryBtn} onPress={() => navigation.navigate("seller-order-details")}>
+            <TouchableOpacity style={styles.primaryBtn} onPress={() => handleSellerOrderDetail(item)}>
               <Text style={styles.primaryBtnText}>{"Sắp xếp vận chuyển"}</Text>
             </TouchableOpacity>
           </View>
