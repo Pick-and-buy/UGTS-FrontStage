@@ -76,6 +76,13 @@ const styles = StyleSheet.create({
         fontWeight: '400',
     },
 
+    processBtn: {
+        backgroundColor: 'green',
+        paddingHorizontal: 20,
+        paddingVertical: 6,
+        borderRadius: 5,
+    },
+
     
     //Filter Order Status
     orderStatusButton: {

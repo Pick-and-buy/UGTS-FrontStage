@@ -64,6 +64,11 @@ const SellerOrderDetails = ({ navigation, route }) => {
         }
     };
 
+    const handleTransportation = async () => {
+        await updateOrderSeller(orderInfo?.id);
+        navigation.navigate('seller');
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -144,18 +149,18 @@ const SellerOrderDetails = ({ navigation, route }) => {
                         <View style={styles.feePrice}>
                             <Text style={{ fontSize: 16, color: COLORS.gray }}>Tổng tiền hàng</Text>
                             <Text style={{ fontSize: 16, color: COLORS.gray }}>
-                            {formattedProductPrice}đ
+                                {formattedProductPrice}đ
                             </Text>
                         </View>
                         <View style={styles.feePrice}>
                             <Text style={{ fontSize: 16, color: COLORS.gray }}>Vận chuyển</Text>
                             <Text style={{ fontSize: 16, color: COLORS.gray }}>
-                            {shippingPrice}đ
+                                {shippingPrice}đ
                             </Text>
                         </View>
                         <View style={styles.feePrice}>
                             <Text style={{ fontSize: 16 }}>Tổng cộng</Text>
-                            <Text style={{ fontSize: 16, color: COLORS.gray }}>
+                            <Text style={{ fontSize: 16 }}>
                                 {totalPrice}đ
                             </Text>
                         </View>
@@ -170,7 +175,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
                         <View style={styles.right}>
                             <TouchableOpacity style={styles.orderId} >
                                 <Text style={{ fontSize: 18 }}>
-                                {orderInfo?.id.length > 12 ? `${orderInfo.id.substring(0, 12)}...` : orderInfo.id}
+                                    {orderInfo?.id.length > 12 ? `${orderInfo.id.substring(0, 12)}...` : orderInfo.id}
                                 </Text>
                                 <MaterialIcons name="content-copy" size={20} color="black" />
                             </TouchableOpacity>
@@ -207,31 +212,35 @@ const SellerOrderDetails = ({ navigation, route }) => {
                         <View style={styles.right}>
                             <TouchableOpacity style={styles.orderId} >
                                 <Text style={{ color: COLORS.gray }}>
-                                {orderInfo?.orderDetails?.paymentMethod}
+                                    {orderInfo?.orderDetails?.paymentMethod}
                                 </Text>
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={styles.redirect}>
-                        <TouchableOpacity style={styles.redirectBtn} onPress={() => { }}>
-                            <Ionicons name="chatbubble-ellipses-outline" size={24} color="black" />
-                            <Text style={styles.redirectBtnText}>Liên hệ người mua</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.redirectBtn} onPress={() => { }}>
-                            <FontAwesome name="wechat" size={24} color="black" />
-                            <Text style={styles.redirectBtnText}>Liên hệ hỗ trợ</Text>
-                        </TouchableOpacity>
-                    </View>
+                    {orderInfo?.orderDetails?.status === "PENDING" &&
+                        <View style={styles.redirect}>
+                            <TouchableOpacity style={styles.redirectBtn} onPress={() => { }}>
+                                <Ionicons name="chatbubble-ellipses-outline" size={24} color="black" />
+                                <Text style={styles.redirectBtnText}>Liên hệ người mua</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.redirectBtn} onPress={() => { }}>
+                                <FontAwesome name="wechat" size={24} color="black" />
+                                <Text style={styles.redirectBtnText}>Liên hệ hỗ trợ</Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
                 </View>
             </ScrollView>
-            <View style={styles.bottomBtn}>
-                <TouchableOpacity style={styles.changeAddressBtn} onPress={handleCancelOrder}>
-                    <Text style={styles.changeAddressBtnText}>Từ chối đơn hàng</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => { }}>
-                    <Text style={styles.buttonText}>Sắp xếp vận chuyển</Text>
-                </TouchableOpacity>
-            </View>
+            {orderInfo?.orderDetails?.status === "PENDING" &&
+                <View style={styles.bottomBtn}>
+                    <TouchableOpacity style={styles.changeAddressBtn} onPress={handleCancelOrder}>
+                        <Text style={styles.changeAddressBtnText}>Từ chối đơn hàng</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={handleTransportation}>
+                        <Text style={styles.buttonText}>Sắp xếp vận chuyển</Text>
+                    </TouchableOpacity>
+                </View>
+            }
         </SafeAreaView>
     )
 }

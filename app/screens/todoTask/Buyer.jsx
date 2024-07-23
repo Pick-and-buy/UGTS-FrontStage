@@ -54,8 +54,8 @@ const Buyer = ({ navigation }) => {
         { id: '1', value: 'All' },
         { id: '2', value: 'Chờ xử lý' },
         { id: '3', value: 'Đang xử lý' },
-        { id: '4', value: 'Giao hàng' },
-        { id: '5', value: 'Hủy hàng' },
+        { id: '4', value: 'Đang giao hàng' },
+        { id: '5', value: 'Đã hủy' },
         { id: '6', value: 'Đã nhận hàng' },
         { id: '7', value: 'Trả lại' },
     ]
@@ -81,9 +81,26 @@ const Buyer = ({ navigation }) => {
                 <Text style={styles.shop}>{item?.post?.user?.username}</Text>
                 <Text style={styles.price}>đ{formatPrice(item?.orderDetails?.price)}</Text>
             </View>
-            <View style={styles.statusButton}>
-                <Text style={styles.statusText}>{item?.orderDetails?.status}</Text>
-            </View>
+            {item?.orderDetails?.status === "PENDING" &&
+                <View style={styles.statusButton}>
+                    <Text style={styles.statusText}>{"Chờ xử lý"}</Text>
+                </View>
+            }
+            {item?.orderDetails?.status === "PROCESSING" &&
+                <View style={[styles.statusButton, { backgroundColor: 'green' }]}>
+                    <Text style={[styles.statusText, { color: COLORS.white }]}>{"Đang xử lý"}</Text>
+                </View>
+            }
+            {item?.orderDetails?.status === "DELIVERED" &&
+                <View style={styles.statusButton}>
+                    <Text style={styles.statusText}>{"Đang giao hàng"}</Text>
+                </View>
+            }
+            {item?.orderDetails?.status === "CANCELLED" &&
+                <View style={[styles.statusButton, { backgroundColor: COLORS.gray2 }]}>
+                    <Text style={[styles.statusText, { color: COLORS.white }]}>{"Đã hủy"}</Text>
+                </View>
+            }
         </TouchableOpacity>
     );
 
@@ -149,7 +166,7 @@ const Buyer = ({ navigation }) => {
                                 marginHorizontal: 'auto',
                                 marginTop: 50
                             }}>
-                                <Text style={{fontSize: 20}}>No orders found</Text>
+                                <Text style={{ fontSize: 20 }}>No orders found</Text>
                             </View>
                         )}
                     </View>

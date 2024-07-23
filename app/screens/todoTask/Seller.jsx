@@ -57,8 +57,8 @@ const Seller = ({ navigation }) => {
     { id: '1', value: 'All' },
     { id: '2', value: 'Chờ xử lý' },
     { id: '3', value: 'Đang xử lý' },
-    { id: '4', value: 'Giao hàng' },
-    { id: '5', value: 'Hủy hàng' },
+    { id: '4', value: 'Đang giao hàng' },
+    { id: '5', value: 'Đã hủy' },
     { id: '6', value: 'Đã nhận hàng' },
     { id: '7', value: 'Trả lại' },
   ]
@@ -98,7 +98,7 @@ const Seller = ({ navigation }) => {
 
   const handleSellerOrderDetail = (orderInfo) => {
     navigation.navigate("seller-order-details", { orderInfo: orderInfo });
-}
+  }
 
   const renderItem = ({ item }) => (
     <View style={styles.card}>
@@ -123,8 +123,15 @@ const Seller = ({ navigation }) => {
         }
         {item?.orderDetails?.status === "PROCESSING" &&
           <View style={styles.buttonWrapper}>
-            <TouchableOpacity style={styles.primaryBtn}>
-              <Text style={styles.cancelBtnText}>{"Đang vận chuyển"}</Text>
+            <TouchableOpacity style={styles.processBtn} onPress={() => handleSellerOrderDetail(item)}>
+              <Text style={[styles.cancelBtnText, { color: COLORS.white, fontSize: 14 }]}>{"Đang xử lý"}</Text>
+            </TouchableOpacity>
+          </View>
+        }
+        {item?.orderDetails?.status === "DELIVERED" &&
+          <View style={styles.buttonWrapper}>
+            <TouchableOpacity style={styles.processBtn}>
+              <Text style={[styles.cancelBtnText, { color: COLORS.white, fontSize: 14 }]}>{"Đang giao hàng"}</Text>
             </TouchableOpacity>
           </View>
         }
@@ -132,6 +139,20 @@ const Seller = ({ navigation }) => {
           <View style={styles.buttonWrapper}>
             <View style={[styles.primaryBtn, { backgroundColor: COLORS.gray2 }]}>
               <Text style={[styles.cancelBtnText, { color: COLORS.white }]}>{"Đã hủy"}</Text>
+            </View>
+          </View>
+        }
+        {item?.orderDetails?.status === "RECEIVED" &&
+          <View style={styles.buttonWrapper}>
+            <View style={[styles.primaryBtn, { backgroundColor: COLORS.gray2 }]}>
+              <Text style={[styles.cancelBtnText, { color: COLORS.white }]}>{"Đã nhận hàng"}</Text>
+            </View>
+          </View>
+        }
+        {item?.orderDetails?.status === "RETURNED" &&
+          <View style={styles.buttonWrapper}>
+            <View style={[styles.primaryBtn, { backgroundColor: COLORS.gray2 }]}>
+              <Text style={[styles.cancelBtnText, { color: COLORS.white }]}>{"Trả hàng"}</Text>
             </View>
           </View>
         }
