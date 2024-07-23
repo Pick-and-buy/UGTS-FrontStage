@@ -12,7 +12,6 @@ const Notification = ({ navigation }) => {
     console.log("user id in noti", user.id);
     // console.log(">>>notification ", notifications);
 
-
     useEffect(() => {
         if (user?.id) {
             fetchNotifications();
@@ -68,12 +67,18 @@ const Notification = ({ navigation }) => {
                 </TouchableOpacity>
             </View>
 
-            <FlatList
-                data={notifications.reverse()}
-                renderItem={renderNotificationItem}
-                keyExtractor={(item) => item.notificationId}
-                contentContainerStyle={styles.notificationList}
-            />
+            {notifications.length > 0 ? (
+                <FlatList
+                    data={notifications.reverse()}
+                    renderItem={renderNotificationItem}
+                    keyExtractor={(item) => item.notificationId}
+                    contentContainerStyle={styles.notificationList}
+                />
+            ) : (
+                <View style={styles.emptyContainer}>
+                    <Text style={styles.emptyText}>Đăng nhập để xem thông báo của bạn</Text>
+                </View>
+            )}
         </SafeAreaView>
     );
 };

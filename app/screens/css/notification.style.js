@@ -76,6 +76,15 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 4
 
-    }
+    },
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    emptyText: {
+        fontSize: 18,
+        color: 'gray',
+    },
 })
 export default styles

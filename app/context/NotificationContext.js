@@ -17,7 +17,7 @@ export const NotificationProvider = ({ children }) => {
             if (user && user.id) {
                 const data = await getNotificationsByUserId(user.id);
                 setNotifications(data.result);
-                console.log("Notifications fetched:", data);
+                // console.log("Notifications fetched:", data);
             }
         } catch (error) {
             console.error('Fetching push notifications failed:', error);
