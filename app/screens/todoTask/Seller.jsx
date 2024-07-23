@@ -18,7 +18,7 @@ import { callFetchListOrders, cancelOrderSeller } from "../../api/order";
 import { getUserByToken } from "../../api/user";
 import { COLORS } from "../../constants/theme";
 
-const Seller = () => {
+const Seller = ({ navigation }) => {
 
   const [listOrdersSeller, setListOrdersSeller] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +26,7 @@ const Seller = () => {
 
   useEffect(() => {
     fetchOrdersBySeller();
-  }, [listOrdersSeller?.orderDetails?.status]);
+  }, []);
 
   const fetchOrdersBySeller = async () => {
     setIsLoading(true);
@@ -108,7 +108,7 @@ const Seller = () => {
             <TouchableOpacity style={styles.cancelBtn} onPress={() => handleCancelOrder(item?.id)}>
               <Text style={styles.cancelBtnText}>{"Hủy đơn"}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.primaryBtn}>
+            <TouchableOpacity style={styles.primaryBtn} onPress={() => navigation.navigate("seller-order-details")}>
               <Text style={styles.primaryBtnText}>{"Sắp xếp vận chuyển"}</Text>
             </TouchableOpacity>
           </View>

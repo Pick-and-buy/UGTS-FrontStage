@@ -56,6 +56,7 @@ import ScanFontIDScreen from './app/screens/verify/ScanFontIDScreen';
 import Notification from './app/screens/notification/Notification';
 import { NotificationProvider } from './app/context/NotificationContext';
 import { UserProvider } from './app/context/UserContext';
+import SellerOrderDetails from './app/screens/payment/SellerOrderDetails';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -343,6 +344,11 @@ export default function App() {
                 <Stack.Screen
                   name="update-post"
                   component={UpdatePost}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='seller-order-details'
+                  component={SellerOrderDetails}
                   options={{ headerShown: false }}
                 />
               </Stack.Navigator>
