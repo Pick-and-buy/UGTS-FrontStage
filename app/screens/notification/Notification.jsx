@@ -10,14 +10,20 @@ const Notification = ({ navigation }) => {
     const { user } = useAuth();
     const { notifications, markNotificationAsRead } = useNotifications();
 
-    const handleNotificationRead = async (notificationId) => {
-        await markNotificationAsRead(notificationId);
+    const handleNotificationRead = async (notificationId, postId, isRead) => {
+        if (!isRead) {
+            await markNotificationAsRead(notificationId);
+        }
+        navigation.navigate('post-details', { postId: postId });
     };
 
     const renderNotificationItem = ({ item }) => {
         const notificationTextStyle = item.read ? styles.readNotificationText : styles.unreadNotificationText;
         return (
-            <TouchableOpacity style={styles.notificationItem} onPress={() => handleNotificationRead(item.notificationId)}>
+            <TouchableOpacity
+                style={styles.notificationItem}
+                onPress={() => handleNotificationRead(item.notificationId, item.postId, item.read)}
+            >
                 <Image
                     source={{ uri: item.userFromAvatar ? item.userFromAvatar : profile }}
                     style={styles.image}
@@ -47,7 +53,7 @@ const Notification = ({ navigation }) => {
                     <FlatList
                         data={notifications.reverse()}
                         renderItem={renderNotificationItem}
-                        keyExtractor={(item) => item.notificationId}
+                        keyExtractor={(item) => item.notificationId.toString()}
                         contentContainerStyle={styles.notificationList}
                     />
                 ) : (
