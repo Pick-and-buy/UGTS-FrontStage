@@ -109,32 +109,39 @@ const HomeExplore = ({ navigation }) => {
     );
 
     return (
-        <FlatList
-            style={styles.container}
-            data={followings}
-            keyExtractor={item => item.id}
-            renderItem={({ item }) => (
-                <View style={styles.posts}>
-                    <UserProfile user={item} />
-                    {loading ? (
-                        <ActivityIndicator size="large" color={COLORS.primary} />
-                    ) : (
-                        <View style={styles.row}>
-                            {item.createdPosts.slice(0, 6).map(post => (
-                                <Post key={post.id} post={post} />
-                            ))}
-                        </View>
-                    )}
-                </View>
+        <View style={styles.container}>
+            {loading ? (
+                <ActivityIndicator size="large" color={COLORS.primary} />
+            ) : (
+                followings.length === 0 ? (
+                    <View style={styles.emptyMessageContainer}>
+                        <Text style={styles.emptyMessage}>Hiện tại bạn chưa theo dõi người dùng nào</Text>
+                    </View>
+                ) : (
+                    <FlatList
+                        data={followings}
+                        keyExtractor={item => item.id}
+                        renderItem={({ item }) => (
+                            <View style={styles.posts}>
+                                <UserProfile user={item} />
+                                <View style={styles.row}>
+                                    {item.createdPosts.slice(0, 6).map(post => (
+                                        <Post key={post.id} post={post} />
+                                    ))}
+                                </View>
+                            </View>
+                        )}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={refreshing}
+                                onRefresh={handleRefresh}
+                                colors={[COLORS.primary]}
+                            />
+                        }
+                    />
+                )
             )}
-            refreshControl={
-                <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={handleRefresh}
-                    colors={[COLORS.primary]}
-                />
-            }
-        />
+        </View>
     );
 };
 
@@ -181,5 +188,14 @@ const styles = StyleSheet.create({
     viewAll: {
         fontSize: 16,
         color: COLORS.primary,
+    },
+    emptyMessageContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    emptyMessage: {
+        fontSize: 16,
+        color: COLORS.gray,
     },
 });
