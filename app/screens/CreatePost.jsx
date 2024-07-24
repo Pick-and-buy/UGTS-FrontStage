@@ -34,7 +34,25 @@ const CreatePost = () => {
   const [listCategory, setListCategory] = useState([]);
   const [listBrandLines, setListBrandLines] = useState([]);
 
-  const [images, setImages] = useState([null, null, null, null, null]);
+  const [images, setImages] = useState([
+    { id: '1', name: 'Overall picture', logoUrl: '', value: '' },
+    { id: '2', name: 'Brand logo', logoUrl: '', value: '' },
+    { id: '3', name: 'Inside label', logoUrl: '', value: '' },
+    { id: '4', name: 'Hardware engravings', logoUrl: '', value: '' },
+    { id: '5', name: 'Serial number', logoUrl: '', value: '' },
+    { id: '6', name: 'Made in label', logoUrl: '', value: '' },
+    { id: '7', name: 'QR code label', logoUrl: '', value: '' },
+    { id: '8', name: 'Hologram label', logoUrl: '', value: '' },
+    { id: '9', name: 'Zipper head (front)', logoUrl: '', value: '' },
+    { id: '10', name: 'Zipper head (back)', logoUrl: '', value: '' },
+    { id: '11', name: 'Button', logoUrl: '', value: '' },
+    { id: '12', name: 'Shoulder strap clasp', logoUrl: '', value: '' },
+    { id: '13', name: 'Logo texture close up', logoUrl: '', value: '' },
+    { id: '14', name: 'Authenticity card', logoUrl: '', value: '' },
+    { id: '15', name: 'Dust bag', logoUrl: '', value: '' },
+    { id: '16', name: '1st optional photo', logoUrl: '', value: '' },
+    { id: '17', name: '2nd optional photo', logoUrl: '', value: '' },
+  ]);
 
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [selectedBrandLine, setSelectedBrandLine] = useState(null);
@@ -231,7 +249,7 @@ const CreatePost = () => {
       });
       if (!result.canceled) {
         const newImages = result?.assets?.map(asset => asset.uri);
-        const updatedImages = [...newImages, ...images].slice(0, 5);
+        const updatedImages = [...newImages, ...images].slice(0, 17);
         setImages(updatedImages);
       }
     } catch (error) {
@@ -248,11 +266,10 @@ const CreatePost = () => {
         allowsEditing: true,
         aspect: [1, 1],
       });
-      console.log('>>> check result: ', result);
       if (!result.canceled) {
         //save images
         const newImages = result?.assets?.map(asset => asset.uri);
-        const updatedImages = [...newImages, ...images].slice(0, 5);
+        const updatedImages = [...newImages, ...images].slice(0, 17);
         setImages(updatedImages);
       }
     } catch (error) {
@@ -310,23 +327,25 @@ const CreatePost = () => {
                     keyExtractor={(item, index) => index.toString()}
                     horizontal
                     renderItem={({ item, index }) => (
-                      item === null || item === "" ?
+                      item.value === null || item.value === "" ?
                         (
-                          <View key={index} style={styles.image} >
-                            <TouchableOpacity onPress={uploadImageCamera}>
-                              <View style={{ position: 'absolute', top: 3, left: 1 }}>
-                                <Text style={{ color: COLORS.gray }}>{index + 1}</Text>
-                              </View>
-                              <FontAwesome style={{ marginTop: 20, marginHorizontal: 20 }} name="camera" size={26} color={COLORS.gray} />
-                              <Text style={{ marginTop: 10, color: COLORS.gray, textAlign: 'center' }}>Ảnh</Text>
-                            </TouchableOpacity>
+                          <View key={index}>
+                            <View key={index} style={styles.image} >
+                              <TouchableOpacity onPress={uploadImageCamera}>
+                                <View style={{ position: 'absolute', top: 3, left: 1 }}>
+                                  <Text style={{ color: COLORS.gray }}>{index + 1}</Text>
+                                </View>
+                                <FontAwesome style={{ marginTop: 20, marginHorizontal: 20 }} name="camera" size={26} color={COLORS.gray} />
+                                <Text style={{ marginTop: 5, color: COLORS.gray, textAlign: 'center', flexWrap: 'wrap' }}>{item.name}</Text>
+                              </TouchableOpacity>
+                            </View>
                           </View>
                         )
                         :
                         (
                           <View key={index}>
                             <ImageBackground
-                              source={{ uri: item }}
+                              source={{ uri: item.value }}
                               style={styles.image} >
                               <TouchableOpacity onPress={() => removeImage(index)}>
                                 <FontAwesome6 style={styles.xmark} name="xmark" size={20} color="white" />
@@ -336,6 +355,7 @@ const CreatePost = () => {
                         )
                     )}
                   />
+                  
                 </View>
                 <View style={{ marginTop: 35, flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10 }}>
                   <Text style={{ fontSize: 16 }}>Thông tin sản phẩm</Text>

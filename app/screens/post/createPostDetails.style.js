@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     image: {
         position: 'relative',
         width: Dimensions.get('window').width / 5.3,
-        height: Dimensions.get('window').width / 5.3,
+        height: Dimensions.get('window').width / 5,
         backgroundColor: COLORS.lightWhite,
         borderRadius: 5,
         alignItems: 'center',
