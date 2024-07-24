@@ -33,9 +33,16 @@ export const NotificationProvider = ({ children }) => {
     };
 
     useEffect(() => {
+        let interval;
         if (user) {
             fetchNotifications();
+            interval = setInterval(fetchNotifications, 1000); // Update every second
         }
+        return () => {
+            if (interval) {
+                clearInterval(interval); // Clean up interval on unmount
+            }
+        };
     }, [user]);
 
     return (
