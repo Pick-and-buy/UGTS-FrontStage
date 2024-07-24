@@ -8,12 +8,14 @@ import NetworkImage from "../components/NetworkImage";
 import ProfileTile from "../components/ProfileTile";
 import styles from "./css/profile.style";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { fetchUserInfo, logout } from "../api/auth";
+
 import { getUserByToken } from "../api/user";
 import { Rating } from 'react-native-stock-star-rating'
 import { MaterialIcons } from '@expo/vector-icons';
+import { useAuth } from "../context/AuthContext";
 
 const Profile = ({ navigation }) => {
+  const { logout } = useAuth();
   const [user, setUser] = useState(null);
   const [createdPosts, setCreatedPosts] = useState([]);
   const [loading, setLoading] = useState(true);

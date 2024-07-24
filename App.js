@@ -24,7 +24,7 @@ import Onboarding from './app/components/Onboarding';
 import PosterInformation from './app/screens/posterInformation/PosterInformation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Profile from './app/screens/Profile';
-import { LoginContext } from './app/context/LoginContext';
+import { LoginContext, LoginProvider } from './app/context/LoginContext';
 import ChangePassword from './app/screens/change password/ChangePassword';
 import UpdateProfile from './app/screens/profile/UpdateProfile';
 import CreatePostDetail from './app/screens/post/CreatePostDetail';
@@ -55,8 +55,7 @@ import ScanFontIDScreen from './app/screens/verify/ScanFontIDScreen';
 
 import Notification from './app/screens/notification/Notification';
 import { NotificationProvider } from './app/context/NotificationContext';
-import { UserProvider } from './app/context/UserContext';
-
+import { AuthProvider } from './app/context/AuthContext';
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [login, setLogin] = useState(null);
@@ -102,7 +101,7 @@ export default function App() {
   return (
     isAppFirstLaunched !== null && (
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <UserProvider>
+        <AuthProvider>
           <NotificationProvider>
             <NavigationContainer>
               <Stack.Navigator>
@@ -338,7 +337,7 @@ export default function App() {
               </Stack.Navigator>
             </NavigationContainer>
           </NotificationProvider>
-        </UserProvider>
+        </AuthProvider>
       </GestureHandlerRootView>
     )
 

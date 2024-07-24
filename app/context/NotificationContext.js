@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useUser } from './UserContext';
-import { pushNotifications } from '../api/user';
+import { getNotificationsByUserId, updateNotificationsReadStatus } from '../api/user';
+import { useAuth } from './AuthContext';
 
 const NotificationContext = createContext();
 
@@ -9,32 +9,44 @@ export const useNotifications = () => {
 };
 
 export const NotificationProvider = ({ children }) => {
-    const { user } = useUser();
+    const { user } = useAuth();
     const [notifications, setNotifications] = useState([]);
 
     const fetchNotifications = async () => {
         try {
             if (user && user.id) {
-                const data = await pushNotifications(user.id);
-                setNotifications(data);
-                console.log("Notifications fetched:", data);
+                const data = await getNotificationsByUserId(user.id);
+                setNotifications(data.result);
             }
         } catch (error) {
-            console.error('Fetching push notifications failed:', error);
+            console.error('Fetching notifications failed:', error);
+        }
+    };
+
+    const markNotificationAsRead = async (notificationId) => {
+        try {
+            await updateNotificationsReadStatus(notificationId);
+            fetchNotifications();
+        } catch (error) {
+            console.error('Updating notification read status failed:', error);
         }
     };
 
     useEffect(() => {
+        let interval;
         if (user) {
-            fetchNotifications(); // Fetch notifications initially
-            const interval = setInterval(fetchNotifications, 1000); // Fetch notifications every second
-
-            return () => clearInterval(interval); // Clear interval on component unmount
+            fetchNotifications();
+            interval = setInterval(fetchNotifications, 1000); // Update every second
         }
+        return () => {
+            if (interval) {
+                clearInterval(interval); // Clean up interval on unmount
+            }
+        };
     }, [user]);
 
     return (
-        <NotificationContext.Provider value={{ notifications }}>
+        <NotificationContext.Provider value={{ notifications, markNotificationAsRead }}>
             {children}
         </NotificationContext.Provider>
     );

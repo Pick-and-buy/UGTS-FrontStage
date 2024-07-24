@@ -10,12 +10,14 @@ import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import styles from "../../screens/css/homeHeader.style";
 import { useNotifications } from "../../context/NotificationContext";
-import { useUser } from '../../context/UserContext';
 
 const Header = () => {
     const navigation = useNavigation();
     const [searchQuery, setSearchQuery] = useState('');
     const { notifications } = useNotifications();
+    const unreadCount = notifications.filter(notification => !notification.read).length;
+    // console.log(`Number of unread notifications: ${unreadCount}`);
+
     const handleSearchChange = (text) => {
         setSearchQuery(text);
     };
@@ -53,7 +55,7 @@ const Header = () => {
                                 name="notifications"
                                 size={24}
                                 color="#AFAFAE" />
-                            {notifications.length > 0 && <View style={styles.notificationDot} />}
+                            {unreadCount > 0 && <View style={styles.notificationDot} />}
                         </View>
                         <View style={styles.optionItem}>
                             <Ionicons

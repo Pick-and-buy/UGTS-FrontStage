@@ -28,7 +28,7 @@ const Post = ({ post, type }) => {
                     onPress={() => navigation.navigate('post-details', { postId: post.id, type })}
                 >
                     <ImageBackground source={{ uri: post?.product?.images[0]?.imageUrl }} style={styles.image}>
-                        {post.isAvailable &&
+                        {!post.isAvailable &&
                             <View style={styles.label} >
                                 <Text style={styles.labelText}>Đã bán</Text>
                             </View>

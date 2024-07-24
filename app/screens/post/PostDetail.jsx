@@ -274,7 +274,7 @@ const PostDetail = ({ navigation, route }) => {
                             justifyContent: 'center',
                             alignItems: 'center',
                         }}>
-                            {!postDetails?.isAvailable ? (
+                            {postDetails?.isAvailable ? (
                                 <TouchableOpacity
                                     style={styles.commentBtnActive}
                                     onPress={() => setModalVisible(true)}
@@ -521,7 +521,7 @@ const PostDetail = ({ navigation, route }) => {
                 </ScrollView>
 
                 {
-                    !postDetails?.isAvailable && (
+                    postDetails?.isAvailable && (
                         <View style={styles.bottomBtn}>
                     {type === "buyer" && (
                         <TouchableOpacity style={styles.button} onPress={handlePress}>
