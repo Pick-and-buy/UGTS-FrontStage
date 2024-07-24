@@ -28,7 +28,11 @@ const Seller = ({ navigation }) => {
   //Sử dụng useFocusEffect và useCallback để mỗi khi redirect màn hình từ 1 trang khác về màn hình Seller thì sẽ tự động re-render dữ liệu
   useFocusEffect(
     useCallback(() => {
-      fetchOrdersBySeller();
+      if (selectedOrderStatus === 'All') {
+        fetchOrdersBySeller();
+      } else {
+        fetchAllOrdersByOrderStatus(selectedOrderStatus);
+      }
     }, [])
   );
 
@@ -49,32 +53,32 @@ const Seller = ({ navigation }) => {
   const fetchAllOrdersByOrderStatus = async (orderStatusName) => {
     setIsLoading(true);
     try {
-        let orderStatus = "";
-        if(orderStatusName === "Chờ xử lý") {
-            orderStatus = "PENDING";
-        } 
-        else if (orderStatusName === "Đang xử lý") {
-            orderStatus = "PROCESSING";
-        } else if (orderStatusName === "Đang giao hàng") {
-            orderStatus = "DELIVERED";
-        } else if (orderStatusName === "Đã hủy") {
-            orderStatus = "CANCELLED";
-        } else if (orderStatusName === "Đã nhận hàng") {
-            orderStatus = "RECEIVED";
-        } else if (orderStatusName === "Trả lại") {
-            orderStatus = "RETURNED";
-        }
-        const res = await getOrdersByOrderStatus(orderStatus);
-        const userData = await getUserByToken(); 
-        //Lọc tất cả order mà có id của người tạo bài post trùng với id của user đăng nhập
-        const filteredOrders = res.result.filter(order => order.post.user.id === userData.result.id);
-        setListOrdersSeller(filteredOrders);
+      let orderStatus = "";
+      if (orderStatusName === "Chờ xử lý") {
+        orderStatus = "PENDING";
+      }
+      else if (orderStatusName === "Đang xử lý") {
+        orderStatus = "PROCESSING";
+      } else if (orderStatusName === "Đang giao hàng") {
+        orderStatus = "DELIVERED";
+      } else if (orderStatusName === "Đã hủy") {
+        orderStatus = "CANCELLED";
+      } else if (orderStatusName === "Đã nhận hàng") {
+        orderStatus = "RECEIVED";
+      } else if (orderStatusName === "Trả lại") {
+        orderStatus = "RETURNED";
+      }
+      const res = await getOrdersByOrderStatus(orderStatus);
+      const userData = await getUserByToken();
+      //Lọc tất cả order mà có id của người tạo bài post trùng với id của user đăng nhập
+      const filteredOrders = res.result.filter(order => order.post.user.id === userData.result.id);
+      setListOrdersSeller(filteredOrders);
     } catch (error) {
-        console.error("Error fetching Orders by order status:", error);
+      console.error("Error fetching Orders by order status:", error);
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
-}
+  }
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -99,7 +103,7 @@ const Seller = ({ navigation }) => {
       fetchOrdersBySeller();
     }
     else {
-        fetchAllOrdersByOrderStatus(orderStatusName);
+      fetchAllOrdersByOrderStatus(orderStatusName);
     }
   };
 
