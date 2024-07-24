@@ -41,7 +41,7 @@ const OrderSuccessfully = ({ navigation, route }) => {
                     <Ionicons name="checkmark-circle-sharp" size={100} color="#4BE289" />
                     <Text style={styles.title}>Đặt hàng thành công</Text>
                     <Text style={styles.subTitle}>
-                        Đơn hàng của bạn sẽ được vận chuyển dến: {orderInfo?.orderDetails?.firstName} {orderInfo?.orderDetails?.lastName} -
+                        Đơn hàng của bạn sẽ được vận chuyển đến: {orderInfo?.orderDetails?.firstName} {orderInfo?.orderDetails?.lastName} -
                         {phoneUserOrder} - {orderInfo?.orderDetails?.address?.street}, {orderInfo?.orderDetails?.address?.district}, {orderInfo?.orderDetails?.address?.province}, {orderInfo?.orderDetails?.address?.country}
                     </Text>
                 </View>

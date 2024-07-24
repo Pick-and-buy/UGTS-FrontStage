@@ -43,6 +43,37 @@ const Buyer = ({ navigation }) => {
         }
     };
 
+    const fetchAllOrdersByOrderStatus = async (orderStatusName) => {
+        console.log('>>> check orderStatusName ===================================', orderStatusName);
+        setIsLoading(true);
+        try {
+            let orderStatus = "";
+            if(orderStatusName === "Chờ xử lý") {
+                orderStatus = "PENDING";
+            } 
+            else if (orderStatusName === "Đang xử lý") {
+                orderStatus = "PROCESSING";
+            } else if (orderStatusName === "Đang giao hàng") {
+                orderStatus = "DELIVERED";
+            } else if (orderStatusName === "Đã hủy") {
+                orderStatus = "CANCELLED";
+            } else if (orderStatusName === "Đã nhận hàng") {
+                orderStatus = "RECEIVED";
+            } else if (orderStatusName === "Trả lại") {
+                orderStatus = "RETURNED";
+            }
+            const res = await getOrdersByOrderStatus(orderStatus);
+            const userData = await getUserByToken(); 
+            //Lọc tất cả order mà có id của người mua trùng với id của user đăng nhập
+            const filteredOrders = res.result.filter(order => order.buyer.id === userData.result.id);
+            setListOrdersBuyer(filteredOrders);
+        } catch (error) {
+            console.error("Error fetching Orders by order status:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
     const formatPrice = (price) => {
         return new Intl.NumberFormat('vi-VN', {
             minimumFractionDigits: 0,
@@ -65,9 +96,9 @@ const Buyer = ({ navigation }) => {
         if (orderStatusName === 'All') {
             fetchAllOrders();
         }
-        //else {
-        //     fetchAllOrdersByOrderStatus(orderStatusName);
-        // }
+        else {
+            fetchAllOrdersByOrderStatus(orderStatusName);
+        }
     };
 
     const renderItem = ({ item }) => (
@@ -99,6 +130,16 @@ const Buyer = ({ navigation }) => {
             {item?.orderDetails?.status === "CANCELLED" &&
                 <View style={[styles.statusButton, { backgroundColor: COLORS.gray2 }]}>
                     <Text style={[styles.statusText, { color: COLORS.white }]}>{"Đã hủy"}</Text>
+                </View>
+            }
+            {item?.orderDetails?.status === "RECEIVED" &&
+                <View style={[styles.statusButton, { backgroundColor: COLORS.gray2 }]}>
+                    <Text style={[styles.statusText, { color: COLORS.white }]}>{"Đã nhận hàng"}</Text>
+                </View>
+            }
+            {item?.orderDetails?.status === "RETURNED" &&
+                <View style={[styles.statusButton, { backgroundColor: COLORS.gray2 }]}>
+                    <Text style={[styles.statusText, { color: COLORS.white }]}>{"Trả lại"}</Text>
                 </View>
             }
         </TouchableOpacity>
