@@ -41,7 +41,7 @@ const CreatePost = () => {
 
   const [loader, setLoader] = useState(false);
 
-  const FEE = 500;
+  const FEE = 500000;
 
   useEffect(() => {
     fetchAllBrands();
@@ -268,6 +268,13 @@ const CreatePost = () => {
     setImages(newImages);
   }
 
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('vi-VN', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(price);
+  };
+
   return (
     <ScrollView style={{ backgroundColor: COLORS.white }}>
       <Formik
@@ -283,6 +290,8 @@ const CreatePost = () => {
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue, setFieldTouched }) => {
 
           const total = values.price ? parseInt(values.price, 10) - FEE : '';
+          const formatFee = formatPrice(FEE);
+          const formatTotal = formatPrice(total);
 
           return (
             <View style={styles.container}>
@@ -862,7 +871,7 @@ const CreatePost = () => {
                 {/* Fee */}
                 <View style={styles.viewContainer}>
                   <View style={styles.textCenter}>
-                    <Text style={{ fontSize: 16 }}>Phí Sàn: {FEE}</Text>
+                    <Text style={{ fontSize: 16 }}>Phí Sàn: {formatFee}VND</Text>
                   </View>
                 </View>
                 <View style={styles.shadow}></View>
@@ -872,7 +881,7 @@ const CreatePost = () => {
               <View style={{ marginTop: -20 }}>
                 <View style={styles.viewContainer}>
                   <View style={styles.textCenter}>
-                    <Text style={{ fontSize: 16 }}>Tiền: <Text style={{ color: 'red', paddingLeft: 25 }}>{total}</Text></Text>
+                    <Text style={{ fontSize: 16 }}>Tiền: <Text style={{ color: 'red', paddingLeft: 25 }}>{formatTotal}VND</Text></Text>
                   </View>
 
                 </View>

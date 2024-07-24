@@ -55,7 +55,13 @@ import ScanFontIDScreen from './app/screens/verify/ScanFontIDScreen';
 
 import Notification from './app/screens/notification/Notification';
 import { NotificationProvider } from './app/context/NotificationContext';
+
+import { UserProvider } from './app/context/UserContext';
+import SellerOrderDetails from './app/screens/payment/SellerOrderDetails';
+
+
 import { AuthProvider } from './app/context/AuthContext';
+
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [login, setLogin] = useState(null);
@@ -332,6 +338,21 @@ export default function App() {
                 <Stack.Screen
                   name="notification"
                   component={Notification}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="cancel-successfully"
+                  component={CancelSuccessfully}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="update-post"
+                  component={UpdatePost}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='seller-order-details'
+                  component={SellerOrderDetails}
                   options={{ headerShown: false }}
                 />
               </Stack.Navigator>

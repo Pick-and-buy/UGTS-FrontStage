@@ -80,3 +80,49 @@ export const callFetchListOrders = async () => {
         throw error;
     }
   }
+
+  export const getOrderByOrderId = async (orderId) => {
+    try {
+      const response = await axiosInstance.get(`/orders/details?orderId=${orderId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching Order By OrderId: ', error);
+        throw error;
+    }
+  }
+
+  export const getOrdersByOrderStatus = async (orderStatus) => {
+    try {
+      const response = await axiosInstance.get(`/orders/status?orderStatus=${orderStatus}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching Orders By Order Status: ', error);
+        throw error;
+    }
+  }
+
+  export const cancelOrderSeller = async (orderId) => {
+    try {
+
+        const response = await axiosInstance.put(`/orders?orderId=${orderId}`, {
+            orderStatus: "CANCELLED",
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error cancel order:', error);
+        throw error;
+    }
+};
+
+export const updateOrderSeller = async (orderId) => {
+    try {
+
+        const response = await axiosInstance.put(`/orders?orderId=${orderId}`, {
+            orderStatus: "PROCESSING",
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error update order:', error);
+        throw error;
+    }
+};

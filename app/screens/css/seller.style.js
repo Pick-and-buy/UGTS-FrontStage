@@ -76,6 +76,43 @@ const styles = StyleSheet.create({
         fontWeight: '400',
     },
 
+    processBtn: {
+        backgroundColor: 'green',
+        paddingHorizontal: 20,
+        paddingVertical: 6,
+        borderRadius: 5,
+    },
+
+    
+    //Filter Order Status
+    orderStatusButton: {
+        paddingVertical: 5,
+        paddingHorizontal: 20,
+        borderRadius: 20,
+        backgroundColor: COLORS.white,
+        ...SHADOWS.medium,
+
+    },
+    selectedOrderStatusButton: {
+        backgroundColor: COLORS.primary,
+    },
+    orderStatusButtonText: {
+        color: COLORS.black,
+    },
+    selectedOrderStatusButtonText: {
+        color: COLORS.white,
+    },
+    orderStatusList: {
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        // width: '100%',
+        height: 50,
+        // marginHorizontal:"auto",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 15
+    },
+
 })
 
 export default styles

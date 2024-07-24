@@ -99,8 +99,7 @@ const styles = StyleSheet.create({
         borderRadius: 6
     },
     content: {
-        marginLeft: 6,
-
+        marginLeft: 10,
     },
     productName: {
         fontSize: 18,
@@ -147,23 +146,14 @@ const styles = StyleSheet.create({
     relatedInformation: {
         width: "96%",
         marginHorizontal: "auto",
+        marginTop: 15
     },
-    transport: {
+    feePrice: {
         flexDirection: "row",
         justifyContent: "space-between",
-        marginVertical: 2,
+        marginVertical: 5,
     },
-    transportFrom: {
-        flexDirection: "row",
-        gap: 3,
-        marginTop: 2
-
-    },
-    transportTime: {
-        flexDirection: "row",
-        gap: 5,
-        marginTop: 2
-    },
+   
     summary: {
         width: "100%",
         flexDirection: "row",
