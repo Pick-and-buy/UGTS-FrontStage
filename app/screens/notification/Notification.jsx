@@ -2,46 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, SafeAreaView, TouchableOpacity, Image, FlatList } from 'react-native';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import styles from '../css/notification.style';
-
-import { getNotificationsByUserId, updateNotificationsReadStatus } from '../../api/user';
 import { useAuth } from '../../context/AuthContext';
+import { useNotifications } from '../../context/NotificationContext';
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
 const Notification = ({ navigation }) => {
     const { user } = useAuth();
-    const [notifications, setNotifications] = useState([]);
-    console.log("user id in noti", user?.id);
-    // console.log(">>>notification ", notifications);
-
-    useEffect(() => {
-        if (user?.id) {
-            fetchNotifications();
-        }
-    }, [user]);
-
-    const fetchNotifications = async () => {
-        try {
-            const notificationsData = await getNotificationsByUserId(user?.id);
-            setNotifications(notificationsData.result);
-        } catch (error) {
-            console.error('Error fetching notifications:', error);
-        }
-    };
+    const { notifications, markNotificationAsRead } = useNotifications();
 
     const handleNotificationRead = async (notificationId) => {
-        console.log(notificationId);
-        try {
-            const rs = await updateNotificationsReadStatus(notificationId);
-            console.log(rs);
-            fetchNotifications();
-        } catch (error) {
-            console.error('Error fetching notifications read:', error);
-        }
-    }
+        await markNotificationAsRead(notificationId);
+    };
 
     const renderNotificationItem = ({ item }) => {
         const notificationTextStyle = item.read ? styles.readNotificationText : styles.unreadNotificationText;
-        // console.log(item.read);
         return (
             <TouchableOpacity style={styles.notificationItem} onPress={() => handleNotificationRead(item.notificationId)}>
                 <Image
