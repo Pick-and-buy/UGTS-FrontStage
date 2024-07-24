@@ -8,7 +8,7 @@ import styles from '../css/addressLists.style';
 import { getUserByToken } from '../../api/user';
 
 const AddressLists = ({ navigation, route }) => {
-    const { type, postDetails } = route.params;
+    const { type, postDetails, orderInfo } = route.params;
     const [user, setUser] = useState(null);
     
     const fetchUserData = async () => {
@@ -65,6 +65,22 @@ const AddressLists = ({ navigation, route }) => {
                             selectedAddress: item,
                             postDetails,
                             user
+                        });
+                    }}
+                >
+                    {content}
+                </TouchableOpacity>
+            );
+        }
+
+        if (type === 'buyer-change-address') {
+            return (
+                <TouchableOpacity
+                    style={styles.addressItem}
+                    onPress={() => {
+                        navigation.navigate('buyer-order-details', {
+                            selectedAddress: item,
+                            orderInfo
                         });
                     }}
                 >

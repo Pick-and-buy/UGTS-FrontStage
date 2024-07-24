@@ -42,7 +42,9 @@ import UpdateAddress from './app/screens/address/UpdateAddress';
 import TodoTask from './app/screens/todoTask/TodoTask';
 import CreateAddress from './app/screens/address/CreateAddress';
 import OrderSuccessfully from './app/screens/payment/OrderSuccessfully';
+import CancelSuccessfully from './app/screens/payment/CancelSuccessfully';
 import BuyerOrderDetails from './app/screens/payment/BuyerOrderDetails';
+import UpdatePost from './app/screens/post/UpdatePost';
 import PostsOfFollowedUser from './app/screens/post/PostsOfFollowedUser';
 import GetIDScreen from './app/screens/verify/Onboarding/GetIDScreen';
 import TakeSelfieScreen from './app/screens/verify/Onboarding/TakeSelfieScreen';
@@ -50,10 +52,10 @@ import ScanIDScreen from './app/screens/verify/Onboarding/ScanIDScreen';
 import FaceMatch from './app/screens/verify/FaceMatch';
 import ScanBackIDScreen from './app/screens/verify/ScanBackIDScreen';
 import ScanFontIDScreen from './app/screens/verify/ScanFontIDScreen';
+
 import Notification from './app/screens/notification/Notification';
 import { NotificationProvider } from './app/context/NotificationContext';
 import { AuthProvider } from './app/context/AuthContext';
-
 const Stack = createNativeStackNavigator();
 export default function App() {
   const [login, setLogin] = useState(null);
@@ -231,7 +233,6 @@ export default function App() {
                   component={ListBrands}
                   options={{ headerShown: false }}
                 />
-
                 <Stack.Screen
                   name='create-post-details'
                   component={CreatePostDetail}
