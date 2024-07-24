@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         // marginLeft: "3%",
         marginBottom: 12,
-        gap: 5
+        gap: 10
     },
     filterLabel: {
         fontSize: 16,
