@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useUser } from './UserContext';
 import { getNotificationsByUserId } from '../api/user';
+import { useAuth } from './AuthContext';
 
 const NotificationContext = createContext();
 
@@ -9,9 +9,9 @@ export const useNotifications = () => {
 };
 
 export const NotificationProvider = ({ children }) => {
-    const { user } = useUser();
+    const { user } = useAuth();
     const [notifications, setNotifications] = useState([]);
-
+    console.log("user in noti context", user);
     const fetchNotifications = async () => {
         try {
             if (user && user.id) {
@@ -20,7 +20,7 @@ export const NotificationProvider = ({ children }) => {
                 // console.log("Notifications fetched:", data);
             }
         } catch (error) {
-            console.error('Fetching push notifications failed:', error);
+            console.error('Fetching notifications failed:', error);
         }
     };
 

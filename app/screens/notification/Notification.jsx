@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, SafeAreaView, TouchableOpacity, Image, FlatList } from 'react-native';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import styles from '../css/notification.style';
-import { useUser } from '../../context/UserContext';
+
 import { getNotificationsByUserId, updateNotificationsReadStatus } from '../../api/user';
+import { useAuth } from '../../context/AuthContext';
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
 const Notification = ({ navigation }) => {
-    const { user } = useUser();
+    const { user } = useAuth();
     const [notifications, setNotifications] = useState([]);
-    console.log("user id in noti", user.id);
+    console.log("user id in noti", user?.id);
     // console.log(">>>notification ", notifications);
 
     useEffect(() => {
@@ -76,7 +77,7 @@ const Notification = ({ navigation }) => {
                 />
             ) : (
                 <View style={styles.emptyContainer}>
-                    <Text style={styles.emptyText}>Đăng nhập để xem thông báo của bạn</Text>
+                    <Text style={styles.emptyText}>Hiện tại bạn chưa có thông báo nào</Text>
                 </View>
             )}
         </SafeAreaView>
