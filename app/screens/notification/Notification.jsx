@@ -68,16 +68,22 @@ const Notification = ({ navigation }) => {
                 </TouchableOpacity>
             </View>
 
-            {notifications.length > 0 ? (
-                <FlatList
-                    data={notifications.reverse()}
-                    renderItem={renderNotificationItem}
-                    keyExtractor={(item) => item.notificationId}
-                    contentContainerStyle={styles.notificationList}
-                />
+            {user ? (
+                notifications.length > 0 ? (
+                    <FlatList
+                        data={notifications.reverse()}
+                        renderItem={renderNotificationItem}
+                        keyExtractor={(item) => item.notificationId}
+                        contentContainerStyle={styles.notificationList}
+                    />
+                ) : (
+                    <View style={styles.emptyContainer}>
+                        <Text style={styles.emptyText}>Hiện tại bạn chưa có thông báo nào</Text>
+                    </View>
+                )
             ) : (
                 <View style={styles.emptyContainer}>
-                    <Text style={styles.emptyText}>Hiện tại bạn chưa có thông báo nào</Text>
+                    <Text style={styles.emptyText}>Đăng nhập để nhận thông báo của bạn</Text>
                 </View>
             )}
         </SafeAreaView>
