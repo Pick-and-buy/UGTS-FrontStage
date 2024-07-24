@@ -274,7 +274,7 @@ const PostDetail = ({ navigation, route }) => {
                             justifyContent: 'center',
                             alignItems: 'center',
                         }}>
-                            {!postDetails?.isAvailable ? (
+                            {postDetails?.isAvailable ? (
                                 <TouchableOpacity
                                     style={styles.commentBtnActive}
                                     onPress={() => setModalVisible(true)}
@@ -537,7 +537,6 @@ const PostDetail = ({ navigation, route }) => {
                             </TouchableOpacity>
                         )
                         }
-
                     </View>
 
                     // )

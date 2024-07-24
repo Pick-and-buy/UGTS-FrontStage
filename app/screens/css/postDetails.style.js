@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
     },
     commentBtnActive: {
-        width: '40%',
+        width: '50%',
         height: 30,
         borderRadius: 5,
         overflow: 'hidden',
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     commentContainerUnActive: {
-        width: '40%',
+        width: '50%',
         height: 30,
         borderRadius: 5,
         overflow: 'hidden',

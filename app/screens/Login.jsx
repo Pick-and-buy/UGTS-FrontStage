@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
     ScrollView,
     Text,
@@ -14,17 +15,16 @@ import * as Yup from 'yup';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { COLORS, SIZES } from "../constants/theme";
 import styles from "./css/login.style";
-import { login } from '../api/auth';
-import { useState } from "react";
+import { useAuth } from '../context/AuthContext';
 
 const Login = ({ navigation }) => {
     const [loader, setLoader] = useState(false);
     const [obsecureText, setObsecureText] = useState(true);
+    const { login } = useAuth();
 
     const handleLogin = async (values, actions) => {
         try {
             await login(values.phoneNumber, values.password);
-            
             navigation.reset({
                 index: 0,
                 routes: [{ name: 'bottom-navigation' }],
