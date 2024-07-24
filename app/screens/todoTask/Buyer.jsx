@@ -19,7 +19,6 @@ import { COLORS } from "../../constants/theme";
 
 const Buyer = ({ navigation }) => {
 
-    const orderStatus = ["Chờ xử lý", "Đang xử lý", "Giao hàng", "Hủy hàng", "Đã nhận hàng", "Trả lại"];
     const [listOrdersBuyer, setListOrdersBuyer] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedOrderStatus, setSelectedOrderStatus] = useState('All');
@@ -44,7 +43,6 @@ const Buyer = ({ navigation }) => {
     };
 
     const fetchAllOrdersByOrderStatus = async (orderStatusName) => {
-        console.log('>>> check orderStatusName ===================================', orderStatusName);
         setIsLoading(true);
         try {
             let orderStatus = "";

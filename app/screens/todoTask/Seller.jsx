@@ -15,7 +15,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useState, useEffect, useCallback } from "react";
 import styles from "../css/seller.style";
-import { callFetchListOrders, cancelOrderSeller } from "../../api/order";
+import { callFetchListOrders, cancelOrderSeller, getOrdersByOrderStatus } from "../../api/order";
 import { getUserByToken } from "../../api/user";
 import { COLORS } from "../../constants/theme";
 
@@ -46,6 +46,36 @@ const Seller = ({ navigation }) => {
     setIsLoading(false);
   };
 
+  const fetchAllOrdersByOrderStatus = async (orderStatusName) => {
+    setIsLoading(true);
+    try {
+        let orderStatus = "";
+        if(orderStatusName === "Chờ xử lý") {
+            orderStatus = "PENDING";
+        } 
+        else if (orderStatusName === "Đang xử lý") {
+            orderStatus = "PROCESSING";
+        } else if (orderStatusName === "Đang giao hàng") {
+            orderStatus = "DELIVERED";
+        } else if (orderStatusName === "Đã hủy") {
+            orderStatus = "CANCELLED";
+        } else if (orderStatusName === "Đã nhận hàng") {
+            orderStatus = "RECEIVED";
+        } else if (orderStatusName === "Trả lại") {
+            orderStatus = "RETURNED";
+        }
+        const res = await getOrdersByOrderStatus(orderStatus);
+        const userData = await getUserByToken(); 
+        //Lọc tất cả order mà có id của người tạo bài post trùng với id của user đăng nhập
+        const filteredOrders = res.result.filter(order => order.post.user.id === userData.result.id);
+        setListOrdersSeller(filteredOrders);
+    } catch (error) {
+        console.error("Error fetching Orders by order status:", error);
+    } finally {
+        setIsLoading(false);
+    }
+}
+
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN', {
       minimumFractionDigits: 0,
@@ -68,9 +98,9 @@ const Seller = ({ navigation }) => {
     if (orderStatusName === 'All') {
       fetchOrdersBySeller();
     }
-    //else {
-    //     fetchAllOrdersByOrderStatus(orderStatusName);
-    // }
+    else {
+        fetchAllOrdersByOrderStatus(orderStatusName);
+    }
   };
 
   const handleCancelOrder = async (orderId) => {
