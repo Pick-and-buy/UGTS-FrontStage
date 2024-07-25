@@ -25,6 +25,7 @@ import { getAllCategoriesByBrandLineName } from "../api/category";
 import { getAllBrandLinesByBrandName } from "../api/brandLine";
 import * as ImagePicker from "expo-image-picker";
 import Button from "../components/Button";
+import { Video } from 'expo-av';
 
 const CreatePost = () => {
 
@@ -35,24 +36,26 @@ const CreatePost = () => {
   const [listBrandLines, setListBrandLines] = useState([]);
 
   const [images, setImages] = useState([
-    { id: '1', name: 'Overall picture', logoUrl: '', value: '' },
-    { id: '2', name: 'Brand logo', logoUrl: '', value: '' },
-    { id: '3', name: 'Inside label', logoUrl: '', value: '' },
-    { id: '4', name: 'Hardware engravings', logoUrl: '', value: '' },
-    { id: '5', name: 'Serial number', logoUrl: '', value: '' },
-    { id: '6', name: 'Made in label', logoUrl: '', value: '' },
-    { id: '7', name: 'QR code label', logoUrl: '', value: '' },
-    { id: '8', name: 'Hologram label', logoUrl: '', value: '' },
-    { id: '9', name: 'Zipper head (front)', logoUrl: '', value: '' },
-    { id: '10', name: 'Zipper head (back)', logoUrl: '', value: '' },
-    { id: '11', name: 'Button', logoUrl: '', value: '' },
-    { id: '12', name: 'Shoulder strap clasp', logoUrl: '', value: '' },
-    { id: '13', name: 'Logo texture close up', logoUrl: '', value: '' },
-    { id: '14', name: 'Authenticity card', logoUrl: '', value: '' },
-    { id: '15', name: 'Dust bag', logoUrl: '', value: '' },
-    { id: '16', name: '1st optional photo', logoUrl: '', value: '' },
-    { id: '17', name: '2nd optional photo', logoUrl: '', value: '' },
+    { id: '1', name: 'Overall picture (upload)', logoUrl: require('../../assets/images/bag/overall_picture.png'), value: '' },
+    { id: '2', name: 'Brand logo (upload)', logoUrl: require('../../assets/images/bag/brand_logo.png'), value: '' },
+    { id: '3', name: 'Inside label (upload)', logoUrl: require('../../assets/images/bag/inside_label.png'), value: '' },
+    { id: '4', name: 'Hardware engravings (upload)', logoUrl: require('../../assets/images/bag/hardware_engravings.png'), value: '' },
+    { id: '5', name: 'Serial number (upload)', logoUrl: require('../../assets/images/bag/serial_number.png'), value: '' },
+    { id: '6', name: 'Made in label (upload)', logoUrl: require('../../assets/images/bag/made_in_label.png'), value: '' },
+    { id: '7', name: 'QR code label (upload)', logoUrl: require('../../assets/images/bag/qr_code_label.png'), value: '' },
+    { id: '8', name: 'Hologram label (upload)', logoUrl: require('../../assets/images/bag/hologram_label.png'), value: '' },
+    { id: '9', name: 'Zipper head (front) (upload)', logoUrl: require('../../assets/images/bag/zipper_head_front.png'), value: '' },
+    { id: '10', name: 'Zipper head (back) (upload)', logoUrl: require('../../assets/images/bag/zipper_head_back.png'), value: '' },
+    { id: '11', name: 'Button (upload)', logoUrl: require('../../assets/images/bag/button.png'), value: '' },
+    { id: '12', name: 'Shoulder strap clasp (upload)', logoUrl: require('../../assets/images/bag/shoulder_strap_clasp.png'), value: '' },
+    { id: '13', name: 'Logo texture close up (upload)', logoUrl: require('../../assets/images/bag/logo_texture_close_up_macro_image.png'), value: '' },
+    { id: '14', name: 'Authenticity card (upload)', logoUrl: require('../../assets/images/bag/authenticity_card.png'), value: '' },
+    { id: '15', name: 'Dust bag (upload)', logoUrl: require('../../assets/images/bag/dust_bag.png'), value: '' },
+    { id: '16', name: '1st optional photo (upload)', logoUrl: require('../../assets/images/bag/1st_optional_photo.png'), value: '' },
+    { id: '17', name: '2nd optional photo (upload)', logoUrl: require('../../assets/images/bag/2nd_optional_photo.png'), value: '' },
   ]);
+  const [invoice, setInvoice] = useState("");
+  const [videoUri, setVideoUri] = useState("");
 
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [selectedBrandLine, setSelectedBrandLine] = useState(null);
@@ -148,8 +151,9 @@ const CreatePost = () => {
 
   const dataSize = [
     { label: 'Small', value: 'Small' },
-    { label: 'Normal', value: 'Normal' },
-    { label: 'Big', value: 'Big' },
+    { label: 'Media', value: 'Media' },
+    { label: 'Large', value: 'Large' },
+    { label: 'Extra Large', value: 'Extra Large' },
   ];
 
   const handleCreatePost = async (values, actions) => {
@@ -195,10 +199,10 @@ const CreatePost = () => {
       formData.append('request', JSON.stringify(request));
       console.log('>>> check images: ', images);
       images.forEach((image, index) => {
-        if (image) {
+        if (image.value) {
           const fileName = image.split('/').pop();
           formData.append('productImage', {
-            uri: image,
+            uri: image.value,
             type: 'image/jpeg',
             name: fileName,
           });
@@ -207,7 +211,26 @@ const CreatePost = () => {
 
       await createPost(formData);
       navigation.navigate('Home')
-      setImages([null, null, null, null, null]);
+      setImages([
+        { id: '1', name: 'Overall picture (upload)', logoUrl: require('../../assets/images/bag/overall_picture.png'), value: '' },
+        { id: '2', name: 'Brand logo (upload)', logoUrl: require('../../assets/images/bag/brand_logo.png'), value: '' },
+        { id: '3', name: 'Inside label (upload)', logoUrl: require('../../assets/images/bag/inside_label.png'), value: '' },
+        { id: '4', name: 'Hardware engravings (upload)', logoUrl: require('../../assets/images/bag/hardware_engravings.png'), value: '' },
+        { id: '5', name: 'Serial number (upload)', logoUrl: require('../../assets/images/bag/serial_number.png'), value: '' },
+        { id: '6', name: 'Made in label (upload)', logoUrl: require('../../assets/images/bag/made_in_label.png'), value: '' },
+        { id: '7', name: 'QR code label (upload)', logoUrl: require('../../assets/images/bag/qr_code_label.png'), value: '' },
+        { id: '8', name: 'Hologram label (upload)', logoUrl: require('../../assets/images/bag/hologram_label.png'), value: '' },
+        { id: '9', name: 'Zipper head (front) (upload)', logoUrl: require('../../assets/images/bag/zipper_head_front.png'), value: '' },
+        { id: '10', name: 'Zipper head (back) (upload)', logoUrl: require('../../assets/images/bag/zipper_head_back.png'), value: '' },
+        { id: '11', name: 'Button (upload)', logoUrl: require('../../assets/images/bag/button.png'), value: '' },
+        { id: '12', name: 'Shoulder strap clasp (upload)', logoUrl: require('../../assets/images/bag/shoulder_strap_clasp.png'), value: '' },
+        { id: '13', name: 'Logo texture close up (upload)', logoUrl: require('../../assets/images/bag/logo_texture_close_up_macro_image.png'), value: '' },
+        { id: '14', name: 'Authenticity card (upload)', logoUrl: require('../../assets/images/bag/authenticity_card.png'), value: '' },
+        { id: '15', name: 'Dust bag (upload)', logoUrl: require('../../assets/images/bag/dust_bag.png'), value: '' },
+        { id: '16', name: '1st optional photo (upload)', logoUrl: require('../../assets/images/bag/1st_optional_photo.png'), value: '' },
+        { id: '17', name: '2nd optional photo (upload)', logoUrl: require('../../assets/images/bag/2nd_optional_photo.png'), value: '' },
+      ]);
+      setInvoice("");
       actions.resetForm({
         title: '',
         brandName: '',
@@ -239,25 +262,25 @@ const CreatePost = () => {
   }
 
   //Upload Image
-  const onGalleryMultiplePress = async () => {
+  const onGalleryMultiplePress = async (index) => {
     try {
       await ImagePicker.requestMediaLibraryPermissionsAsync();
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         aspect: [1, 1],
-        allowsMultipleSelection: true,  // allow multiple images
+        //allowsMultipleSelection: true,  // allow multiple images
       });
       if (!result.canceled) {
-        const newImages = result?.assets?.map(asset => asset.uri);
-        const updatedImages = [...newImages, ...images].slice(0, 17);
-        setImages(updatedImages);
+        const newImages = [...images];
+        newImages[index].value = result.assets[0].uri;
+        setImages(newImages);
       }
     } catch (error) {
       console.error('Error Upload Image: ', error);
     }
   }
 
-  const uploadImageCamera = async () => {
+  const uploadImageCamera = async (index) => {
     try {
       await ImagePicker.requestCameraPermissionsAsync();
       let result = await ImagePicker.launchCameraAsync({
@@ -267,10 +290,9 @@ const CreatePost = () => {
         aspect: [1, 1],
       });
       if (!result.canceled) {
-        //save images
-        const newImages = result?.assets?.map(asset => asset.uri);
-        const updatedImages = [...newImages, ...images].slice(0, 17);
-        setImages(updatedImages);
+        const newImages = [...images];
+        newImages[index].value = result.assets[0].uri;
+        setImages(newImages);
       }
     } catch (error) {
       console.error('Error Upload Image: ', error);
@@ -280,9 +302,53 @@ const CreatePost = () => {
   //Remove Image
   const removeImage = (index) => {
     const newImages = [...images];
-    newImages.splice(index, 1);
-    newImages.push("")
+    newImages[index].value = '';
     setImages(newImages);
+  }
+
+  //Upload Invoice
+  const onGalleryUploadInvoice = async () => {
+    try {
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        aspect: [1, 1],
+      });
+      if (!result.canceled) {
+        const newImages = result.assets[0].uri;
+        setInvoice(newImages);
+      }
+    } catch (error) {
+      console.error('Error Upload Image: ', error);
+    }
+  }
+
+  //Remove Invoice
+  const removeInvoice = () => {
+    setInvoice("")
+  }
+
+  //Upload video
+  const UploadVideoScreen = async () => {
+    try {
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+      let result = await ImagePicker.launchImageLibraryAsync({
+        // cameraType: ImagePicker.CameraType.back,
+        mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+        allowsEditing: true,
+        aspect: [1, 1],
+      });
+      if (!result.canceled) {
+        setVideoUri(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Error Upload Image: ', error);
+    }
+  };
+
+  //Remove Video
+  const removeVideo = () => {
+    setVideoUri("");
   }
 
   const formatPrice = (price) => {
@@ -331,14 +397,16 @@ const CreatePost = () => {
                         (
                           <View key={index}>
                             <View key={index} style={styles.image} >
-                              <TouchableOpacity onPress={uploadImageCamera}>
-                                <View style={{ position: 'absolute', top: 3, left: 1 }}>
-                                  <Text style={{ color: COLORS.gray }}>{index + 1}</Text>
-                                </View>
-                                <FontAwesome style={{ marginTop: 20, marginHorizontal: 20 }} name="camera" size={26} color={COLORS.gray} />
-                                <Text style={{ marginTop: 5, color: COLORS.gray, textAlign: 'center', flexWrap: 'wrap' }}>{item.name}</Text>
+                              <TouchableOpacity onPress={() => uploadImageCamera(index)}>
+                                <Image
+                                  style={styles.imageBrandLogo}
+                                  source={item.logoUrl}
+                                />
                               </TouchableOpacity>
                             </View>
+                            <TouchableOpacity style={styles.viewBrandLogo} onPress={() => onGalleryMultiplePress(index)}>
+                              <Text style={styles.textBrandLogo}>{item.name}</Text>
+                            </TouchableOpacity>
                           </View>
                         )
                         :
@@ -351,46 +419,83 @@ const CreatePost = () => {
                                 <FontAwesome6 style={styles.xmark} name="xmark" size={20} color="white" />
                               </TouchableOpacity>
                             </ImageBackground>
+                            <View style={styles.viewBrandLogo}>
+                              <Text style={styles.textBrandLogo}>{item.name}</Text>
+                            </View>
                           </View>
                         )
                     )}
                   />
-                  
+
                 </View>
-                <View style={{ marginTop: 35, flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10 }}>
-                  <Text style={{ fontSize: 16 }}>Thông tin sản phẩm</Text>
+                <View style={{ marginTop: 20, flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10 }}>
+                  <Text style={{ fontSize: 16, color: '#6e6d6d' }}>Thông tin sản phẩm</Text>
                   <TouchableOpacity
                     style={{ flexDirection: "row", gap: 10 }}
                     onPress={() => console.warn("Quy Tắc")}
                   >
-                    <AntDesign name="questioncircle" size={20} color="#5e5b55" />
-                    <Text>Quy tắc</Text>
+                    <AntDesign name="questioncircle" size={20} color="#6e6d6d" />
+                    <Text style={{ color: '#6e6d6d' }}>Quy tắc</Text>
                   </TouchableOpacity>
 
                 </View>
               </View>
               {/* Upload Image by gallery and Camera Option */}
               <View style={styles.selectOption}>
-                {/* Upload Image by gallery */}
-                <TouchableOpacity
-                  onPress={onGalleryMultiplePress}
-                  style={[styles.uploadContainer, { marginLeft: 20 }]}>
-                  <Image
-                    style={styles.imageSelect}
-                    source={require('../../assets/images/gallery.png')}
-                  />
-                  <Text style={{ fontSize: 16 }}>Thư viện</Text>
-                </TouchableOpacity>
-                {/* Upload Image by Camera */}
-                <TouchableOpacity
-                  onPress={uploadImageCamera}
-                  style={styles.uploadContainer}>
-                  <Image
-                    style={styles.imageSelect}
-                    source={require('../../assets/images/camera.png')}
-                  />
-                  <Text style={{ fontSize: 16 }}>Chụp ảnh</Text>
-                </TouchableOpacity>
+                {invoice === "" ? (
+                  <TouchableOpacity
+                    onPress={onGalleryUploadInvoice}
+                    style={[styles.uploadContainer, { marginLeft: 10 }]}>
+                    <Image
+                      style={styles.imageSelect}
+                      source={require('../../assets/images/gallery.png')}
+                    />
+                    <Text style={{ fontSize: 16 }}>Tải Ảnh Hóa Đơn</Text>
+                  </TouchableOpacity>
+                )
+                  :
+                  (
+                    <View style={styles.uploadInvoiceContainer}>
+                      <ImageBackground
+                        style={styles.uploadInvoice}
+                        source={{ uri: invoice }}
+                      >
+                        <TouchableOpacity onPress={() => removeInvoice()}>
+                          <FontAwesome6 style={[styles.xmark, { left: 15, top: 5 }]} name="xmark" size={20} color="white" />
+                        </TouchableOpacity>
+                      </ImageBackground>
+                    </View>
+                  )
+                }
+
+                {videoUri === "" ? (
+                  <TouchableOpacity
+                    onPress={UploadVideoScreen}
+                    style={styles.uploadContainer}>
+                    <Image
+                      style={styles.imageSelect}
+                      source={require('../../assets/images/camera.png')}
+                    />
+                    <Text style={{ fontSize: 16 }}>Upload video</Text>
+                  </TouchableOpacity>
+                )
+                  :
+                  (
+                    <View style={styles.uploadVideoContainer}>
+                      <Video
+                        source={{ uri: videoUri }}
+                        style={{ width: '100%', height: '100%' }}
+                        // style={styles.uploadVideo}
+                        useNativeControls
+                        resizeMode="cover"
+                        isLooping
+                      />
+                      <TouchableOpacity onPress={() => removeVideo()} style={{ position: 'absolute', bottom: 10, left: 15 }}>
+                        <FontAwesome6 name="xmark" size={20} color="white" />
+                      </TouchableOpacity>
+                    </View>
+                  )
+                }
               </View>
               <View style={styles.shadow}></View>
 
