@@ -256,7 +256,7 @@ const Profile = ({ navigation }) => {
                     borderRadius: 12,
                   }}
                 >
-                  <ProfileTile title={"Lịch sử mặt hàng đã xem"} icon={"history"} font={3} isDivider={true} />
+                  <ProfileTile title={"Lịch sử mặt hàng đã xem"} icon={"history"} font={3} isDivider={true} onPress={() => navigation.navigate("order-tracking")} />
                   <ProfileTile title={"Mặt hàng đã thích"} icon={"heart"} font={3} isDivider={true} />
                   <ProfileTile title={"Mặt hàng đã mua"} icon={"shopping-bag"} font={3} isDivider={true} />
                   <ProfileTile title={"Các bài đã đăng"} icon={"camera"} font={3} isDivider={true} />

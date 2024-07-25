@@ -61,6 +61,7 @@ import SellerOrderDetails from './app/screens/payment/SellerOrderDetails';
 
 
 import { AuthProvider } from './app/context/AuthContext';
+import OrderTracking from './app/screens/payment/OrderTracking';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -353,6 +354,11 @@ export default function App() {
                 <Stack.Screen
                   name='seller-order-details'
                   component={SellerOrderDetails}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='order-tracking'
+                  component={OrderTracking}
                   options={{ headerShown: false }}
                 />
               </Stack.Navigator>
