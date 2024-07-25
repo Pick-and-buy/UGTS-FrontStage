@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     orderTracking:{
         width: "100%",
         backgroundColor:COLORS.white,
-        marginTop:20,
+        marginTop:15,
         marginBottom:6,
         borderBlockColor:"#ddd",
         borderBottomWidth:1,

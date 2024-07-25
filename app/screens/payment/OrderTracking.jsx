@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Feather } from '@expo/vector-icons';
-import { COLORS } from '../../constants/theme';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 
 const OrderTracking = ({ status }) => {
   console.log(status);
@@ -21,7 +21,17 @@ const OrderTracking = ({ status }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Feather name="package" size={40} color="#2490A9" />
+        <View
+          style={{
+            padding: 5,
+            borderWidth: 1,
+            borderRadius: 99,
+            borderColor: '#ccc',
+            marginLeft:8,
+            marginRight:8,
+          }}>
+          <MaterialCommunityIcons name="package-variant-closed" size={40} color="#2490A9" />
+        </View>
         <View>
           <Text style={styles.title}>Đã đặt hàng</Text>
           <Text style={styles.subtitle}>Ngày giao hàng dự kiến • 4 July - 6 July</Text>
@@ -104,7 +114,7 @@ const styles = StyleSheet.create({
     height: 6,
     backgroundColor: '#2490A9',
     marginBottom: 35,
-    marginLeft:-28,
+    marginLeft: -28,
     marginRight: -32,
   },
   dottedLine: {
@@ -113,7 +123,7 @@ const styles = StyleSheet.create({
     borderTopColor: '#2490A9',
     borderStyle: 'dotted',
     marginBottom: 35,
-    marginLeft:-28,
+    marginLeft: -28,
     marginRight: -32,
   },
 });
