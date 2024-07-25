@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { StyleSheet, View, Text, Image, SafeAreaView, TouchableOpacity, ScrollView, Alert, Clipboard } from "react-native";
+import { StyleSheet, View, Text, Image, SafeAreaView, TouchableOpacity, ScrollView, Alert } from "react-native";
 import styles from "../css/buyerOrderDetails.style";
 import { useFocusEffect } from '@react-navigation/native';
 import { Feather, AntDesign, MaterialIcons, MaterialCommunityIcons, SimpleLineIcons, Ionicons, Entypo } from '@expo/vector-icons';
@@ -9,6 +9,8 @@ import { getUserByToken } from "../../api/user";
 import { format, addDays } from 'date-fns';
 import { cancelOrderBuyer, updateOrderBuyer } from '../../api/order';
 import OrderTracking from './OrderTracking';
+import * as Clipboard from 'expo-clipboard';
+
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
 const BuyerOrderDetails = ({ navigation, route }) => {
@@ -69,7 +71,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
 
   const copiedOrderId = () => {
     Clipboard.setString(orderInfo?.id);
-    Alert.alert('>>> check copiedText: ', orderInfo.id)
+    // Alert.alert('>>> check copiedText: ', orderInfo.id)
   };
 
   useFocusEffect(
