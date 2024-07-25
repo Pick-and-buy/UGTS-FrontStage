@@ -8,6 +8,7 @@ import { G, Line, Svg } from "react-native-svg";
 import { getUserByToken } from "../../api/user";
 import { format, addDays } from 'date-fns';
 import { cancelOrderBuyer, updateOrderBuyer } from '../../api/order';
+import OrderTracking from './OrderTracking';
 
 const BuyerOrderDetails = ({ navigation, route }) => {
   const orderInfo = route.params.orderInfo;
@@ -119,8 +120,14 @@ const BuyerOrderDetails = ({ navigation, route }) => {
         <Feather name="chevron-left" size={30} color={COLORS.primary} onPress={() => navigation.goBack()} />
         <Text style={styles.headerText}>Thông tin đơn hàng</Text>
       </View>
+      
       <ScrollView style={styles.wrapper} showsVerticalScrollIndicator={false}>
-
+        {
+          orderInfo?.orderDetails?.status !== "CANCELLED" &&
+          <View style={styles.orderTracking}>
+            <OrderTracking status={orderInfo?.orderDetails?.status} />
+          </View>
+        }
         <View>
           <View style={styles.ownerAddress}>
             <SimpleLineIcons name="location-pin" size={20} color="black" />

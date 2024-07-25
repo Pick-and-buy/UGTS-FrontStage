@@ -29,6 +29,15 @@ const styles = StyleSheet.create({
         width: "100%",
         marginHorizontal: "auto",
     },
+    orderTracking:{
+        width: "100%",
+        backgroundColor:COLORS.white,
+        marginTop:20,
+        marginBottom:6,
+        borderBlockColor:"#ddd",
+        borderBottomWidth:1,
+        paddingBottom:20
+    },
     address: {
         width: "92%",
         justifyContent: "center",

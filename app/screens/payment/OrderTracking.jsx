@@ -5,7 +5,7 @@ import { Feather } from '@expo/vector-icons';
 import { COLORS } from '../../constants/theme';
 
 const OrderTracking = ({ status }) => {
-  status = 'DELIVERED'
+  console.log(status);
   const steps = [
     { key: 'PENDING', label: 'Đã đặt hàng' },
     { key: 'PROCESSING', label: 'Đang chờ đơn vị vận chuyển' },
@@ -34,7 +34,7 @@ const OrderTracking = ({ status }) => {
               {index < currentIndex ? (
                 <Icon name="check-circle" size={24} color="#2490A9" />
               ) : index === currentIndex ? (
-                <View style={{ backgroundColor: '#2490A9', borderRadius: 30, padding: 2.5, justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ backgroundColor: '#2490A9', borderRadius: 30, padding: 4, justifyContent: 'center', alignItems: 'center' }}>
                   <Icon name="package-variant-closed" size={16} color="#fff" />
                 </View>
               ) : (
@@ -56,12 +56,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    elevation: 2,
+    // borderRadius: 8,
+    // elevation: 2,
     justifyContent: 'center',
   },
   header: {
@@ -93,7 +89,7 @@ const styles = StyleSheet.create({
   },
   step: {
     alignItems: 'center',
-    marginTop: -8.5,
+    marginTop: -10,
     marginVertical: 2
   },
   stepText: {
@@ -108,15 +104,17 @@ const styles = StyleSheet.create({
     height: 6,
     backgroundColor: '#2490A9',
     marginBottom: 35,
-    marginHorizontal: -32
+    marginLeft:-28,
+    marginRight: -32,
   },
   dottedLine: {
     width: 60,
-    borderTopWidth: 6,
+    borderTopWidth: 4,
     borderTopColor: '#2490A9',
     borderStyle: 'dotted',
     marginBottom: 35,
-    marginHorizontal: -32,
+    marginLeft:-28,
+    marginRight: -32,
   },
 });
 
