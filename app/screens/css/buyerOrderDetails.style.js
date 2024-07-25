@@ -326,6 +326,33 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
     },
+    confirm:{
+        width: "96%",
+        flexDirection: 'row',
+        marginHorizontal: "auto",
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 10,
+        marginTop:8
+    },
+    confirmButton:{
+        flex:1,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: COLORS.primary,
+        marginVertical: 'auto',
+        borderRadius: 8,
+        paddingHorizontal:6
+    },
+    confirmTextButton:{
+        color: COLORS.white,
+    },
+    confirmText:{
+        width: "60%",
+        color: COLORS.gray,
+        fontSize:12
+    }
 
 });
 

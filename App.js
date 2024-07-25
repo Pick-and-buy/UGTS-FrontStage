@@ -52,6 +52,7 @@ import ScanIDScreen from './app/screens/verify/Onboarding/ScanIDScreen';
 import FaceMatch from './app/screens/verify/FaceMatch';
 import ScanBackIDScreen from './app/screens/verify/ScanBackIDScreen';
 import ScanFontIDScreen from './app/screens/verify/ScanFontIDScreen';
+import AddRating from './app/screens/payment/AddRating';
 
 import Notification from './app/screens/notification/Notification';
 import { NotificationProvider } from './app/context/NotificationContext';
@@ -359,6 +360,11 @@ export default function App() {
                 <Stack.Screen
                   name='order-tracking'
                   component={OrderTracking}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='start-rating'
+                  component={AddRating}
                   options={{ headerShown: false }}
                 />
               </Stack.Navigator>

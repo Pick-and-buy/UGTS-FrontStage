@@ -289,7 +289,19 @@ const BuyerOrderDetails = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
         </View>
+        {orderInfo?.orderDetails?.status === "RECEIVED" &&
+          <><View style={styles.divider} /><View style={styles.confirm}>
+            <Text style={styles.confirmText}>
+              Vui lòng chỉ ấn "Đã nhận được hàng" khi đơn hàng đã được giao đến bạn và sản phẩm nhận được không có vấn để nào.
+            </Text>
+            <TouchableOpacity style={styles.confirmButton}>
+              <Text style={styles.confirmTextButton}>Đã nhận được hàng</Text>
+            </TouchableOpacity>
+          </View></>
+        }
+
       </ScrollView>
+      
       {orderInfo?.orderDetails?.status === "CANCELLED" ? (
         <View style={styles.bottomBtn}>
           <TouchableOpacity style={styles.buyBtn}>
@@ -312,6 +324,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
         </View>
       )
       }
+
     </SafeAreaView>
   )
 }
