@@ -1,11 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
-
-const OrderTracking = ({ status }) => {
-  console.log(status);
+import { format, addDays } from 'date-fns';
+const OrderTracking = ({ status, deliveryDateFrom, deliveryDateTo }) => {
   const steps = [
     { key: 'PENDING', label: 'Đã đặt hàng' },
     { key: 'PROCESSING', label: 'Đang chờ đơn vị vận chuyển' },
@@ -15,8 +13,10 @@ const OrderTracking = ({ status }) => {
   ];
 
   const getStatusIndex = (status) => steps.findIndex(step => step.key === status);
+  const getStatusLabel = (status) => steps.find(step => step.key === status)?.label;
 
   const currentIndex = getStatusIndex(status);
+  const currentLabel = getStatusLabel(status);
 
   return (
     <View style={styles.container}>
@@ -27,14 +27,14 @@ const OrderTracking = ({ status }) => {
             borderWidth: 1,
             borderRadius: 99,
             borderColor: '#ccc',
-            marginLeft:8,
-            marginRight:8,
+            marginLeft: 8,
+            marginRight: 8,
           }}>
           <MaterialCommunityIcons name="package-variant-closed" size={40} color="#2490A9" />
         </View>
         <View>
-          <Text style={styles.title}>Đã đặt hàng</Text>
-          <Text style={styles.subtitle}>Ngày giao hàng dự kiến • 4 July - 6 July</Text>
+          <Text style={styles.title}>{currentLabel}</Text>
+          <Text style={styles.subtitle}>Ngày giao hàng dự kiến • {deliveryDateFrom ? format(deliveryDateFrom, 'MMM d') : ''} - {deliveryDateTo ? format(deliveryDateTo, 'MMM d') : ''}</Text>
         </View>
       </View>
       <View style={styles.trackingContainer}>
@@ -66,8 +66,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    // borderRadius: 8,
-    // elevation: 2,
     justifyContent: 'center',
   },
   header: {
@@ -91,7 +89,7 @@ const styles = StyleSheet.create({
   trackingContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 20
+    marginTop: 20,
   },
   tracking: {
     flexDirection: 'row',
@@ -100,7 +98,7 @@ const styles = StyleSheet.create({
   step: {
     alignItems: 'center',
     marginTop: -10,
-    marginVertical: 2
+    marginVertical: 2,
   },
   stepText: {
     fontSize: 12,

@@ -9,6 +9,7 @@ import { getUserByToken } from "../../api/user";
 import { format, addDays } from 'date-fns';
 import { cancelOrderBuyer, updateOrderBuyer } from '../../api/order';
 import OrderTracking from './OrderTracking';
+const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
 const BuyerOrderDetails = ({ navigation, route }) => {
   const orderInfo = route.params.orderInfo;
@@ -120,12 +121,15 @@ const BuyerOrderDetails = ({ navigation, route }) => {
         <Feather name="chevron-left" size={30} color={COLORS.primary} onPress={() => navigation.goBack()} />
         <Text style={styles.headerText}>Thông tin đơn hàng</Text>
       </View>
-      
       <ScrollView style={styles.wrapper} showsVerticalScrollIndicator={false}>
         {
           orderInfo?.orderDetails?.status !== "CANCELLED" &&
           <View style={styles.orderTracking}>
-            <OrderTracking status={orderInfo?.orderDetails?.status} />
+            <OrderTracking
+              status={orderInfo?.orderDetails?.status}
+              deliveryDateFrom={deliveryDateFrom}
+              deliveryDateTo={deliveryDateTo}
+            />
           </View>
         }
         <View>
@@ -162,7 +166,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
           <View style={styles.seller}>
             <Image
               style={styles.sellerImage}
-              source={{ uri: orderInfo?.post?.user?.avatar }}
+              source={{ uri: orderInfo?.post?.user?.avatar ? orderInfo?.post?.user?.avatar : profile }}
             />
             <Text style={styles.sellerText}>
               {orderInfo?.post?.user?.username}
