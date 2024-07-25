@@ -4,7 +4,20 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Feather } from '@expo/vector-icons';
 import { COLORS } from '../../constants/theme';
 
-const OrderTracking = ({status}) => {
+const OrderTracking = ({ status }) => {
+  status = 'DELIVERED'
+  const steps = [
+    { key: 'PENDING', label: 'Đã đặt hàng' },
+    { key: 'PROCESSING', label: 'Đang chờ đơn vị vận chuyển' },
+    { key: 'DELIVERED', label: 'Đang vận chuyển' },
+    { key: 'RECEIVED', label: 'Đơn hàng đã được giao' },
+    { key: 'COMPLETED', label: 'Hoàn thành' }
+  ];
+
+  const getStatusIndex = (status) => steps.findIndex(step => step.key === status);
+
+  const currentIndex = getStatusIndex(status);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -15,42 +28,33 @@ const OrderTracking = ({status}) => {
         </View>
       </View>
       <View style={styles.trackingContainer}>
-        <View style={styles.tracking}>
-          <View style={[styles.step, { marginBottom: 15 }]}>
-            <Icon name="check-circle" size={24} color="#2490A9" />
-            <Text style={styles.stepText}>Đã đặt hàng</Text>
-          </View>
-          <View style={styles.line} />
-          <View style={styles.step}>
-            <Icon name="check-circle" size={24} color="#2490A9" />
-            <Text style={styles.stepText}>Đang chờ đơn vị vận chuyển</Text>
-          </View>
-          <View style={styles.line} />
-          <View style={styles.step}>
-            <Icon name="check-circle" size={24} color="#2490A9" />
-            <Text style={styles.stepText}>Đang vận chuyển</Text>
-          </View>
-          <View style={styles.line} />
-          <View style={styles.step}>
-            <View style={{ backgroundColor: '#2490A9',borderRadius:30,padding:2.5 }}>
-              <Icon name="package-variant-closed" size={16} color="#fff" />
+        {steps.map((step, index) => (
+          <React.Fragment key={step.key}>
+            <View style={styles.step}>
+              {index < currentIndex ? (
+                <Icon name="check-circle" size={24} color="#2490A9" />
+              ) : index === currentIndex ? (
+                <View style={{ backgroundColor: '#2490A9', borderRadius: 30, padding: 2.5, justifyContent: 'center', alignItems: 'center' }}>
+                  <Icon name="package-variant-closed" size={16} color="#fff" />
+                </View>
+              ) : (
+                <Icon name="checkbox-blank-circle-outline" size={24} color="#aaa" />
+              )}
+              <Text style={styles.stepText}>{step.label}</Text>
             </View>
-            <Text style={styles.stepText}>Đơn hàng đã được giao</Text>
-          </View>
-          <View style={styles.dottedLine} />
-          <View style={[styles.step, { marginBottom: 15 }]}>
-            <Icon name="checkbox-blank-circle-outline" size={24} color="#aaa" />
-            <Text style={styles.stepText}>Hoàn thành</Text>
-          </View>
-        </View>
+            {index < steps.length - 1 && (
+              <View style={index < currentIndex ? styles.line : styles.dottedLine} />
+            )}
+          </React.Fragment>
+        ))}
       </View>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // padding: 16,
     backgroundColor: '#fff',
     borderRadius: 8,
     shadowColor: '#000',
@@ -81,6 +85,7 @@ const styles = StyleSheet.create({
   trackingContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
+    marginTop: 20
   },
   tracking: {
     flexDirection: 'row',
@@ -88,6 +93,8 @@ const styles = StyleSheet.create({
   },
   step: {
     alignItems: 'center',
+    marginTop: -8.5,
+    marginVertical: 2
   },
   stepText: {
     fontSize: 12,
