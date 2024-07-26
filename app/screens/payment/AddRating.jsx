@@ -2,21 +2,34 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RatingInput, Rating } from "react-native-stock-star-rating";
 import { COLORS, SIZES } from "../../constants/theme";
-const AddRating = () => {
+const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
+
+const AddRating = ({ orderInfo }) => {
+
   const [rating, setRating] = useState(0);
   console.log(rating);
   return (
     <View style={styles.container}>
+      <View style={styles.imageWrapper}>
+        <Image
+          style={styles.image}
+          source={{ uri: orderInfo?.post?.user?.avatar ? orderInfo?.post?.user?.avatar : profile }}
+        />
+      </View>
+      <View style={styles.seller}>
+        <Text style={styles.sellerTitle}>
+          {orderInfo?.post?.user?.username}
+        </Text>
+      </View>
       <View style={styles.ratingBox}>
-        <View style={styles.image}>
-        </View>
+
 
         <View>
           <RatingInput
@@ -67,6 +80,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.white,
     justifyContent: "center",
+    marginTop: 20,
+    marginBottom: 50
   },
   ratingBox: {
     width: '80%',
@@ -76,15 +91,32 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginHorizontal: "auto"
   },
-
+  imageWrapper: {
+    width: 65,
+    height: 65,
+    borderRadius: 50,
+    marginHorizontal: "auto",
+    marginBottom:8
+  },
   image: {
-    position: "absolute",
-    zIndex: 999,
-    top: -30,
+    width: "100%",
+    height: "100%",
+    borderRadius: 50,
+    
   },
   small: {
     fontSize: 16,
     fontFamily: "medium",
     color: COLORS.lightWhite,
   },
+  seller:{
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom:10
+  },
+  sellerTitle:{
+    fontSize:22,
+    fontWeight:"bold",
+    color: '#000'
+  }
 });

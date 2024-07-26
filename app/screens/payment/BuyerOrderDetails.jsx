@@ -10,6 +10,7 @@ import { format, addDays } from 'date-fns';
 import { cancelOrderBuyer, updateOrderBuyer } from '../../api/order';
 import OrderTracking from './OrderTracking';
 import * as Clipboard from 'expo-clipboard';
+import AddRating from './AddRating';
 
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
@@ -22,6 +23,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
   const [deliveryDateFrom, setDeliveryDateFrom] = useState(null);
   const [deliveryDateTo, setDeliveryDateTo] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
+  const [showAddRating, setShowAddRating] = useState(false);
 
   const fetchPhoneUserOder = async () => {
     const phoneNumber = orderInfo?.orderDetails?.phoneNumber;
@@ -289,16 +291,24 @@ const BuyerOrderDetails = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
         </View>
-        {orderInfo?.orderDetails?.status === "RECEIVED" &&
-          <><View style={styles.divider} /><View style={styles.confirm}>
-            <Text style={styles.confirmText}>
-              Vui lòng chỉ ấn "Đã nhận được hàng" khi đơn hàng đã được giao đến bạn và sản phẩm nhận được không có vấn để nào.
-            </Text>
-            <TouchableOpacity style={styles.confirmButton}>
-              <Text style={styles.confirmTextButton}>Đã nhận được hàng</Text>
-            </TouchableOpacity>
-          </View></>
+        {orderInfo?.orderDetails?.status === "RECEIVED" && !showAddRating &&
+          <>
+            <View style={styles.divider} />
+            <View style={styles.confirm}>
+              <Text style={styles.confirmText}>
+                Vui lòng chỉ ấn "Đã nhận được hàng" khi đơn hàng đã được giao đến bạn và sản phẩm nhận được không có vấn để nào.
+              </Text>
+              <TouchableOpacity
+                style={styles.confirmButton}
+                onPress={() => setShowAddRating(true)}
+              >
+                <Text style={styles.confirmTextButton}>Đã nhận được hàng</Text>
+              </TouchableOpacity>
+            </View>
+          </>
         }
+
+        {showAddRating && <AddRating orderInfo={orderInfo}/>}
 
       </ScrollView>
 
