@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     height: 6,
     backgroundColor: '#2490A9',
     marginBottom: 35,
-    marginLeft: -28,
+    marginLeft: -30,
     marginRight: -32,
   },
   dottedLine: {
