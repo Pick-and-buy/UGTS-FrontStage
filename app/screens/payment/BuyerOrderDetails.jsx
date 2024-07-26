@@ -301,29 +301,32 @@ const BuyerOrderDetails = ({ navigation, route }) => {
         }
 
       </ScrollView>
-      
-      {orderInfo?.orderDetails?.status === "CANCELLED" ? (
+
+      {orderInfo?.orderDetails?.status !== "DELIVERED" && orderInfo?.orderDetails?.status !== "RECEIVED" && (
         <View style={styles.bottomBtn}>
-          <TouchableOpacity style={styles.buyBtn}>
-            <Text style={styles.buyBtnText}>Mua Lại Sản Phẩm</Text>
-          </TouchableOpacity>
+          {orderInfo?.orderDetails?.status === "CANCELLED" ? (
+            <TouchableOpacity style={styles.buyBtn}>
+              <Text style={styles.buyBtnText}>Mua Lại Sản Phẩm</Text>
+            </TouchableOpacity>
+          ) : orderInfo?.orderDetails?.status === "PENDING" || orderInfo?.orderDetails?.status === "PROCESSING" ? (
+            <>
+              <TouchableOpacity
+                style={styles.changeAddressBtn}
+                onPress={() => navigation.navigate('address-lists', {
+                  orderInfo,
+                  type: 'buyer-change-address'
+                })}
+              >
+                <Text style={styles.changeAddressBtnText}>Thay đổi địa chỉ</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={handleCancelOrder}>
+                <Text style={styles.buttonText}>Hủy đơn hàng</Text>
+              </TouchableOpacity>
+            </>
+          ) : null}
         </View>
-      ) : (
-        <View style={styles.bottomBtn}>
-          <TouchableOpacity style={styles.changeAddressBtn}
-            onPress={() => navigation.navigate('address-lists', {
-              orderInfo,
-              type: 'buyer-change-address'
-            })}
-          >
-            <Text style={styles.changeAddressBtnText}>Thay đổi địa chỉ</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={handleCancelOrder}>
-            <Text style={styles.buttonText}>Hủy đơn hàng</Text>
-          </TouchableOpacity>
-        </View>
-      )
-      }
+      )}
+
 
     </SafeAreaView>
   )

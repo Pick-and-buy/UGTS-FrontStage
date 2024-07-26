@@ -5,6 +5,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: COLORS.white,
+        // paddingBottom:30
 
     },
     header: {
@@ -333,7 +334,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         gap: 10,
-        marginTop:8
+        marginTop:8,
+        marginBottom:30
     },
     confirmButton:{
         flex:1,
@@ -343,7 +345,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.primary,
         marginVertical: 'auto',
         borderRadius: 8,
-        paddingHorizontal:6
+        paddingHorizontal:6,
     },
     confirmTextButton:{
         color: COLORS.white,
