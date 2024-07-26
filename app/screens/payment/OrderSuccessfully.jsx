@@ -45,12 +45,20 @@ const OrderSuccessfully = ({ navigation, route }) => {
                         {phoneUserOrder} - {orderInfo?.orderDetails?.address?.street}, {orderInfo?.orderDetails?.address?.district}, {orderInfo?.orderDetails?.address?.province}, {orderInfo?.orderDetails?.address?.country}
                     </Text>
                 </View>
-                <TouchableOpacity style={styles.button} onPress={handleOrderDetail}>
-                    <Ionicons name="bag-handle" size={24} color={COLORS.primary} />
-                    <Text style={styles.btnText}>
-                        Xem chi tiết đơn hàng
-                    </Text>
-                </TouchableOpacity>
+                <View style={styles.btnWrapper}>
+                    <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate("bottom-navigation")}>
+                        {/* <Ionicons name="bag-handle" size={24} color={COLORS.primary} /> */}
+                        <Text style={styles.btnText}>
+                            Trở về trang chủ
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={handleOrderDetail}>
+                        <Ionicons name="bag-handle" size={24} color={COLORS.primary} />
+                        <Text style={styles.btnText}>
+                            Xem chi tiết đơn hàng
+                        </Text>
+                    </TouchableOpacity>
+                </View>
                 <View style={styles.divider} />
                 <View style={styles.recommendation}>
                     <Text style={styles.recommendationText}>Có thể bạn cũng thích</Text>
