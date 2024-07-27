@@ -164,30 +164,30 @@ const Seller = ({ navigation }) => {
         }
         {item?.orderDetails?.status === "DELIVERED" &&
           <View style={styles.buttonWrapper}>
-            <TouchableOpacity style={styles.processBtn}>
+            <TouchableOpacity style={styles.processBtn} onPress={() => handleSellerOrderDetail(item)}>
               <Text style={[styles.cancelBtnText, { color: COLORS.white, fontSize: 12 }]}>{"Đang giao hàng"}</Text>
             </TouchableOpacity>
           </View>
         }
         {item?.orderDetails?.status === "CANCELLED" &&
           <View style={styles.buttonWrapper}>
-            <View style={[styles.primaryBtn, { backgroundColor: COLORS.gray2 }]}>
+            <TouchableOpacity style={[styles.primaryBtn, { backgroundColor: COLORS.gray2 }]} onPress={() => handleSellerOrderDetail(item)}>
               <Text style={[styles.cancelBtnText, { color: COLORS.white }]}>{"Đã hủy"}</Text>
-            </View>
+            </TouchableOpacity>
           </View>
         }
         {item?.orderDetails?.status === "RECEIVED" &&
           <View style={styles.buttonWrapper}>
-            <View style={[styles.processBtn]}>
+            <TouchableOpacity style={[styles.processBtn]} onPress={() => handleSellerOrderDetail(item)}>
               <Text style={[styles.cancelBtnText, { color: COLORS.white }]}>{"Đã nhận hàng"}</Text>
-            </View>
+            </TouchableOpacity>
           </View>
         }
         {item?.orderDetails?.status === "RETURNED" &&
           <View style={styles.buttonWrapper}>
-            <View style={[styles.primaryBtn, { backgroundColor: COLORS.gray2 }]}>
+            <TouchableOpacity style={[styles.primaryBtn, { backgroundColor: COLORS.gray2 }]} onPress={() => handleSellerOrderDetail(item)}>
               <Text style={[styles.cancelBtnText, { color: COLORS.white }]}>{"Trả hàng"}</Text>
-            </View>
+            </TouchableOpacity>
           </View>
         }
       </View>
