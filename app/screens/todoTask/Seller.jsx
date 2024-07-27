@@ -178,7 +178,7 @@ const Seller = ({ navigation }) => {
         }
         {item?.orderDetails?.status === "RECEIVED" &&
           <View style={styles.buttonWrapper}>
-            <View style={[styles.primaryBtn, { backgroundColor: COLORS.gray2 }]}>
+            <View style={[styles.processBtn]}>
               <Text style={[styles.cancelBtnText, { color: COLORS.white }]}>{"Đã nhận hàng"}</Text>
             </View>
           </View>
