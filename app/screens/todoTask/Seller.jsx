@@ -142,7 +142,7 @@ const Seller = ({ navigation }) => {
           {item?.post?.title}
         </Text>
         {/* Username: name of buyer */}
-        <Text style={styles.shop}>{item?.buyer?.username}</Text>
+        <Text style={styles.shop}>Người mua: {item?.buyer?.username}</Text>
         <Text style={styles.price}>đ{formatPrice(item?.orderDetails?.price)}</Text>
 
         {item?.orderDetails?.status === "PENDING" &&
@@ -158,14 +158,14 @@ const Seller = ({ navigation }) => {
         {item?.orderDetails?.status === "PROCESSING" &&
           <View style={styles.buttonWrapper}>
             <TouchableOpacity style={styles.processBtn} onPress={() => handleSellerOrderDetail(item)}>
-              <Text style={[styles.cancelBtnText, { color: COLORS.white, fontSize: 14 }]}>{"Đang xử lý"}</Text>
+              <Text style={[styles.cancelBtnText, { color: COLORS.white, fontSize: 12 }]}>{"Đang xử lý"}</Text>
             </TouchableOpacity>
           </View>
         }
         {item?.orderDetails?.status === "DELIVERED" &&
           <View style={styles.buttonWrapper}>
             <TouchableOpacity style={styles.processBtn}>
-              <Text style={[styles.cancelBtnText, { color: COLORS.white, fontSize: 14 }]}>{"Đang giao hàng"}</Text>
+              <Text style={[styles.cancelBtnText, { color: COLORS.white, fontSize: 12 }]}>{"Đang giao hàng"}</Text>
             </TouchableOpacity>
           </View>
         }
