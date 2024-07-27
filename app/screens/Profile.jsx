@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, SafeAreaView, RefreshControl } from "react-native";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { COLORS, SIZES } from "../constants/theme";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome6, Octicons } from '@expo/vector-icons';
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
 import NetworkImage from "../components/NetworkImage";
@@ -69,7 +69,7 @@ const Profile = ({ navigation }) => {
       routes: [{ name: 'bottom-navigation' }],
     });
   };
-
+  // console.log(user?.result?.verified);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -126,8 +126,15 @@ const Profile = ({ navigation }) => {
 
                         />
                         <Text style={{ fontSize: 12, marginTop: 4, marginLeft: 2 }}>(100)</Text>
-                        <MaterialIcons name="verified-user" size={16} color="#699BF7" style={{ marginTop: 4, marginLeft: 10 }} />
-                        <Text style={{ fontSize: 12, marginTop: 4, marginLeft: 2 }}>Tài khoản đã xác minh</Text>
+                        {user?.result?.verified == true ? (
+                          <><MaterialIcons name="verified-user" size={16} color="#699BF7" style={{ marginTop: 4, marginLeft: 10 }} />
+                            <Text style={{ fontSize: 12, marginTop: 4, marginLeft: 2 }}>Tài khoản đã xác minh</Text></>
+                        ) : (
+                          <>
+                            <Octicons name="unverified" size={14} color="gray" style={{ marginTop: 6, marginLeft: 10 }} />
+                            <Text style={{ fontSize: 12, marginTop: 4, marginLeft: 2 }}>Tài khoản chưa xác minh</Text></>
+
+                        )}
                       </View>
                     </View>
                     <AntDesign name="right" size={22} color="gray" style={{ marginTop: 12, marginLeft: 40 }} />

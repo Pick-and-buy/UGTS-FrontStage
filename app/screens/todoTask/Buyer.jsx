@@ -46,9 +46,9 @@ const Buyer = ({ navigation }) => {
         setIsLoading(true);
         try {
             let orderStatus = "";
-            if(orderStatusName === "Chờ xử lý") {
+            if (orderStatusName === "Chờ xử lý") {
                 orderStatus = "PENDING";
-            } 
+            }
             else if (orderStatusName === "Đang xử lý") {
                 orderStatus = "PROCESSING";
             } else if (orderStatusName === "Đang giao hàng") {
@@ -61,7 +61,7 @@ const Buyer = ({ navigation }) => {
                 orderStatus = "RETURNED";
             }
             const res = await getOrdersByOrderStatus(orderStatus);
-            const userData = await getUserByToken(); 
+            const userData = await getUserByToken();
             //Lọc tất cả order mà có id của người mua trùng với id của user đăng nhập
             const filteredOrders = res.result.filter(order => order.buyer.id === userData.result.id);
             setListOrdersBuyer(filteredOrders);
@@ -103,43 +103,46 @@ const Buyer = ({ navigation }) => {
         <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("buyer-order-details", { orderInfo: item })}>
             <Image source={{ uri: item?.post?.product?.images[0]?.imageUrl }} style={styles.image} />
             <View style={styles.info}>
-                <Text style={styles.itemTitle}>
-                    {item?.post?.title.length > 13 ? `${item?.post?.title.substring(0, 13)}...` : item?.post?.title}
+                <Text numberOfLines={2} style={styles.itemTitle}>
+                    {item?.post?.title}
                 </Text>
                 {/* Username: name of seller */}
                 <Text style={styles.shop}>{item?.post?.user?.username}</Text>
-                <Text style={styles.price}>đ{formatPrice(item?.orderDetails?.price)}</Text>
+                <View style={{ flex: 1, flexDirection: "row", justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Text style={styles.price}>đ{formatPrice(item?.orderDetails?.price)}</Text>
+
+                    {item?.orderDetails?.status === "PENDING" &&
+                        <View style={styles.statusButton}>
+                            <Text style={styles.statusText}>{"Chờ xử lý"}</Text>
+                        </View>
+                    }
+                    {item?.orderDetails?.status === "PROCESSING" &&
+                        <View style={[styles.statusButton, { backgroundColor: '#04AA6D' }]}>
+                            <Text style={[styles.statusText, { color: COLORS.white }]}>{"Đang xử lý"}</Text>
+                        </View>
+                    }
+                    {item?.orderDetails?.status === "DELIVERED" &&
+                        <View style={[styles.statusButton, { backgroundColor: '#04AA6D' }]}>
+                            <Text style={styles.statusText}>{"Đang giao hàng"}</Text>
+                        </View>
+                    }
+                    {item?.orderDetails?.status === "CANCELLED" &&
+                        <View style={[styles.statusButton, { backgroundColor: COLORS.gray2 }]}>
+                            <Text style={[styles.statusText, { color: COLORS.white }]}>{"Đã hủy"}</Text>
+                        </View>
+                    }
+                    {item?.orderDetails?.status === "RECEIVED" &&
+                        <View style={[styles.statusButton, { backgroundColor: '#04AA6D' }]}>
+                            <Text style={[styles.statusText, { color: COLORS.white }]}>{"Đã nhận hàng"}</Text>
+                        </View>
+                    }
+                    {item?.orderDetails?.status === "RETURNED" &&
+                        <View style={[styles.statusButton, { backgroundColor: COLORS.gray2 }]}>
+                            <Text style={[styles.statusText, { color: COLORS.white }]}>{"Trả lại"}</Text>
+                        </View>
+                    }
+                </View>
             </View>
-            {item?.orderDetails?.status === "PENDING" &&
-                <View style={styles.statusButton}>
-                    <Text style={styles.statusText}>{"Chờ xử lý"}</Text>
-                </View>
-            }
-            {item?.orderDetails?.status === "PROCESSING" &&
-                <View style={[styles.statusButton, { backgroundColor: 'green' }]}>
-                    <Text style={[styles.statusText, { color: COLORS.white }]}>{"Đang xử lý"}</Text>
-                </View>
-            }
-            {item?.orderDetails?.status === "DELIVERED" &&
-                <View style={styles.statusButton}>
-                    <Text style={styles.statusText}>{"Đang giao hàng"}</Text>
-                </View>
-            }
-            {item?.orderDetails?.status === "CANCELLED" &&
-                <View style={[styles.statusButton, { backgroundColor: COLORS.gray2 }]}>
-                    <Text style={[styles.statusText, { color: COLORS.white }]}>{"Đã hủy"}</Text>
-                </View>
-            }
-            {item?.orderDetails?.status === "RECEIVED" &&
-                <View style={[styles.statusButton, { backgroundColor: COLORS.gray2 }]}>
-                    <Text style={[styles.statusText, { color: COLORS.white }]}>{"Đã nhận hàng"}</Text>
-                </View>
-            }
-            {item?.orderDetails?.status === "RETURNED" &&
-                <View style={[styles.statusButton, { backgroundColor: COLORS.gray2 }]}>
-                    <Text style={[styles.statusText, { color: COLORS.white }]}>{"Trả lại"}</Text>
-                </View>
-            }
         </TouchableOpacity>
     );
 

@@ -138,8 +138,8 @@ const Seller = ({ navigation }) => {
     <View style={styles.card}>
       <Image source={{ uri: item?.post?.product?.images[0]?.imageUrl }} style={styles.image} />
       <View style={styles.info}>
-        <Text style={styles.itemTitle}>
-          {item?.post?.title.length > 27 ? `${item?.post?.title.substring(0, 27)}...` : item?.post?.title}
+        <Text numberOfLines={1} style={styles.itemTitle}>
+          {item?.post?.title}
         </Text>
         {/* Username: name of buyer */}
         <Text style={styles.shop}>{item?.buyer?.username}</Text>
