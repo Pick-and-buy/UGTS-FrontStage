@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     container: {
         marginTop: 60,
         marginBottom: 100,
+        backgroundColor: '#f0f2f5'
     },
     viewContainer: {
         flexDirection: 'row',
@@ -87,6 +88,35 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 3,
         left: 18
+    },
+
+    //Check box
+    checkboxContainer: {
+        flex: 1,
+        marginBottom: 30,
+        flexDirection: "row",
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 'auto',
+        gap: 10
+    },
+    checkboxView: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        // borderWidth: 1, 
+        width: '30%',
+        height: "100%",
+        borderRadius: 10,
+        backgroundColor: '#fff',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -5 },
+        shadowOpacity: 0.2,
+        shadowRadius: 10,
+        
+    },
+    textVerified: {
+        marginTop: 10,
+        textAlign: 'center'
     },
 
     //Upload Image by gallery and Camera Option
@@ -236,6 +266,27 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 
+    //Modal style
+    modalContainer: {
+        backgroundColor: COLORS.white,
+        padding: 20,
+        borderRadius: 10,
+        alignItems: "center",
+      },
+      modalText: {
+        fontSize: SIZES.large,
+        textAlign: "center",
+        marginBottom: 20,
+      },
+      modalButton: {
+        backgroundColor: COLORS.primary,
+        padding: 10,
+        borderRadius: 5,
+      },
+      modalButtonText: {
+        color: COLORS.white,
+        fontSize: SIZES.medium,
+      },
 })
 
 export default styles;

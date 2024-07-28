@@ -9,6 +9,7 @@ import {
   Dimensions,
   FlatList,
   ImageBackground,
+  Alert,
   // Button,
 } from "react-native";
 import { FontAwesome, AntDesign, MaterialIcons, FontAwesome6, Ionicons } from '@expo/vector-icons';
@@ -26,9 +27,9 @@ import { getAllBrandLinesByBrandName } from "../api/brandLine";
 import * as ImagePicker from "expo-image-picker";
 import Button from "../components/Button";
 import { Video } from 'expo-av';
+import Checkbox from 'expo-checkbox';
 
 const CreatePost = () => {
-
   const navigation = useNavigation();
 
   const [listBrandName, setListBrandName] = useState([]);
@@ -36,23 +37,23 @@ const CreatePost = () => {
   const [listBrandLines, setListBrandLines] = useState([]);
 
   const [images, setImages] = useState([
-    { id: '1', name: 'Overall picture (upload)', logoUrl: require('../../assets/images/bag/overall_picture.png'), value: '' },
-    { id: '2', name: 'Brand logo (upload)', logoUrl: require('../../assets/images/bag/brand_logo.png'), value: '' },
-    { id: '3', name: 'Inside label (upload)', logoUrl: require('../../assets/images/bag/inside_label.png'), value: '' },
-    { id: '4', name: 'Hardware engravings (upload)', logoUrl: require('../../assets/images/bag/hardware_engravings.png'), value: '' },
-    { id: '5', name: 'Serial number (upload)', logoUrl: require('../../assets/images/bag/serial_number.png'), value: '' },
-    { id: '6', name: 'Made in label (upload)', logoUrl: require('../../assets/images/bag/made_in_label.png'), value: '' },
-    { id: '7', name: 'QR code label (upload)', logoUrl: require('../../assets/images/bag/qr_code_label.png'), value: '' },
-    { id: '8', name: 'Hologram label (upload)', logoUrl: require('../../assets/images/bag/hologram_label.png'), value: '' },
-    { id: '9', name: 'Zipper head (front) (upload)', logoUrl: require('../../assets/images/bag/zipper_head_front.png'), value: '' },
-    { id: '10', name: 'Zipper head (back) (upload)', logoUrl: require('../../assets/images/bag/zipper_head_back.png'), value: '' },
-    { id: '11', name: 'Button (upload)', logoUrl: require('../../assets/images/bag/button.png'), value: '' },
-    { id: '12', name: 'Shoulder strap clasp (upload)', logoUrl: require('../../assets/images/bag/shoulder_strap_clasp.png'), value: '' },
-    { id: '13', name: 'Logo texture close up (upload)', logoUrl: require('../../assets/images/bag/logo_texture_close_up_macro_image.png'), value: '' },
-    { id: '14', name: 'Authenticity card (upload)', logoUrl: require('../../assets/images/bag/authenticity_card.png'), value: '' },
-    { id: '15', name: 'Dust bag (upload)', logoUrl: require('../../assets/images/bag/dust_bag.png'), value: '' },
-    { id: '16', name: '1st optional photo (upload)', logoUrl: require('../../assets/images/bag/1st_optional_photo.png'), value: '' },
-    { id: '17', name: '2nd optional photo (upload)', logoUrl: require('../../assets/images/bag/2nd_optional_photo.png'), value: '' },
+    { index: '1', name: 'Overall picture', logoUrl: require('../../assets/images/bag/overall_picture.png'), value: '' },
+    { index: '2', name: 'Brand logo', logoUrl: require('../../assets/images/bag/brand_logo.png'), value: '' },
+    { index: '3', name: 'Inside label', logoUrl: require('../../assets/images/bag/inside_label.png'), value: '' },
+    { index: '4', name: 'Hardware engravings', logoUrl: require('../../assets/images/bag/hardware_engravings.png'), value: '' },
+    { index: '5', name: 'Serial number', logoUrl: require('../../assets/images/bag/serial_number.png'), value: '' },
+    { index: '6', name: 'Made in label', logoUrl: require('../../assets/images/bag/made_in_label.png'), value: '' },
+    { index: '7', name: 'QR code label', logoUrl: require('../../assets/images/bag/qr_code_label.png'), value: '' },
+    { index: '8', name: 'Hologram label', logoUrl: require('../../assets/images/bag/hologram_label.png'), value: '' },
+    { index: '9', name: 'Zipper head (front)', logoUrl: require('../../assets/images/bag/zipper_head_front.png'), value: '' },
+    { index: '10', name: 'Zipper head (back)', logoUrl: require('../../assets/images/bag/zipper_head_back.png'), value: '' },
+    { index: '11', name: 'Button', logoUrl: require('../../assets/images/bag/button.png'), value: '' },
+    { index: '12', name: 'Shoulder strap clasp', logoUrl: require('../../assets/images/bag/shoulder_strap_clasp.png'), value: '' },
+    { index: '13', name: 'Logo texture close up', logoUrl: require('../../assets/images/bag/logo_texture_close_up_macro_image.png'), value: '' },
+    { index: '14', name: 'Authenticity card', logoUrl: require('../../assets/images/bag/authenticity_card.png'), value: '' },
+    { index: '15', name: 'Dust bag', logoUrl: require('../../assets/images/bag/dust_bag.png'), value: '' },
+    { index: '16', name: '1st optional photo', logoUrl: require('../../assets/images/bag/1st_optional_photo.png'), value: '' },
+    { index: '17', name: '2nd optional photo', logoUrl: require('../../assets/images/bag/2nd_optional_photo.png'), value: '' },
   ]);
   const [invoice, setInvoice] = useState("");
   const [videoUri, setVideoUri] = useState("");
@@ -62,6 +63,8 @@ const CreatePost = () => {
 
   const [loader, setLoader] = useState(false);
 
+  const [isChecked_2, setChecked_2] = useState(false);
+  const [isChecked_3, setChecked_3] = useState(false);
   const FEE = 500000;
 
   useEffect(() => {
@@ -156,106 +159,156 @@ const CreatePost = () => {
     { label: 'Extra Large', value: 'Extra Large' },
   ];
 
+  const validateImages = () => {
+    // check điều kiện khi 4 ảnh đầu có giá trị = ''
+    for (let i = 0; i < 4; i++) {
+      if (images[i].value === '') {
+        return false;
+      }
+    }
+    // check điều kiện khi người dùng bấm vào xác thực level 2 và ảnh hóa đơn + video bị lỗi
+    if (isChecked_2) {
+      if (invoice === '' || videoUri === '') {
+        return false;
+      }
+    }
+    return true;
+  };
+
   const handleCreatePost = async (values, actions) => {
     try {
-      let { title, brandName, productName, brandLineName, condition, category, exteriorMaterial,
-        interiorMaterial, size, width, height, length, referenceCode, manufactureYear, color, accessories, dateCode,
-        serialNumber, purchasedPlace, description, price,
-        // dataShippingMethod, dataShippingTime, shippingAddress, fee, saleProfit,
-      } = values;
-      console.log(values);
+      if (validateImages() === true) {
+        // Handle form submission here
+        let { title, brandName, productName, brandLineName, condition, category, exteriorMaterial,
+          interiorMaterial, size, width, height, length, referenceCode, manufactureYear, color, accessories, dateCode,
+          serialNumber, purchasedPlace, description, price,
+          // dataShippingMethod, dataShippingTime, shippingAddress, fee, saleProfit,
+        } = values;
 
-      const calculatedPrice = parseInt(values.price, 10) - FEE;
+        const calculatedPrice = parseInt(values.price, 10) - FEE;
 
-      const formData = new FormData();
+        const formData = new FormData();
 
-      const request = {
-        title: title,
-        description: description,
-        brand: { name: brandName },
-        brandLine: { lineName: brandLineName },
-        category: { categoryName: category },
-        product: {
-          name: productName,
-          price: calculatedPrice,
-          color: color,
-          size: size,
-          width: width,
-          height: height,
-          length: length,
-          referenceCode: referenceCode,
-          manufactureYear: manufactureYear,
-          exteriorMaterial: exteriorMaterial,
-          interiorMaterial: interiorMaterial,
-          accessories: accessories,
-          dateCode: dateCode,
-          serialNumber: serialNumber,
-          purchasedPlace: purchasedPlace,
-          story: '',
-        },
-        condition: condition,
-      };
+        const request = {
+          title: title,
+          description: description,
+          brand: { name: brandName },
+          brandLine: { lineName: brandLineName },
+          category: { categoryName: category },
+          product: {
+            name: productName,
+            price: calculatedPrice,
+            color: color,
+            size: size,
+            width: width,
+            height: height,
+            length: length,
+            referenceCode: referenceCode,
+            manufactureYear: manufactureYear,
+            exteriorMaterial: exteriorMaterial,
+            interiorMaterial: interiorMaterial,
+            accessories: accessories,
+            dateCode: dateCode,
+            serialNumber: serialNumber,
+            purchasedPlace: purchasedPlace,
+            story: '',
+          },
+          condition: condition,
+        };
 
-      formData.append('request', JSON.stringify(request));
-      console.log('>>> check images: ', images);
-      images.forEach((image, index) => {
-        if (image.value) {
-          const fileName = image.split('/').pop();
+        formData.append('request', JSON.stringify(request));
+        // console.log('>>> check images: ', images);
+        images.forEach((image, index) => {
+          if (image.value) {
+            const fileName = image.value.split('/').pop();
+            formData.append('productImage', {
+              uri: image.value,
+              type: 'image/jpeg',
+              name: fileName,
+            });
+          }
+        });
+
+        if (invoice) {
+          const invoiceFileName = invoice.split('/').pop();
           formData.append('productImage', {
-            uri: image.value,
+            uri: invoice,
             type: 'image/jpeg',
-            name: fileName,
+            name: invoiceFileName,
           });
         }
-      });
 
-      await createPost(formData);
-      navigation.navigate('Home')
-      setImages([
-        { id: '1', name: 'Overall picture (upload)', logoUrl: require('../../assets/images/bag/overall_picture.png'), value: '' },
-        { id: '2', name: 'Brand logo (upload)', logoUrl: require('../../assets/images/bag/brand_logo.png'), value: '' },
-        { id: '3', name: 'Inside label (upload)', logoUrl: require('../../assets/images/bag/inside_label.png'), value: '' },
-        { id: '4', name: 'Hardware engravings (upload)', logoUrl: require('../../assets/images/bag/hardware_engravings.png'), value: '' },
-        { id: '5', name: 'Serial number (upload)', logoUrl: require('../../assets/images/bag/serial_number.png'), value: '' },
-        { id: '6', name: 'Made in label (upload)', logoUrl: require('../../assets/images/bag/made_in_label.png'), value: '' },
-        { id: '7', name: 'QR code label (upload)', logoUrl: require('../../assets/images/bag/qr_code_label.png'), value: '' },
-        { id: '8', name: 'Hologram label (upload)', logoUrl: require('../../assets/images/bag/hologram_label.png'), value: '' },
-        { id: '9', name: 'Zipper head (front) (upload)', logoUrl: require('../../assets/images/bag/zipper_head_front.png'), value: '' },
-        { id: '10', name: 'Zipper head (back) (upload)', logoUrl: require('../../assets/images/bag/zipper_head_back.png'), value: '' },
-        { id: '11', name: 'Button (upload)', logoUrl: require('../../assets/images/bag/button.png'), value: '' },
-        { id: '12', name: 'Shoulder strap clasp (upload)', logoUrl: require('../../assets/images/bag/shoulder_strap_clasp.png'), value: '' },
-        { id: '13', name: 'Logo texture close up (upload)', logoUrl: require('../../assets/images/bag/logo_texture_close_up_macro_image.png'), value: '' },
-        { id: '14', name: 'Authenticity card (upload)', logoUrl: require('../../assets/images/bag/authenticity_card.png'), value: '' },
-        { id: '15', name: 'Dust bag (upload)', logoUrl: require('../../assets/images/bag/dust_bag.png'), value: '' },
-        { id: '16', name: '1st optional photo (upload)', logoUrl: require('../../assets/images/bag/1st_optional_photo.png'), value: '' },
-        { id: '17', name: '2nd optional photo (upload)', logoUrl: require('../../assets/images/bag/2nd_optional_photo.png'), value: '' },
-      ]);
-      setInvoice("");
-      actions.resetForm({
-        title: '',
-        brandName: '',
-        productName: '',
-        brandLineName: '',
-        condition: '',
-        category: '',
-        exteriorMaterial: '',
-        interiorMaterial: '',
-        size: '',
-        width: '',
-        height: '',
-        length: '',
-        referenceCode: '',
-        manufactureYear: '',
-        color: '',
-        accessories: '',
-        dateCode: '',
-        serialNumber: '',
-        purchasedPlace: '',
-        story: '',
-        description: '',
-        price: '',
-      })
+        if (videoUri) {
+          const videoFileName = videoUri.split('/').pop();
+          formData.append('productImage', {
+            uri: videoUri,
+            type: 'video/mp4',
+            name: videoFileName,
+          });
+        }
 
+        await createPost(formData);
+        navigation.navigate('Home')
+        setImages([
+          { id: '1', name: 'Overall picture (upload)', logoUrl: require('../../assets/images/bag/overall_picture.png'), value: '' },
+          { id: '2', name: 'Brand logo (upload)', logoUrl: require('../../assets/images/bag/brand_logo.png'), value: '' },
+          { id: '3', name: 'Inside label (upload)', logoUrl: require('../../assets/images/bag/inside_label.png'), value: '' },
+          { id: '4', name: 'Hardware engravings (upload)', logoUrl: require('../../assets/images/bag/hardware_engravings.png'), value: '' },
+          { id: '5', name: 'Serial number (upload)', logoUrl: require('../../assets/images/bag/serial_number.png'), value: '' },
+          { id: '6', name: 'Made in label (upload)', logoUrl: require('../../assets/images/bag/made_in_label.png'), value: '' },
+          { id: '7', name: 'QR code label (upload)', logoUrl: require('../../assets/images/bag/qr_code_label.png'), value: '' },
+          { id: '8', name: 'Hologram label (upload)', logoUrl: require('../../assets/images/bag/hologram_label.png'), value: '' },
+          { id: '9', name: 'Zipper head (front) (upload)', logoUrl: require('../../assets/images/bag/zipper_head_front.png'), value: '' },
+          { id: '10', name: 'Zipper head (back) (upload)', logoUrl: require('../../assets/images/bag/zipper_head_back.png'), value: '' },
+          { id: '11', name: 'Button (upload)', logoUrl: require('../../assets/images/bag/button.png'), value: '' },
+          { id: '12', name: 'Shoulder strap clasp (upload)', logoUrl: require('../../assets/images/bag/shoulder_strap_clasp.png'), value: '' },
+          { id: '13', name: 'Logo texture close up (upload)', logoUrl: require('../../assets/images/bag/logo_texture_close_up_macro_image.png'), value: '' },
+          { id: '14', name: 'Authenticity card (upload)', logoUrl: require('../../assets/images/bag/authenticity_card.png'), value: '' },
+          { id: '15', name: 'Dust bag (upload)', logoUrl: require('../../assets/images/bag/dust_bag.png'), value: '' },
+          { id: '16', name: '1st optional photo (upload)', logoUrl: require('../../assets/images/bag/1st_optional_photo.png'), value: '' },
+          { id: '17', name: '2nd optional photo (upload)', logoUrl: require('../../assets/images/bag/2nd_optional_photo.png'), value: '' },
+        ]);
+        setInvoice("");
+        setVideoUri("")
+        actions.resetForm({
+          title: '',
+          brandName: '',
+          productName: '',
+          brandLineName: '',
+          condition: '',
+          category: '',
+          exteriorMaterial: '',
+          interiorMaterial: '',
+          size: '',
+          width: '',
+          height: '',
+          length: '',
+          referenceCode: '',
+          manufactureYear: '',
+          color: '',
+          accessories: '',
+          dateCode: '',
+          serialNumber: '',
+          purchasedPlace: '',
+          story: '',
+          description: '',
+          price: '',
+        })
+      } else {
+        if (isChecked_2) {
+          Alert.alert(
+            "Thiếu thông tin",
+            "Hãy cập nhật 4 ảnh đầu tiên có dấu * và cập nhật thêm ảnh hóa đơn và video sản phẩm",
+            [{ text: "OK" }]
+          );
+        } else {
+          Alert.alert(
+            "Thiếu thông tin",
+            "Hãy cập nhật 4 ảnh đầu tiên có dấu *",
+            [{ text: "OK" }]
+          );
+        }
+      }
     } catch (error) {
       console.error('ERROR handle create post: ', error);
     }
@@ -402,10 +455,12 @@ const CreatePost = () => {
                                   style={styles.imageBrandLogo}
                                   source={item.logoUrl}
                                 />
+                                <FontAwesome name="camera" size={14} color={COLORS.gray} style={{ position: 'absolute', left: 3, top: 5 }} />
                               </TouchableOpacity>
                             </View>
                             <TouchableOpacity style={styles.viewBrandLogo} onPress={() => onGalleryMultiplePress(index)}>
                               <Text style={styles.textBrandLogo}>{item.name}</Text>
+                              <AntDesign name="cloudupload" size={16} color={COLORS.gray} style={{ textAlign: 'center' }} />
                             </TouchableOpacity>
                           </View>
                         )
@@ -440,8 +495,102 @@ const CreatePost = () => {
 
                 </View>
               </View>
+
+              {/* Check box */}
+              <View style={styles.checkboxContainer}>
+                <View style={styles.checkboxView}>
+                  <Checkbox
+                    value={isChecked_2}
+                    onValueChange={setChecked_2}
+                  />
+                  <View style={{ height: '70%' }}>
+                    <Text style={styles.textVerified}>Verified Level 2</Text>
+                  </View>
+                </View>
+
+                <View style={styles.checkboxView}>
+                  <Checkbox
+                    value={isChecked_3}
+                    onValueChange={setChecked_3}
+                  />
+                  <View style={{ height: '70%' }}>
+                    <Text style={styles.textVerified}>Ticket Box Check Authentic</Text>
+                  </View>
+                </View>
+              </View>
+
+              {isChecked_2 ?
+                (
+                  <View>
+                    <View View style={styles.selectOption}>
+                      {invoice === "" ? (
+                        <TouchableOpacity
+                          onPress={onGalleryUploadInvoice}
+                          style={[styles.uploadContainer, { marginLeft: 10 }]}>
+                          <Image
+                            style={styles.imageSelect}
+                            source={require('../../assets/images/gallery.png')}
+                          />
+                          <Text style={{ fontSize: 16 }}>Tải Ảnh Hóa Đơn</Text>
+                        </TouchableOpacity>
+                      )
+                        :
+                        (
+                          <View style={styles.uploadInvoiceContainer}>
+                            <ImageBackground
+                              style={styles.uploadInvoice}
+                              source={{ uri: invoice }}
+                            >
+                              <TouchableOpacity onPress={() => removeInvoice()}>
+                                <FontAwesome6 style={[styles.xmark, { left: 15, top: 5 }]} name="xmark" size={20} color="white" />
+                              </TouchableOpacity>
+                            </ImageBackground>
+                          </View>
+                        )
+                      }
+
+                      {videoUri === "" ? (
+                        <TouchableOpacity
+                          onPress={UploadVideoScreen}
+                          style={styles.uploadContainer}>
+                          <Image
+                            style={styles.imageSelect}
+                            source={require('../../assets/images/camera.png')}
+                          />
+                          <Text style={{ fontSize: 16 }}>Upload video</Text>
+                        </TouchableOpacity>
+                      )
+                        :
+                        (
+                          <View style={styles.uploadVideoContainer}>
+                            <Video
+                              source={{ uri: videoUri }}
+                              style={{ width: '100%', height: '100%' }}
+                              // style={styles.uploadVideo}
+                              useNativeControls
+                              resizeMode="cover"
+                              shouldPlay
+                              isLooping
+                            />
+                            <TouchableOpacity onPress={() => removeVideo()} style={{ position: 'absolute', bottom: 10, left: 15 }}>
+                              <FontAwesome6 name="xmark" size={20} color="white" />
+                            </TouchableOpacity>
+                          </View>
+                        )
+                      }
+                    </View>
+                    <View style={styles.shadow}></View>
+                  </View>
+                )
+                :
+                (
+                  <View></View>
+                )
+              }
+
+
               {/* Upload Image by gallery and Camera Option */}
-              <View style={styles.selectOption}>
+              {/* <View View style={styles.selectOption}>
                 {invoice === "" ? (
                   <TouchableOpacity
                     onPress={onGalleryUploadInvoice}
@@ -496,8 +645,9 @@ const CreatePost = () => {
                     </View>
                   )
                 }
-              </View>
-              <View style={styles.shadow}></View>
+              </View> */}
+              {/* <View style={styles.shadow}></View> */}
+
 
               {/* Product Information */}
               <View style={styles.productContainer}>
@@ -1013,14 +1163,6 @@ const CreatePost = () => {
                 <View style={styles.shadow}></View>
               </View>
 
-              {/* <View>
-                <Button
-                  title={"Đăng Bài"}
-                  onPress={handleSubmit}
-                  isValid={true}
-                />
-              </View> */}
-
               <View style={{ marginTop: 30 }}>
                 <TouchableOpacity style={styles.button}
                   onPress={handleSubmit}
@@ -1032,7 +1174,7 @@ const CreatePost = () => {
           )
         }}
       </Formik>
-    </ScrollView>
+    </ScrollView >
   );
 }
 
