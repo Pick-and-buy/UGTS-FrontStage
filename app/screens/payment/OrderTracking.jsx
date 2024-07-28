@@ -3,10 +3,10 @@ import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { format, addDays } from 'date-fns';
-const OrderTracking = ({ status, deliveryDateFrom, deliveryDateTo }) => {
+const OrderTracking = ({ status, orderDate, deliveryDateFrom, deliveryDateTo }) => {
   const steps = [
     { key: 'PENDING', label: 'Đã đặt hàng' },
-    { key: 'PROCESSING', label: 'Đang chờ đơn vị vận chuyển' },
+    { key: 'PROCESSING', label: 'Người bán đang chuẩn bị hàng' },
     { key: 'DELIVERED', label: 'Đang vận chuyển' },
     { key: 'RECEIVED', label: 'Đơn hàng đã được giao' },
     { key: 'COMPLETED', label: 'Hoàn thành' }
@@ -34,7 +34,13 @@ const OrderTracking = ({ status, deliveryDateFrom, deliveryDateTo }) => {
         </View>
         <View>
           <Text style={styles.title}>{currentLabel}</Text>
-          <Text style={styles.subtitle}>Ngày giao hàng dự kiến • {deliveryDateFrom ? format(deliveryDateFrom, 'MMM d') : ''} - {deliveryDateTo ? format(deliveryDateTo, 'MMM d') : ''}</Text>
+          {status === "PENDING" ? (
+            <Text style={styles.subtitle}>Thời gian đặt hàng • {orderDate ? format(orderDate, 'dd/MM/yy HH:mm:ss') : ''}</Text>
+          ) : (
+            <Text style={styles.subtitle}>Ngày giao hàng dự kiến • {deliveryDateFrom ? format(deliveryDateFrom, 'MMM d') : ''} - {deliveryDateTo ? format(deliveryDateTo, 'MMM d') : ''}</Text>
+          )
+          }
+
         </View>
       </View>
       <View style={styles.trackingContainer}>
