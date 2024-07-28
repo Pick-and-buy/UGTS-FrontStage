@@ -52,7 +52,7 @@ const Buyer = ({ navigation }) => {
             else if (orderStatusName === "Đang xử lý") {
                 orderStatus = "PROCESSING";
             } else if (orderStatusName === "Đang giao hàng") {
-                orderStatus = "DELIVERED";
+                orderStatus = "DELIVERING";
             } else if (orderStatusName === "Đã hủy") {
                 orderStatus = "CANCELLED";
             } else if (orderStatusName === "Đã nhận hàng") {
@@ -121,7 +121,7 @@ const Buyer = ({ navigation }) => {
                             <Text style={[styles.statusText, { color: COLORS.white }]}>{"Đang xử lý"}</Text>
                         </View>
                     }
-                    {item?.orderDetails?.status === "DELIVERED" &&
+                    {item?.orderDetails?.status === "DELIVERING" &&
                         <View style={[styles.statusButton, { backgroundColor: '#04AA6D' }]}>
                             <Text style={styles.statusText}>{"Đang giao hàng"}</Text>
                         </View>

@@ -17,6 +17,9 @@ const styles = StyleSheet.create({
         paddingBottom: 12,
         ...SHADOWS.medium
     },
+    backButton: {
+        left: -15,
+    },
     headerText: {
         color: COLORS.black,
         fontSize: 20,
@@ -153,7 +156,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         marginVertical: 5,
     },
-   
+
     summary: {
         width: "100%",
         flexDirection: "row",

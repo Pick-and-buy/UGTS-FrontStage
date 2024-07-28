@@ -7,7 +7,7 @@ const OrderTracking = ({ status, orderDate, deliveryDateFrom, deliveryDateTo }) 
   const steps = [
     { key: 'PENDING', label: 'Đã đặt hàng' },
     { key: 'PROCESSING', label: 'Người bán đang chuẩn bị hàng' },
-    { key: 'DELIVERED', label: 'Đang vận chuyển' },
+    { key: 'DELIVERING', label: 'Đang vận chuyển' },
     { key: 'RECEIVED', label: 'Đơn hàng đã được giao' },
     { key: 'COMPLETED', label: 'Hoàn thành' }
   ];

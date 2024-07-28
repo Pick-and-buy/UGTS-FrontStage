@@ -7,17 +7,40 @@ import { COLORS } from "../../constants/theme";
 import { G, Line, Svg } from "react-native-svg";
 import { getUserByToken } from "../../api/user";
 import { format, addDays } from 'date-fns';
-import { cancelOrderSeller, updateOrderSeller } from '../../api/order';
+import { cancelOrderSeller, getOrderByOrderId, updateOrderSeller } from '../../api/order';
 import OrderTracking from './OrderTracking';
+const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
 const SellerOrderDetails = ({ navigation, route }) => {
     const orderInfo = route.params.orderInfo;
     // console.log('>>> check order infor: ', orderInfo);
     const [phoneUserOrder, setPhoneUserOrder] = useState(null);
+    const [updatedOrderInfo, setUpdatedOrderInfo] = useState();
+
+    useEffect(() => {
+        if (orderInfo) {
+            fetchOrderInfo();
+        }
+    }, [orderInfo]);
+
+    useEffect(() => {
+        if (updatedOrderInfo) {
+            fetchPhoneUserOder();
+        }
+    }, [updatedOrderInfo]);
+
+    const fetchOrderInfo = async () => {
+        try {
+            const data = await getOrderByOrderId(orderInfo.id);
+            setUpdatedOrderInfo(data.result);
+        } catch (error) {
+            console.error('Fetching order data by order id failed:', error);
+        }
+    }
 
     const fetchPhoneUserOder = async () => {
-        const phoneNumber = orderInfo?.orderDetails?.phoneNumber;
-        const country = orderInfo?.orderDetails?.address?.country;
+        const phoneNumber = updatedOrderInfo?.orderDetails?.phoneNumber;
+        const country = updatedOrderInfo?.orderDetails?.address?.country;
         let regionCode = '';
 
         if (country === 'Việt Nam') {
@@ -27,9 +50,6 @@ const SellerOrderDetails = ({ navigation, route }) => {
         setPhoneUserOrder(`(${regionCode}) ${visibleDigits}`)
     }
 
-    useEffect(() => {
-        fetchPhoneUserOder();
-    }, [])
 
     const formatPrice = (price) => {
         return new Intl.NumberFormat('vi-VN', {
@@ -38,9 +58,9 @@ const SellerOrderDetails = ({ navigation, route }) => {
         }).format(price);
     };
 
-    const formattedProductPrice = formatPrice(orderInfo?.post?.product?.price);
+    const formattedProductPrice = formatPrice(updatedOrderInfo?.post?.product?.price);
     const shippingPrice = formatPrice(42500);
-    const totalPrice = formatPrice(orderInfo?.post?.product?.price + 42500);
+    const totalPrice = formatPrice(updatedOrderInfo?.post?.product?.price + 42500);
 
     const handleCancelOrder = async () => {
         try {
@@ -54,7 +74,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
                     {
                         text: "Xác Nhận",
                         onPress: async () => {
-                            await cancelOrderSeller(orderInfo?.id);
+                            await cancelOrderSeller(updatedOrderInfo?.id);
                             navigation.navigate('seller');
                         },
                     }
@@ -66,24 +86,27 @@ const SellerOrderDetails = ({ navigation, route }) => {
     };
 
     const handleTransportation = async () => {
-        await updateOrderSeller(orderInfo?.id);
+        await updateOrderSeller(updatedOrderInfo?.id);
         navigation.navigate('seller');
     }
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <Feather name="chevron-left" size={30} color={COLORS.primary} onPress={() => navigation.goBack()} />
+                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                    <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
+                </TouchableOpacity>
                 <Text style={styles.headerText}>Thông tin đơn hàng</Text>
             </View>
             <ScrollView style={styles.wrapper} showsVerticalScrollIndicator={false}>
                 {
-                    orderInfo?.orderDetails?.status !== "CANCELLED" &&
+                    updatedOrderInfo?.orderDetails?.status !== "CANCELLED" &&
                     <View style={styles.orderTracking}>
                         <OrderTracking
-                            status={orderInfo?.orderDetails?.status}
-                            deliveryDateFrom={deliveryDateFrom}
-                            deliveryDateTo={deliveryDateTo}
+                            status={updatedOrderInfo?.orderDetails?.status}
+                            orderDate={updatedOrderInfo?.orderDetails?.orderDate}
+                            deliveryDateFrom={updatedOrderInfo?.orderDetails?.deliveryDate}
+                            deliveryDateTo={updatedOrderInfo?.orderDetails?.receivedDate}
                         />
                     </View>
                 }
@@ -91,18 +114,18 @@ const SellerOrderDetails = ({ navigation, route }) => {
                     <View style={styles.ownerAddress}>
                         <SimpleLineIcons name="location-pin" size={20} color="black" />
                         <Text style={styles.ownerName}>
-                            {orderInfo?.orderDetails?.firstName} {orderInfo?.orderDetails?.lastName} {phoneUserOrder}
+                            {updatedOrderInfo?.orderDetails?.firstName} {updatedOrderInfo?.orderDetails?.lastName} {phoneUserOrder}
                         </Text>
                     </View>
                     <View style={styles.locationDetails}>
                         <Text style={styles.locationText}>
-                            {orderInfo?.orderDetails?.address?.addressLine ?
+                            {updatedOrderInfo?.orderDetails?.address?.addressLine ?
                                 (
-                                    `${orderInfo?.orderDetails?.address?.addressLine}, ${orderInfo?.orderDetails?.address?.street}, ${orderInfo?.orderDetails?.address?.district}, ${orderInfo?.orderDetails?.address?.province}, ${orderInfo?.orderDetails?.address?.country}`
+                                    `${updatedOrderInfo?.orderDetails?.address?.addressLine}, ${updatedOrderInfo?.orderDetails?.address?.street}, ${updatedOrderInfo?.orderDetails?.address?.district}, ${updatedOrderInfo?.orderDetails?.address?.province}, ${updatedOrderInfo?.orderDetails?.address?.country}`
                                 )
                                 :
                                 (
-                                    `${orderInfo?.orderDetails?.address?.street}, ${orderInfo?.orderDetails?.address?.district}, ${orderInfo?.orderDetails?.address?.province}, ${orderInfo?.orderDetails?.address?.country}`
+                                    `${updatedOrderInfo?.orderDetails?.address?.street}, ${updatedOrderInfo?.orderDetails?.address?.district}, ${updatedOrderInfo?.orderDetails?.address?.province}, ${updatedOrderInfo?.orderDetails?.address?.country}`
                                 )
                             }
                         </Text>
@@ -121,23 +144,23 @@ const SellerOrderDetails = ({ navigation, route }) => {
                     <View style={styles.seller}>
                         <Image
                             style={styles.sellerImage}
-                            source={{ uri: orderInfo?.buyer?.avatar }}
+                            source={{ uri: updatedOrderInfo?.buyer?.avatar ? updatedOrderInfo?.buyer?.avatar : profile }}
                         />
                         <Text style={styles.sellerText}>
-                            {orderInfo?.buyer?.username}
+                            {updatedOrderInfo?.buyer?.username}
                         </Text>
                     </View>
                     <View style={styles.product}>
                         <Image
                             style={styles.productImage}
-                            source={{ uri: orderInfo?.post?.product?.images[0]?.imageUrl }}
+                            source={{ uri: updatedOrderInfo?.post?.product?.images[0]?.imageUrl }}
                         />
                         <View style={styles.content}>
                             <Text numberOfLines={1} style={styles.productName}>
-                                {orderInfo?.post?.product?.name}
+                                {updatedOrderInfo?.post?.product?.name}
                             </Text>
                             <Text numberOfLines={1} style={styles.productDescription}>
-                                Color: {orderInfo?.post?.product?.color}, Size: {orderInfo?.post?.product?.size}
+                                Color: {updatedOrderInfo?.post?.product?.color}, Size: {updatedOrderInfo?.post?.product?.size}
                             </Text>
                             <View style={styles.label}>
                                 <View style={styles.verifiedLabel}>
@@ -186,7 +209,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
                         <View style={styles.right}>
                             <TouchableOpacity style={styles.orderId} >
                                 <Text style={{ fontSize: 18 }}>
-                                    {orderInfo?.id.length > 12 ? `${orderInfo.id.substring(0, 12)}...` : orderInfo.id}
+                                    {updatedOrderInfo?.id.length > 12 ? `${orderInfo.id.substring(0, 12)}...` : orderInfo.id}
                                 </Text>
                                 <MaterialIcons name="content-copy" size={20} color="black" />
                             </TouchableOpacity>
@@ -199,7 +222,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
                         <View style={styles.right}>
                             <TouchableOpacity style={styles.orderId} >
                                 <Text style={{ color: COLORS.gray }}>
-                                    {orderInfo?.orderDetails?.orderDate}
+                                    {updatedOrderInfo?.orderDetails?.orderDate}
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -223,12 +246,12 @@ const SellerOrderDetails = ({ navigation, route }) => {
                         <View style={styles.right}>
                             <TouchableOpacity style={styles.orderId} >
                                 <Text style={{ color: COLORS.gray }}>
-                                    {orderInfo?.orderDetails?.paymentMethod}
+                                    {updatedOrderInfo?.orderDetails?.paymentMethod}
                                 </Text>
                             </TouchableOpacity>
                         </View>
                     </View>
-                    {orderInfo?.orderDetails?.status === "PENDING" &&
+                    {updatedOrderInfo?.orderDetails?.status === "PENDING" &&
                         <View style={styles.redirect}>
                             <TouchableOpacity style={styles.redirectBtn} onPress={() => { }}>
                                 <Ionicons name="chatbubble-ellipses-outline" size={24} color="black" />
@@ -242,7 +265,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
                     }
                 </View>
             </ScrollView>
-            {orderInfo?.orderDetails?.status === "PENDING" &&
+            {updatedOrderInfo?.orderDetails?.status === "PENDING"  &&
                 <View style={styles.bottomBtn}>
                     <TouchableOpacity style={styles.changeAddressBtn} onPress={handleCancelOrder}>
                         <Text style={styles.changeAddressBtnText}>Từ chối đơn hàng</Text>

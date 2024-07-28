@@ -60,7 +60,7 @@ const Seller = ({ navigation }) => {
       else if (orderStatusName === "Đang xử lý") {
         orderStatus = "PROCESSING";
       } else if (orderStatusName === "Đang giao hàng") {
-        orderStatus = "DELIVERED";
+        orderStatus = "DELIVERING";
       } else if (orderStatusName === "Đã hủy") {
         orderStatus = "CANCELLED";
       } else if (orderStatusName === "Đã nhận hàng") {
@@ -162,7 +162,7 @@ const Seller = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         }
-        {item?.orderDetails?.status === "DELIVERED" &&
+        {item?.orderDetails?.status === "DELIVERING" &&
           <View style={styles.buttonWrapper}>
             <TouchableOpacity style={styles.processBtn} onPress={() => handleSellerOrderDetail(item)}>
               <Text style={[styles.cancelBtnText, { color: COLORS.white, fontSize: 12 }]}>{"Đang giao hàng"}</Text>

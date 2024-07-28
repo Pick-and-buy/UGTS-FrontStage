@@ -19,8 +19,6 @@ const BuyerOrderDetails = ({ navigation, route }) => {
   // const [user, setUser] = useState(null);
   const [updatedOrderInfo, setUpdatedOrderInfo] = useState();
   const [phoneUserOrder, setPhoneUserOrder] = useState(null);
-  const [deliveryDateFrom, setDeliveryDateFrom] = useState(updatedOrderInfo?.orderDetails?.deliveryDate);
-  const [deliveryDateTo, setDeliveryDateTo] = useState(updatedOrderInfo?.orderDetails?.receivedDate);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [showAddRating, setShowAddRating] = useState(false);
   useEffect(() => {
@@ -312,7 +310,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
 
       </ScrollView>
 
-      {updatedOrderInfo?.orderDetails?.status !== "DELIVERED" && updatedOrderInfo?.orderDetails?.status !== "RECEIVED" && (
+      {updatedOrderInfo?.orderDetails?.status !== "DELIVERING" && updatedOrderInfo?.orderDetails?.status !== "RECEIVED" && (
         <View style={styles.bottomBtn}>
           {updatedOrderInfo?.orderDetails?.status === "CANCELLED" ? (
             <TouchableOpacity style={styles.buyBtn}>
