@@ -4,8 +4,12 @@ import { COLORS, SHADOWS } from "../../constants/theme";
 
 const styles = StyleSheet.create({
     container: {
-        width: "100%",
-        marginBottom: 20
+        // width: "100%",
+        // marginBottom: 20
+        flex: 1,
+    },
+    wrapper: {
+        flex: 1
     },
     card: {
         width: "96%",

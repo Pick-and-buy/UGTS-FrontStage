@@ -154,7 +154,7 @@ const Buyer = ({ navigation }) => {
                 )
                 :
                 (
-                    <View>
+                    <View style={styles.wrapper}>
                         <View>
                             <View style={{
                                 flexDirection: "row",
@@ -162,7 +162,7 @@ const Buyer = ({ navigation }) => {
                                 alignItems: "center",
                                 marginLeft: "3%",
                                 marginVertical: 10,
-                                gap: 5
+                                gap: 5,
                             }}>
                                 <Text style={{ fontSize: 16, color: COLORS.black, fontWeight: "bold" }}>Order Status</Text>
                                 <AntDesign name="filter" size={16} color="black" />
