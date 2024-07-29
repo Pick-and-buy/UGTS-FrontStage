@@ -12,8 +12,8 @@ const AddRating = ({ navigation, orderInfo }) => {
   // console.log(orderInfo.id);
   const fetchRating = async (ratingLabel) => {
     try {
-      // const response = await ratingUser(ratingLabel, review, orderInfo?.buyer?.id, orderInfo?.post?.user?.id, orderInfo?.id);
-      console.log(response);
+      const response = await ratingUser(ratingLabel, review, orderInfo?.buyer?.id, orderInfo?.post?.user?.id, orderInfo?.id);
+      // console.log(response);
       alert("Cảm ơn bạn đã để lại đánh giá")
       navigation.navigate("bottom-navigation")
     } catch (error) {

@@ -306,7 +306,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
           </>
         }
 
-        {showAddRating && <AddRating orderInfo={updatedOrderInfo} />}
+        {showAddRating && <AddRating navigation={navigation} orderInfo={updatedOrderInfo} />}
 
       </ScrollView>
 
