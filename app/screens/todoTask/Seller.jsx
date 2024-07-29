@@ -157,6 +157,9 @@ const Seller = ({ navigation }) => {
         }
         {item?.orderDetails?.status === "PROCESSING" &&
           <View style={styles.buttonWrapper}>
+            <TouchableOpacity style={styles.cancelBtn} onPress={() => handleCancelOrder(item?.id)}>
+              <Text style={styles.cancelBtnText}>{"Hủy đơn"}</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.processBtn} onPress={() => handleSellerOrderDetail(item)}>
               <Text style={[styles.cancelBtnText, { color: COLORS.white, fontSize: 12 }]}>{"Đang xử lý"}</Text>
             </TouchableOpacity>
@@ -203,7 +206,7 @@ const Seller = ({ navigation }) => {
         )
         :
         (
-          <View>
+          <View style={styles.wrapper}>
             <View>
               <View style={{
                 flexDirection: "row",

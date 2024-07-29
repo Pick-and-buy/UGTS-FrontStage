@@ -222,7 +222,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
                         <View style={styles.right}>
                             <TouchableOpacity style={styles.orderId} >
                                 <Text style={{ color: COLORS.gray }}>
-                                    {updatedOrderInfo?.orderDetails?.orderDate}
+                                    {updatedOrderInfo?.orderDetails?.orderDate ? format(updatedOrderInfo?.orderDetails?.orderDate, 'dd/MM/yy HH:mm:ss') : ''}
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -234,7 +234,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
                         <View style={styles.right}>
                             <TouchableOpacity style={styles.orderId} >
                                 <Text style={{ color: COLORS.gray }}>
-                                    J&T Express
+                                    Nhật Tín Express
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -265,13 +265,23 @@ const SellerOrderDetails = ({ navigation, route }) => {
                     }
                 </View>
             </ScrollView>
-            {updatedOrderInfo?.orderDetails?.status === "PENDING"  &&
+            {updatedOrderInfo?.orderDetails?.status === "PENDING" &&
                 <View style={styles.bottomBtn}>
                     <TouchableOpacity style={styles.changeAddressBtn} onPress={handleCancelOrder}>
                         <Text style={styles.changeAddressBtnText}>Từ chối đơn hàng</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.button} onPress={handleTransportation}>
                         <Text style={styles.buttonText}>Sắp xếp vận chuyển</Text>
+                    </TouchableOpacity>
+                </View>
+            }
+            {updatedOrderInfo?.orderDetails?.status === "PROCESSING" &&
+                <View style={styles.bottomBtn}>
+                    <TouchableOpacity style={styles.changeAddressBtn} onPress={handleCancelOrder}>
+                        <Text style={styles.changeAddressBtnText}>Từ chối đơn hàng</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={() => { }}>
+                        <Text style={styles.buttonText}>In nhãn</Text>
                     </TouchableOpacity>
                 </View>
             }
