@@ -97,9 +97,9 @@ const UserProfile = ({ navigation, route }) => {
                 />
                 <Text style={{ fontSize: 12, marginLeft: 4, marginTop: 4 }}>(100)</Text>
               </View>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <MaterialIcons name="verified-user" size={16} color="#699BF7" style={{ marginTop: 0, marginLeft: 0 }} />
-                <Text style={{ fontSize: 12 }}>Tài khoản đã xác minh</Text>
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                <MaterialIcons name="verified-user" size={16} color="#699BF7" style={{ marginTop: 0, marginLeft: 0,marginRight:4 }} />
+                <Text style={{ fontSize: 12}}>Tài khoản đã xác minh</Text>
               </View>
             </View>
           </View>
@@ -134,7 +134,7 @@ const UserProfile = ({ navigation, route }) => {
             ) : (
               <View style={styles.row}>
                 {createdPosts.map(post => (
-                  <Post key={post.id} post={post} type="seller"/>
+                  <Post key={post.id} post={post} type="seller" />
                 ))}
               </View>
             )}

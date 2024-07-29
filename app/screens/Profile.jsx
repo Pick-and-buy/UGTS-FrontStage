@@ -126,7 +126,7 @@ const Profile = ({ navigation }) => {
 
                         />
                         <Text style={{ fontSize: 12, marginTop: 4, marginLeft: 2 }}>(100)</Text>
-                        {user?.result?.verified == true ? (
+                        {user?.result?.verified === true ? (
                           <><MaterialIcons name="verified-user" size={16} color="#699BF7" style={{ marginTop: 4, marginLeft: 10 }} />
                             <Text style={{ fontSize: 12, marginTop: 4, marginLeft: 2 }}>Tài khoản đã xác minh</Text></>
                         ) : (

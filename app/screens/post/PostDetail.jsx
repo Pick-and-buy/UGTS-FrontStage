@@ -12,7 +12,7 @@ import {
     Button,
     RefreshControl,
 } from "react-native";
-import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo, FontAwesome } from '@expo/vector-icons';
+import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo, FontAwesome, Octicons } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
 import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
 import Carousel from "../../components/carousel/Carousel";
@@ -42,7 +42,7 @@ const PostDetail = ({ navigation, route }) => {
     const [refreshing, setRefreshing] = useState(false);
     const [type, setType] = useState('buyer');
 
-    // console.log(postId);
+    // console.log(postDetails?.user?.verified);
     useEffect(() => {
         fetchPostDetails();
         checkAuthentication();
@@ -498,10 +498,22 @@ const PostDetail = ({ navigation, route }) => {
                                         size={16}
                                     />
                                     <Text style={{ fontSize: 12, marginLeft: 4 }}>(100)</Text>
-                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 40 }}>
-                                        <MaterialIcons name="verified-user" size={12} color="#699BF7" style={{ marginTop: 0, marginLeft: 0 }} />
-                                        <Text style={{ fontSize: 12 }}>Tài khoản đã xác minh</Text>
-                                    </View>
+
+                                    {postDetails?.user?.verified === true ? (<>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 40 }}>
+                                            <MaterialIcons name="verified-user" size={12} color="#699BF7" style={{ marginTop: 0, marginLeft: 0 }} />
+                                            <Text style={{ fontSize: 12 }}>Tài khoản đã xác minh</Text>
+                                        </View></>
+                                    ) : (
+                                        <>
+                                            <Octicons name="unverified" size={14} color="gray" style={{ marginTop: 6, marginLeft: 10 }} />
+                                            <Text style={{ fontSize: 12, marginTop: 4, marginLeft: 2 }}>Tài khoản chưa xác minh</Text>
+                                        </>
+                                    )
+
+                                    }
+
+
                                 </View>
                             </View>
                         </View>
@@ -521,25 +533,25 @@ const PostDetail = ({ navigation, route }) => {
                 </ScrollView>
 
                 {
-                    // !postDetails?.isAvailable && (
-                    <View style={styles.bottomBtn}>
-                        {type === "buyer" && (
-                            <TouchableOpacity style={styles.button} onPress={handlePress}>
-                                <Text style={styles.buttonText}>Mua ngay</Text>
-                            </TouchableOpacity>
-                        )
-                        }
-                        {type === "seller" && (
-                            <TouchableOpacity style={styles.button}
-                                onPress={() => navigation.navigate('update-post', { postId: postId })}
-                            >
-                                <Text style={styles.buttonText}>Chỉnh sửa</Text>
-                            </TouchableOpacity>
-                        )
-                        }
-                    </View>
+                    postDetails?.isAvailable && (
+                        <View style={styles.bottomBtn}>
+                            {type === "buyer" && (
+                                <TouchableOpacity style={styles.button} onPress={handlePress}>
+                                    <Text style={styles.buttonText}>Mua ngay</Text>
+                                </TouchableOpacity>
+                            )
+                            }
+                            {type === "seller" && (
+                                <TouchableOpacity style={styles.button}
+                                    onPress={() => navigation.navigate('update-post', { postId: postId })}
+                                >
+                                    <Text style={styles.buttonText}>Chỉnh sửa</Text>
+                                </TouchableOpacity>
+                            )
+                            }
+                        </View>
 
-                    // )
+                    )
                 }
 
             </View>
