@@ -272,4 +272,21 @@ export const verifyInformation = async (user, fontData, backData, faceMatchData)
   }
 };
 
+export const ratingUser = async (stars, comment, ratingUserId, ratedUserId, orderId) => {
+  console.log(stars, comment, ratingUserId, ratedUserId);
+  try {
+    const response = await axiosInstance.post(`/rating`, {
+      stars: stars,
+      comment: comment,
+      ratingUserId: ratingUserId,
+      ratedUserId: ratedUserId,
+      orderId: orderId
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error rating:', error);
+    throw error;
+  }
+};
+
 

@@ -35,11 +35,17 @@ const OrderTracking = ({ status, orderDate, deliveryDateFrom, deliveryDateTo }) 
         <View>
           <Text style={styles.title}>{currentLabel}</Text>
           {status === "PENDING" ? (
-            <Text style={styles.subtitle}>Thời gian đặt hàng • {orderDate ? format(orderDate, 'dd/MM/yy HH:mm:ss') : ''}</Text>
+            <Text style={styles.subtitle}>
+              Thời gian đặt hàng • {orderDate ? format(orderDate, 'dd/MM/yy HH:mm:ss') : ''}
+            </Text>
+          ) : status === "COMPLETED" ? (
+            <Text style={styles.subtitle}>Đã nhận hàng và đánh giá</Text>
           ) : (
-            <Text style={styles.subtitle}>Ngày giao hàng dự kiến • {deliveryDateFrom ? format(deliveryDateFrom, 'MMM d') : ''} - {deliveryDateTo ? format(deliveryDateTo, 'MMM d') : ''}</Text>
-          )
-          }
+            <Text style={styles.subtitle}>
+              Ngày giao hàng dự kiến • {deliveryDateFrom ? format(deliveryDateFrom, 'MMM d') : ''} - {deliveryDateTo ? format(deliveryDateTo, 'MMM d') : ''}
+            </Text>
+          )}
+
 
         </View>
       </View>

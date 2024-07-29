@@ -108,7 +108,7 @@ export default HomeFollow;
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        marginBottom: "8%",
+        marginBottom: "18%",
     },
     posts: {
         width: '98%',

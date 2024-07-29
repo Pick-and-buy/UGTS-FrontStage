@@ -59,6 +59,8 @@ const Buyer = ({ navigation }) => {
                 orderStatus = "RECEIVED";
             } else if (orderStatusName === "Trả lại") {
                 orderStatus = "RETURNED";
+            } else if (orderStatusName === "Hoàn thành") {
+                orderStatus = "COMPLETED";
             }
             const res = await getOrdersByOrderStatus(orderStatus);
             const userData = await getUserByToken();
@@ -87,6 +89,7 @@ const Buyer = ({ navigation }) => {
         { id: '5', value: 'Đã hủy' },
         { id: '6', value: 'Đã nhận hàng' },
         { id: '7', value: 'Trả lại' },
+        { id: '8', value: 'Hoàn thành' },
     ]
 
     const handleOrderStatusPress = (orderStatusName) => {
@@ -134,6 +137,11 @@ const Buyer = ({ navigation }) => {
                     {item?.orderDetails?.status === "RECEIVED" &&
                         <View style={[styles.statusButton, { backgroundColor: '#04AA6D' }]}>
                             <Text style={[styles.statusText, { color: COLORS.white }]}>{"Đã nhận hàng"}</Text>
+                        </View>
+                    }
+                    {item?.orderDetails?.status === "COMPLETED" &&
+                        <View style={[styles.statusButton, { backgroundColor: '#04AA6D' }]}>
+                            <Text style={[styles.statusText, { color: COLORS.white }]}>{"Hoàn thành"}</Text>
                         </View>
                     }
                     {item?.orderDetails?.status === "RETURNED" &&
