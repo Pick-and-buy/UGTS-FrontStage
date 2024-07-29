@@ -86,10 +86,10 @@ const Buyer = ({ navigation }) => {
         { id: '2', value: 'Chờ xử lý' },
         { id: '3', value: 'Đang xử lý' },
         { id: '4', value: 'Đang giao hàng' },
-        { id: '5', value: 'Đã hủy' },
-        { id: '6', value: 'Đã nhận hàng' },
-        { id: '7', value: 'Trả lại' },
-        { id: '8', value: 'Hoàn thành' },
+        { id: '5', value: 'Đã nhận hàng' },
+        { id: '6', value: 'Hoàn thành' },
+        { id: '7', value: 'Đã hủy' },
+        { id: '8', value: 'Trả lại' },
     ]
 
     const handleOrderStatusPress = (orderStatusName) => {
