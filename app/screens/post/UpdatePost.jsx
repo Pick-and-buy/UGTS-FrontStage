@@ -28,8 +28,45 @@ const UpdatePost = ({ route }) => {
 
     const navigation = useNavigation();
 
-    const [images, setImages] = useState([null, null, null, null, null, null, null, null, null, null]);
-    const [imagesView, setImagesView] = useState([null]);
+    //const [images, setImages] = useState([null, null, null, null, null, null, null, null, null, null]);
+    const [images, setImages] = useState([
+        { index: '1', name: 'Overall picture', logoUrl: require('../../../assets/images/bag/overall_picture.png'), value: '' },
+        { index: '2', name: 'Brand logo', logoUrl: require('../../../assets/images/bag/brand_logo.png'), value: '' },
+        { index: '3', name: 'Inside label', logoUrl: require('../../../assets/images/bag/inside_label.png'), value: '' },
+        { index: '4', name: 'Hardware engravings', logoUrl: require('../../../assets/images/bag/hardware_engravings.png'), value: '' },
+        { index: '5', name: 'Serial number', logoUrl: require('../../../assets/images/bag/serial_number.png'), value: '' },
+        { index: '6', name: 'Made in label', logoUrl: require('../../../assets/images/bag/made_in_label.png'), value: '' },
+        { index: '7', name: 'QR code label', logoUrl: require('../../../assets/images/bag/qr_code_label.png'), value: '' },
+        { index: '8', name: 'Hologram label', logoUrl: require('../../../assets/images/bag/hologram_label.png'), value: '' },
+        { index: '9', name: 'Zipper head (front)', logoUrl: require('../../../assets/images/bag/zipper_head_front.png'), value: '' },
+        { index: '10', name: 'Zipper head (back)', logoUrl: require('../../../assets/images/bag/zipper_head_back.png'), value: '' },
+        { index: '11', name: 'Button', logoUrl: require('../../../assets/images/bag/button.png'), value: '' },
+        { index: '12', name: 'Shoulder strap clasp', logoUrl: require('../../../assets/images/bag/shoulder_strap_clasp.png'), value: '' },
+        { index: '13', name: 'Logo texture close up', logoUrl: require('../../../assets/images/bag/logo_texture_close_up_macro_image.png'), value: '' },
+        { index: '14', name: 'Authenticity card', logoUrl: require('../../../assets/images/bag/authenticity_card.png'), value: '' },
+        { index: '15', name: 'Dust bag', logoUrl: require('../../../assets/images/bag/dust_bag.png'), value: '' },
+        { index: '16', name: '1st optional photo', logoUrl: require('../../../assets/images/bag/1st_optional_photo.png'), value: '' },
+        { index: '17', name: '2nd optional photo', logoUrl: require('../../../assets/images/bag/2nd_optional_photo.png'), value: '' },
+    ]);
+    const [imagesView, setImagesView] = useState([
+        { index: '1', name: 'Overall picture', logoUrl: require('../../../assets/images/bag/overall_picture.png'), value: '' },
+        { index: '2', name: 'Brand logo', logoUrl: require('../../../assets/images/bag/brand_logo.png'), value: '' },
+        { index: '3', name: 'Inside label', logoUrl: require('../../../assets/images/bag/inside_label.png'), value: '' },
+        { index: '4', name: 'Hardware engravings', logoUrl: require('../../../assets/images/bag/hardware_engravings.png'), value: '' },
+        { index: '5', name: 'Serial number', logoUrl: require('../../../assets/images/bag/serial_number.png'), value: '' },
+        { index: '6', name: 'Made in label', logoUrl: require('../../../assets/images/bag/made_in_label.png'), value: '' },
+        { index: '7', name: 'QR code label', logoUrl: require('../../../assets/images/bag/qr_code_label.png'), value: '' },
+        { index: '8', name: 'Hologram label', logoUrl: require('../../../assets/images/bag/hologram_label.png'), value: '' },
+        { index: '9', name: 'Zipper head (front)', logoUrl: require('../../../assets/images/bag/zipper_head_front.png'), value: '' },
+        { index: '10', name: 'Zipper head (back)', logoUrl: require('../../../assets/images/bag/zipper_head_back.png'), value: '' },
+        { index: '11', name: 'Button', logoUrl: require('../../../assets/images/bag/button.png'), value: '' },
+        { index: '12', name: 'Shoulder strap clasp', logoUrl: require('../../../assets/images/bag/shoulder_strap_clasp.png'), value: '' },
+        { index: '13', name: 'Logo texture close up', logoUrl: require('../../../assets/images/bag/logo_texture_close_up_macro_image.png'), value: '' },
+        { index: '14', name: 'Authenticity card', logoUrl: require('../../../assets/images/bag/authenticity_card.png'), value: '' },
+        { index: '15', name: 'Dust bag', logoUrl: require('../../../assets/images/bag/dust_bag.png'), value: '' },
+        { index: '16', name: '1st optional photo', logoUrl: require('../../../assets/images/bag/1st_optional_photo.png'), value: '' },
+        { index: '17', name: '2nd optional photo', logoUrl: require('../../../assets/images/bag/2nd_optional_photo.png'), value: '' },
+    ]);
 
     const [selectedBrand, setSelectedBrand] = useState(null);
     const [selectedBrandLine, setSelectedBrandLine] = useState(null);
@@ -66,15 +103,15 @@ const UpdatePost = ({ route }) => {
     }, [postId]);
 
     const setListImage = () => {
-        const newImages = [];
-        postDetails?.product?.images.map(item => {
-            newImages.push(item.imageUrl)
+        const newImagesView = images.map((image, index) => {
+            const imageUrl = postDetails?.product?.images[index]?.imageUrl || '';
+            return {
+                ...image,
+                value: imageUrl,
+            };
         });
 
-        while (newImages.length < 5) {
-            newImages.push("")
-        }
-        setImagesView(newImages);
+        setImagesView(newImagesView);
     }
 
     useEffect(() => {
@@ -102,7 +139,7 @@ const UpdatePost = ({ route }) => {
 
             formData.append('request', JSON.stringify(request));
 
-            const filteredImages = images.filter(image => image && image !== "");
+            const filteredImages = images.filter(image => image.value && image.value !== "");
 
             if (filteredImages.length === 0) {
                 console.warn('Ảnh không được để trống!')
@@ -110,9 +147,9 @@ const UpdatePost = ({ route }) => {
             } else {
                 filteredImages.forEach((image, index) => {
                     if (image) {
-                        const fileName = image.split('/').pop();
+                        const fileName = image.value.split('/').pop();
                         formData.append('productImages', {
-                            uri: image,
+                            uri: image.value,
                             type: 'image/jpeg',
                             name: fileName,
                         });
@@ -129,7 +166,7 @@ const UpdatePost = ({ route }) => {
     }
 
     //Upload Image
-    const onGalleryMultiplePress = async () => {
+    const onGalleryMultiplePress = async (index) => {
         try {
             await ImagePicker.requestMediaLibraryPermissionsAsync();
             let result = await ImagePicker.launchImageLibraryAsync({
@@ -138,16 +175,16 @@ const UpdatePost = ({ route }) => {
                 allowsMultipleSelection: true,  // allow multiple images
             });
             if (!result.canceled) {
-                const newImages = result?.assets?.map(asset => asset.uri);
-                const updatedImages = [...newImages, ...images].slice(0, 5);
-                setImages(updatedImages);
+                const newImages = [...images];
+                newImages[index].value = result.assets[0].uri;
+                setImages(newImages);
             }
         } catch (error) {
             console.error('Error Upload Image: ', error);
         }
     }
 
-    const uploadImageCamera = async () => {
+    const uploadImageCamera = async (index) => {
         try {
             await ImagePicker.requestCameraPermissionsAsync();
             let result = await ImagePicker.launchCameraAsync({
@@ -156,12 +193,11 @@ const UpdatePost = ({ route }) => {
                 allowsEditing: true,
                 aspect: [1, 1],
             });
-            console.log('>>> check result: ', result);
             if (!result.canceled) {
                 //save images
-                const newImages = result?.assets?.map(asset => asset.uri);
-                const updatedImages = [...newImages, ...images].slice(0, 5);
-                setImages(updatedImages);
+                const newImages = [...images];
+                newImages[index].value = result.assets[0].uri;
+                setImages(newImages);
             }
         } catch (error) {
             console.error('Error Upload Image: ', error);
@@ -171,8 +207,7 @@ const UpdatePost = ({ route }) => {
     //Remove Image
     const removeImage = (index) => {
         const newImages = [...images];
-        newImages.splice(index, 1);
-        newImages.push("")
+        newImages[index].value = '';
         setImages(newImages);
     }
 
@@ -221,15 +256,21 @@ const UpdatePost = ({ route }) => {
                                         keyExtractor={(item, index) => index.toString()}
                                         horizontal
                                         renderItem={({ item, index }) => (
-                                            item === null || item === "" ?
+                                            item.value === null || item.value === "" ?
                                                 (
-                                                    <View key={index} style={styles.image} >
-                                                        <TouchableOpacity onPress={uploadImageCamera}>
-                                                            <View style={{ position: 'absolute', top: 3, left: 1 }}>
-                                                                <Text style={{ color: COLORS.gray }}>{index + 1}</Text>
-                                                            </View>
-                                                            <FontAwesome style={{ marginTop: 20, marginHorizontal: 20 }} name="camera" size={26} color={COLORS.gray} />
-                                                            <Text style={{ marginTop: 10, color: COLORS.gray, textAlign: 'center' }}>Ảnh</Text>
+                                                    <View key={index}>
+                                                        <View key={index} style={styles.image} >
+                                                            <TouchableOpacity onPress={() => uploadImageCamera(index)}>
+                                                                <Image
+                                                                    style={styles.imageBrandLogo}
+                                                                    source={item.logoUrl}
+                                                                />
+                                                                <FontAwesome name="camera" size={14} color={COLORS.gray} style={{ position: 'absolute', left: 3, top: 5 }} />
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                        <TouchableOpacity style={styles.viewBrandLogo} onPress={() => onGalleryMultiplePress(index)}>
+                                                            <Text style={styles.textBrandLogo}>{item.name}</Text>
+                                                            <AntDesign name="cloudupload" size={16} color={COLORS.gray} style={{ textAlign: 'center' }} />
                                                         </TouchableOpacity>
                                                     </View>
                                                 )
@@ -237,12 +278,15 @@ const UpdatePost = ({ route }) => {
                                                 (
                                                     <View key={index}>
                                                         <ImageBackground
-                                                            source={{ uri: item }}
+                                                            source={{ uri: item.value }}
                                                             style={styles.image} >
                                                             <TouchableOpacity onPress={() => removeImage(index)}>
                                                                 <FontAwesome6 style={styles.xmark} name="xmark" size={20} color="white" />
                                                             </TouchableOpacity>
                                                         </ImageBackground>
+                                                        <View style={styles.viewBrandLogo}>
+                                                            <Text style={styles.textBrandLogo}>{item.name}</Text>
+                                                        </View>
                                                     </View>
                                                 )
                                         )}
@@ -250,32 +294,41 @@ const UpdatePost = ({ route }) => {
                                 </View>
 
                                 {/* Image View */}
-                                <View
-                                    style={[styles.imageUpload, { marginTop: 20 }]}>
+                                <View style={[styles.imageUpload, { marginTop: 20 }]}>
                                     <FlatList
                                         data={imagesView}
                                         keyExtractor={(item, index) => index.toString()}
                                         horizontal
                                         renderItem={({ item, index }) => (
-                                            item === null || item === "" ?
+                                            item.value === null || item.value === "" ?
                                                 (
-                                                    <View key={index} style={styles.image} >
-                                                        <View>
-                                                            <View style={{ position: 'absolute', top: 3, left: 1 }}>
-                                                                <Text style={{ color: COLORS.gray }}>{index + 1}</Text>
-                                                            </View>
-                                                            <FontAwesome style={{ marginTop: 20, marginHorizontal: 20 }} name="camera" size={26} color={COLORS.gray} />
-                                                            <Text style={{ marginTop: 10, color: COLORS.gray, textAlign: 'center' }}>Xem Ảnh</Text>
+                                                    <View key={index}>
+                                                        <View key={index} style={styles.image} >
+                                                            <TouchableOpacity>
+                                                                <Image
+                                                                    style={styles.imageBrandLogo}
+                                                                    source={item.logoUrl}
+                                                                />
+                                                            </TouchableOpacity>
                                                         </View>
+                                                        <TouchableOpacity style={styles.viewBrandLogo}>
+                                                            <Text style={styles.textBrandLogo}>{item.name}</Text>
+                                                        </TouchableOpacity>
                                                     </View>
                                                 )
                                                 :
                                                 (
                                                     <View key={index}>
                                                         <ImageBackground
-                                                            source={{ uri: item }}
+                                                            source={{ uri: item.value }}
                                                             style={styles.image} >
+                                                            <TouchableOpacity onPress={() => removeImage(index)}>
+                                                                <FontAwesome6 style={styles.xmark} name="xmark" size={20} color="white" />
+                                                            </TouchableOpacity>
                                                         </ImageBackground>
+                                                        <View style={styles.viewBrandLogo}>
+                                                            <Text style={styles.textBrandLogo}>{item.name}</Text>
+                                                        </View>
                                                     </View>
                                                 )
                                         )}

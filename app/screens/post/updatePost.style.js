@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     imageUploadContaniner: {
         marginVertical: 20,
         width: Dimensions.get('window').width,
-        height: 260,
+        height: 330,
         backgroundColor: '#dbd9d9',
     },
     imageUpload: {
@@ -69,11 +69,26 @@ const styles = StyleSheet.create({
     image: {
         position: 'relative',
         width: Dimensions.get('window').width / 5.3,
-        height: Dimensions.get('window').width / 5.3,
+        height: Dimensions.get('window').width / 5,
         backgroundColor: COLORS.lightWhite,
         borderRadius: 5,
         alignItems: 'center',
         marginRight: 5
+    },
+
+    imageBrandLogo: {
+        width: Dimensions.get('window').width / 5.5,
+        height: Dimensions.get('window').width / 5.1,
+        borderRadius: 5,
+        marginVertical: 'auto'
+    },
+    viewBrandLogo: {
+        width: Dimensions.get('window').width / 5.1,
+    },
+    textBrandLogo: {
+        marginTop: 5,
+        color: COLORS.gray,
+        textAlign: 'center'
     },
 
     xmark: {

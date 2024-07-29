@@ -55,7 +55,7 @@ export const createPost = async (formData) => {
   try {
     const token = await getAuthToken();
 
-    const response = await fetch('http://192.168.1.10:8080/api/v1/posts', {
+    const response = await fetch('http://192.168.1.7:8080/api/v1/posts', {
 
       method: 'POST',
       headers: {
@@ -73,7 +73,7 @@ export const createPost = async (formData) => {
 export const updatePost = async (id, formData) => {
   try {
     const token = await getAuthToken();
-    const response = await fetch(`http://192.168.1.9:8080/api/v1/posts/${id}`, {
+    const response = await fetch(`http://192.168.1.7:8080/api/v1/posts/${id}`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,
