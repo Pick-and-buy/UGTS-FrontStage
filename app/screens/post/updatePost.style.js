@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     imageUploadContaniner: {
         marginVertical: 20,
         width: Dimensions.get('window').width,
-        height: 330,
+        height: 360,
         backgroundColor: '#dbd9d9',
     },
     imageUpload: {

@@ -231,7 +231,7 @@ const CreatePost = () => {
 
         if (invoice) {
           const invoiceFileName = invoice.split('/').pop();
-          formData.append('productImage', {
+          formData.append('originalReceiptProof', {
             uri: invoice,
             type: 'image/jpeg',
             name: invoiceFileName,
@@ -240,7 +240,7 @@ const CreatePost = () => {
 
         if (videoUri) {
           const videoFileName = videoUri.split('/').pop();
-          formData.append('productImage', {
+          formData.append('productVideo', {
             uri: videoUri,
             type: 'video/mp4',
             name: videoFileName,
