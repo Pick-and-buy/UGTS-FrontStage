@@ -103,8 +103,14 @@ const UpdatePost = ({ route }) => {
     }, [postId]);
 
     const setListImage = () => {
-        const newImagesView = images.map((image, index) => {
-            const imageUrl = postDetails?.product?.images[index]?.imageUrl || '';
+
+        const newImagesView = imagesView.map((image, index) => {
+            // Tìm ảnh từ API có imgIndex trùng với index của imagesView
+            const matchedImage = postDetails?.product?.images.find(apiImage => apiImage.imgIndex === imagesView.index);
+
+            // Nếu tìm thấy imgIndex === index của imagesView thì gán imageUrl vào value, ngược lại để value trống
+            const imageUrl = matchedImage ? matchedImage.imageUrl : '';
+
             return {
                 ...image,
                 value: imageUrl,
