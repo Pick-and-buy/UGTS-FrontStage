@@ -68,6 +68,8 @@ const UpdatePost = ({ route }) => {
         { index: '17', label: '2nd optional photo', name: '2ndoptionalphoto', logoUrl: require('../../../assets/images/bag/2nd_optional_photo.png'), value: '' },
     ]);
 
+    const [isMuted, setIsMuted] = useState(false);
+
     const [selectedBrand, setSelectedBrand] = useState(null);
     const [selectedBrandLine, setSelectedBrandLine] = useState(null);
 
@@ -392,6 +394,12 @@ const UpdatePost = ({ route }) => {
                                         resizeMode="cover"
                                         shouldPlay
                                         isLooping
+                                        isMuted={isMuted} // Set initial state to mute
+                                        onPlaybackStatusUpdate={(status) => {
+                                            if (!status.isPlaying && status.isMuted !== isMuted) {
+                                                setIsMuted(true); // Ensure the video starts muted
+                                            }
+                                        }}
                                     />
                                 </View>
                             </View>

@@ -58,6 +58,8 @@ const CreatePost = () => {
   const [invoice, setInvoice] = useState("");
   const [videoUri, setVideoUri] = useState("");
 
+  const [isMuted, setIsMuted] = useState(false);
+
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [selectedBrandLine, setSelectedBrandLine] = useState(null);
 
@@ -570,6 +572,12 @@ const CreatePost = () => {
                               resizeMode="cover"
                               shouldPlay
                               isLooping
+                              isMuted={isMuted} // Set initial state to mute
+                              onPlaybackStatusUpdate={(status) => {
+                                if (!status.isPlaying && status.isMuted !== isMuted) {
+                                  setIsMuted(true); // Ensure the video starts muted
+                                }
+                              }}
                             />
                             <TouchableOpacity onPress={() => removeVideo()} style={{ position: 'absolute', bottom: 10, left: 15 }}>
                               <FontAwesome6 name="xmark" size={20} color="white" />
