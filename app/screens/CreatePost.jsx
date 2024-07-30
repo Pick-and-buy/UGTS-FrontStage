@@ -37,23 +37,23 @@ const CreatePost = () => {
   const [listBrandLines, setListBrandLines] = useState([]);
 
   const [images, setImages] = useState([
-    { index: '1', name: 'Overall picture', logoUrl: require('../../assets/images/bag/overall_picture.png'), value: '' },
-    { index: '2', name: 'Brand logo', logoUrl: require('../../assets/images/bag/brand_logo.png'), value: '' },
-    { index: '3', name: 'Inside label', logoUrl: require('../../assets/images/bag/inside_label.png'), value: '' },
-    { index: '4', name: 'Hardware engravings', logoUrl: require('../../assets/images/bag/hardware_engravings.png'), value: '' },
-    { index: '5', name: 'Serial number', logoUrl: require('../../assets/images/bag/serial_number.png'), value: '' },
-    { index: '6', name: 'Made in label', logoUrl: require('../../assets/images/bag/made_in_label.png'), value: '' },
-    { index: '7', name: 'QR code label', logoUrl: require('../../assets/images/bag/qr_code_label.png'), value: '' },
-    { index: '8', name: 'Hologram label', logoUrl: require('../../assets/images/bag/hologram_label.png'), value: '' },
-    { index: '9', name: 'Zipper head (front)', logoUrl: require('../../assets/images/bag/zipper_head_front.png'), value: '' },
-    { index: '10', name: 'Zipper head (back)', logoUrl: require('../../assets/images/bag/zipper_head_back.png'), value: '' },
-    { index: '11', name: 'Button', logoUrl: require('../../assets/images/bag/button.png'), value: '' },
-    { index: '12', name: 'Shoulder strap clasp', logoUrl: require('../../assets/images/bag/shoulder_strap_clasp.png'), value: '' },
-    { index: '13', name: 'Logo texture close up', logoUrl: require('../../assets/images/bag/logo_texture_close_up_macro_image.png'), value: '' },
-    { index: '14', name: 'Authenticity card', logoUrl: require('../../assets/images/bag/authenticity_card.png'), value: '' },
-    { index: '15', name: 'Dust bag', logoUrl: require('../../assets/images/bag/dust_bag.png'), value: '' },
-    { index: '16', name: '1st optional photo', logoUrl: require('../../assets/images/bag/1st_optional_photo.png'), value: '' },
-    { index: '17', name: '2nd optional photo', logoUrl: require('../../assets/images/bag/2nd_optional_photo.png'), value: '' },
+    { index: '1', label: 'Overall picture', name: 'Overallpicture', logoUrl: require('../../assets/images/bag/overall_picture.png'), value: '' },
+    { index: '2', label: 'Brand logo', name: 'Brandlogo', logoUrl: require('../../assets/images/bag/brand_logo.png'), value: '' },
+    { index: '3', label: 'Inside label', name: 'Insidelabel', logoUrl: require('../../assets/images/bag/inside_label.png'), value: '' },
+    { index: '4', label: 'Hardware engravings', name: 'Hardwareengravings', logoUrl: require('../../assets/images/bag/hardware_engravings.png'), value: '' },
+    { index: '5', label: 'Serial number', name: 'Serialnumber', logoUrl: require('../../assets/images/bag/serial_number.png'), value: '' },
+    { index: '6', label: 'Made in label', name: 'Madeinlabel', logoUrl: require('../../assets/images/bag/made_in_label.png'), value: '' },
+    { index: '7', label: 'QR code label', name: 'QRcodelabel', logoUrl: require('../../assets/images/bag/qr_code_label.png'), value: '' },
+    { index: '8', label: 'Hologram label', name: 'Hologramlabel', logoUrl: require('../../assets/images/bag/hologram_label.png'), value: '' },
+    { index: '9', label: 'Zipper head (front)', name: 'Zipperhead(front)', logoUrl: require('../../assets/images/bag/zipper_head_front.png'), value: '' },
+    { index: '10', label: 'Zipper head (back)', name: 'Zipperhead(back)', logoUrl: require('../../assets/images/bag/zipper_head_back.png'), value: '' },
+    { index: '11', label: 'Button', name: 'Button', logoUrl: require('../../assets/images/bag/button.png'), value: '' },
+    { index: '12', label: 'Shoulder strap clasp', name: 'Shoulderstrapclasp', logoUrl: require('../../assets/images/bag/shoulder_strap_clasp.png'), value: '' },
+    { index: '13', label: 'Logo texture close up', name: 'Logotexturecloseup', logoUrl: require('../../assets/images/bag/logo_texture_close_up_macro_image.png'), value: '' },
+    { index: '14', label: 'Authenticity card', name: 'Authenticitycard', logoUrl: require('../../assets/images/bag/authenticity_card.png'), value: '' },
+    { index: '15', label: 'Dust bag', name: 'Dustbag', logoUrl: require('../../assets/images/bag/dust_bag.png'), value: '' },
+    { index: '16', label: '1st optional photo', name: '1stoptionalphoto', logoUrl: require('../../assets/images/bag/1st_optional_photo.png'), value: '' },
+    { index: '17', label: '2nd optional photo', name: '2ndoptionalphoto', logoUrl: require('../../assets/images/bag/2nd_optional_photo.png'), value: '' },
   ]);
   const [invoice, setInvoice] = useState("");
   const [videoUri, setVideoUri] = useState("");
@@ -217,10 +217,9 @@ const CreatePost = () => {
         };
 
         formData.append('request', JSON.stringify(request));
-        // console.log('>>> check images: ', images);
         images.forEach((image, index) => {
           if (image.value) {
-            const fileName = image.value.split('/').pop();
+            const fileName = `${image.name}.jpg`;
             formData.append('productImage', {
               uri: image.value,
               type: 'image/jpeg',
@@ -250,23 +249,23 @@ const CreatePost = () => {
         await createPost(formData);
         navigation.navigate('Home')
         setImages([
-          { id: '1', name: 'Overall picture (upload)', logoUrl: require('../../assets/images/bag/overall_picture.png'), value: '' },
-          { id: '2', name: 'Brand logo (upload)', logoUrl: require('../../assets/images/bag/brand_logo.png'), value: '' },
-          { id: '3', name: 'Inside label (upload)', logoUrl: require('../../assets/images/bag/inside_label.png'), value: '' },
-          { id: '4', name: 'Hardware engravings (upload)', logoUrl: require('../../assets/images/bag/hardware_engravings.png'), value: '' },
-          { id: '5', name: 'Serial number (upload)', logoUrl: require('../../assets/images/bag/serial_number.png'), value: '' },
-          { id: '6', name: 'Made in label (upload)', logoUrl: require('../../assets/images/bag/made_in_label.png'), value: '' },
-          { id: '7', name: 'QR code label (upload)', logoUrl: require('../../assets/images/bag/qr_code_label.png'), value: '' },
-          { id: '8', name: 'Hologram label (upload)', logoUrl: require('../../assets/images/bag/hologram_label.png'), value: '' },
-          { id: '9', name: 'Zipper head (front) (upload)', logoUrl: require('../../assets/images/bag/zipper_head_front.png'), value: '' },
-          { id: '10', name: 'Zipper head (back) (upload)', logoUrl: require('../../assets/images/bag/zipper_head_back.png'), value: '' },
-          { id: '11', name: 'Button (upload)', logoUrl: require('../../assets/images/bag/button.png'), value: '' },
-          { id: '12', name: 'Shoulder strap clasp (upload)', logoUrl: require('../../assets/images/bag/shoulder_strap_clasp.png'), value: '' },
-          { id: '13', name: 'Logo texture close up (upload)', logoUrl: require('../../assets/images/bag/logo_texture_close_up_macro_image.png'), value: '' },
-          { id: '14', name: 'Authenticity card (upload)', logoUrl: require('../../assets/images/bag/authenticity_card.png'), value: '' },
-          { id: '15', name: 'Dust bag (upload)', logoUrl: require('../../assets/images/bag/dust_bag.png'), value: '' },
-          { id: '16', name: '1st optional photo (upload)', logoUrl: require('../../assets/images/bag/1st_optional_photo.png'), value: '' },
-          { id: '17', name: '2nd optional photo (upload)', logoUrl: require('../../assets/images/bag/2nd_optional_photo.png'), value: '' },
+          { index: '1', label: 'Overall picture', name: 'Overallpicture', logoUrl: require('../../assets/images/bag/overall_picture.png'), value: '' },
+          { index: '2', label: 'Brand logo', name: 'Brandlogo', logoUrl: require('../../assets/images/bag/brand_logo.png'), value: '' },
+          { index: '3', label: 'Inside label', name: 'Insidelabel', logoUrl: require('../../assets/images/bag/inside_label.png'), value: '' },
+          { index: '4', label: 'Hardware engravings', name: 'Hardwareengravings', logoUrl: require('../../assets/images/bag/hardware_engravings.png'), value: '' },
+          { index: '5', label: 'Serial number', name: 'Serialnumber', logoUrl: require('../../assets/images/bag/serial_number.png'), value: '' },
+          { index: '6', label: 'Made in label', name: 'Madeinlabel', logoUrl: require('../../assets/images/bag/made_in_label.png'), value: '' },
+          { index: '7', label: 'QR code label', name: 'QRcodelabel', logoUrl: require('../../assets/images/bag/qr_code_label.png'), value: '' },
+          { index: '8', label: 'Hologram label', name: 'Hologramlabel', logoUrl: require('../../assets/images/bag/hologram_label.png'), value: '' },
+          { index: '9', label: 'Zipper head (front)', name: 'Zipperhead(front)', logoUrl: require('../../assets/images/bag/zipper_head_front.png'), value: '' },
+          { index: '10', label: 'Zipper head (back)', name: 'Zipperhead(back)', logoUrl: require('../../assets/images/bag/zipper_head_back.png'), value: '' },
+          { index: '11', label: 'Button', name: 'Button', logoUrl: require('../../assets/images/bag/button.png'), value: '' },
+          { index: '12', label: 'Shoulder strap clasp', name: 'Shoulderstrapclasp', logoUrl: require('../../assets/images/bag/shoulder_strap_clasp.png'), value: '' },
+          { index: '13', label: 'Logo texture close up', name: 'Logotexturecloseup', logoUrl: require('../../assets/images/bag/logo_texture_close_up_macro_image.png'), value: '' },
+          { index: '14', label: 'Authenticity card', name: 'Authenticitycard', logoUrl: require('../../assets/images/bag/authenticity_card.png'), value: '' },
+          { index: '15', label: 'Dust bag', name: 'Dustbag', logoUrl: require('../../assets/images/bag/dust_bag.png'), value: '' },
+          { index: '16', label: '1st optional photo', name: '1stoptionalphoto', logoUrl: require('../../assets/images/bag/1st_optional_photo.png'), value: '' },
+          { index: '17', label: '2nd optional photo', name: '2ndoptionalphoto', logoUrl: require('../../assets/images/bag/2nd_optional_photo.png'), value: '' },
         ]);
         setInvoice("");
         setVideoUri("")
@@ -459,7 +458,7 @@ const CreatePost = () => {
                               </TouchableOpacity>
                             </View>
                             <TouchableOpacity style={styles.viewBrandLogo} onPress={() => onGalleryMultiplePress(index)}>
-                              <Text style={styles.textBrandLogo}>{item.name}</Text>
+                              <Text style={styles.textBrandLogo}>{item.label}</Text>
                               <AntDesign name="cloudupload" size={16} color={COLORS.gray} style={{ textAlign: 'center' }} />
                             </TouchableOpacity>
                           </View>
@@ -475,7 +474,7 @@ const CreatePost = () => {
                               </TouchableOpacity>
                             </ImageBackground>
                             <View style={styles.viewBrandLogo}>
-                              <Text style={styles.textBrandLogo}>{item.name}</Text>
+                              <Text style={styles.textBrandLogo}>{item.label}</Text>
                             </View>
                           </View>
                         )

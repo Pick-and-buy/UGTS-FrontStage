@@ -18,6 +18,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { updatePost, getPostDetails } from "../../api/post";
 import * as ImagePicker from "expo-image-picker";
+import { Video } from 'expo-av';
 import Button from "../../components/Button";
 
 const UpdatePost = ({ route }) => {
@@ -28,44 +29,43 @@ const UpdatePost = ({ route }) => {
 
     const navigation = useNavigation();
 
-    //const [images, setImages] = useState([null, null, null, null, null, null, null, null, null, null]);
     const [images, setImages] = useState([
-        { index: '1', name: 'Overall picture', logoUrl: require('../../../assets/images/bag/overall_picture.png'), value: '' },
-        { index: '2', name: 'Brand logo', logoUrl: require('../../../assets/images/bag/brand_logo.png'), value: '' },
-        { index: '3', name: 'Inside label', logoUrl: require('../../../assets/images/bag/inside_label.png'), value: '' },
-        { index: '4', name: 'Hardware engravings', logoUrl: require('../../../assets/images/bag/hardware_engravings.png'), value: '' },
-        { index: '5', name: 'Serial number', logoUrl: require('../../../assets/images/bag/serial_number.png'), value: '' },
-        { index: '6', name: 'Made in label', logoUrl: require('../../../assets/images/bag/made_in_label.png'), value: '' },
-        { index: '7', name: 'QR code label', logoUrl: require('../../../assets/images/bag/qr_code_label.png'), value: '' },
-        { index: '8', name: 'Hologram label', logoUrl: require('../../../assets/images/bag/hologram_label.png'), value: '' },
-        { index: '9', name: 'Zipper head (front)', logoUrl: require('../../../assets/images/bag/zipper_head_front.png'), value: '' },
-        { index: '10', name: 'Zipper head (back)', logoUrl: require('../../../assets/images/bag/zipper_head_back.png'), value: '' },
-        { index: '11', name: 'Button', logoUrl: require('../../../assets/images/bag/button.png'), value: '' },
-        { index: '12', name: 'Shoulder strap clasp', logoUrl: require('../../../assets/images/bag/shoulder_strap_clasp.png'), value: '' },
-        { index: '13', name: 'Logo texture close up', logoUrl: require('../../../assets/images/bag/logo_texture_close_up_macro_image.png'), value: '' },
-        { index: '14', name: 'Authenticity card', logoUrl: require('../../../assets/images/bag/authenticity_card.png'), value: '' },
-        { index: '15', name: 'Dust bag', logoUrl: require('../../../assets/images/bag/dust_bag.png'), value: '' },
-        { index: '16', name: '1st optional photo', logoUrl: require('../../../assets/images/bag/1st_optional_photo.png'), value: '' },
-        { index: '17', name: '2nd optional photo', logoUrl: require('../../../assets/images/bag/2nd_optional_photo.png'), value: '' },
+        { index: '1', label: 'Overall picture', name: 'Overallpicture', logoUrl: require('../../../assets/images/bag/overall_picture.png'), value: '' },
+        { index: '2', label: 'Brand logo', name: 'Brandlogo', logoUrl: require('../../../assets/images/bag/brand_logo.png'), value: '' },
+        { index: '3', label: 'Inside label', name: 'Insidelabel', logoUrl: require('../../../assets/images/bag/inside_label.png'), value: '' },
+        { index: '4', label: 'Hardware engravings', name: 'Hardwareengravings', logoUrl: require('../../../assets/images/bag/hardware_engravings.png'), value: '' },
+        { index: '5', label: 'Serial number', name: 'Serialnumber', logoUrl: require('../../../assets/images/bag/serial_number.png'), value: '' },
+        { index: '6', label: 'Made in label', name: 'Madeinlabel', logoUrl: require('../../../assets/images/bag/made_in_label.png'), value: '' },
+        { index: '7', label: 'QR code label', name: 'QRcodelabel', logoUrl: require('../../../assets/images/bag/qr_code_label.png'), value: '' },
+        { index: '8', label: 'Hologram label', name: 'Hologramlabel', logoUrl: require('../../../assets/images/bag/hologram_label.png'), value: '' },
+        { index: '9', label: 'Zipper head (front)', name: 'Zipperhead(front)', logoUrl: require('../../../assets/images/bag/zipper_head_front.png'), value: '' },
+        { index: '10', label: 'Zipper head (back)', name: 'Zipperhead(back)', logoUrl: require('../../../assets/images/bag/zipper_head_back.png'), value: '' },
+        { index: '11', label: 'Button', name: 'Button', logoUrl: require('../../../assets/images/bag/button.png'), value: '' },
+        { index: '12', label: 'Shoulder strap clasp', name: 'Shoulderstrapclasp', logoUrl: require('../../../assets/images/bag/shoulder_strap_clasp.png'), value: '' },
+        { index: '13', label: 'Logo texture close up', name: 'Logotexturecloseup', logoUrl: require('../../../assets/images/bag/logo_texture_close_up_macro_image.png'), value: '' },
+        { index: '14', label: 'Authenticity card', name: 'Authenticitycard', logoUrl: require('../../../assets/images/bag/authenticity_card.png'), value: '' },
+        { index: '15', label: 'Dust bag', name: 'Dustbag', logoUrl: require('../../../assets/images/bag/dust_bag.png'), value: '' },
+        { index: '16', label: '1st optional photo', name: '1stoptionalphoto', logoUrl: require('../../../assets/images/bag/1st_optional_photo.png'), value: '' },
+        { index: '17', label: '2nd optional photo', name: '2ndoptionalphoto', logoUrl: require('../../../assets/images/bag/2nd_optional_photo.png'), value: '' },
     ]);
     const [imagesView, setImagesView] = useState([
-        { index: '1', name: 'Overall picture', logoUrl: require('../../../assets/images/bag/overall_picture.png'), value: '' },
-        { index: '2', name: 'Brand logo', logoUrl: require('../../../assets/images/bag/brand_logo.png'), value: '' },
-        { index: '3', name: 'Inside label', logoUrl: require('../../../assets/images/bag/inside_label.png'), value: '' },
-        { index: '4', name: 'Hardware engravings', logoUrl: require('../../../assets/images/bag/hardware_engravings.png'), value: '' },
-        { index: '5', name: 'Serial number', logoUrl: require('../../../assets/images/bag/serial_number.png'), value: '' },
-        { index: '6', name: 'Made in label', logoUrl: require('../../../assets/images/bag/made_in_label.png'), value: '' },
-        { index: '7', name: 'QR code label', logoUrl: require('../../../assets/images/bag/qr_code_label.png'), value: '' },
-        { index: '8', name: 'Hologram label', logoUrl: require('../../../assets/images/bag/hologram_label.png'), value: '' },
-        { index: '9', name: 'Zipper head (front)', logoUrl: require('../../../assets/images/bag/zipper_head_front.png'), value: '' },
-        { index: '10', name: 'Zipper head (back)', logoUrl: require('../../../assets/images/bag/zipper_head_back.png'), value: '' },
-        { index: '11', name: 'Button', logoUrl: require('../../../assets/images/bag/button.png'), value: '' },
-        { index: '12', name: 'Shoulder strap clasp', logoUrl: require('../../../assets/images/bag/shoulder_strap_clasp.png'), value: '' },
-        { index: '13', name: 'Logo texture close up', logoUrl: require('../../../assets/images/bag/logo_texture_close_up_macro_image.png'), value: '' },
-        { index: '14', name: 'Authenticity card', logoUrl: require('../../../assets/images/bag/authenticity_card.png'), value: '' },
-        { index: '15', name: 'Dust bag', logoUrl: require('../../../assets/images/bag/dust_bag.png'), value: '' },
-        { index: '16', name: '1st optional photo', logoUrl: require('../../../assets/images/bag/1st_optional_photo.png'), value: '' },
-        { index: '17', name: '2nd optional photo', logoUrl: require('../../../assets/images/bag/2nd_optional_photo.png'), value: '' },
+        { index: '1', label: 'Overall picture', name: 'Overallpicture', logoUrl: require('../../../assets/images/bag/overall_picture.png'), value: '' },
+        { index: '2', label: 'Brand logo', name: 'Brandlogo', logoUrl: require('../../../assets/images/bag/brand_logo.png'), value: '' },
+        { index: '3', label: 'Inside label', name: 'Insidelabel', logoUrl: require('../../../assets/images/bag/inside_label.png'), value: '' },
+        { index: '4', label: 'Hardware engravings', name: 'Hardwareengravings', logoUrl: require('../../../assets/images/bag/hardware_engravings.png'), value: '' },
+        { index: '5', label: 'Serial number', name: 'Serialnumber', logoUrl: require('../../../assets/images/bag/serial_number.png'), value: '' },
+        { index: '6', label: 'Made in label', name: 'Madeinlabel', logoUrl: require('../../../assets/images/bag/made_in_label.png'), value: '' },
+        { index: '7', label: 'QR code label', name: 'QRcodelabel', logoUrl: require('../../../assets/images/bag/qr_code_label.png'), value: '' },
+        { index: '8', label: 'Hologram label', name: 'Hologramlabel', logoUrl: require('../../../assets/images/bag/hologram_label.png'), value: '' },
+        { index: '9', label: 'Zipper head (front)', name: 'Zipperhead(front)', logoUrl: require('../../../assets/images/bag/zipper_head_front.png'), value: '' },
+        { index: '10', label: 'Zipper head (back)', name: 'Zipperhead(back)', logoUrl: require('../../../assets/images/bag/zipper_head_back.png'), value: '' },
+        { index: '11', label: 'Button', name: 'Button', logoUrl: require('../../../assets/images/bag/button.png'), value: '' },
+        { index: '12', label: 'Shoulder strap clasp', name: 'Shoulderstrapclasp', logoUrl: require('../../../assets/images/bag/shoulder_strap_clasp.png'), value: '' },
+        { index: '13', label: 'Logo texture close up', name: 'Logotexturecloseup', logoUrl: require('../../../assets/images/bag/logo_texture_close_up_macro_image.png'), value: '' },
+        { index: '14', label: 'Authenticity card', name: 'Authenticitycard', logoUrl: require('../../../assets/images/bag/authenticity_card.png'), value: '' },
+        { index: '15', label: 'Dust bag', name: 'Dustbag', logoUrl: require('../../../assets/images/bag/dust_bag.png'), value: '' },
+        { index: '16', label: '1st optional photo', name: '1stoptionalphoto', logoUrl: require('../../../assets/images/bag/1st_optional_photo.png'), value: '' },
+        { index: '17', label: '2nd optional photo', name: '2ndoptionalphoto', logoUrl: require('../../../assets/images/bag/2nd_optional_photo.png'), value: '' },
     ]);
 
     const [selectedBrand, setSelectedBrand] = useState(null);
@@ -102,21 +102,24 @@ const UpdatePost = ({ route }) => {
         fetchPostDetails();
     }, [postId]);
 
+    const getLastPartUrl = (url, imagesViewName) => {
+        const parts = url.split('/');
+        const fileName = parts.pop();
+        const namePart = fileName.split('-').pop().split('.')[0];
+        return namePart === imagesViewName;
+    };
+
     const setListImage = () => {
-
         const newImagesView = imagesView.map((image, index) => {
-            // Tìm ảnh từ API có imgIndex trùng với index của imagesView
-            const matchedImage = postDetails?.product?.images.find(apiImage => apiImage.imgIndex === imagesView.index);
-
-            // Nếu tìm thấy imgIndex === index của imagesView thì gán imageUrl vào value, ngược lại để value trống
+            // Tìm ảnh từ API có last part url của imageUrl trùng với name của imagesView
+            const matchedImage = postDetails?.product?.images.find(apiImage => getLastPartUrl(apiImage.imageUrl, image.name));
+            // Nếu tìm thấy url có last part === imagesView.name thì gán imageUrl vào value, ngược lại để value trống
             const imageUrl = matchedImage ? matchedImage.imageUrl : '';
-
             return {
                 ...image,
                 value: imageUrl,
             };
         });
-
         setImagesView(newImagesView);
     }
 
@@ -275,7 +278,7 @@ const UpdatePost = ({ route }) => {
                                                             </TouchableOpacity>
                                                         </View>
                                                         <TouchableOpacity style={styles.viewBrandLogo} onPress={() => onGalleryMultiplePress(index)}>
-                                                            <Text style={styles.textBrandLogo}>{item.name}</Text>
+                                                            <Text style={styles.textBrandLogo}>{item.label}</Text>
                                                             <AntDesign name="cloudupload" size={16} color={COLORS.gray} style={{ textAlign: 'center' }} />
                                                         </TouchableOpacity>
                                                     </View>
@@ -291,7 +294,7 @@ const UpdatePost = ({ route }) => {
                                                             </TouchableOpacity>
                                                         </ImageBackground>
                                                         <View style={styles.viewBrandLogo}>
-                                                            <Text style={styles.textBrandLogo}>{item.name}</Text>
+                                                            <Text style={styles.textBrandLogo}>{item.label}</Text>
                                                         </View>
                                                     </View>
                                                 )
@@ -318,7 +321,7 @@ const UpdatePost = ({ route }) => {
                                                             </TouchableOpacity>
                                                         </View>
                                                         <TouchableOpacity style={styles.viewBrandLogo}>
-                                                            <Text style={styles.textBrandLogo}>{item.name}</Text>
+                                                            <Text style={styles.textBrandLogo}>{item.label}</Text>
                                                         </TouchableOpacity>
                                                     </View>
                                                 )
@@ -328,12 +331,9 @@ const UpdatePost = ({ route }) => {
                                                         <ImageBackground
                                                             source={{ uri: item.value }}
                                                             style={styles.image} >
-                                                            <TouchableOpacity onPress={() => removeImage(index)}>
-                                                                <FontAwesome6 style={styles.xmark} name="xmark" size={20} color="white" />
-                                                            </TouchableOpacity>
                                                         </ImageBackground>
                                                         <View style={styles.viewBrandLogo}>
-                                                            <Text style={styles.textBrandLogo}>{item.name}</Text>
+                                                            <Text style={styles.textBrandLogo}>{item.label}</Text>
                                                         </View>
                                                     </View>
                                                 )
@@ -353,8 +353,8 @@ const UpdatePost = ({ route }) => {
                                 </View>
                             </View>
                             {/* Upload Image by gallery and Camera Option */}
-                            <View style={styles.selectOption}>
-                                {/* Upload Image by gallery */}
+                            {/* <View style={styles.selectOption}>
+
                                 <TouchableOpacity
                                     onPress={onGalleryMultiplePress}
                                     style={[styles.uploadContainer, { marginLeft: 20 }]}>
@@ -364,7 +364,7 @@ const UpdatePost = ({ route }) => {
                                     />
                                     <Text style={{ fontSize: 16 }}>Thư viện</Text>
                                 </TouchableOpacity>
-                                {/* Upload Image by Camera */}
+
                                 <TouchableOpacity
                                     onPress={uploadImageCamera}
                                     style={styles.uploadContainer}>
@@ -374,6 +374,26 @@ const UpdatePost = ({ route }) => {
                                     />
                                     <Text style={{ fontSize: 16 }}>Chụp ảnh</Text>
                                 </TouchableOpacity>
+                            </View> */}
+
+                            <View style={styles.selectOption}>
+                                <View style={styles.uploadInvoiceContainer}>
+                                    <ImageBackground
+                                        style={styles.uploadInvoice}
+                                        source={{ uri: postDetails?.product?.originalReceiptProof }}
+                                    >
+                                    </ImageBackground>
+                                </View>
+                                <View style={styles.uploadVideoContainer}>
+                                    <Video
+                                        source={{ uri: postDetails?.product?.productVideo }}
+                                        style={{ width: '100%', height: '100%' }}
+                                        useNativeControls
+                                        resizeMode="cover"
+                                        shouldPlay
+                                        isLooping
+                                    />
+                                </View>
                             </View>
                             <View style={styles.shadow}></View>
 
