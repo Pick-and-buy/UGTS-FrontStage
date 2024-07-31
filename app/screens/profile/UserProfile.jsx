@@ -96,24 +96,24 @@ const UserProfile = ({ navigation }) => {
 
         {/* Follower */}
         <View style={styles.followerView}>
-          <View style={styles.blockView}>
+          <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary')}>
             <Text style={styles.number}>
               {followingCount}
             </Text>
             <Text>Đã theo dõi</Text>
-          </View>
-          <View style={styles.blockView}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary')}>
             <Text style={styles.number}>
               {followersCount}
             </Text>
             <Text>Theo dõi</Text>
-          </View>
-          <View style={styles.blockView}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary')}>
             <Text style={styles.number}>
               {ratingCount}
             </Text>
             <Text>Đánh giá</Text>
-          </View>
+          </TouchableOpacity>
           {user.verified === true ? (
             <View style={styles.blockView}>
               <MaterialIcons name="verified-user" size={19} color="#699BF7" style={{ marginTop: 6 }} />

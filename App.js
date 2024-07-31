@@ -63,6 +63,10 @@ import SellerOrderDetails from './app/screens/payment/SellerOrderDetails';
 
 import { AuthProvider } from './app/context/AuthContext';
 import OrderTracking from './app/screens/payment/OrderTracking';
+import Following from './app/screens/profile/Following';
+import Followers from './app/screens/profile/Followers';
+import Appreciation from './app/screens/profile/Appreciation';
+import Summary from './app/screens/profile/Summary';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -363,8 +367,28 @@ export default function App() {
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
+                  name='summary'
+                  component={Summary}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
                   name='start-rating'
                   component={AddRating}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='following'
+                  component={Following}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='followers'
+                  component={Followers}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='appreciation'
+                  component={Appreciation}
                   options={{ headerShown: false }}
                 />
               </Stack.Navigator>
