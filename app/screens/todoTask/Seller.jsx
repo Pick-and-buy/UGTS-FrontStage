@@ -199,6 +199,13 @@ const Seller = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         }
+        {item?.orderDetails?.status === "COMPLETED" &&
+          <View style={styles.buttonWrapper}>
+            <TouchableOpacity style={[styles.processBtn]} onPress={() => handleSellerOrderDetail(item)}>
+              <Text style={[styles.cancelBtnText, { color: COLORS.white }]}>{"Hoàn thành"}</Text>
+            </TouchableOpacity>
+          </View>
+        }
         {item?.orderDetails?.status === "RETURNED" &&
           <View style={styles.buttonWrapper}>
             <TouchableOpacity style={[styles.primaryBtn, { backgroundColor: COLORS.gray2 }]} onPress={() => handleSellerOrderDetail(item)}>
