@@ -9,13 +9,13 @@ import { COLORS, SIZES } from '../constants/theme.js';
 import axios from 'axios';  // Import axios
 import { getAuthToken, sendImageToAPI } from '../api/user.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useAuth } from '../context/AuthContext'; // Import useAuth
+import { useAuth } from '../context/AuthContext';
 
 const UploadPhoto = ({ navigation, route }) => {
     const user = route.params;
     const userId = user.id;
     const [image, setImage] = useState();
-    const { updateAvatar } = useAuth(); // Get updateAvatar from context
+    const { updateAvatar } = useAuth();
 
     const uploadImage = async (mode) => {
         try {
@@ -69,7 +69,7 @@ const UploadPhoto = ({ navigation, route }) => {
                     Alert.alert(respone.message);
                 }
             } catch (err) {
-                alert("Error updating profile: " + err.message);
+                alert("Error updating image profile: " + err.message);
             }
         } else {
             alert("Please select an image first.");
@@ -99,7 +99,7 @@ const UploadPhoto = ({ navigation, route }) => {
                 </View>
 
                 {image &&
-                    <View style={{justifyContent: 'center', alignItems: 'center', position: 'relative', top: -30 }}>
+                    <View style={{ justifyContent: 'center', alignItems: 'center', position: 'relative', top: -30 }}>
                         <Image
                             source={{ uri: image }}
                             style={{ height: 150, width: 150, borderRadius: 15 }}

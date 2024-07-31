@@ -14,26 +14,28 @@ import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
 import styles from "../css/buyer.style";
 import { callFetchListOrders, getOrdersByOrderStatus } from "../../api/order";
-import { getUserByToken } from "../../api/user";
 import { COLORS } from "../../constants/theme";
+import { useAuth } from '../../context/AuthContext';
 
 const Buyer = ({ navigation }) => {
-
+    const { user } = useAuth();
     const [listOrdersBuyer, setListOrdersBuyer] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedOrderStatus, setSelectedOrderStatus] = useState('All');
 
     useEffect(() => {
-        fetchAllOrders();
-    }, []);
+        if (user) {
+            fetchAllOrders();
+        }
+    }, [user]);
 
     const fetchAllOrders = async () => {
+        if (!user) return; // Exit if user doesn't exist
+
         setIsLoading(true);
         try {
             const res = await callFetchListOrders();
-            const userData = await getUserByToken();  // Fetch user data
-            //Lọc tất cả order mà có id của người mua trùng với id của user đăng nhập
-            const filteredOrders = res.result.filter(order => order.buyer.id === userData.result.id);
+            const filteredOrders = res.result.filter(order => order.buyer.id === user.id);
             setListOrdersBuyer(filteredOrders);
         } catch (error) {
             console.error("Error fetching Orders:", error);
@@ -43,13 +45,14 @@ const Buyer = ({ navigation }) => {
     };
 
     const fetchAllOrdersByOrderStatus = async (orderStatusName) => {
+        if (!user) return; // Exit if user doesn't exist
+
         setIsLoading(true);
         try {
             let orderStatus = "";
             if (orderStatusName === "Chờ xử lý") {
                 orderStatus = "PENDING";
-            }
-            else if (orderStatusName === "Đang xử lý") {
+            } else if (orderStatusName === "Đang xử lý") {
                 orderStatus = "PROCESSING";
             } else if (orderStatusName === "Đang giao hàng") {
                 orderStatus = "DELIVERING";
@@ -63,16 +66,14 @@ const Buyer = ({ navigation }) => {
                 orderStatus = "COMPLETED";
             }
             const res = await getOrdersByOrderStatus(orderStatus);
-            const userData = await getUserByToken();
-            //Lọc tất cả order mà có id của người mua trùng với id của user đăng nhập
-            const filteredOrders = res.result.filter(order => order.buyer.id === userData.result.id);
+            const filteredOrders = res.result.filter(order => order.buyer.id === user.id);
             setListOrdersBuyer(filteredOrders);
         } catch (error) {
             console.error("Error fetching Orders by order status:", error);
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     const formatPrice = (price) => {
         return new Intl.NumberFormat('vi-VN', {
@@ -90,14 +91,13 @@ const Buyer = ({ navigation }) => {
         { id: '6', value: 'Hoàn thành' },
         { id: '7', value: 'Đã hủy' },
         { id: '8', value: 'Trả lại' },
-    ]
+    ];
 
     const handleOrderStatusPress = (orderStatusName) => {
         setSelectedOrderStatus(orderStatusName);
         if (orderStatusName === 'All') {
             fetchAllOrders();
-        }
-        else {
+        } else {
             fetchAllOrdersByOrderStatus(orderStatusName);
         }
     };
@@ -109,7 +109,6 @@ const Buyer = ({ navigation }) => {
                 <Text numberOfLines={2} style={styles.itemTitle}>
                     {item?.post?.title}
                 </Text>
-                {/* Username: name of seller */}
                 <Text style={styles.shop}>{item?.post?.user?.username}</Text>
                 <View style={{ flex: 1, flexDirection: "row", justifyContent: 'space-between', alignItems: 'center' }}>
                     <Text style={styles.price}>đ{formatPrice(item?.orderDetails?.price)}</Text>
@@ -220,11 +219,10 @@ const Buyer = ({ navigation }) => {
                             </View>
                         )}
                     </View>
-
                 )
             }
         </View>
     )
 }
 
-export default Buyer
+export default Buyer;

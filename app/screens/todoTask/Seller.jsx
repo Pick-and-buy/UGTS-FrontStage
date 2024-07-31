@@ -18,31 +18,33 @@ import styles from "../css/seller.style";
 import { callFetchListOrders, cancelOrderSeller, getOrdersByOrderStatus } from "../../api/order";
 import { getUserByToken } from "../../api/user";
 import { COLORS } from "../../constants/theme";
+import { useAuth } from '../../context/AuthContext';
 
 const Seller = ({ navigation }) => {
-
+  const { user } = useAuth();
   const [listOrdersSeller, setListOrdersSeller] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedOrderStatus, setSelectedOrderStatus] = useState('All');
 
-  //Sử dụng useFocusEffect và useCallback để mỗi khi redirect màn hình từ 1 trang khác về màn hình Seller thì sẽ tự động re-render dữ liệu
   useFocusEffect(
     useCallback(() => {
-      if (selectedOrderStatus === 'All') {
-        fetchOrdersBySeller();
-      } else {
-        fetchAllOrdersByOrderStatus(selectedOrderStatus);
+      if (user) {
+        if (selectedOrderStatus === 'All') {
+          fetchOrdersBySeller();
+        } else {
+          fetchAllOrdersByOrderStatus(selectedOrderStatus);
+        }
       }
-    }, [])
+    }, [selectedOrderStatus, user])
   );
 
   const fetchOrdersBySeller = async () => {
+    if (!user) return; // Exit if user doesn't exist
+
     setIsLoading(true);
     try {
       const res = await callFetchListOrders();
-      const userData = await getUserByToken();  // Fetch user data
-      //Lọc tất cả order mà có id của người tạo bài post trùng với id của user đăng nhập
-      const filteredOrders = res.result.filter(order => order.post.user.id === userData.result.id);
+      const filteredOrders = res.result.filter(order => order.post.user.id === user.id);
       setListOrdersSeller(filteredOrders);
     } catch (error) {
       console.error("Error fetching Orders:", error);
@@ -51,36 +53,46 @@ const Seller = ({ navigation }) => {
   };
 
   const fetchAllOrdersByOrderStatus = async (orderStatusName) => {
+    if (!user) return; // Exit if user doesn't exist
+
     setIsLoading(true);
     try {
       let orderStatus = "";
-      if (orderStatusName === "Chờ xử lý") {
-        orderStatus = "PENDING";
-      }
-      else if (orderStatusName === "Đang xử lý") {
-        orderStatus = "PROCESSING";
-      } else if (orderStatusName === "Đang giao hàng") {
-        orderStatus = "DELIVERING";
-      } else if (orderStatusName === "Đã hủy") {
-        orderStatus = "CANCELLED";
-      } else if (orderStatusName === "Đã nhận hàng") {
-        orderStatus = "RECEIVED";
-      } else if (orderStatusName === "Trả lại") {
-        orderStatus = "RETURNED";
-      } else if (orderStatusName === "Hoàn thành") {
-        orderStatus = "COMPLETED";
+      switch (orderStatusName) {
+        case "Chờ xử lý":
+          orderStatus = "PENDING";
+          break;
+        case "Đang xử lý":
+          orderStatus = "PROCESSING";
+          break;
+        case "Đang giao hàng":
+          orderStatus = "DELIVERING";
+          break;
+        case "Đã hủy":
+          orderStatus = "CANCELLED";
+          break;
+        case "Đã nhận hàng":
+          orderStatus = "RECEIVED";
+          break;
+        case "Trả lại":
+          orderStatus = "RETURNED";
+          break;
+        case "Hoàn thành":
+          orderStatus = "COMPLETED";
+          break;
+        default:
+          orderStatus = "";
       }
       const res = await getOrdersByOrderStatus(orderStatus);
       const userData = await getUserByToken();
-      //Lọc tất cả order mà có id của người tạo bài post trùng với id của user đăng nhập
-      const filteredOrders = res.result.filter(order => order.post.user.id === userData.result.id);
+      const filteredOrders = res.result.filter(order => order.post.user.id === user.id);
       setListOrdersSeller(filteredOrders);
     } catch (error) {
       console.error("Error fetching Orders by order status:", error);
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -98,14 +110,13 @@ const Seller = ({ navigation }) => {
     { id: '6', value: 'Hoàn thành' },
     { id: '7', value: 'Đã hủy' },
     { id: '8', value: 'Trả lại' },
-  ]
+  ];
 
   const handleOrderStatusPress = (orderStatusName) => {
     setSelectedOrderStatus(orderStatusName);
     if (orderStatusName === 'All') {
       fetchOrdersBySeller();
-    }
-    else {
+    } else {
       fetchAllOrdersByOrderStatus(orderStatusName);
     }
   };
@@ -135,7 +146,7 @@ const Seller = ({ navigation }) => {
 
   const handleSellerOrderDetail = (orderInfo) => {
     navigation.navigate("seller-order-details", { orderInfo: orderInfo });
-  }
+  };
 
   const renderItem = ({ item }) => (
     <View style={styles.card}>
@@ -144,7 +155,6 @@ const Seller = ({ navigation }) => {
         <Text numberOfLines={1} style={styles.itemTitle}>
           {item?.post?.title}
         </Text>
-        {/* Username: name of buyer */}
         <Text style={styles.shop}>Người mua: {item?.buyer?.username}</Text>
         <Text style={styles.price}>đ{formatPrice(item?.orderDetails?.price)}</Text>
 
@@ -197,7 +207,6 @@ const Seller = ({ navigation }) => {
           </View>
         }
       </View>
-
     </View>
   );
 
@@ -266,11 +275,10 @@ const Seller = ({ navigation }) => {
               </View>
             )}
           </View>
-
         )
       }
     </View>
   )
 }
 
-export default Seller
+export default Seller;
