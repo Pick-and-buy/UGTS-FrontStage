@@ -10,7 +10,7 @@ import {
     RefreshControl,
     Alert
 } from "react-native";
-import { Ionicons, Feather, MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Feather, AntDesign, Octicons } from '@expo/vector-icons';
 import { COLORS } from "../../constants/theme";
 import { Rating } from 'react-native-stock-star-rating';
 import Post from "../post/Post";
@@ -28,9 +28,9 @@ const SellerProfile = ({ navigation, route }) => {
     const [followersCount, setFollowersCount] = useState(0);
     const [followingCount, setFollowingCount] = useState(0)
     const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
-    
+
     // console.log(userOfPost.id);
-    
+
     useEffect(() => {
         fetchPostsByUserId();
         fetchFollowersCount();
@@ -136,48 +136,70 @@ const SellerProfile = ({ navigation, route }) => {
             <View style={styles.container}>
                 {/* Header */}
                 <View style={styles.header}>
-                    <Ionicons
-                        onPress={() => navigation.goBack()}
-                        name="chevron-back-outline"
-                        size={30}
-                        color={COLORS.gray} />
-                    <Text style={{ fontSize: 24, fontWeight: "bold", color: COLORS.black }}>THÔNG TIN NGƯỜI BÁN</Text>
+                    <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                        <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
+                    </TouchableOpacity>
+                    <Text style={{ fontSize: 20, fontWeight: "bold", color: COLORS.black }}>{userOfPost?.lastName} {userOfPost?.firstName}</Text>
                     <Feather
                         onPress={() => console.warn('More Function')}
                         name="more-horizontal"
                         size={35}
                         color="gray" />
                 </View>
-
-                <View style={styles.shadow}>
-                    {/* Tạo Khoảng Trống */}
-                </View>
-
                 {/* Personal Information */}
                 <View style={styles.personalContainer}>
-                    <View style={[styles.detailContainer, { alignItems: 'flex-start' }]}>
+                    <View
+                        style={styles.avatarTouchable}
+                    >
                         <Image
                             style={styles.avatar}
                             source={{ uri: userOfPost?.avatar ? userOfPost?.avatar : profile }}
                         />
-                        <View style={{ gap: 5 }}>
-                            <Text style={{ fontSize: 18 }}>
-                                {userOfPost?.username}
-                            </Text>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Rating
-                                    stars={4.7}
-                                    maxStars={5}
-                                    size={16}
-                                />
-                                <Text style={{ fontSize: 12, marginLeft: 4, marginTop: 4 }}>(100)</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <MaterialIcons name="verified-user" size={16} color="#699BF7" style={{ marginTop: 0, marginLeft: 0 }} />
-                                <Text style={{ fontSize: 12 }}>Tài khoản đã xác minh</Text>
-                            </View>
-                        </View>
                     </View>
+                    <Text style={styles.username}>
+                        @{userOfPost?.username}
+                    </Text>
+                </View>
+
+                {/* Follower */}
+                <View style={styles.followerView}>
+                    <View style={styles.blockView}>
+                        <Text style={styles.number}>
+                            {followingCount}
+                        </Text>
+                        <Text>Đã theo dõi</Text>
+                    </View>
+                    <View style={styles.blockView}>
+                        <Text style={styles.number}>
+                            {followersCount}
+                        </Text>
+                        <Text>Theo dõi</Text>
+                    </View>
+                    <View style={styles.blockView}>
+                        <Text style={styles.number}>
+                            {55}
+                        </Text>
+                        <Text>Đánh giá</Text>
+                    </View>
+                    {userOfPost.verified === true ? (
+                        <View style={styles.blockView}>
+                            <MaterialIcons name="verified-user" size={19} color="#699BF7" style={{ marginTop: 6 }} />
+                            <Text>Đã xác minh</Text>
+                        </View>
+                    ) : (
+                        <View style={styles.blockView}>
+                            <Octicons name="unverified" size={19} color="gray" style={{ marginTop: 6 }} />
+                            <Text>Chưa xác minh</Text>
+                        </View>
+                    )
+
+                    }
+
+                </View>
+
+
+                {/* Button */}
+                <View style={styles.buttonWrapper}>
                     <View>
                         {userIdLogged && userOfPost.id !== userIdLogged && (
                             <TouchableOpacity
@@ -208,15 +230,6 @@ const SellerProfile = ({ navigation, route }) => {
                     </View>
                 </View>
 
-                {/* Follower */}
-                <View style={styles.followerView}>
-                    <Text>
-                        {followersCount}<Text> người theo dõi</Text>
-                    </Text>
-                    <Text>
-                        {followingCount}<Text> người đang theo dõi</Text>
-                    </Text>
-                </View>
 
                 {/* User product */}
                 <View style={styles.containerPost}>
