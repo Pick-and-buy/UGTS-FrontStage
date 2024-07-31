@@ -412,6 +412,44 @@ const CreatePost = () => {
     }).format(price);
   };
 
+  const renderImages = ({ item, index }) => {
+    return (
+      item.value === null || item.value === "" ?
+        (
+          <View key={index}>
+            <View key={index} style={styles.image} >
+              <TouchableOpacity onPress={() => uploadImageCamera(index)}>
+                <Image
+                  style={styles.imageBrandLogo}
+                  source={item.logoUrl}
+                />
+                <FontAwesome name="camera" size={14} color={COLORS.gray} style={{ position: 'absolute', left: 3, top: 5 }} />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity style={styles.viewBrandLogo} onPress={() => onGalleryMultiplePress(index)}>
+              <Text style={styles.textBrandLogo}>{item.label}</Text>
+              <AntDesign name="cloudupload" size={16} color={COLORS.gray} style={{ textAlign: 'center' }} />
+            </TouchableOpacity>
+          </View>
+        )
+        :
+        (
+          <View key={index}>
+            <ImageBackground
+              source={{ uri: item.value }}
+              style={styles.image} >
+              <TouchableOpacity onPress={() => removeImage(index)}>
+                <FontAwesome6 style={styles.xmark} name="xmark" size={20} color="white" />
+              </TouchableOpacity>
+            </ImageBackground>
+            <View style={styles.viewBrandLogo}>
+              <Text style={styles.textBrandLogo}>{item.label}</Text>
+            </View>
+          </View>
+        )
+    );
+  };
+
   return (
     <ScrollView style={{ backgroundColor: COLORS.white }}>
       <Formik
@@ -440,49 +478,13 @@ const CreatePost = () => {
 
               {/* Image Upload */}
               <View style={styles.imageUploadContaniner}>
-                <View
-                  style={styles.imageUpload}>
+                <View style={styles.imageUpload}>
                   <FlatList
                     data={images}
                     keyExtractor={(item, index) => index.toString()}
                     horizontal
-                    renderItem={({ item, index }) => (
-                      item.value === null || item.value === "" ?
-                        (
-                          <View key={index}>
-                            <View key={index} style={styles.image} >
-                              <TouchableOpacity onPress={() => uploadImageCamera(index)}>
-                                <Image
-                                  style={styles.imageBrandLogo}
-                                  source={item.logoUrl}
-                                />
-                                <FontAwesome name="camera" size={14} color={COLORS.gray} style={{ position: 'absolute', left: 3, top: 5 }} />
-                              </TouchableOpacity>
-                            </View>
-                            <TouchableOpacity style={styles.viewBrandLogo} onPress={() => onGalleryMultiplePress(index)}>
-                              <Text style={styles.textBrandLogo}>{item.label}</Text>
-                              <AntDesign name="cloudupload" size={16} color={COLORS.gray} style={{ textAlign: 'center' }} />
-                            </TouchableOpacity>
-                          </View>
-                        )
-                        :
-                        (
-                          <View key={index}>
-                            <ImageBackground
-                              source={{ uri: item.value }}
-                              style={styles.image} >
-                              <TouchableOpacity onPress={() => removeImage(index)}>
-                                <FontAwesome6 style={styles.xmark} name="xmark" size={20} color="white" />
-                              </TouchableOpacity>
-                            </ImageBackground>
-                            <View style={styles.viewBrandLogo}>
-                              <Text style={styles.textBrandLogo}>{item.label}</Text>
-                            </View>
-                          </View>
-                        )
-                    )}
+                    renderItem={renderImages}
                   />
-
                 </View>
                 <View style={{ marginTop: 20, flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10 }}>
                   <Text style={{ fontSize: 16, color: '#6e6d6d' }}>Thông tin sản phẩm</Text>
@@ -594,67 +596,6 @@ const CreatePost = () => {
                   <View></View>
                 )
               }
-
-
-              {/* Upload Image by gallery and Camera Option */}
-              {/* <View View style={styles.selectOption}>
-                {invoice === "" ? (
-                  <TouchableOpacity
-                    onPress={onGalleryUploadInvoice}
-                    style={[styles.uploadContainer, { marginLeft: 10 }]}>
-                    <Image
-                      style={styles.imageSelect}
-                      source={require('../../assets/images/gallery.png')}
-                    />
-                    <Text style={{ fontSize: 16 }}>Tải Ảnh Hóa Đơn</Text>
-                  </TouchableOpacity>
-                )
-                  :
-                  (
-                    <View style={styles.uploadInvoiceContainer}>
-                      <ImageBackground
-                        style={styles.uploadInvoice}
-                        source={{ uri: invoice }}
-                      >
-                        <TouchableOpacity onPress={() => removeInvoice()}>
-                          <FontAwesome6 style={[styles.xmark, { left: 15, top: 5 }]} name="xmark" size={20} color="white" />
-                        </TouchableOpacity>
-                      </ImageBackground>
-                    </View>
-                  )
-                }
-
-                {videoUri === "" ? (
-                  <TouchableOpacity
-                    onPress={UploadVideoScreen}
-                    style={styles.uploadContainer}>
-                    <Image
-                      style={styles.imageSelect}
-                      source={require('../../assets/images/camera.png')}
-                    />
-                    <Text style={{ fontSize: 16 }}>Upload video</Text>
-                  </TouchableOpacity>
-                )
-                  :
-                  (
-                    <View style={styles.uploadVideoContainer}>
-                      <Video
-                        source={{ uri: videoUri }}
-                        style={{ width: '100%', height: '100%' }}
-                        // style={styles.uploadVideo}
-                        useNativeControls
-                        resizeMode="cover"
-                        isLooping
-                      />
-                      <TouchableOpacity onPress={() => removeVideo()} style={{ position: 'absolute', bottom: 10, left: 15 }}>
-                        <FontAwesome6 name="xmark" size={20} color="white" />
-                      </TouchableOpacity>
-                    </View>
-                  )
-                }
-              </View> */}
-              {/* <View style={styles.shadow}></View> */}
-
 
               {/* Product Information */}
               <View style={styles.productContainer}>

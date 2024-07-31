@@ -56,8 +56,9 @@ const styles = StyleSheet.create({
     imageUploadContaniner: {
         marginVertical: 20,
         width: Dimensions.get('window').width,
-        height: 360,
+        height: 370,
         backgroundColor: '#dbd9d9',
+        paddingLeft: 5,
     },
     imageUpload: {
         flexDirection: "row",
@@ -68,8 +69,8 @@ const styles = StyleSheet.create({
     },
     image: {
         position: 'relative',
-        width: Dimensions.get('window').width / 5.3,
-        height: Dimensions.get('window').width / 5,
+        width: Dimensions.get('window').width / 5,
+        height: Dimensions.get('window').width / 4.7,
         backgroundColor: COLORS.lightWhite,
         borderRadius: 5,
         alignItems: 'center',
@@ -77,13 +78,13 @@ const styles = StyleSheet.create({
     },
 
     imageBrandLogo: {
-        width: Dimensions.get('window').width / 5.5,
-        height: Dimensions.get('window').width / 5.1,
+        width: Dimensions.get('window').width / 5.2,
+        height: Dimensions.get('window').width / 4.8,
         borderRadius: 5,
         marginVertical: 'auto'
     },
     viewBrandLogo: {
-        width: Dimensions.get('window').width / 5.1,
+        width: Dimensions.get('window').width / 4.8,
     },
     textBrandLogo: {
         marginTop: 5,
@@ -100,7 +101,6 @@ const styles = StyleSheet.create({
     //Upload Image by gallery and Camera Option
     selectOption: {
         flexDirection: 'row',
-        marginBottom: 20,
         marginHorizontal: "5%",
         gap: 20,
     },
@@ -122,9 +122,14 @@ const styles = StyleSheet.create({
     //Upload Invoice
     uploadInvoiceContainer: {
         width: '45%',
+        height: Dimensions.get('window').width / 3 + 30,
+        marginLeft: 10,
+    },
+
+    uploadInvoiceImage: {
+        width: '100%',
         height: Dimensions.get('window').width / 3,
         borderRadius: 20,
-        marginLeft: 10,
         overflow: 'hidden', //Kết hợp với flex = 1 để tạo borderRadius cho ImageBackground
     },
     uploadInvoice: {
@@ -135,18 +140,16 @@ const styles = StyleSheet.create({
 
     //Upload Video
     uploadVideoContainer: {
-        position: 'relative',
         width: '45%',
-        height: Dimensions.get('window').width / 3,
-        borderRadius: 20,
-        marginLeft: 10,
-        overflow: 'hidden', //Kết hợp với flex = 1 để tạo borderRadius cho ImageBackground
+        height: Dimensions.get('window').width / 3 + 30,
+        marginLeft: 5,
     },
 
     uploadVideo: {
-        flex: 1, //Kết hợp với overflow: 'hidden' để tạo borderRadius cho ImageBackground
         width: '100%',
         height: Dimensions.get('window').width / 3,
+        borderRadius: 20,
+        overflow: 'hidden', //Kết hợp với flex = 1 để tạo borderRadius cho ImageBackground
     },
 
     //Product Information
@@ -159,6 +162,7 @@ const styles = StyleSheet.create({
         width: "100%",
         marginVertical: 5,
         fontSize: 16,
+        color: COLORS.blue
     },
 
     leftText: {
