@@ -12,11 +12,11 @@ import {
 import { MaterialCommunityIcons, Feather, AntDesign } from '@expo/vector-icons';
 import { COLORS } from "../../constants/theme";
 import { Rating } from 'react-native-stock-star-rating';
+import { MaterialIcons, Octicons } from '@expo/vector-icons';
 import styles from "../css/UserProfile.style";
 import Post from "../post/Post";
 import { getListsFollowers, getListsFollowing } from "../../api/user";
 import { useAuth } from "../../context/AuthContext";
-
 const UserProfile = ({ navigation }) => {
   const { user } = useAuth();
   const createdPosts = user.createdPosts;
@@ -78,7 +78,6 @@ const UserProfile = ({ navigation }) => {
               <AntDesign name="pluscircle" size={24} color="#06bcee" />
             </View>
           </TouchableOpacity>
-
           <Text style={styles.username}>
             @{user?.username}
           </Text>
@@ -102,8 +101,22 @@ const UserProfile = ({ navigation }) => {
             <Text style={styles.number}>
               {55}
             </Text>
-            <Text>Thích</Text>
+            <Text>Đánh giá</Text>
           </View>
+          {user.verified === true ? (
+            <View style={styles.blockView}>
+              <MaterialIcons name="verified-user" size={19} color="#699BF7" style={{ marginTop: 6 }} />
+              <Text>Đã xác minh</Text>
+            </View>
+          ) : (
+            <View style={styles.blockView}>
+              <Octicons name="unverified" size={19} color="gray" style={{ marginTop: 6 }} />
+              <Text>Chưa xác minh</Text>
+            </View>
+          )
+
+          }
+
         </View>
         {/* Button */}
         <View style={styles.buttonWrapper}>

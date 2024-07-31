@@ -57,8 +57,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 20,
-        gap: 50,
-        paddingRight: 25
+        gap: 30,
+        marginHorizontal: "auto"
     },
     blockView: {
         flexDirection: 'column',
