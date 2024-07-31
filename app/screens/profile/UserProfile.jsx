@@ -15,7 +15,7 @@ import { Rating } from 'react-native-stock-star-rating';
 import { MaterialIcons, Octicons } from '@expo/vector-icons';
 import styles from "../css/UserProfile.style";
 import Post from "../post/Post";
-import { getListsFollowers, getListsFollowing } from "../../api/user";
+import { getListsFollowers, getListsFollowing, getRatingByUserId } from "../../api/user";
 import { useAuth } from "../../context/AuthContext";
 const UserProfile = ({ navigation }) => {
   const { user } = useAuth();
@@ -23,11 +23,13 @@ const UserProfile = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
+  const [ratingCount, setRatingCount] = useState(0);
   const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
   useEffect(() => {
     fetchFollowersCount();
     fetchFollowingCount();
+    fetchRating();
   }, []);
 
   const fetchFollowersCount = async () => {
@@ -43,6 +45,15 @@ const UserProfile = ({ navigation }) => {
     try {
       const response = await getListsFollowing(user.id);
       setFollowingCount(response.result.length);
+    } catch (error) {
+      console.error('Error fetching following count:', error);
+    }
+  };
+
+  const fetchRating = async () => {
+    try {
+      const response = await getRatingByUserId(user.id);
+      setRatingCount(response.result.length);
     } catch (error) {
       console.error('Error fetching following count:', error);
     }
@@ -99,7 +110,7 @@ const UserProfile = ({ navigation }) => {
           </View>
           <View style={styles.blockView}>
             <Text style={styles.number}>
-              {55}
+              {ratingCount}
             </Text>
             <Text>Đánh giá</Text>
           </View>

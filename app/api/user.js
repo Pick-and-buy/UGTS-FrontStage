@@ -272,7 +272,7 @@ export const verifyInformation = async (user, fontData, backData, faceMatchData)
 };
 
 export const ratingUser = async (stars, comment, ratingUserId, ratedUserId, orderId) => {
-  console.log(stars, comment, ratingUserId, ratedUserId);
+  // console.log(stars, comment, ratingUserId, ratedUserId);
   try {
     const response = await axiosInstance.post(`/rating`, {
       stars: stars,
@@ -281,6 +281,15 @@ export const ratingUser = async (stars, comment, ratingUserId, ratedUserId, orde
       ratedUserId: ratedUserId,
       orderId: orderId
     });
+    return response.data;
+  } catch (error) {
+    console.error('Error rating:', error);
+    throw error;
+  }
+};
+export const getRatingByUserId = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`/rating/rated?ratedUserId=${userId}`);
     return response.data;
   } catch (error) {
     console.error('Error rating:', error);
