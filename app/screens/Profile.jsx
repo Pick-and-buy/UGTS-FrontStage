@@ -1,5 +1,5 @@
+import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, SafeAreaView, RefreshControl } from "react-native";
-import React, { useCallback, useContext, useEffect, useState } from "react";
 import { COLORS, SIZES } from "../constants/theme";
 import { Ionicons, FontAwesome6, Octicons } from '@expo/vector-icons';
 import { AntDesign } from "@expo/vector-icons";
@@ -7,69 +7,24 @@ import { FontAwesome } from '@expo/vector-icons';
 import NetworkImage from "../components/NetworkImage";
 import ProfileTile from "../components/ProfileTile";
 import styles from "./css/profile.style";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import { getUserByToken } from "../api/user";
-import { Rating } from 'react-native-stock-star-rating'
+import { Rating } from 'react-native-stock-star-rating';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from "../context/AuthContext";
 
 const Profile = ({ navigation }) => {
-  const { logout } = useAuth();
-  const [user, setUser] = useState(null);
-  const [createdPosts, setCreatedPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
+  const { logout, user, isAuthenticated } = useAuth();
 
   const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
   const bkImg = "https://d326fntlu7tb1e.cloudfront.net/uploads/ab6356de-429c-45a1-b403-d16f7c20a0bc-bkImg-min.png";
 
-  const fetchUserData = async () => {
-    try {
-      const userData = await getUserByToken();
-      setUser(userData);
-      setCreatedPosts(userData.result.createdPosts);
-    } catch (error) {
-      console.error('Fetching user data failed:', error);
-    }
-  };
-
-  const checkToken = async () => {
-    const token = await AsyncStorage.getItem('token');
-    setIsAuthenticated(!!token);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    const initialize = async () => {
-      await checkToken();
-      if (isAuthenticated) {
-        await fetchUserData();
-      }
-    };
-    initialize();
-  }, [isAuthenticated]);
-
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    await fetchUserData();
-    setRefreshing(false);
-  }, []);
-
-  if (loading) {
-    return null; // or a loading spinner
-  }
-
   const handleLogout = async () => {
     await logout();
-    setUser(null);
     navigation.reset({
       index: 0,
       routes: [{ name: 'bottom-navigation' }],
     });
   };
-  // console.log(user?.result?.verified);
+
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -78,11 +33,6 @@ const Profile = ({ navigation }) => {
         scrollEnabled={true}
         nestedScrollEnabled={true}
         style={{ flex: 1 }}
-        refreshControl={
-          isAuthenticated ? (
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          ) : null
-        }
       >
         <View style={{
           backgroundColor: COLORS.offwhite,
@@ -105,18 +55,18 @@ const Profile = ({ navigation }) => {
                 }}
               >
                 <NetworkImage
-                  source={user?.result?.avatar ? user?.result?.avatar : profile}
+                  source={user?.avatar ? user?.avatar : profile}
                   width={45}
                   height={45}
                   radius={99}
                 />
                 {isAuthenticated ? (
                   <TouchableOpacity style={{ flexDirection: "row" }}
-                    onPress={() => navigation.navigate("user-profile-details", { user, createdPosts })}
+                    onPress={() => navigation.navigate("user-profile-details")}
                   >
                     <View style={{ marginLeft: 4, marginTop: 2, flexDirection: "column" }}>
                       <Text style={styles.text}>
-                        {user?.result?.username}
+                        {user?.username}
                       </Text>
                       <View style={{ marginLeft: 10, marginTop: -8, flexDirection: "row" }}>
                         <Rating
@@ -126,7 +76,7 @@ const Profile = ({ navigation }) => {
 
                         />
                         <Text style={{ fontSize: 12, marginTop: 4, marginLeft: 2 }}>(100)</Text>
-                        {user?.result?.verified === true ? (
+                        {user?.verified === true ? (
                           <><MaterialIcons name="verified-user" size={16} color="#699BF7" style={{ marginTop: 4, marginLeft: 10 }} />
                             <Text style={{ fontSize: 12, marginTop: 4, marginLeft: 2 }}>Tài khoản đã xác minh</Text></>
                         ) : (

@@ -7,14 +7,15 @@ import Button from '../components/Button.jsx';
 import BackBtn from '../components/BackBtn.jsx';
 import { COLORS, SIZES } from '../constants/theme.js';
 import axios from 'axios';  // Import axios
-import { getAuthToken, sendImageToAPI} from '../api/user.js';
+import { getAuthToken, sendImageToAPI } from '../api/user.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '../context/AuthContext'; // Import useAuth
 
 const UploadPhoto = ({ navigation, route }) => {
     const user = route.params;
-    // console.log(user.result.id);
-    const userId = user.result.id;
+    const userId = user.id;
     const [image, setImage] = useState();
+    const { updateAvatar } = useAuth(); // Get updateAvatar from context
 
     const uploadImage = async (mode) => {
         try {
@@ -41,26 +42,39 @@ const UploadPhoto = ({ navigation, route }) => {
             if (!result.canceled) {
                 // Save image locally
                 saveImage(result.assets[0].uri);
-                console.log(result.assets[0].uri);
-                // Get the authentication token
-                const authToken = await getAuthToken();
-
-                // Send image to API
-                await sendImageToAPI(result.assets[0].uri, userId, authToken);
             }
         } catch (err) {
             alert("Error uploading image: " + err.message);
         }
     };
 
-    const saveImage = async (image) => {
+    const saveImage = async (imageUri) => {
         try {
-            setImage(image);
+            setImage(imageUri);
         } catch (err) {
             throw err;
         }
     };
 
+    const handleContinue = async () => {
+        if (image) {
+            try {
+                // Get the authentication token
+                const authToken = await getAuthToken();
+                // Update avatar in context
+                const respone = await updateAvatar(image, userId, authToken);
+                if (respone.code === 1000) {
+                    // Navigate to the user profile details screen
+                    navigation.navigate("user-profile-details");
+                    Alert.alert(respone.message);
+                }
+            } catch (err) {
+                alert("Error updating profile: " + err.message);
+            }
+        } else {
+            alert("Please select an image first.");
+        }
+    };
 
     return (
         <View style={styles.wrapper}>
@@ -85,14 +99,12 @@ const UploadPhoto = ({ navigation, route }) => {
                 </View>
 
                 {image &&
-
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', position: 'relative', top: -30 }}>
+                    <View style={{justifyContent: 'center', alignItems: 'center', position: 'relative', top: -30 }}>
                         <Image
                             source={{ uri: image }}
                             style={{ height: 150, width: 150, borderRadius: 15 }}
                         />
                     </View>
-
                 }
 
                 <TouchableOpacity
@@ -120,20 +132,13 @@ const UploadPhoto = ({ navigation, route }) => {
                 <View>
                     <Button
                         title={"TIẾP TỤC"}
-                        onPress={() => navigation.navigate("congrats-navigation", {
-                            title: "HOÀN THÀNH!",
-                            content: "Cập nhật ảnh đại diện thành công!",
-                            routerName: "Profile",
-                            btnTxt: "ĐẾN Mua Sắm",
-                            isReset: false,
-                        })}
+                        onPress={handleContinue}
                         isValid={true}
                     />
                 </View>
-
             </View>
         </View>
-    )
+    );
 }
 
 export default UploadPhoto;

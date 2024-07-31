@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   ScrollView,
@@ -8,22 +9,22 @@ import {
   SafeAreaView,
   ActivityIndicator,
 } from "react-native";
-import { Ionicons, Feather, MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Feather, AntDesign } from '@expo/vector-icons';
 import { COLORS } from "../../constants/theme";
 import { Rating } from 'react-native-stock-star-rating';
 import styles from "../css/UserProfile.style";
 import Post from "../post/Post";
-import { useEffect, useState } from "react";
 import { getListsFollowers, getListsFollowing } from "../../api/user";
+import { useAuth } from "../../context/AuthContext";
 
-const UserProfile = ({ navigation, route }) => {
-  const { user, createdPosts } = route.params;
+const UserProfile = ({ navigation }) => {
+  const { user } = useAuth();
+  const createdPosts = user.createdPosts;
   const [loading, setLoading] = useState(false);
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
-  const profile =
-    "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
-  // console.log(user.result.id);
+  const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
+
   useEffect(() => {
     fetchFollowersCount();
     fetchFollowingCount();
@@ -31,9 +32,8 @@ const UserProfile = ({ navigation, route }) => {
 
   const fetchFollowersCount = async () => {
     try {
-      const response = await getListsFollowers(user.result.id);
+      const response = await getListsFollowers(user.id);
       setFollowersCount(response.result.length);
-      // console.log(response.result.length);
     } catch (error) {
       console.error('Error fetching followers count:', error);
     }
@@ -41,7 +41,7 @@ const UserProfile = ({ navigation, route }) => {
 
   const fetchFollowingCount = async () => {
     try {
-      const response = await getListsFollowing(user.result.id);
+      const response = await getListsFollowing(user.id);
       setFollowingCount(response.result.length);
     } catch (error) {
       console.error('Error fetching following count:', error);
@@ -53,12 +53,10 @@ const UserProfile = ({ navigation, route }) => {
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <Ionicons
-            onPress={() => navigation.goBack()}
-            name="chevron-back-outline"
-            size={30}
-            color={COLORS.gray} />
-          <Text style={{ fontSize: 24, fontWeight: "bold", color: COLORS.black }}>THÔNG TIN CỦA BẠN</Text>
+          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+            <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
+          </TouchableOpacity>
+          <Text style={{ fontSize: 20, fontWeight: "bold", color: COLORS.black }}>{user?.lastName} {user?.firstName}</Text>
           <Feather
             onPress={() => console.warn('More Function')}
             name="more-horizontal"
@@ -66,63 +64,56 @@ const UserProfile = ({ navigation, route }) => {
             color="gray" />
         </View>
 
-        <View style={styles.shadow}>
-          {/* Tạo Khoảng Trống */}
-        </View>
-
         {/* Personal Information */}
         <View style={styles.personalContainer}>
-          <View style={[styles.detailContainer, { alignItems: 'flex-start', position: 'relative' }]}>
-            <TouchableOpacity
-              style={styles.avatarTouchable}
-              onPress={() => navigation.navigate('upload-photo-navigation', user)}
-            >
-              <Image
-                style={styles.avatar}
-                source={{ uri: user?.result?.avatar ? user?.result?.avatar : profile }}
-              />
-              <View style={styles.editIcon}>
-                <Feather name="edit" size={24} color={COLORS.primary} />
-              </View>
-            </TouchableOpacity>
-            <View style={{ gap: 5 }}>
-              <Text style={{ fontSize: 18 }}>
-                {user?.result?.username}
-              </Text>
-              <View style={{ flexDirection: 'row' }}>
-                <Rating
-                  stars={4.7}
-                  maxStars={5}
-                  size={16}
-                />
-                <Text style={{ fontSize: 12, marginLeft: 4, marginTop: 4 }}>(100)</Text>
-              </View>
-              <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                <MaterialIcons name="verified-user" size={16} color="#699BF7" style={{ marginTop: 0, marginLeft: 0,marginRight:4 }} />
-                <Text style={{ fontSize: 12}}>Tài khoản đã xác minh</Text>
-              </View>
+          <TouchableOpacity
+            style={styles.avatarTouchable}
+            onPress={() => navigation.navigate('upload-photo-navigation', user)}
+          >
+            <Image
+              style={styles.avatar}
+              source={{ uri: user?.avatar ? user?.avatar : profile }}
+            />
+            <View style={styles.editIcon}>
+              <AntDesign name="pluscircle" size={24} color="#06bcee" />
             </View>
-          </View>
-          <View>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('update-profile', user)}
-              style={styles.followBtn}
-            >
-              <Text style={{ margin: 5, color: COLORS.primary }}>Chỉnh sửa</Text>
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
+
+          <Text style={styles.username}>
+            @{user?.username}
+          </Text>
         </View>
 
         {/* Follower */}
         <View style={styles.followerView}>
-          <Text>
-            {followersCount}<Text> người theo dõi</Text>
-          </Text>
-          <Text>
-            {followingCount}<Text> người đang theo dõi</Text>
-          </Text>
+          <View style={styles.blockView}>
+            <Text style={styles.number}>
+              {followingCount}
+            </Text>
+            <Text>Đã theo dõi</Text>
+          </View>
+          <View style={styles.blockView}>
+            <Text style={styles.number}>
+              {followersCount}
+            </Text>
+            <Text>Theo dõi</Text>
+          </View>
+          <View style={styles.blockView}>
+            <Text style={styles.number}>
+              {55}
+            </Text>
+            <Text>Thích</Text>
+          </View>
         </View>
-
+        {/* Button */}
+        <View style={styles.buttonWrapper}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('update-profile', user)}
+            style={styles.followBtn}
+          >
+            <Text style={styles.btnText}>Sửa hồ sơ</Text>
+          </TouchableOpacity>
+        </View>
         {/* User product */}
         <View style={styles.containerPost}>
           <View style={{ marginTop: 20, justifyContent: "center", alignItems: "center" }}>
@@ -132,11 +123,17 @@ const UserProfile = ({ navigation, route }) => {
             {loading ? (
               <ActivityIndicator size="large" color={COLORS.primary} />
             ) : (
-              <View style={styles.row}>
-                {createdPosts.map(post => (
-                  <Post key={post.id} post={post} type="seller" />
-                ))}
-              </View>
+              createdPosts.length > 0 ? (
+                <View style={styles.row}>
+                  {createdPosts.map(post => (
+                    <Post key={post.id} post={post} type="seller" />
+                  ))}
+                </View>
+              ) : (
+                <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+                  <Text style={{ fontSize: 16, color: 'gray' }}>Bạn chưa có sản phẩm nào</Text>
+                </View>
+              )
             )}
           </ScrollView>
         </View>

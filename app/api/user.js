@@ -118,9 +118,8 @@ export const sendImageToAPI = async (imageUri, userId, authToken) => {
     }
 
     const responseData = await response.json();
-    console.log(responseData);
-    Alert.alert("Success", "Image uploaded successfully!");
-
+    // console.log(responseData);
+    return responseData;
   } catch (error) {
     console.error("Error uploading image: ", error);
     Alert.alert("Error", "Failed to upload image. Please try again.");
