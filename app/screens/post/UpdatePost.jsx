@@ -229,8 +229,16 @@ const UpdatePost = ({ route }) => {
         );
     }
 
+    const isImageUploaded = (label) => {
+        if(imagesView.value) {
+            const newImagesView = imagesView.find(image => image.label === label)
+            return newImagesView;
+        }
+        //return imagesView.find(image => image.label === label)?.value !== '';
+    };
+
     const renderImages = ({ item, index }) => {
-        // const isUploaded = isImageUploaded(item.label);
+        const isUploaded = isImageUploaded(item.label);
         return (
             item.value === null || item.value === "" ?
                 (
@@ -746,6 +754,19 @@ const UpdatePost = ({ route }) => {
                                     </View>
                                 </View>
                                 <View style={styles.shadow}></View>
+
+                                {/* Verify Level */}
+                                <View style={styles.viewContainer}>
+                                    <View style={styles.left}>
+                                        <Text style={styles.leftText}>Verified Level </Text>
+                                    </View>
+                                    <View style={styles.right}>
+                                        <Text style={[styles.rightText, {color: COLORS.primary}]}>
+                                        {postDetails?.product?.verifiedLevel}
+                                        </Text>
+                                    </View>
+                                </View>
+                                <View style={styles.shadow}></View>
                             </View>
 
                             {/* Product Description */}
@@ -795,7 +816,7 @@ const UpdatePost = ({ route }) => {
                                         <Text style={styles.leftText}>Phí Sàn</Text>
                                     </View>
                                     <View style={styles.right}>
-                                        <Text style={styles.rightText}>{formattedFee} VND</Text>
+                                        <Text style={styles.rightText}>Miễn phí</Text>
                                     </View>
                                 </View>
                                 <View style={styles.shadow}></View>

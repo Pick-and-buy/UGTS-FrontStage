@@ -21,7 +21,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Dropdown } from 'react-native-element-dropdown';
 import { callFetchListBrands } from "../api/brand";
-import { createPost } from "../api/post";
+import { createPost_Level_1, createPost_Level_2 } from "../api/post";
 import { getAllCategoriesByBrandLineName } from "../api/category";
 import { getAllBrandLinesByBrandName } from "../api/brandLine";
 import * as ImagePicker from "expo-image-picker";
@@ -67,7 +67,7 @@ const CreatePost = () => {
 
   const [isChecked_2, setChecked_2] = useState(false);
   const [isChecked_3, setChecked_3] = useState(false);
-  const FEE = 500000;
+  const FEE = 0;
 
   useEffect(() => {
     fetchAllBrands();
@@ -222,7 +222,7 @@ const CreatePost = () => {
         images.forEach((image, index) => {
           if (image.value) {
             const fileName = `${image.name}.jpg`;
-            formData.append('productImage', {
+            formData.append('productImages', {
               uri: image.value,
               type: 'image/jpeg',
               name: fileName,
@@ -248,7 +248,11 @@ const CreatePost = () => {
           });
         }
 
-        await createPost(formData);
+        if(invoice && videoUri) {
+          await createPost_Level_2(formData)
+        } else {
+          await createPost_Level_1(formData);
+        }
         navigation.navigate('Home')
         setImages([
           { index: '1', label: 'Overall picture', name: 'Overallpicture', logoUrl: require('../../assets/images/bag/overall_picture.png'), value: '' },
@@ -1094,7 +1098,7 @@ const CreatePost = () => {
                 {/* Fee */}
                 <View style={styles.viewContainer}>
                   <View style={styles.textCenter}>
-                    <Text style={{ fontSize: 16 }}>Phí Sàn: {formatFee}VND</Text>
+                    <Text style={{ fontSize: 16 }}>Phí Sàn: <Text style={{color: 'blue'}}>Miễn phí</Text></Text>
                   </View>
                 </View>
                 <View style={styles.shadow}></View>
