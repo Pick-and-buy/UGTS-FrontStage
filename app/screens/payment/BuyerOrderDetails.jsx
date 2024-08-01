@@ -289,9 +289,9 @@ const BuyerOrderDetails = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
         </View>
+        <View style={styles.divider} />
         {updatedOrderInfo?.orderDetails?.status === "RECEIVED" && !showAddRating &&
           <>
-            <View style={styles.divider} />
             <View style={styles.confirm}>
               <Text style={styles.confirmText}>
                 Vui lòng chỉ ấn "Đã nhận được hàng" khi đơn hàng đã được giao đến bạn và sản phẩm nhận được không có vấn để nào.

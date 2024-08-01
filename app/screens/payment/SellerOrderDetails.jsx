@@ -9,6 +9,7 @@ import { getUserByToken } from "../../api/user";
 import { format, addDays } from 'date-fns';
 import { cancelOrderSeller, getOrderByOrderId, updateOrderSeller } from '../../api/order';
 import OrderTracking from './OrderTracking';
+import SellerAddRating from './SellerAddRating';
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
 const SellerOrderDetails = ({ navigation, route }) => {
@@ -16,7 +17,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
     // console.log('>>> check order infor: ', orderInfo);
     const [phoneUserOrder, setPhoneUserOrder] = useState(null);
     const [updatedOrderInfo, setUpdatedOrderInfo] = useState();
-
+    const [showAddRating, setShowAddRating] = useState(false);
     useEffect(() => {
         if (orderInfo) {
             fetchOrderInfo();
@@ -264,6 +265,25 @@ const SellerOrderDetails = ({ navigation, route }) => {
                         </View>
                     }
                 </View>
+
+                <View style={styles.divider} />
+                {updatedOrderInfo?.orderDetails?.status === "RECEIVED" && !showAddRating &&
+                    <>
+                        <View style={styles.confirm}>
+                            <Text style={styles.confirmText}>
+                                Vui lòng chỉ ấn "Đánh giá người mua" khi đơn hàng đã được giao đến người mua và sản phẩm nhận được không có vấn để nào.
+                            </Text>
+                            <TouchableOpacity
+                                style={styles.confirmButton}
+                                onPress={() => setShowAddRating(true)}
+                            >
+                                <Text style={styles.confirmTextButton}>Đánh giá người mua</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </>
+                }
+                {showAddRating && <SellerAddRating navigation={navigation} orderInfo={updatedOrderInfo} />}
+
             </ScrollView>
             {updatedOrderInfo?.orderDetails?.status === "PENDING" &&
                 <View style={styles.bottomBtn}>
