@@ -6,19 +6,30 @@ import Following from './Following';
 import Followers from './Followers';
 import Appreciation from './Appreciation';
 import styles from "../../screens/css/userTab.style";
-import { getListsFollowers, getListsFollowing } from '../../api/user';
+import { getListsFollowers, getListsFollowing, getRatingByUserId } from '../../api/user';
 
 const Tab = createMaterialTopTabNavigator();
 
 const UserTab = ({ user }) => {
     const [followersCount, setFollowersCount] = useState(0);
     const [followingCount, setFollowingCount] = useState(0);
+    const [ratingCount, setRatingCount] = useState(0);
     // console.log(followersCount);
-    
+
     useEffect(() => {
         fetchFollowersCount();
         fetchFollowingCount();
+        fetchRatingsCount();
     }, [user]);
+
+    const fetchRatingsCount = async () => {
+        try {
+            const response = await getRatingByUserId(user.id);
+            setRatingCount(response.result.length);
+        } catch (error) {
+            console.error('Error fetching followers count in user tab', error);
+        }
+    };
 
     const fetchFollowersCount = async () => {
         try {
@@ -88,7 +99,7 @@ const UserTab = ({ user }) => {
                     tabBarIcon: ({ focused }) => (
                         <View style={{ width: 100, marginLeft: -25 }}>
                             <Text style={focused ? styles.tabActive : styles.tab}>
-                                Đánh giá {'1'}
+                                Đánh giá {ratingCount}
                             </Text>
                         </View>
                     ),
