@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { View, Text } from 'react-native';
 import React from 'react';
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { COLORS } from '../../constants/theme';
@@ -9,7 +9,7 @@ import styles from "../../screens/css/userTab.style";
 
 const Tab = createMaterialTopTabNavigator();
 
-const UserTab = () => {
+const UserTab = ({ user }) => {
     return (
         <Tab.Navigator
             initialRouteName="following"
@@ -27,6 +27,7 @@ const UserTab = () => {
             <Tab.Screen
                 name="following"
                 component={Following}
+                initialParams={{ user }}
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <View style={{ width: 100, marginLeft: -30 }}>
@@ -40,6 +41,7 @@ const UserTab = () => {
             <Tab.Screen
                 name="follower"
                 component={Followers}
+                initialParams={{ user }}
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <View style={{ width: 100, marginLeft: -30 }}>
@@ -53,6 +55,7 @@ const UserTab = () => {
             <Tab.Screen
                 name="appreciation"
                 component={Appreciation}
+                initialParams={{ user }}
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <View style={{ width: 100, marginLeft: -30 }}>
