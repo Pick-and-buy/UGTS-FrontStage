@@ -1,15 +1,43 @@
 import { View, Text } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { COLORS } from '../../constants/theme';
 import Following from './Following';
 import Followers from './Followers';
 import Appreciation from './Appreciation';
 import styles from "../../screens/css/userTab.style";
+import { getListsFollowers, getListsFollowing } from '../../api/user';
 
 const Tab = createMaterialTopTabNavigator();
 
 const UserTab = ({ user }) => {
+    const [followersCount, setFollowersCount] = useState(0);
+    const [followingCount, setFollowingCount] = useState(0);
+    // console.log(followersCount);
+    
+    useEffect(() => {
+        fetchFollowersCount();
+        fetchFollowingCount();
+    }, [user]);
+
+    const fetchFollowersCount = async () => {
+        try {
+            const response = await getListsFollowers(user.id);
+            setFollowersCount(response.result.length);
+        } catch (error) {
+            console.error('Error fetching followers count in user tab', error);
+        }
+    };
+
+    const fetchFollowingCount = async () => {
+        try {
+            const response = await getListsFollowing(user.id);
+            setFollowingCount(response.result.length);
+        } catch (error) {
+            console.error('Error fetching following count in user tab', error);
+        }
+    };
+
     return (
         <Tab.Navigator
             initialRouteName="following"
@@ -30,9 +58,9 @@ const UserTab = ({ user }) => {
                 initialParams={{ user }}
                 options={{
                     tabBarIcon: ({ focused }) => (
-                        <View style={{ width: 100, marginLeft: -30 }}>
+                        <View style={{ width: 110, marginLeft: -40 }}>
                             <Text style={focused ? styles.tabActive : styles.tab}>
-                                Đang theo dõi
+                                Đang theo dõi {followingCount}
                             </Text>
                         </View>
                     ),
@@ -44,9 +72,9 @@ const UserTab = ({ user }) => {
                 initialParams={{ user }}
                 options={{
                     tabBarIcon: ({ focused }) => (
-                        <View style={{ width: 100, marginLeft: -30 }}>
+                        <View style={{ width: 110, marginLeft: -40 }}>
                             <Text style={focused ? styles.tabActive : styles.tab}>
-                                Người theo dõi
+                                Người theo dõi {followersCount}
                             </Text>
                         </View>
                     ),
@@ -58,9 +86,9 @@ const UserTab = ({ user }) => {
                 initialParams={{ user }}
                 options={{
                     tabBarIcon: ({ focused }) => (
-                        <View style={{ width: 100, marginLeft: -30 }}>
+                        <View style={{ width: 100, marginLeft: -25 }}>
                             <Text style={focused ? styles.tabActive : styles.tab}>
-                                Đánh giá
+                                Đánh giá {'1'}
                             </Text>
                         </View>
                     ),

@@ -77,7 +77,7 @@ const Following = ({ navigation, route }) => {
         if (text.trim() === '') {
             setFilteredFollowings(followings);
         } else {
-            const filtered = followings.filter(item => 
+            const filtered = followings.filter(item =>
                 item.username.toLowerCase().includes(text.toLowerCase()) ||
                 item.firstName.toLowerCase().includes(text.toLowerCase()) ||
                 item.lastName.toLowerCase().includes(text.toLowerCase())
