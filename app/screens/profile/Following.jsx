@@ -10,6 +10,7 @@ const Following = ({ navigation, route }) => {
     const { user } = route.params;
     const [searchQuery, setSearchQuery] = useState('');
     const [followings, setFollowings] = useState([]);
+    const [filteredFollowings, setFilteredFollowings] = useState([]);
     const [loading, setLoading] = useState(false);
     const [followStatus, setFollowStatus] = useState({});
 
@@ -21,6 +22,7 @@ const Following = ({ navigation, route }) => {
         try {
             const response = await getListsFollowing(user.id);
             setFollowings(response.result);
+            setFilteredFollowings(response.result);
 
             // Check follow status for each user
             const statusPromises = response.result.map(item => checkFollowStatus(item));
@@ -72,12 +74,15 @@ const Following = ({ navigation, route }) => {
 
     const handleSearchChange = (text) => {
         setSearchQuery(text);
-    };
-
-    const handleSearchSubmit = () => {
-        if (searchQuery.trim() !== '') {
-            navigation.navigate('Search', { query: searchQuery });
-            setSearchQuery(''); // Clear input after navigation
+        if (text.trim() === '') {
+            setFilteredFollowings(followings);
+        } else {
+            const filtered = followings.filter(item => 
+                item.username.toLowerCase().includes(text.toLowerCase()) ||
+                item.firstName.toLowerCase().includes(text.toLowerCase()) ||
+                item.lastName.toLowerCase().includes(text.toLowerCase())
+            );
+            setFilteredFollowings(filtered);
         }
     };
 
@@ -144,7 +149,6 @@ const Following = ({ navigation, route }) => {
                 <TextInput
                     value={searchQuery}
                     onChangeText={handleSearchChange}
-                    onSubmitEditing={handleSearchSubmit}
                     placeholder="Nhập tên bạn muốn tìm kiếm"
                     placeholderTextColor="#AFAFAE"
                     style={styles.textInput}
@@ -153,7 +157,7 @@ const Following = ({ navigation, route }) => {
 
             <View style={styles.followings}>
                 <FlatList
-                    data={followings}
+                    data={filteredFollowings}
                     renderItem={({ item }) => <UserItem item={item} />}
                     keyExtractor={(item) => item.id.toString()}
                     estimatedItemSize={100}

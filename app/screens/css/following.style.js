@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        marginVertical: 10
+        marginVertical: 8
     },
     avatar: {
         width: 60,
