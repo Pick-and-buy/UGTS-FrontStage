@@ -10,12 +10,39 @@ import styles from "./css/profile.style";
 import { Rating } from 'react-native-stock-star-rating';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from "../context/AuthContext";
+import { getRatingByUserId } from "../api/user";
 
 const Profile = ({ navigation }) => {
   const { logout, user, isAuthenticated } = useAuth();
+  const [ratings, setRatings] = useState();
+  const [averageRating, setAverageRating] = useState(0);
 
   const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
   const bkImg = "https://d326fntlu7tb1e.cloudfront.net/uploads/ab6356de-429c-45a1-b403-d16f7c20a0bc-bkImg-min.png";
+
+  useEffect(() => {
+    fetchRatings();
+  }, [user]);
+
+  const fetchRatings = async () => {
+    try {
+      const response = await getRatingByUserId(user.id);
+      setRatings(response.result);
+      calculateAverageRating(response.result);
+    } catch (error) {
+      console.error('Error fetching ratings in profile', error);
+    }
+  };
+
+  const calculateAverageRating = (ratings) => {
+    if (ratings.length === 0) return;
+
+    const totalStars = ratings.reduce((sum, rating) => sum + rating.stars, 0);
+    const average = totalStars / ratings.length;
+
+    setAverageRating(average);
+  };
+
 
   const handleLogout = async () => {
     await logout();
@@ -70,12 +97,12 @@ const Profile = ({ navigation }) => {
                       </Text>
                       <View style={{ marginLeft: 10, marginTop: -8, flexDirection: "row" }}>
                         <Rating
-                          stars={4.7}
+                          stars={averageRating}
                           maxStars={5}
                           size={16}
 
                         />
-                        <Text style={{ fontSize: 12, marginTop: 4, marginLeft: 2 }}>(100)</Text>
+                        <Text style={{ fontSize: 12, marginTop: 4, marginLeft: 2 }}>({averageRating})</Text>
                         {user?.verified === true ? (
                           <><MaterialIcons name="verified-user" size={16} color="#699BF7" style={{ marginTop: 4, marginLeft: 10 }} />
                             <Text style={{ fontSize: 12, marginTop: 4, marginLeft: 2 }}>Tài khoản đã xác minh</Text></>

@@ -19,7 +19,7 @@ import Carousel from "../../components/carousel/Carousel";
 import { getPostDetails, getComments, postComment, getLikedPostByUser } from "../../api/post";
 import styles from "../css/postDetails.style";
 import { Rating } from 'react-native-stock-star-rating';
-import { getUserByToken, likePost, unlikePost } from "../../api/user";
+import { getRatingByUserId, getUserByToken, likePost, unlikePost } from "../../api/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Comment from "./Comment";
 import moment from "moment";
@@ -41,13 +41,20 @@ const PostDetail = ({ navigation, route }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const [type, setType] = useState('buyer');
-
+    const [ratings, setRatings] = useState();
+    const [averageRating, setAverageRating] = useState(0);
     // console.log(postDetails?.user?.verified);
     useEffect(() => {
         fetchPostDetails();
         checkAuthentication();
         fetchComments();
     }, []);
+
+    useEffect(() => {
+        if (postDetails?.user?.id) {
+            fetchRatings();
+        }
+    }, [postDetails]);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -187,6 +194,27 @@ const PostDetail = ({ navigation, route }) => {
             return;
         }
     };
+
+
+    const fetchRatings = async () => {
+        try {
+            const response = await getRatingByUserId(postDetails?.user?.id);
+            setRatings(response.result);
+            calculateAverageRating(response.result);
+        } catch (error) {
+            console.error('Error fetching ratings in profile', error);
+        }
+    };
+
+    const calculateAverageRating = (ratings) => {
+        if (ratings.length === 0) return;
+
+        const totalStars = ratings.reduce((sum, rating) => sum + rating.stars, 0);
+        const average = totalStars / ratings.length;
+
+        setAverageRating(average);
+    };
+
 
     // Format the price using the helper function
     const formattedPrice = formatPrice(postDetails?.product?.price);
@@ -493,11 +521,11 @@ const PostDetail = ({ navigation, route }) => {
                                 <Text style={{ fontSize: 18 }}>{postDetails?.user?.username}</Text>
                                 <View style={{ flexDirection: 'row', justifyContent: "center", alignItems: 'center' }}>
                                     <Rating
-                                        stars={4.7}
+                                        stars={averageRating}
                                         maxStars={5}
                                         size={16}
                                     />
-                                    <Text style={{ fontSize: 12, marginLeft: 4 }}>(100)</Text>
+                                    <Text style={{ fontSize: 12, marginLeft: 4 }}>({averageRating})</Text>
 
                                     {postDetails?.user?.verified === true ? (<>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 40 }}>
