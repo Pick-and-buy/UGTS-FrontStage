@@ -26,7 +26,7 @@ const HomeFollow = ({ navigation }) => {
         setLoading(true);
         try {
             const response = await getAllPosts();
-            const posts = response.data.result;
+            const posts = response.data.result.posts;
             setPosts(posts);
             setFilteredPosts(posts); // Initialize filteredPosts with all posts
         } catch (error) {
