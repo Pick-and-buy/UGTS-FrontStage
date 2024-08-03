@@ -39,8 +39,8 @@ const Notification = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-                    <MaterialIcons name="keyboard-backspace" size={26} color="black" />
+            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                    <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
                 </TouchableOpacity>
                 <Text style={styles.headerText}>Thông báo của tôi</Text>
                 <TouchableOpacity style={styles.checkAll} onPress={() => navigation.navigate("")}>
