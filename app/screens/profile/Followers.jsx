@@ -34,7 +34,7 @@ const Followers = ({ navigation, route }) => {
       });
       setFollowStatus(statusMap);
     } catch (error) {
-      console.error('Error fetching following:', error);
+      console.error('Error fetching follower:', error);
     }
   };
 
