@@ -248,7 +248,7 @@ const CreatePost = () => {
           });
         }
 
-        if(invoice && videoUri) {
+        if (invoice && videoUri) {
           await createPost_Level_2(formData)
         } else {
           await createPost_Level_1(formData);
@@ -301,11 +301,25 @@ const CreatePost = () => {
         })
       } else {
         if (isChecked_2) {
-          Alert.alert(
-            "Thiếu thông tin",
-            "Hãy cập nhật 4 ảnh đầu tiên có dấu * và cập nhật thêm ảnh hóa đơn và video sản phẩm",
-            [{ text: "OK" }]
-          );
+          if (!invoice && !videoUri) {
+            Alert.alert(
+              "Thiếu thông tin",
+              "Hãy cập nhật ảnh hóa đơn và video",
+              [{ text: "OK" }]
+            );
+          } else if (!invoice) {
+            Alert.alert(
+              "Thiếu thông tin",
+              "Hãy cập nhật ảnh hóa đơn để xác thực level 2",
+              [{ text: "OK" }]
+            );
+          } else if (!videoUri) {
+            Alert.alert(
+              "Thiếu thông tin",
+              "Hãy cập nhật video để xác thực level 2",
+              [{ text: "OK" }]
+            );
+          }
         } else {
           Alert.alert(
             "Thiếu thông tin",
@@ -1098,7 +1112,7 @@ const CreatePost = () => {
                 {/* Fee */}
                 <View style={styles.viewContainer}>
                   <View style={styles.textCenter}>
-                    <Text style={{ fontSize: 16 }}>Phí Sàn: <Text style={{color: 'blue'}}>Miễn phí</Text></Text>
+                    <Text style={{ fontSize: 16 }}>Phí Sàn: <Text style={{ color: 'blue' }}>Miễn phí</Text></Text>
                   </View>
                 </View>
                 <View style={styles.shadow}></View>

@@ -8,6 +8,7 @@ import {
     TextInput,
     FlatList,
     ImageBackground,
+    Alert,
 } from "react-native";
 import { FontAwesome, AntDesign, MaterialIcons, FontAwesome6, Ionicons } from '@expo/vector-icons';
 import React, { useState, useRef, useContext, useEffect } from "react";
@@ -19,7 +20,7 @@ import * as Yup from 'yup';
 import { updatePost, getPostDetails } from "../../api/post";
 import * as ImagePicker from "expo-image-picker";
 import { Video } from 'expo-av';
-import Button from "../../components/Button";
+import Checkbox from 'expo-checkbox';
 
 const UpdatePost = ({ route }) => {
     // console.log(">>> check postId: ", route.params);
@@ -174,6 +175,29 @@ const UpdatePost = ({ route }) => {
                             name: fileName,
                         });
                     }
+                });
+            }
+            if (!invoice) {
+                Alert.alert(
+                    "Thiếu thông tin",
+                    "Hãy cập nhật ảnh hóa đơn",
+                    [{ text: "OK" }]
+                );
+            } else {
+                const invoiceFileName = invoice.split('/').pop();
+                formData.append('originalReceiptProof', {
+                    uri: invoice,
+                    type: 'image/jpeg',
+                    name: invoiceFileName,
+                });
+            }
+
+            if (videoUri) {
+                const videoFileName = videoUri.split('/').pop();
+                formData.append('productVideo', {
+                    uri: videoUri,
+                    type: 'video/mp4',
+                    name: videoFileName,
                 });
             }
 
