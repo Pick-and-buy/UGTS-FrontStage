@@ -5,6 +5,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: COLORS.white,
+        // paddingBottom:30
 
     },
     header: {
@@ -17,6 +18,11 @@ const styles = StyleSheet.create({
         paddingBottom: 12,
         ...SHADOWS.medium
     },
+    backButton: {
+        // position: "absolute",
+        left: -15,
+        // bottom: 10
+    },
     headerText: {
         color: COLORS.black,
         fontSize: 20,
@@ -28,6 +34,15 @@ const styles = StyleSheet.create({
         paddingBottom: "10%",
         width: "100%",
         marginHorizontal: "auto",
+    },
+    orderTracking: {
+        width: "100%",
+        backgroundColor: COLORS.white,
+        marginTop: 15,
+        marginBottom: 6,
+        borderBlockColor: "#ddd",
+        borderBottomWidth: 1,
+        paddingBottom: 20
     },
     address: {
         width: "92%",
@@ -317,6 +332,34 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
     },
+    confirm: {
+        width: "96%",
+        flexDirection: 'row',
+        marginHorizontal: "auto",
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 10,
+        marginTop: 8,
+        marginBottom: 30
+    },
+    confirmButton: {
+        flex: 1,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: COLORS.primary,
+        marginVertical: 'auto',
+        borderRadius: 8,
+        paddingHorizontal: 6,
+    },
+    confirmTextButton: {
+        color: COLORS.white,
+    },
+    confirmText: {
+        width: "60%",
+        color: COLORS.gray,
+        fontSize: 12
+    }
 
 });
 

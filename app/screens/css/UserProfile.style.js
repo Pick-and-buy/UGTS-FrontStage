@@ -1,68 +1,89 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import { COLORS, SIZES } from "../../constants/theme";
-
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-        backgroundColor: COLORS.white,
-    },
     container: {
-        flex: 1,
-        paddingTop: 50,
+        width: windowWidth,
+        height: windowHeight,
         backgroundColor: COLORS.white,
     },
     // Header
     header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: 20,
-        marginHorizontal: 15,
-    },
-    // Space
-    shadow: {
-        borderWidth: 1,
-        borderColor: '#C0C0C0',
         width: "100%",
+        height: "10%",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-end",
+        backgroundColor: COLORS.white,
+        paddingBottom: 12,
+        paddingHorizontal: 15
+    },
+    divider: {
+        height: 1,
+        backgroundColor: "#F3F3F3",
+        marginTop: 15
     },
     // Personal Information
     personalContainer: {
-        marginHorizontal: 15,
-        marginTop: 25,
-        flexDirection: "row",
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        width: "100%",
+        marginTop: 15,
     },
-    detailContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 10,
-        position: 'relative',
+    avatarTouchable: {
+        marginHorizontal: "auto"
     },
     avatar: {
-        width: 80,
-        height: 80,
+        width: 85,
+        height: 85,
         borderRadius: 99,
     },
     editIcon: {
         position: 'absolute',
         bottom: 0,
-        left: 50,
-        borderRadius: 15,
-        padding: 3,
+        left: 60,
+        backgroundColor: COLORS.white,
+        borderRadius: 99
+    },
+    username: {
+        textAlign: "center",
+        marginTop: 10,
+        fontSize: 16,
+
     },
     // Follower
     followerView: {
+        width: "100%",
         flexDirection: 'row',
-        gap: 20,
-        marginHorizontal: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
         marginTop: 20,
-        marginLeft: 20,
+        gap: 30,
+        marginHorizontal: "auto"
+    },
+    blockView: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    number: {
+        fontSize: 18
+        , fontWeight: "600",
+    },
+    buttonWrapper: {
+        width: "100%",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 15
     },
     followBtn: {
-        borderWidth: 1,
-        borderColor: COLORS.primary,
         borderRadius: 5,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        backgroundColor: "#EEE"
+    },
+    btnText: {
+        fontSize: 16,
     },
     containerPost: {
         flex: 1,

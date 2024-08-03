@@ -31,7 +31,7 @@ const TodoTaskTab = () => {
                     tabBarIcon: ({ focused }) => (
                         <View style={{ width: 100, marginLeft: -30 }}>
                             <Text style={focused ? styles.tabActive : styles.tab}>
-                                Mua
+                                Danh mục mua
                             </Text>
                         </View>
                     ),
@@ -44,7 +44,7 @@ const TodoTaskTab = () => {
                     tabBarIcon: ({ focused }) => (
                         <View style={{ width: 100, marginLeft: -30 }}>
                             <Text style={focused ? styles.tabActive : styles.tab}>
-                                Bán
+                                Danh mục bán
                             </Text>
                         </View>
                     ),

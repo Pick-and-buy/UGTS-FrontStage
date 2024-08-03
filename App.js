@@ -52,6 +52,7 @@ import ScanIDScreen from './app/screens/verify/Onboarding/ScanIDScreen';
 import FaceMatch from './app/screens/verify/FaceMatch';
 import ScanBackIDScreen from './app/screens/verify/ScanBackIDScreen';
 import ScanFontIDScreen from './app/screens/verify/ScanFontIDScreen';
+import AddRating from './app/screens/payment/AddRating';
 
 import Notification from './app/screens/notification/Notification';
 import { NotificationProvider } from './app/context/NotificationContext';
@@ -61,6 +62,11 @@ import SellerOrderDetails from './app/screens/payment/SellerOrderDetails';
 
 
 import { AuthProvider } from './app/context/AuthContext';
+import OrderTracking from './app/screens/payment/OrderTracking';
+import Following from './app/screens/profile/Following';
+import Followers from './app/screens/profile/Followers';
+import Appreciation from './app/screens/profile/Appreciation';
+import Summary from './app/screens/profile/Summary';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -353,6 +359,36 @@ export default function App() {
                 <Stack.Screen
                   name='seller-order-details'
                   component={SellerOrderDetails}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='order-tracking'
+                  component={OrderTracking}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='summary'
+                  component={Summary}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='start-rating'
+                  component={AddRating}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='following'
+                  component={Following}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='followers'
+                  component={Followers}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='appreciation'
+                  component={Appreciation}
                   options={{ headerShown: false }}
                 />
               </Stack.Navigator>

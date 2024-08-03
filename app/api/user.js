@@ -118,9 +118,8 @@ export const sendImageToAPI = async (imageUri, userId, authToken) => {
     }
 
     const responseData = await response.json();
-    console.log(responseData);
-    Alert.alert("Success", "Image uploaded successfully!");
-
+    // console.log(responseData);
+    return responseData;
   } catch (error) {
     console.error("Error uploading image: ", error);
     Alert.alert("Error", "Failed to upload image. Please try again.");
@@ -268,6 +267,32 @@ export const verifyInformation = async (user, fontData, backData, faceMatchData)
     return response.data;
   } catch (error) {
     console.error('Error verify information :', error);
+    throw error;
+  }
+};
+
+export const ratingUser = async (stars, comment, ratingUserId, ratedUserId, orderId) => {
+  // console.log(stars, comment, ratingUserId, ratedUserId);
+  try {
+    const response = await axiosInstance.post(`/rating`, {
+      stars: stars,
+      comment: comment,
+      ratingUserId: ratingUserId,
+      ratedUserId: ratedUserId,
+      orderId: orderId
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error rating:', error);
+    throw error;
+  }
+};
+export const getRatingByUserId = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`/rating/rated?ratedUserId=${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error rating:', error);
     throw error;
   }
 };

@@ -28,8 +28,24 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 30
     },
+    btnWrapper:{
+        width:"90%",
+        flexDirection:"row",
+        marginHorizontal:"auto"
+    },
     button: {
         width: "50%",
+        height: 40,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        borderWidth: 0.5,
+        borderRadius: 6,
+        marginHorizontal: "auto",
+        marginBottom: 40
+    },
+    backButton:{
+        width: "40%",
         height: 40,
         flexDirection: "row",
         justifyContent: "center",
