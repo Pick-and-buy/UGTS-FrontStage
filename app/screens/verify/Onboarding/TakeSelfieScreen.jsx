@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS } from '../../../constants/theme';
 
 const TakeSelfieScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-                <Ionicons name="arrow-back" size={24} color="black" />
+                <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
             </TouchableOpacity>
             <Image source={require("../../../../assets/images/face recognition.png")} style={styles.image} />
             <Text style={styles.title}>Chụp ảnh khuôn mặt</Text>

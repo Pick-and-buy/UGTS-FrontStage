@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { StyleSheet, View, Text, Image, SafeAreaView, TouchableOpacity, ScrollView, Alert, Clipboard } from "react-native";
+import { StyleSheet, View, Text, Image, SafeAreaView, TouchableOpacity, ScrollView, Alert } from "react-native";
 import styles from "../css/buyerOrderDetails.style";
 import { useFocusEffect } from '@react-navigation/native';
 import { Feather, AntDesign, MaterialIcons, MaterialCommunityIcons, SimpleLineIcons, Ionicons, Entypo } from '@expo/vector-icons';
@@ -7,21 +7,44 @@ import { COLORS } from "../../constants/theme";
 import { G, Line, Svg } from "react-native-svg";
 import { getUserByToken } from "../../api/user";
 import { format, addDays } from 'date-fns';
-import { cancelOrderBuyer, updateOrderBuyer } from '../../api/order';
+import { cancelOrderBuyer, getOrderByOrderId, updateOrderBuyer } from '../../api/order';
+import OrderTracking from './OrderTracking';
+import * as Clipboard from 'expo-clipboard';
+import AddRating from './AddRating';
+
+const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
 const BuyerOrderDetails = ({ navigation, route }) => {
   const orderInfo = route.params.orderInfo;
-  const postDetails = route.params.orderInfo?.post;
-
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
+  const [updatedOrderInfo, setUpdatedOrderInfo] = useState();
   const [phoneUserOrder, setPhoneUserOrder] = useState(null);
-  const [deliveryDateFrom, setDeliveryDateFrom] = useState(null);
-  const [deliveryDateTo, setDeliveryDateTo] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
+  const [showAddRating, setShowAddRating] = useState(false);
+  useEffect(() => {
+    if (orderInfo) {
+      fetchOrderInfo();
+    }
+  }, [orderInfo]);
+
+  useEffect(() => {
+    if (updatedOrderInfo) {
+      fetchPhoneUserOder();
+    }
+  }, [updatedOrderInfo]);
+
+  const fetchOrderInfo = async () => {
+    try {
+      const data = await getOrderByOrderId(orderInfo.id);
+      setUpdatedOrderInfo(data.result);
+    } catch (error) {
+      console.error('Fetching order data by order id failed:', error);
+    }
+  }
 
   const fetchPhoneUserOder = async () => {
-    const phoneNumber = orderInfo?.orderDetails?.phoneNumber;
-    const country = orderInfo?.orderDetails?.address?.country;
+    const phoneNumber = updatedOrderInfo?.orderDetails?.phoneNumber;
+    const country = updatedOrderInfo?.orderDetails?.address?.country;
     let regionCode = '';
 
     if (country === 'Việt Nam') {
@@ -31,28 +54,6 @@ const BuyerOrderDetails = ({ navigation, route }) => {
     setPhoneUserOrder(`(${regionCode}) ${visibleDigits}`)
   }
 
-  const calculateDeliveryDate = () => {
-    const currentDate = new Date();
-    const deliveryFrom = addDays(currentDate, 2);
-    const deliveryTo = addDays(currentDate, 6);
-    setDeliveryDateFrom(deliveryFrom);
-    setDeliveryDateTo(deliveryTo);
-  };
-
-  const fetchUserData = async () => {
-    try {
-      const userData = await getUserByToken();
-      setUser(userData);
-    } catch (error) {
-      console.error('Fetching user data failed:', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchPhoneUserOder();
-    calculateDeliveryDate();
-    fetchUserData();
-  }, [])
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -61,14 +62,16 @@ const BuyerOrderDetails = ({ navigation, route }) => {
     }).format(price);
   };
 
-  const formattedProductPrice = formatPrice(orderInfo?.post?.product?.price);
+  const formattedProductPrice = formatPrice(updatedOrderInfo?.post?.product?.price);
   const shippingPrice = formatPrice(42500);
-  const totalPrice = formatPrice(orderInfo?.post?.product?.price + 42500);
+  const totalPrice = formatPrice(updatedOrderInfo?.post?.product?.price + 42500);
 
-  // const copiedOrderId = () => {
-  //   Clipboard.setString(orderInfo?.id);
-  //   Alert.alert('>>> check copiedText: ', orderInfo.id)
-  // };
+
+  const copiedOrderId = () => {
+    Clipboard.setString(updatedOrderInfo?.id);
+    // Alert.alert('>>> check copiedText: ', orderInfo.id)
+  };
+
 
   useFocusEffect(
     useCallback(() => {
@@ -116,27 +119,39 @@ const BuyerOrderDetails = ({ navigation, route }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Feather name="chevron-left" size={30} color={COLORS.primary} onPress={() => navigation.goBack()} />
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
+        </TouchableOpacity>
         <Text style={styles.headerText}>Thông tin đơn hàng</Text>
       </View>
       <ScrollView style={styles.wrapper} showsVerticalScrollIndicator={false}>
-
+        {
+          updatedOrderInfo?.orderDetails?.status !== "CANCELLED" &&
+          <View style={styles.orderTracking}>
+            <OrderTracking
+              status={updatedOrderInfo?.orderDetails?.status}
+              orderDate={updatedOrderInfo?.orderDetails?.orderDate}
+              deliveryDateFrom={updatedOrderInfo?.orderDetails?.deliveryDate}
+              deliveryDateTo={updatedOrderInfo?.orderDetails?.receivedDate}
+            />
+          </View>
+        }
         <View>
           <View style={styles.ownerAddress}>
             <SimpleLineIcons name="location-pin" size={20} color="black" />
             <Text style={styles.ownerName}>
-              {orderInfo?.orderDetails?.firstName} {orderInfo?.orderDetails?.lastName} {phoneUserOrder}
+              {updatedOrderInfo?.orderDetails?.firstName} {updatedOrderInfo?.orderDetails?.lastName} {phoneUserOrder}
             </Text>
           </View>
           <View style={styles.locationDetails}>
             <Text style={styles.locationText}>
               {selectedAddress ?
                 (
-                  `${selectedAddress?.street}, ${selectedAddress?.district}, ${selectedAddress?.province}, ${selectedAddress?.country}`
+                  `${selectedAddress?.addressLine},${selectedAddress?.street}, ${selectedAddress?.district}, ${selectedAddress?.province}, ${selectedAddress?.country}`
                 )
                 :
                 (
-                  `${orderInfo?.orderDetails?.address?.addressLine}, ${orderInfo?.orderDetails?.address?.street}, ${orderInfo?.orderDetails?.address?.district}, ${orderInfo?.orderDetails?.address?.province}, ${orderInfo?.orderDetails?.address?.country}`
+                  `${updatedOrderInfo?.orderDetails?.address?.addressLine}, ${updatedOrderInfo?.orderDetails?.address?.street}, ${updatedOrderInfo?.orderDetails?.address?.district}, ${updatedOrderInfo?.orderDetails?.address?.province}, ${updatedOrderInfo?.orderDetails?.address?.country}`
                 )
               }
             </Text>
@@ -155,23 +170,23 @@ const BuyerOrderDetails = ({ navigation, route }) => {
           <View style={styles.seller}>
             <Image
               style={styles.sellerImage}
-              source={{ uri: orderInfo?.post?.user?.avatar }}
+              source={{ uri: updatedOrderInfo?.post?.user?.avatar ? updatedOrderInfo?.post?.user?.avatar : profile }}
             />
             <Text style={styles.sellerText}>
-              {orderInfo?.post?.user?.username}
+              {updatedOrderInfo?.post?.user?.username}
             </Text>
           </View>
           <View style={styles.product}>
             <Image
               style={styles.productImage}
-              source={{ uri: orderInfo?.post?.product?.images[0]?.imageUrl }}
+              source={{ uri: updatedOrderInfo?.post?.product?.images[0]?.imageUrl }}
             />
             <View style={styles.content}>
               <Text numberOfLines={1} style={styles.productName}>
-                {orderInfo?.post?.product?.name}
+                {updatedOrderInfo?.post?.product?.name}
               </Text>
               <Text numberOfLines={1} style={styles.productDescription}>
-                Color: {orderInfo?.post?.product?.color}, Size: {orderInfo?.post?.product?.size}
+                Color: {updatedOrderInfo?.post?.product?.color}, Size: {updatedOrderInfo?.post?.product?.size}
               </Text>
               <View style={styles.label}>
                 <View style={styles.verifiedLabel}>
@@ -204,7 +219,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
             <View style={styles.transportTime}>
               <AntDesign name="clockcircleo" size={16} color={COLORS.gray} />
               <Text style={{ fontSize: 12, color: COLORS.gray }}>
-                Ngày giao hàng dự kiến: {deliveryDateFrom ? format(deliveryDateFrom, 'MMM d') : ''} - {deliveryDateTo ? format(deliveryDateTo, 'MMM d') : ''}
+                Ngày giao hàng dự kiến: {updatedOrderInfo?.orderDetails?.deliveryDate ? format(updatedOrderInfo?.orderDetails?.deliveryDate, 'MMM d') : ''} - {updatedOrderInfo?.orderDetails?.receivedDate ? format(updatedOrderInfo?.orderDetails?.receivedDate, 'MMM d') : ''}
               </Text>
             </View>
           </View>
@@ -243,7 +258,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
             <View>
               {/* List phương thức thanh toán in here*/}
               <Text>
-                {orderInfo?.orderDetails?.paymentMethod}
+                {updatedOrderInfo?.orderDetails?.paymentMethod}
               </Text>
             </View>
           </View>
@@ -257,7 +272,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
             <View style={styles.right}>
               <TouchableOpacity style={styles.orderId} onPress={() => {}}>
                 <Text style={{ fontSize: 18 }}>
-                  {orderInfo?.id.length > 10 ? `${orderInfo.id.substring(0, 10)}...` : orderInfo.id}
+                  {updatedOrderInfo?.id.length > 10 ? `${orderInfo.id.substring(0, 10)}...` : orderInfo.id}
                 </Text>
                 <MaterialIcons name="content-copy" size={20} color="black" />
               </TouchableOpacity>
@@ -269,36 +284,60 @@ const BuyerOrderDetails = ({ navigation, route }) => {
               <Text style={styles.redirectBtnText}>Liên hệ người bán</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.redirectBtn}
-              onPress={() => navigation.navigate("seller-profile-navigation", { userOfPost: orderInfo?.post?.user, userIdLogged: orderInfo?.post?.id })}
+              onPress={() => navigation.navigate("seller-profile-navigation", { userOfPost: updatedOrderInfo?.post?.user, userIdLogged: updatedOrderInfo?.post?.id })}
             >
               <Entypo name="shop" size={24} color="black" />
               <Text style={styles.redirectBtnText}>Ghé thăm người bán</Text>
             </TouchableOpacity>
           </View>
         </View>
+        <View style={styles.divider} />
+        {updatedOrderInfo?.orderDetails?.status === "RECEIVED" && !showAddRating &&
+          <>
+            <View style={styles.confirm}>
+              <Text style={styles.confirmText}>
+                Vui lòng chỉ ấn "Đã nhận được hàng" khi đơn hàng đã được giao đến bạn và sản phẩm nhận được không có vấn để nào.
+              </Text>
+              <TouchableOpacity
+                style={styles.confirmButton}
+                onPress={() => setShowAddRating(true)}
+              >
+                <Text style={styles.confirmTextButton}>Đã nhận được hàng</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        }
+
+        {showAddRating && <AddRating navigation={navigation} orderInfo={updatedOrderInfo} />}
+
       </ScrollView>
-      {orderInfo?.orderDetails?.status === "CANCELLED" ? (
+
+      {updatedOrderInfo?.orderDetails?.status !== "DELIVERING" && updatedOrderInfo?.orderDetails?.status !== "RECEIVED" && (
         <View style={styles.bottomBtn}>
-          <TouchableOpacity style={styles.buyBtn}>
-            <Text style={styles.buyBtnText}>Mua Lại Sản Phẩm</Text>
-          </TouchableOpacity>
+          {updatedOrderInfo?.orderDetails?.status === "CANCELLED" ? (
+            <TouchableOpacity style={styles.buyBtn}>
+              <Text style={styles.buyBtnText}>Mua Lại Sản Phẩm</Text>
+            </TouchableOpacity>
+          ) : updatedOrderInfo?.orderDetails?.status === "PENDING" || updatedOrderInfo?.orderDetails?.status === "PROCESSING" ? (
+            <>
+              <TouchableOpacity
+                style={styles.changeAddressBtn}
+                onPress={() => navigation.navigate('address-lists', {
+                  orderInfo,
+                  type: 'buyer-change-address'
+                })}
+              >
+                <Text style={styles.changeAddressBtnText}>Thay đổi địa chỉ</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={handleCancelOrder}>
+                <Text style={styles.buttonText}>Hủy đơn hàng</Text>
+              </TouchableOpacity>
+            </>
+          ) : null}
         </View>
-      ) : (
-        <View style={styles.bottomBtn}>
-          <TouchableOpacity style={styles.changeAddressBtn}
-            onPress={() => navigation.navigate('address-lists', {
-              orderInfo,
-              type: 'buyer-change-address'
-            })}
-          >
-            <Text style={styles.changeAddressBtnText}>Thay đổi địa chỉ</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={handleCancelOrder}>
-            <Text style={styles.buttonText}>Hủy đơn hàng</Text>
-          </TouchableOpacity>
-        </View>
-      )
-      }
+      )}
+
+
     </SafeAreaView>
   )
 }

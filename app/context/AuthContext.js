@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getUserByToken } from "../api/user";
+import { getUserByToken, sendImageToAPI } from "../api/user";
 import { login as loginAPI } from '../api/auth';
 
 const AuthContext = createContext();
@@ -50,6 +50,16 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const updateAvatar = async (avatarUri, userId, authToken) => {
+        try {
+            const response = await sendImageToAPI(avatarUri, userId, authToken);
+            setUser(response.result);
+            return response;
+        } catch (error) {
+            console.error('Updating avatar failed:', error);
+        }
+    };
+
     useEffect(() => {
         const initialize = async () => {
             await checkToken();
@@ -61,7 +71,7 @@ export const AuthProvider = ({ children }) => {
     }, [isAuthenticated]);
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout, user }}>
+        <AuthContext.Provider value={{ isAuthenticated, login, logout, user, updateAvatar }}>
             {children}
         </AuthContext.Provider>
     );

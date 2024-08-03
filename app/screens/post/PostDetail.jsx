@@ -12,14 +12,14 @@ import {
     Button,
     RefreshControl,
 } from "react-native";
-import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo, FontAwesome } from '@expo/vector-icons';
+import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo, FontAwesome, Octicons,MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
 import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
 import Carousel from "../../components/carousel/Carousel";
 import { getPostDetails, getComments, postComment, getLikedPostByUser } from "../../api/post";
 import styles from "../css/postDetails.style";
 import { Rating } from 'react-native-stock-star-rating';
-import { getUserByToken, likePost, unlikePost } from "../../api/user";
+import { getRatingByUserId, getUserByToken, likePost, unlikePost } from "../../api/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Comment from "./Comment";
 import moment from "moment";
@@ -41,13 +41,20 @@ const PostDetail = ({ navigation, route }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const [type, setType] = useState('buyer');
-
-    // console.log(postId);
+    const [ratings, setRatings] = useState();
+    const [averageRating, setAverageRating] = useState(0);
+    // console.log(postDetails?.user?.verified);
     useEffect(() => {
         fetchPostDetails();
         checkAuthentication();
         fetchComments();
     }, []);
+
+    useEffect(() => {
+        if (postDetails?.user?.id) {
+            fetchRatings();
+        }
+    }, [postDetails]);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -188,15 +195,38 @@ const PostDetail = ({ navigation, route }) => {
         }
     };
 
+
+    const fetchRatings = async () => {
+        try {
+            const response = await getRatingByUserId(postDetails?.user?.id);
+            setRatings(response.result);
+            calculateAverageRating(response.result);
+        } catch (error) {
+            console.error('Error fetching ratings in profile', error);
+        }
+    };
+
+    const calculateAverageRating = (ratings) => {
+        if (ratings.length === 0) return;
+
+        const totalStars = ratings.reduce((sum, rating) => sum + rating.stars, 0);
+        const average = totalStars / ratings.length;
+
+        setAverageRating(average);
+    };
+
+
     // Format the price using the helper function
     const formattedPrice = formatPrice(postDetails?.product?.price);
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.wrapper}>
                 <View style={styles.header}>
-                    <Feather style={{ marginLeft: "2%" }} name="chevron-left" size={30} color={COLORS.primary} onPress={() => navigation.goBack()} />
+                    <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                        <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
+                    </TouchableOpacity>
                     <Text numberOfLines={1} style={styles.headerText}>{postDetails?.product?.name}</Text>
-                    <AntDesign style={{ marginRight: "2%" }} name="sharealt" size={25} color={COLORS.primary} />
+                    <AntDesign style={{ marginRight: "2%" }} name="sharealt" size={24} color={COLORS.black} />
                 </View>
                 <ScrollView contentContainerStyle={styles.contentContainer}
                     showsVerticalScrollIndicator={false}
@@ -493,15 +523,27 @@ const PostDetail = ({ navigation, route }) => {
                                 <Text style={{ fontSize: 18 }}>{postDetails?.user?.username}</Text>
                                 <View style={{ flexDirection: 'row', justifyContent: "center", alignItems: 'center' }}>
                                     <Rating
-                                        stars={4.7}
+                                        stars={averageRating}
                                         maxStars={5}
                                         size={16}
                                     />
-                                    <Text style={{ fontSize: 12, marginLeft: 4 }}>(100)</Text>
-                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 40 }}>
-                                        <MaterialIcons name="verified-user" size={12} color="#699BF7" style={{ marginTop: 0, marginLeft: 0 }} />
-                                        <Text style={{ fontSize: 12 }}>Tài khoản đã xác minh</Text>
-                                    </View>
+                                    <Text style={{ fontSize: 12, marginLeft: 4 }}>({averageRating})</Text>
+
+                                    {postDetails?.user?.verified === true ? (<>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 40 }}>
+                                            <MaterialIcons name="verified-user" size={12} color="#699BF7" style={{ marginTop: 0, marginLeft: 0 }} />
+                                            <Text style={{ fontSize: 12 }}>Tài khoản đã xác minh</Text>
+                                        </View></>
+                                    ) : (
+                                        <>
+                                            <Octicons name="unverified" size={14} color="gray" style={{ marginTop: 6, marginLeft: 10 }} />
+                                            <Text style={{ fontSize: 12, marginTop: 4, marginLeft: 2 }}>Tài khoản chưa xác minh</Text>
+                                        </>
+                                    )
+
+                                    }
+
+
                                 </View>
                             </View>
                         </View>
@@ -521,25 +563,25 @@ const PostDetail = ({ navigation, route }) => {
                 </ScrollView>
 
                 {
-                    // !postDetails?.isAvailable && (
-                    <View style={styles.bottomBtn}>
-                        {type === "buyer" && (
-                            <TouchableOpacity style={styles.button} onPress={handlePress}>
-                                <Text style={styles.buttonText}>Mua ngay</Text>
-                            </TouchableOpacity>
-                        )
-                        }
-                        {type === "seller" && (
-                            <TouchableOpacity style={styles.button}
-                                onPress={() => navigation.navigate('update-post', { postId: postId })}
-                            >
-                                <Text style={styles.buttonText}>Chỉnh sửa</Text>
-                            </TouchableOpacity>
-                        )
-                        }
-                    </View>
+                    postDetails?.isAvailable && (
+                        <View style={styles.bottomBtn}>
+                            {type === "buyer" && (
+                                <TouchableOpacity style={styles.button} onPress={handlePress}>
+                                    <Text style={styles.buttonText}>Mua ngay</Text>
+                                </TouchableOpacity>
+                            )
+                            }
+                            {type === "seller" && (
+                                <TouchableOpacity style={styles.button}
+                                    onPress={() => navigation.navigate('update-post', { postId: postId })}
+                                >
+                                    <Text style={styles.buttonText}>Chỉnh sửa</Text>
+                                </TouchableOpacity>
+                            )
+                            }
+                        </View>
 
-                    // )
+                    )
                 }
 
             </View>

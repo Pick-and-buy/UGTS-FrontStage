@@ -18,31 +18,33 @@ import styles from "../css/seller.style";
 import { callFetchListOrders, cancelOrderSeller, getOrdersByOrderStatus } from "../../api/order";
 import { getUserByToken } from "../../api/user";
 import { COLORS } from "../../constants/theme";
+import { useAuth } from '../../context/AuthContext';
 
 const Seller = ({ navigation }) => {
-
+  const { user } = useAuth();
   const [listOrdersSeller, setListOrdersSeller] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedOrderStatus, setSelectedOrderStatus] = useState('All');
 
-  //Sử dụng useFocusEffect và useCallback để mỗi khi redirect màn hình từ 1 trang khác về màn hình Seller thì sẽ tự động re-render dữ liệu
   useFocusEffect(
     useCallback(() => {
-      if (selectedOrderStatus === 'All') {
-        fetchOrdersBySeller();
-      } else {
-        fetchAllOrdersByOrderStatus(selectedOrderStatus);
+      if (user) {
+        if (selectedOrderStatus === 'All') {
+          fetchOrdersBySeller();
+        } else {
+          fetchAllOrdersByOrderStatus(selectedOrderStatus);
+        }
       }
-    }, [])
+    }, [selectedOrderStatus, user])
   );
 
   const fetchOrdersBySeller = async () => {
+    if (!user) return; // Exit if user doesn't exist
+
     setIsLoading(true);
     try {
       const res = await callFetchListOrders();
-      const userData = await getUserByToken();  // Fetch user data
-      //Lọc tất cả order mà có id của người tạo bài post trùng với id của user đăng nhập
-      const filteredOrders = res.result.filter(order => order.post.user.id === userData.result.id);
+      const filteredOrders = res.result.filter(order => order.post.user.id === user.id);
       setListOrdersSeller(filteredOrders);
     } catch (error) {
       console.error("Error fetching Orders:", error);
@@ -51,34 +53,46 @@ const Seller = ({ navigation }) => {
   };
 
   const fetchAllOrdersByOrderStatus = async (orderStatusName) => {
+    if (!user) return; // Exit if user doesn't exist
+
     setIsLoading(true);
     try {
       let orderStatus = "";
-      if (orderStatusName === "Chờ xử lý") {
-        orderStatus = "PENDING";
-      }
-      else if (orderStatusName === "Đang xử lý") {
-        orderStatus = "PROCESSING";
-      } else if (orderStatusName === "Đang giao hàng") {
-        orderStatus = "DELIVERED";
-      } else if (orderStatusName === "Đã hủy") {
-        orderStatus = "CANCELLED";
-      } else if (orderStatusName === "Đã nhận hàng") {
-        orderStatus = "RECEIVED";
-      } else if (orderStatusName === "Trả lại") {
-        orderStatus = "RETURNED";
+      switch (orderStatusName) {
+        case "Chờ xử lý":
+          orderStatus = "PENDING";
+          break;
+        case "Đang xử lý":
+          orderStatus = "PROCESSING";
+          break;
+        case "Đang giao hàng":
+          orderStatus = "DELIVERING";
+          break;
+        case "Đã hủy":
+          orderStatus = "CANCELLED";
+          break;
+        case "Đã nhận hàng":
+          orderStatus = "RECEIVED";
+          break;
+        case "Trả lại":
+          orderStatus = "RETURNED";
+          break;
+        case "Hoàn thành":
+          orderStatus = "COMPLETED";
+          break;
+        default:
+          orderStatus = "";
       }
       const res = await getOrdersByOrderStatus(orderStatus);
       const userData = await getUserByToken();
-      //Lọc tất cả order mà có id của người tạo bài post trùng với id của user đăng nhập
-      const filteredOrders = res.result.filter(order => order.post.user.id === userData.result.id);
+      const filteredOrders = res.result.filter(order => order.post.user.id === user.id);
       setListOrdersSeller(filteredOrders);
     } catch (error) {
       console.error("Error fetching Orders by order status:", error);
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -92,17 +106,17 @@ const Seller = ({ navigation }) => {
     { id: '2', value: 'Chờ xử lý' },
     { id: '3', value: 'Đang xử lý' },
     { id: '4', value: 'Đang giao hàng' },
-    { id: '5', value: 'Đã hủy' },
-    { id: '6', value: 'Đã nhận hàng' },
-    { id: '7', value: 'Trả lại' },
-  ]
+    { id: '5', value: 'Đã nhận hàng' },
+    { id: '6', value: 'Hoàn thành' },
+    { id: '7', value: 'Đã hủy' },
+    { id: '8', value: 'Trả lại' },
+  ];
 
   const handleOrderStatusPress = (orderStatusName) => {
     setSelectedOrderStatus(orderStatusName);
     if (orderStatusName === 'All') {
       fetchOrdersBySeller();
-    }
-    else {
+    } else {
       fetchAllOrdersByOrderStatus(orderStatusName);
     }
   };
@@ -132,17 +146,16 @@ const Seller = ({ navigation }) => {
 
   const handleSellerOrderDetail = (orderInfo) => {
     navigation.navigate("seller-order-details", { orderInfo: orderInfo });
-  }
+  };
 
   const renderItem = ({ item }) => (
     <View style={styles.card}>
       <Image source={{ uri: item?.post?.product?.images[0]?.imageUrl }} style={styles.image} />
       <View style={styles.info}>
-        <Text style={styles.itemTitle}>
-          {item?.post?.title.length > 27 ? `${item?.post?.title.substring(0, 27)}...` : item?.post?.title}
+        <Text numberOfLines={1} style={styles.itemTitle}>
+          {item?.post?.title}
         </Text>
-        {/* Username: name of buyer */}
-        <Text style={styles.shop}>{item?.buyer?.username}</Text>
+        <Text style={styles.shop}>Người mua: {item?.buyer?.username}</Text>
         <Text style={styles.price}>đ{formatPrice(item?.orderDetails?.price)}</Text>
 
         {item?.orderDetails?.status === "PENDING" &&
@@ -157,41 +170,50 @@ const Seller = ({ navigation }) => {
         }
         {item?.orderDetails?.status === "PROCESSING" &&
           <View style={styles.buttonWrapper}>
+            <TouchableOpacity style={styles.cancelBtn} onPress={() => handleCancelOrder(item?.id)}>
+              <Text style={styles.cancelBtnText}>{"Hủy đơn"}</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.processBtn} onPress={() => handleSellerOrderDetail(item)}>
-              <Text style={[styles.cancelBtnText, { color: COLORS.white, fontSize: 14 }]}>{"Đang xử lý"}</Text>
+              <Text style={[styles.cancelBtnText, { color: COLORS.white, fontSize: 12 }]}>{"Đang xử lý"}</Text>
             </TouchableOpacity>
           </View>
         }
-        {item?.orderDetails?.status === "DELIVERED" &&
+        {item?.orderDetails?.status === "DELIVERING" &&
           <View style={styles.buttonWrapper}>
-            <TouchableOpacity style={styles.processBtn}>
-              <Text style={[styles.cancelBtnText, { color: COLORS.white, fontSize: 14 }]}>{"Đang giao hàng"}</Text>
+            <TouchableOpacity style={styles.processBtn} onPress={() => handleSellerOrderDetail(item)}>
+              <Text style={[styles.cancelBtnText, { color: COLORS.white, fontSize: 12 }]}>{"Đang giao hàng"}</Text>
             </TouchableOpacity>
           </View>
         }
         {item?.orderDetails?.status === "CANCELLED" &&
           <View style={styles.buttonWrapper}>
-            <View style={[styles.primaryBtn, { backgroundColor: COLORS.gray2 }]}>
+            <TouchableOpacity style={[styles.primaryBtn, { backgroundColor: COLORS.gray2 }]} onPress={() => handleSellerOrderDetail(item)}>
               <Text style={[styles.cancelBtnText, { color: COLORS.white }]}>{"Đã hủy"}</Text>
-            </View>
+            </TouchableOpacity>
           </View>
         }
         {item?.orderDetails?.status === "RECEIVED" &&
           <View style={styles.buttonWrapper}>
-            <View style={[styles.primaryBtn, { backgroundColor: COLORS.gray2 }]}>
+            <TouchableOpacity style={[styles.processBtn]} onPress={() => handleSellerOrderDetail(item)}>
               <Text style={[styles.cancelBtnText, { color: COLORS.white }]}>{"Đã nhận hàng"}</Text>
-            </View>
+            </TouchableOpacity>
+          </View>
+        }
+        {item?.orderDetails?.status === "COMPLETED" &&
+          <View style={styles.buttonWrapper}>
+            <TouchableOpacity style={[styles.processBtn]} onPress={() => handleSellerOrderDetail(item)}>
+              <Text style={[styles.cancelBtnText, { color: COLORS.white }]}>{"Hoàn thành"}</Text>
+            </TouchableOpacity>
           </View>
         }
         {item?.orderDetails?.status === "RETURNED" &&
           <View style={styles.buttonWrapper}>
-            <View style={[styles.primaryBtn, { backgroundColor: COLORS.gray2 }]}>
+            <TouchableOpacity style={[styles.primaryBtn, { backgroundColor: COLORS.gray2 }]} onPress={() => handleSellerOrderDetail(item)}>
               <Text style={[styles.cancelBtnText, { color: COLORS.white }]}>{"Trả hàng"}</Text>
-            </View>
+            </TouchableOpacity>
           </View>
         }
       </View>
-
     </View>
   );
 
@@ -203,7 +225,7 @@ const Seller = ({ navigation }) => {
         )
         :
         (
-          <View>
+          <View style={styles.wrapper}>
             <View>
               <View style={{
                 flexDirection: "row",
@@ -260,11 +282,10 @@ const Seller = ({ navigation }) => {
               </View>
             )}
           </View>
-
         )
       }
     </View>
   )
 }
 
-export default Seller
+export default Seller;

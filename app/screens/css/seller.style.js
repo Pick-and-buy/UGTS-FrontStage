@@ -4,8 +4,10 @@ import { COLORS, SHADOWS } from "../../constants/theme";
 
 const styles = StyleSheet.create({
     container: {
-        width: "100%",
-        marginBottom: 20
+        flex:1,
+    },
+    wrapper: {
+        flex: 1,
     },
     card: {
         width: "96%",
@@ -21,7 +23,7 @@ const styles = StyleSheet.create({
         ...SHADOWS.small
     },
     image: {
-        width: "30%",
+        width: "28%",
         height: "100%",
         borderRadius: 15,
         marginRight: 10,
@@ -40,7 +42,7 @@ const styles = StyleSheet.create({
         color: '#8F8F8F',
     },
     price: {
-        fontSize: 14,
+        fontSize: 20,
         color: '#4CAF50',
     },
     buttonWrapper: {
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-end',
         alignItems: 'center',
-        marginTop:10,
+        marginTop: 4,
     },
     cancelBtn: {
         borderWidth: 1,
@@ -56,14 +58,16 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 5,
         borderRadius: 5,
-        marginRight: 8,
-        
+        marginRight: "auto",
+
     },
     primaryBtn: {
+        width: "65%",
         backgroundColor: COLORS.primary,
-        paddingHorizontal: 20,
         paddingVertical: 6,
         borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     cancelBtnText: {
         color: COLORS.black,
@@ -77,13 +81,15 @@ const styles = StyleSheet.create({
     },
 
     processBtn: {
-        backgroundColor: 'green',
-        paddingHorizontal: 20,
+        width: "65%",
+        backgroundColor: '#04AA6D',
         paddingVertical: 6,
         borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
-    
+
     //Filter Order Status
     orderStatusButton: {
         paddingVertical: 5,
