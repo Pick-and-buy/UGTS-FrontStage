@@ -12,7 +12,7 @@ import {
     Button,
     RefreshControl,
 } from "react-native";
-import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo, FontAwesome, Octicons } from '@expo/vector-icons';
+import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo, FontAwesome, Octicons,MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
 import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
 import Carousel from "../../components/carousel/Carousel";
@@ -222,9 +222,11 @@ const PostDetail = ({ navigation, route }) => {
         <SafeAreaView style={styles.container}>
             <View style={styles.wrapper}>
                 <View style={styles.header}>
-                    <Feather style={{ marginLeft: "2%" }} name="chevron-left" size={30} color={COLORS.primary} onPress={() => navigation.goBack()} />
+                    <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                        <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
+                    </TouchableOpacity>
                     <Text numberOfLines={1} style={styles.headerText}>{postDetails?.product?.name}</Text>
-                    <AntDesign style={{ marginRight: "2%" }} name="sharealt" size={25} color={COLORS.primary} />
+                    <AntDesign style={{ marginRight: "2%" }} name="sharealt" size={24} color={COLORS.black} />
                 </View>
                 <ScrollView contentContainerStyle={styles.contentContainer}
                     showsVerticalScrollIndicator={false}
