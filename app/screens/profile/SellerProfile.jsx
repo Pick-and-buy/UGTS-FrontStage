@@ -181,7 +181,7 @@ const SellerProfile = ({ navigation, route }) => {
                         </Text>
                         <Text>Đánh giá</Text>
                     </TouchableOpacity>
-                    {userOfPost.verified === true ? (
+                    {userOfPost.isVerified === true ? (
                         <View style={styles.blockView}>
                             <MaterialIcons name="verified-user" size={19} color="#699BF7" style={{ marginTop: 6 }} />
                             <Text>Đã xác minh</Text>
