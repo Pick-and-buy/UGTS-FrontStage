@@ -51,12 +51,30 @@ export const callFetchPostByBrandName = (query) => {
   return axiosInstance.get(`/posts/brands?${query}`)
 }
 
-export const createPost = async (formData) => {
+export const createPost_Level_1 = async (formData) => {
   try {
     const token = await getAuthToken();
 
-    const response = await fetch('http://192.168.1.9:8080/api/v1/posts', {
+    const response = await fetch('http://192.168.1.10:8080/api/v1/posts/level-1', {
 
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data'
+      },
+      body: formData,
+    });
+    return response;
+  } catch (error) {
+    console.error('Error Create Post:', error);
+  }
+}
+
+export const createPost_Level_2 = async (formData) => {
+  try {
+    const token = await getAuthToken();
+
+    const response = await fetch('http://192.168.1.10:8080/api/v1/posts/level-2', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -73,7 +91,7 @@ export const createPost = async (formData) => {
 export const updatePost = async (id, formData) => {
   try {
     const token = await getAuthToken();
-    const response = await fetch(`http://192.168.1.9:8080/api/v1/posts/${id}`, {
+    const response = await fetch(`http://192.168.1.10:8080/api/v1/posts/${id}`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,

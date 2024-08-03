@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     container: {
         marginTop: 60,
         marginBottom: 100,
+        backgroundColor: '#f0f2f5'
     },
     viewContainer: {
         flexDirection: 'row',
@@ -50,8 +51,9 @@ const styles = StyleSheet.create({
     imageUploadContaniner: {
         marginVertical: 20,
         width: Dimensions.get('window').width,
-        height: 160,
+        height: 210,
         backgroundColor: '#dbd9d9',
+        paddingLeft: 5
     },
     imageUpload: {
         flexDirection: "row",
@@ -61,41 +63,114 @@ const styles = StyleSheet.create({
         marginHorizontal: 'auto'
     },
     image: {
-        position: 'relative',
-        width: Dimensions.get('window').width / 5.3,
-        height: Dimensions.get('window').width / 5.3,
+        // position: 'relative',
+        width: Dimensions.get('window').width / 5,
+        height: Dimensions.get('window').width / 4.7,
         backgroundColor: COLORS.lightWhite,
         borderRadius: 5,
         alignItems: 'center',
         marginRight: 5
     },
-
+    imageBrandLogo: {
+        width: Dimensions.get('window').width / 5.2,
+        height: Dimensions.get('window').width / 4.8,
+        borderRadius: 5,
+        marginVertical: 'auto'
+    },
+    viewBrandLogo: {
+        width: Dimensions.get('window').width / 4.8,
+    },
+    textBrandLogo: {
+        marginTop: 5,
+        color: COLORS.gray,
+        textAlign: 'center'
+    },
     xmark: {
-        position: 'absolute', 
-        top: 3, 
+        position: 'absolute',
+        top: 3,
         left: 18
+    },
+
+    //Check box
+    checkboxContainer: {
+        flex: 1,
+        marginBottom: 30,
+        flexDirection: "row",
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 'auto',
+        gap: 10
+    },
+    checkboxView: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        // borderWidth: 1, 
+        width: '30%',
+        height: "100%",
+        borderRadius: 10,
+        backgroundColor: '#fff',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -5 },
+        shadowOpacity: 0.2,
+        shadowRadius: 10,
+        
+    },
+    textVerified: {
+        marginTop: 10,
+        textAlign: 'center'
     },
 
     //Upload Image by gallery and Camera Option
     selectOption: {
         flexDirection: 'row',
         marginBottom: 20,
-        marginHorizontal: "10%",
+        marginHorizontal: "5%",
         gap: 20,
     },
     uploadContainer: {
         flexDirection: 'column',
         borderWidth: 2,
         borderRadius: 20,
-        width: '40%',
+        width: '45%',
         backgroundColor: 'white',
         borderColor: COLORS.lightWhite,
         ...SHADOWS.medium,
         justifyContent: "center",
         alignItems: "center",
+        height: Dimensions.get('window').width / 3,
     },
-    imageSelect:{
-        marginVertical:10,
+    imageSelect: {
+        marginVertical: 10,
+    },
+
+    //Upload Invoice
+    uploadInvoiceContainer: {
+        width: '45%',
+        height: Dimensions.get('window').width / 3,
+        borderRadius: 20,
+        marginLeft: 10,
+        overflow: 'hidden', //Kết hợp với flex = 1 để tạo borderRadius cho ImageBackground
+    },
+    uploadInvoice: {
+        flex: 1, //Kết hợp với overflow: 'hidden' để tạo borderRadius cho ImageBackground
+        width: '100%',
+        height: Dimensions.get('window').width / 3,
+    },
+
+    //Upload Video
+    uploadVideoContainer: {
+        position: 'relative',
+        width: '45%',
+        height: Dimensions.get('window').width / 3,
+        borderRadius: 20,
+        marginLeft: 10,
+        overflow: 'hidden', //Kết hợp với flex = 1 để tạo borderRadius cho ImageBackground
+    },
+
+    uploadVideo: {
+        flex: 1, //Kết hợp với overflow: 'hidden' để tạo borderRadius cho ImageBackground
+        width: '100%',
+        height: Dimensions.get('window').width / 3,
     },
 
     //Product Information
@@ -176,15 +251,15 @@ const styles = StyleSheet.create({
     },
 
     button: {
-        width:"96%",
-        height:50,
+        width: "96%",
+        height: 50,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: COLORS.primary,
         borderColor: COLORS.gray2,
-        marginHorizontal:"auto",
-        marginVertical:'auto',
-        borderRadius:8
+        marginHorizontal: "auto",
+        marginVertical: 'auto',
+        borderRadius: 8
     },
     buttonText: {
         color: 'white',
@@ -192,6 +267,27 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 
+    //Modal style
+    modalContainer: {
+        backgroundColor: COLORS.white,
+        padding: 20,
+        borderRadius: 10,
+        alignItems: "center",
+      },
+      modalText: {
+        fontSize: SIZES.large,
+        textAlign: "center",
+        marginBottom: 20,
+      },
+      modalButton: {
+        backgroundColor: COLORS.primary,
+        padding: 10,
+        borderRadius: 5,
+      },
+      modalButtonText: {
+        color: COLORS.white,
+        fontSize: SIZES.medium,
+      },
 })
 
 export default styles;
