@@ -12,7 +12,7 @@ import {
 import { FontAwesome, AntDesign, MaterialIcons, FontAwesome6, Ionicons } from '@expo/vector-icons';
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { NavigationContaine, useNavigation } from '@react-navigation/native';
-import { COLORS } from "../../constants/theme";
+import { COLORS, SHADOWS } from "../../constants/theme";
 import styles from '../post/updatePost.style';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -67,6 +67,9 @@ const UpdatePost = ({ route }) => {
         { index: '16', label: '1st optional photo', name: '1stoptionalphoto', logoUrl: require('../../../assets/images/bag/1st_optional_photo.png'), value: '' },
         { index: '17', label: '2nd optional photo', name: '2ndoptionalphoto', logoUrl: require('../../../assets/images/bag/2nd_optional_photo.png'), value: '' },
     ]);
+
+    const [invoice, setInvoice] = useState("");
+    const [videoUri, setVideoUri] = useState("");
 
     const [isMuted, setIsMuted] = useState(false);
 
@@ -123,6 +126,12 @@ const UpdatePost = ({ route }) => {
             };
         });
         setImagesView(newImagesView);
+        if (postDetails?.product?.originalReceiptProof) {
+            setInvoice(postDetails?.product?.originalReceiptProof);
+        }
+        if (postDetails?.product?.productVideo) {
+            setVideoUri(postDetails?.product?.productVideo)
+        }
     }
 
     useEffect(() => {
@@ -221,6 +230,51 @@ const UpdatePost = ({ route }) => {
         setImages(newImages);
     }
 
+    //Upload Invoice
+    const onGalleryUploadInvoice = async () => {
+        try {
+            await ImagePicker.requestMediaLibraryPermissionsAsync();
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                aspect: [1, 1],
+            });
+            if (!result.canceled) {
+                const newImages = result.assets[0].uri;
+                setInvoice(newImages);
+            }
+        } catch (error) {
+            console.error('Error Upload Image: ', error);
+        }
+    }
+
+    //Remove Invoice
+    const removeInvoice = () => {
+        setInvoice("")
+    }
+
+    //Upload video
+    const UploadVideoScreen = async () => {
+        try {
+            await ImagePicker.requestMediaLibraryPermissionsAsync();
+            let result = await ImagePicker.launchImageLibraryAsync({
+                // cameraType: ImagePicker.CameraType.back,
+                mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+                allowsEditing: true,
+                aspect: [1, 1],
+            });
+            if (!result.canceled) {
+                setVideoUri(result.assets[0].uri);
+            }
+        } catch (error) {
+            console.error('Error Upload Image: ', error);
+        }
+    };
+
+    //Remove Video
+    const removeVideo = () => {
+        setVideoUri("");
+    }
+
     if (!isDataLoaded) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -230,11 +284,10 @@ const UpdatePost = ({ route }) => {
     }
 
     const isImageUploaded = (label) => {
-        if(imagesView.value) {
-            const newImagesView = imagesView.find(image => image.label === label)
-            return newImagesView;
-        }
-        //return imagesView.find(image => image.label === label)?.value !== '';
+        //Step 1: Tìm trong imagesView xem những object nào đang có value khác rỗng
+        //Step 2: Tìm trong những object đó xem có label của imagesView === label của images
+        const newImagesView = imagesView.find(image => image.label === label && image.value !== '');
+        return newImagesView;
     };
 
     const renderImages = ({ item, index }) => {
@@ -243,19 +296,41 @@ const UpdatePost = ({ route }) => {
             item.value === null || item.value === "" ?
                 (
                     <View key={index}>
-                        <View key={index} style={styles.image} >
-                            <TouchableOpacity onPress={() => uploadImageCamera(index)}>
-                                <Image
-                                    style={styles.imageBrandLogo}
-                                    source={item.logoUrl}
-                                />
-                                <FontAwesome name="camera" size={14} color={COLORS.gray} style={{ position: 'absolute', left: 3, top: 5 }} />
-                            </TouchableOpacity>
-                        </View>
-                        <TouchableOpacity style={styles.viewBrandLogo} onPress={() => onGalleryMultiplePress(index)}>
-                            <Text style={styles.textBrandLogo}>{item.label}</Text>
-                            <AntDesign name="cloudupload" size={16} color={COLORS.gray} style={{ textAlign: 'center' }} />
-                        </TouchableOpacity>
+                        {!isUploaded ?
+                            (
+                                <View>
+                                    <View key={index} style={styles.image} >
+                                        <TouchableOpacity onPress={() => uploadImageCamera(index)}>
+                                            <Image
+                                                style={styles.imageBrandLogo}
+                                                source={item.logoUrl}
+                                            />
+                                            <FontAwesome name="camera" size={14} color={COLORS.gray} style={{ position: 'absolute', left: 3, top: 5 }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <TouchableOpacity style={styles.viewBrandLogo} onPress={() => onGalleryMultiplePress(index)}>
+                                        <Text style={styles.textBrandLogo}>{item.label}</Text>
+                                        <AntDesign name="cloudupload" size={16} color={COLORS.gray} style={{ textAlign: 'center' }} />
+                                    </TouchableOpacity>
+                                </View>
+                            )
+                            :
+                            (
+                                <View>
+                                    <View key={index} style={styles.image} >
+                                        <View>
+                                            <Image
+                                                style={styles.imageBrandLogo}
+                                                source={item.logoUrl}
+                                            />
+                                        </View>
+                                    </View>
+                                    <View style={styles.viewBrandLogo}>
+                                        <Text style={styles.textBrandLogo}>{item.label}</Text>
+                                    </View>
+                                </View>
+                            )
+                        }
                     </View>
                 )
                 :
@@ -372,43 +447,89 @@ const UpdatePost = ({ route }) => {
                             </View>
 
                             {/* Upload image invoice and video */}
-                            {postDetails?.product?.originalReceiptProof && postDetails?.product?.productVideo &&
-                                <View style={styles.selectOption}>
-                                    <View style={styles.uploadInvoiceContainer}>
-                                        <View style={styles.uploadInvoiceImage}>
-                                            <ImageBackground
-                                                style={styles.uploadInvoice}
-                                                source={{ uri: postDetails?.product?.originalReceiptProof }}
+                            <View style={styles.selectOption}>
+                                {invoice ?
+                                    (
+                                        <View style={styles.uploadInvoiceContainer}>
+                                            <View style={styles.uploadInvoiceImage}>
+                                                <ImageBackground
+                                                    style={styles.uploadInvoice}
+                                                    source={{ uri: invoice }}
+                                                >
+                                                    <TouchableOpacity onPress={() => removeInvoice()}>
+                                                        <FontAwesome6 style={[styles.xmark, { left: 15, top: 5 }]} name="xmark" size={20} color="white" />
+                                                    </TouchableOpacity>
+                                                </ImageBackground>
+                                            </View>
+                                            <View style={{ marginTop: 10 }}>
+                                                <Text style={{ textAlign: 'center', fontSize: 16 }}>Ảnh hóa đơn</Text>
+                                            </View>
+                                        </View>
+                                    )
+                                    :
+                                    (
+                                        <View style={styles.uploadInvoiceContainer}>
+                                            <TouchableOpacity style={[styles.uploadInvoiceImage, { borderWidth: 2, borderColor: COLORS.offwhite, ...SHADOWS.medium }]}
+                                                onPress={onGalleryUploadInvoice}
                                             >
-                                            </ImageBackground>
+                                                <Image
+                                                    style={[styles.imageUploadVideo, { marginVertical: 30 }]}
+                                                    source={require('../../../assets/images/gallery.png')}
+                                                />
+                                            </TouchableOpacity>
+                                            <View style={{ marginTop: 10 }}>
+                                                <Text style={{ textAlign: 'center', fontSize: 16 }}>Tải ảnh hóa đơn</Text>
+                                            </View>
                                         </View>
-                                        <View style={{ marginTop: 10 }}>
-                                            <Text style={{ textAlign: 'center', fontSize: 16 }}>Ảnh hóa đơn</Text>
+                                    )
+
+                                }
+                                {videoUri ?
+                                    (
+                                        <View style={styles.uploadVideoContainer}>
+                                            <View style={styles.uploadVideo}>
+                                                <Video
+                                                    source={{ uri: videoUri }}
+                                                    style={{ width: '100%', height: '100%' }}
+                                                    useNativeControls
+                                                    resizeMode="cover"
+                                                    shouldPlay
+                                                    isLooping
+                                                    isMuted={isMuted} // Set initial state to mute
+                                                    onPlaybackStatusUpdate={(status) => {
+                                                        if (!status.isPlaying && status.isMuted !== isMuted) {
+                                                            setIsMuted(true); // Ensure the video starts muted
+                                                        }
+                                                    }}
+                                                />
+                                                <TouchableOpacity onPress={() => removeVideo()} style={{ position: 'absolute', bottom: 10, left: 15 }}>
+                                                    <FontAwesome6 name="xmark" size={20} color="white" />
+                                                </TouchableOpacity>
+                                            </View>
+                                            <View style={{ marginTop: 10 }}>
+                                                <Text style={{ textAlign: 'center', fontSize: 16 }}>Video</Text>
+                                            </View>
                                         </View>
-                                    </View>
-                                    <View style={styles.uploadVideoContainer}>
-                                        <View style={styles.uploadVideo}>
-                                            <Video
-                                                source={{ uri: postDetails?.product?.productVideo }}
-                                                style={{ width: '100%', height: '100%' }}
-                                                useNativeControls
-                                                resizeMode="cover"
-                                                shouldPlay
-                                                isLooping
-                                                isMuted={isMuted} // Set initial state to mute
-                                                onPlaybackStatusUpdate={(status) => {
-                                                    if (!status.isPlaying && status.isMuted !== isMuted) {
-                                                        setIsMuted(true); // Ensure the video starts muted
-                                                    }
-                                                }}
-                                            />
+                                    )
+                                    :
+                                    (
+                                        <View style={styles.uploadVideoContainer}>
+                                            <TouchableOpacity style={[styles.uploadVideo, { borderWidth: 2, borderColor: COLORS.offwhite, ...SHADOWS.medium }]}
+                                                onPress={UploadVideoScreen}
+                                            >
+                                                <Image
+                                                    style={styles.imageUploadVideo}
+                                                    source={require('../../../assets/images/camera.png')}
+                                                />
+                                            </TouchableOpacity>
+                                            <View style={{ marginTop: 10 }}>
+                                                <Text style={{ textAlign: 'center', fontSize: 16 }}>Tải video</Text>
+                                            </View>
                                         </View>
-                                        <View style={{ marginTop: 10 }}>
-                                            <Text style={{ textAlign: 'center', fontSize: 16 }}>Video</Text>
-                                        </View>
-                                    </View>
-                                </View>
-                            }
+                                    )
+
+                                }
+                            </View>
                             <View style={styles.shadow}></View>
 
                             {/* Product Information */}
@@ -761,8 +882,8 @@ const UpdatePost = ({ route }) => {
                                         <Text style={styles.leftText}>Verified Level </Text>
                                     </View>
                                     <View style={styles.right}>
-                                        <Text style={[styles.rightText, {color: COLORS.primary}]}>
-                                        {postDetails?.product?.verifiedLevel}
+                                        <Text style={[styles.rightText, { color: COLORS.primary }]}>
+                                            {postDetails?.product?.verifiedLevel}
                                         </Text>
                                     </View>
                                 </View>

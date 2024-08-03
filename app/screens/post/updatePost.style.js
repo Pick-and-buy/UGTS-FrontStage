@@ -151,6 +151,13 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         overflow: 'hidden', //Kết hợp với flex = 1 để tạo borderRadius cho ImageBackground
     },
+    
+    imageUploadVideo: {
+        width: '50%', 
+        height: '60%', 
+        marginHorizontal: "auto", 
+        marginVertical: 20, 
+    },
 
     //Product Information
     productContainer: {
