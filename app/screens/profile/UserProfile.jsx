@@ -96,19 +96,19 @@ const UserProfile = ({ navigation }) => {
 
         {/* Follower */}
         <View style={styles.followerView}>
-          <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary', user)}>
+          <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary', { screen: 'following', user: user })}>
             <Text style={styles.number}>
               {followingCount}
             </Text>
             <Text>Đã theo dõi</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary', user)}>
+          <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary', { screen: 'follower', user: user })}>
             <Text style={styles.number}>
               {followersCount}
             </Text>
             <Text>Theo dõi</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary', user)}>
+          <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary', { screen: 'appreciation', user: user })}>
             <Text style={styles.number}>
               {ratingCount}
             </Text>

@@ -163,19 +163,19 @@ const SellerProfile = ({ navigation, route }) => {
 
                 {/* Follower */}
                 <View style={styles.followerView}>
-                    <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary', userOfPost)}>
+                    <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary', { screen: 'following', user: userOfPost })}>
                         <Text style={styles.number}>
                             {followingCount}
                         </Text>
                         <Text>Đã theo dõi</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary', userOfPost)}>
+                    <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary', { screen: 'follower', user: userOfPost })}>
                         <Text style={styles.number}>
                             {followersCount}
                         </Text>
                         <Text>Theo dõi</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary', userOfPost)}>
+                    <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary', { screen: 'appreciation', user: userOfPost })}>
                         <Text style={styles.number}>
                             {55}
                         </Text>
