@@ -10,10 +10,11 @@ const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6
 const Appreciation = ({ navigation, route }) => {
   const { user } = route.params;
   const [followStatus, setFollowStatus] = useState({});
-  const [ratings, seRatings] = useState([]);
+  const [ratings, setRatings] = useState([]);
   const [filteredRatings, setFilteredRatings] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState('All'); // New state for selected filter
 
   useEffect(() => {
     fetchRatings();
@@ -22,7 +23,7 @@ const Appreciation = ({ navigation, route }) => {
   const fetchRatings = async () => {
     try {
       const response = await getRatingByUserId(user.id);
-      seRatings(response.result);
+      setRatings(response.result);
       setFilteredRatings(response.result);
 
       // Check follow status for each user
@@ -148,16 +149,27 @@ const Appreciation = ({ navigation, route }) => {
 
   const handleSearchChange = (text) => {
     setSearchQuery(text);
-    if (text.trim() === '') {
-      setFilteredRatings(ratings);
-    } else {
-      const filtered = ratings.filter(item =>
-        item.ratingUser.username.toLowerCase().includes(text.toLowerCase()) ||
-        item.ratingUser.firstName.toLowerCase().includes(text.toLowerCase()) ||
-        item.ratingUser.lastName.toLowerCase().includes(text.toLowerCase())
+    applyFilters(text, selectedFilter);
+  };
+
+  const handleFilterChange = (filter) => {
+    setSelectedFilter(filter);
+    applyFilters(searchQuery, filter);
+  };
+
+  const applyFilters = (searchQuery, filter) => {
+    let filtered = ratings;
+    if (searchQuery.trim() !== '') {
+      filtered = filtered.filter(item =>
+        item.ratingUser.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.ratingUser.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.ratingUser.lastName.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      setFilteredRatings(filtered);
     }
+    if (filter !== 'All') {
+      filtered = filtered.filter(item => item.stars === parseInt(filter));
+    }
+    setFilteredRatings(filtered);
   };
 
   return (
@@ -175,6 +187,28 @@ const Appreciation = ({ navigation, route }) => {
           placeholderTextColor="#AFAFAE"
           style={styles.textInput}
         />
+      </View>
+
+      <View style={styles.filterContainer}>
+        {['All', 1, 2, 3, 4, 5].map((filter) => (
+          <TouchableOpacity
+            key={filter}
+            onPress={() => handleFilterChange(filter)}
+            style={[
+              styles.filterButton,
+              selectedFilter === filter && styles.selectedFilterButton
+            ]}
+          >
+            <Text
+              style={[
+                styles.filterButtonText,
+                selectedFilter === filter && styles.selectedFilterButtonText
+              ]}
+            >
+              {filter === 'All' ? 'Tất cả' : `${filter} sao`}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </View>
 
       <View style={styles.ratings}>

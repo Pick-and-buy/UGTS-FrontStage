@@ -93,21 +93,41 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         backgroundColor: "#f2f2f2",
         width: "96%",
-        paddingLeft:6,
-        paddingRight:6,
-        paddingBottom:6,
-        borderRadius:5
-    },  
-    stars:{
+        paddingLeft: 6,
+        paddingRight: 6,
+        paddingBottom: 6,
+        borderRadius: 5
+    },
+    stars: {
         top: 0,
-        flexDirection:'row',
+        flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        gap:5,
-        marginLeft:-2
+        gap: 5,
+        marginLeft: -2
     },
     commentText: {
-        fontSize:16
-    }
+        fontSize: 16
+    },
+    filterContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginVertical: 10,
+    },
+    filterButton: {
+        padding: 10,
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: '#ccc',
+    },
+    selectedFilterButton: {
+        backgroundColor: COLORS.primary
+    },
+    filterButtonText: {
+        color: '#000',
+    },
+    selectedFilterButtonText: {
+        color: '#fff',
+    },
 })
 export default styles
