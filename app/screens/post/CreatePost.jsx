@@ -15,17 +15,17 @@ import {
 import { FontAwesome, AntDesign, MaterialIcons, FontAwesome6, Ionicons } from '@expo/vector-icons';
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { NavigationContaine, useNavigation } from '@react-navigation/native';
-import { COLORS } from "../constants/theme";
-import styles from '../screens/post/createPostDetails.style';
+import { COLORS } from "../../constants/theme";
+import styles from '../css/createPost.style'
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Dropdown } from 'react-native-element-dropdown';
-import { callFetchListBrands } from "../api/brand";
-import { createPost_Level_1, createPost_Level_2 } from "../api/post";
-import { getAllCategoriesByBrandLineName } from "../api/category";
-import { getAllBrandLinesByBrandName } from "../api/brandLine";
+import { callFetchListBrands } from "../../api/brand";
+import { createPost_Level_1, createPost_Level_2 } from "../../api/post";
+import { getAllCategoriesByBrandLineName } from "../../api/category";
+import { getAllBrandLinesByBrandName } from "../../api/brandLine";
 import * as ImagePicker from "expo-image-picker";
-import Button from "../components/Button";
+import Button from "../../components/Button";
 import { Video } from 'expo-av';
 import Checkbox from 'expo-checkbox';
 
@@ -37,23 +37,23 @@ const CreatePost = () => {
   const [listBrandLines, setListBrandLines] = useState([]);
 
   const [images, setImages] = useState([
-    { index: '1', label: 'Overall picture', name: 'Overallpicture', logoUrl: require('../../assets/images/bag/overall_picture.png'), value: '' },
-    { index: '2', label: 'Brand logo', name: 'Brandlogo', logoUrl: require('../../assets/images/bag/brand_logo.png'), value: '' },
-    { index: '3', label: 'Inside label', name: 'Insidelabel', logoUrl: require('../../assets/images/bag/inside_label.png'), value: '' },
-    { index: '4', label: 'Hardware engravings', name: 'Hardwareengravings', logoUrl: require('../../assets/images/bag/hardware_engravings.png'), value: '' },
-    { index: '5', label: 'Serial number', name: 'Serialnumber', logoUrl: require('../../assets/images/bag/serial_number.png'), value: '' },
-    { index: '6', label: 'Made in label', name: 'Madeinlabel', logoUrl: require('../../assets/images/bag/made_in_label.png'), value: '' },
-    { index: '7', label: 'QR code label', name: 'QRcodelabel', logoUrl: require('../../assets/images/bag/qr_code_label.png'), value: '' },
-    { index: '8', label: 'Hologram label', name: 'Hologramlabel', logoUrl: require('../../assets/images/bag/hologram_label.png'), value: '' },
-    { index: '9', label: 'Zipper head (front)', name: 'Zipperhead(front)', logoUrl: require('../../assets/images/bag/zipper_head_front.png'), value: '' },
-    { index: '10', label: 'Zipper head (back)', name: 'Zipperhead(back)', logoUrl: require('../../assets/images/bag/zipper_head_back.png'), value: '' },
-    { index: '11', label: 'Button', name: 'Button', logoUrl: require('../../assets/images/bag/button.png'), value: '' },
-    { index: '12', label: 'Shoulder strap clasp', name: 'Shoulderstrapclasp', logoUrl: require('../../assets/images/bag/shoulder_strap_clasp.png'), value: '' },
-    { index: '13', label: 'Logo texture close up', name: 'Logotexturecloseup', logoUrl: require('../../assets/images/bag/logo_texture_close_up_macro_image.png'), value: '' },
-    { index: '14', label: 'Authenticity card', name: 'Authenticitycard', logoUrl: require('../../assets/images/bag/authenticity_card.png'), value: '' },
-    { index: '15', label: 'Dust bag', name: 'Dustbag', logoUrl: require('../../assets/images/bag/dust_bag.png'), value: '' },
-    { index: '16', label: '1st optional photo', name: '1stoptionalphoto', logoUrl: require('../../assets/images/bag/1st_optional_photo.png'), value: '' },
-    { index: '17', label: '2nd optional photo', name: '2ndoptionalphoto', logoUrl: require('../../assets/images/bag/2nd_optional_photo.png'), value: '' },
+    { index: '1', label: 'Overall picture', name: 'Overallpicture', logoUrl: require('../../../assets/images/bag/overall_picture.png'), value: '' },
+    { index: '2', label: 'Brand logo', name: 'Brandlogo', logoUrl: require('../../../assets/images/bag/brand_logo.png'), value: '' },
+    { index: '3', label: 'Inside label', name: 'Insidelabel', logoUrl: require('../../../assets/images/bag/inside_label.png'), value: '' },
+    { index: '4', label: 'Hardware engravings', name: 'Hardwareengravings', logoUrl: require('../../../assets/images/bag/hardware_engravings.png'), value: '' },
+    { index: '5', label: 'Serial number', name: 'Serialnumber', logoUrl: require('../../../assets/images/bag/serial_number.png'), value: '' },
+    { index: '6', label: 'Made in label', name: 'Madeinlabel', logoUrl: require('../../../assets/images/bag/made_in_label.png'), value: '' },
+    { index: '7', label: 'QR code label', name: 'QRcodelabel', logoUrl: require('../../../assets/images/bag/qr_code_label.png'), value: '' },
+    { index: '8', label: 'Hologram label', name: 'Hologramlabel', logoUrl: require('../../../assets/images/bag/hologram_label.png'), value: '' },
+    { index: '9', label: 'Zipper head (front)', name: 'Zipperhead(front)', logoUrl: require('../../../assets/images/bag/zipper_head_front.png'), value: '' },
+    { index: '10', label: 'Zipper head (back)', name: 'Zipperhead(back)', logoUrl: require('../../../assets/images/bag/zipper_head_back.png'), value: '' },
+    { index: '11', label: 'Button', name: 'Button', logoUrl: require('../../../assets/images/bag/button.png'), value: '' },
+    { index: '12', label: 'Shoulder strap clasp', name: 'Shoulderstrapclasp', logoUrl: require('../../../assets/images/bag/shoulder_strap_clasp.png'), value: '' },
+    { index: '13', label: 'Logo texture close up', name: 'Logotexturecloseup', logoUrl: require('../../../assets/images/bag/logo_texture_close_up_macro_image.png'), value: '' },
+    { index: '14', label: 'Authenticity card', name: 'Authenticitycard', logoUrl: require('../../../assets/images/bag/authenticity_card.png'), value: '' },
+    { index: '15', label: 'Dust bag', name: 'Dustbag', logoUrl: require('../../../assets/images/bag/dust_bag.png'), value: '' },
+    { index: '16', label: '1st optional photo', name: '1stoptionalphoto', logoUrl: require('../../../assets/images/bag/1st_optional_photo.png'), value: '' },
+    { index: '17', label: '2nd optional photo', name: '2ndoptionalphoto', logoUrl: require('../../../assets/images/bag/2nd_optional_photo.png'), value: '' },
   ]);
   const [invoice, setInvoice] = useState("");
   const [videoUri, setVideoUri] = useState("");
@@ -255,23 +255,23 @@ const CreatePost = () => {
         }
         navigation.navigate('Home')
         setImages([
-          { index: '1', label: 'Overall picture', name: 'Overallpicture', logoUrl: require('../../assets/images/bag/overall_picture.png'), value: '' },
-          { index: '2', label: 'Brand logo', name: 'Brandlogo', logoUrl: require('../../assets/images/bag/brand_logo.png'), value: '' },
-          { index: '3', label: 'Inside label', name: 'Insidelabel', logoUrl: require('../../assets/images/bag/inside_label.png'), value: '' },
-          { index: '4', label: 'Hardware engravings', name: 'Hardwareengravings', logoUrl: require('../../assets/images/bag/hardware_engravings.png'), value: '' },
-          { index: '5', label: 'Serial number', name: 'Serialnumber', logoUrl: require('../../assets/images/bag/serial_number.png'), value: '' },
-          { index: '6', label: 'Made in label', name: 'Madeinlabel', logoUrl: require('../../assets/images/bag/made_in_label.png'), value: '' },
-          { index: '7', label: 'QR code label', name: 'QRcodelabel', logoUrl: require('../../assets/images/bag/qr_code_label.png'), value: '' },
-          { index: '8', label: 'Hologram label', name: 'Hologramlabel', logoUrl: require('../../assets/images/bag/hologram_label.png'), value: '' },
-          { index: '9', label: 'Zipper head (front)', name: 'Zipperhead(front)', logoUrl: require('../../assets/images/bag/zipper_head_front.png'), value: '' },
-          { index: '10', label: 'Zipper head (back)', name: 'Zipperhead(back)', logoUrl: require('../../assets/images/bag/zipper_head_back.png'), value: '' },
-          { index: '11', label: 'Button', name: 'Button', logoUrl: require('../../assets/images/bag/button.png'), value: '' },
-          { index: '12', label: 'Shoulder strap clasp', name: 'Shoulderstrapclasp', logoUrl: require('../../assets/images/bag/shoulder_strap_clasp.png'), value: '' },
-          { index: '13', label: 'Logo texture close up', name: 'Logotexturecloseup', logoUrl: require('../../assets/images/bag/logo_texture_close_up_macro_image.png'), value: '' },
-          { index: '14', label: 'Authenticity card', name: 'Authenticitycard', logoUrl: require('../../assets/images/bag/authenticity_card.png'), value: '' },
-          { index: '15', label: 'Dust bag', name: 'Dustbag', logoUrl: require('../../assets/images/bag/dust_bag.png'), value: '' },
-          { index: '16', label: '1st optional photo', name: '1stoptionalphoto', logoUrl: require('../../assets/images/bag/1st_optional_photo.png'), value: '' },
-          { index: '17', label: '2nd optional photo', name: '2ndoptionalphoto', logoUrl: require('../../assets/images/bag/2nd_optional_photo.png'), value: '' },
+          { index: '1', label: 'Overall picture', name: 'Overallpicture', logoUrl: require('../../../assets/images/bag/overall_picture.png'), value: '' },
+          { index: '2', label: 'Brand logo', name: 'Brandlogo', logoUrl: require('../../../assets/images/bag/brand_logo.png'), value: '' },
+          { index: '3', label: 'Inside label', name: 'Insidelabel', logoUrl: require('../../../assets/images/bag/inside_label.png'), value: '' },
+          { index: '4', label: 'Hardware engravings', name: 'Hardwareengravings', logoUrl: require('../../../assets/images/bag/hardware_engravings.png'), value: '' },
+          { index: '5', label: 'Serial number', name: 'Serialnumber', logoUrl: require('../../../assets/images/bag/serial_number.png'), value: '' },
+          { index: '6', label: 'Made in label', name: 'Madeinlabel', logoUrl: require('../../../assets/images/bag/made_in_label.png'), value: '' },
+          { index: '7', label: 'QR code label', name: 'QRcodelabel', logoUrl: require('../../../assets/images/bag/qr_code_label.png'), value: '' },
+          { index: '8', label: 'Hologram label', name: 'Hologramlabel', logoUrl: require('../../../assets/images/bag/hologram_label.png'), value: '' },
+          { index: '9', label: 'Zipper head (front)', name: 'Zipperhead(front)', logoUrl: require('../../../assets/images/bag/zipper_head_front.png'), value: '' },
+          { index: '10', label: 'Zipper head (back)', name: 'Zipperhead(back)', logoUrl: require('../../../assets/images/bag/zipper_head_back.png'), value: '' },
+          { index: '11', label: 'Button', name: 'Button', logoUrl: require('../../../assets/images/bag/button.png'), value: '' },
+          { index: '12', label: 'Shoulder strap clasp', name: 'Shoulderstrapclasp', logoUrl: require('../../../assets/images/bag/shoulder_strap_clasp.png'), value: '' },
+          { index: '13', label: 'Logo texture close up', name: 'Logotexturecloseup', logoUrl: require('../../../assets/images/bag/logo_texture_close_up_macro_image.png'), value: '' },
+          { index: '14', label: 'Authenticity card', name: 'Authenticitycard', logoUrl: require('../../../assets/images/bag/authenticity_card.png'), value: '' },
+          { index: '15', label: 'Dust bag', name: 'Dustbag', logoUrl: require('../../../assets/images/bag/dust_bag.png'), value: '' },
+          { index: '16', label: '1st optional photo', name: '1stoptionalphoto', logoUrl: require('../../../assets/images/bag/1st_optional_photo.png'), value: '' },
+          { index: '17', label: '2nd optional photo', name: '2ndoptionalphoto', logoUrl: require('../../../assets/images/bag/2nd_optional_photo.png'), value: '' },
         ]);
         setInvoice("");
         setVideoUri("")
@@ -550,7 +550,7 @@ const CreatePost = () => {
                           style={[styles.uploadContainer, { marginLeft: 10 }]}>
                           <Image
                             style={styles.imageSelect}
-                            source={require('../../assets/images/gallery.png')}
+                            source={require('../../../assets/images/gallery.png')}
                           />
                           <Text style={{ fontSize: 16 }}>Tải Ảnh Hóa Đơn</Text>
                         </TouchableOpacity>
@@ -576,7 +576,7 @@ const CreatePost = () => {
                           style={styles.uploadContainer}>
                           <Image
                             style={styles.imageSelect}
-                            source={require('../../assets/images/camera.png')}
+                            source={require('../../../assets/images/camera.png')}
                           />
                           <Text style={{ fontSize: 16 }}>Upload video</Text>
                         </TouchableOpacity>
@@ -1140,7 +1140,7 @@ const CreatePost = () => {
           )
         }}
       </Formik>
-    </ScrollView >
+    </ScrollView>
   );
 }
 

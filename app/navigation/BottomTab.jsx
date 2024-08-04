@@ -6,7 +6,7 @@ import Home from "../screens/Home";
 import Search from "../screens/Search";
 import Profile from "../screens/Profile";
 import { COLORS } from "../constants/theme";
-import CreatePost from "../screens/CreatePost";
+import CreatePost from "../screens/post/CreatePost";
 import Favourite from "../screens/Favourite";
 import styles from "./BottomTab.style";
 

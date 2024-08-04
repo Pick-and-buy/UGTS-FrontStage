@@ -14,7 +14,7 @@ import { FontAwesome, AntDesign, MaterialIcons, FontAwesome6, Ionicons } from '@
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { NavigationContaine, useNavigation } from '@react-navigation/native';
 import { COLORS, SHADOWS } from "../../constants/theme";
-import styles from '../post/updatePost.style';
+import styles from '../css/updatePost.style';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { updatePost, getPostDetails } from "../../api/post";

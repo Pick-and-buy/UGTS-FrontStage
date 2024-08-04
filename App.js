@@ -27,7 +27,6 @@ import Profile from './app/screens/Profile';
 import { LoginContext, LoginProvider } from './app/context/LoginContext';
 import ChangePassword from './app/screens/change password/ChangePassword';
 import UpdateProfile from './app/screens/profile/UpdateProfile';
-import CreatePostDetail from './app/screens/post/CreatePostDetail';
 import News from './app/screens/news/News';
 import Slider from './app/screens/home/Slider';
 import Search from './app/screens/Search';
@@ -243,11 +242,6 @@ export default function App() {
                 <Stack.Screen
                   name='list-all-brand'
                   component={ListBrands}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='create-post-details'
-                  component={CreatePostDetail}
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
