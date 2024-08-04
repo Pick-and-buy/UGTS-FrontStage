@@ -32,7 +32,7 @@ const CreatePostGuide = ({ navigation }) => {
                         <FontAwesome6 name="bolt-lightning" size={28} color="black" />
                         <Text style={styles.text}>Đăng bài nhanh</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.option}>
+                    <TouchableOpacity style={styles.option} onPress={() => navigation.navigate("create-post")}>
                         <Entypo name="news" size={28} color="black" />
                         <Text style={styles.text}>Đăng bài chi tiết</Text>
                     </TouchableOpacity>

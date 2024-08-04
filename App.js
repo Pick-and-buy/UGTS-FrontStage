@@ -67,6 +67,7 @@ import Followers from './app/screens/profile/Followers';
 import Appreciation from './app/screens/profile/Appreciation';
 import Summary from './app/screens/profile/Summary';
 import CreatePostGuide from './app/screens/post/CreatePostGuide';
+import CreatePost from './app/screens/post/CreatePost';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -344,6 +345,11 @@ export default function App() {
                 <Stack.Screen
                   name="cancel-successfully"
                   component={CancelSuccessfully}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="create-post"
+                  component={CreatePost}
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
