@@ -9,6 +9,7 @@ import { COLORS } from "../constants/theme";
 import CreatePost from "../screens/post/CreatePost";
 import Favourite from "../screens/Favourite";
 import styles from "./BottomTab.style";
+import CreatePostGuide from "../screens/post/CreatePostGuide";
 
 const Tab = createBottomTabNavigator();
 
@@ -63,8 +64,8 @@ const BottomTab = () => {
       />
 
       <Tab.Screen
-        name="Create-Post"
-        component={CreatePost}
+        name="create-post-guide"
+        component={CreatePostGuide}
         options={{
           unmountOnBlur: true,
           tabBarIcon: ({ focused }) => (

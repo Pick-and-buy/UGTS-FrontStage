@@ -66,6 +66,7 @@ import Following from './app/screens/profile/Following';
 import Followers from './app/screens/profile/Followers';
 import Appreciation from './app/screens/profile/Appreciation';
 import Summary from './app/screens/profile/Summary';
+import CreatePostGuide from './app/screens/post/CreatePostGuide';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -383,6 +384,11 @@ export default function App() {
                 <Stack.Screen
                   name='appreciation'
                   component={Appreciation}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='create-post-guide'
+                  component={CreatePostGuide}
                   options={{ headerShown: false }}
                 />
               </Stack.Navigator>
