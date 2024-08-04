@@ -66,10 +66,12 @@ const BuyerOrderDetails = ({ navigation, route }) => {
   const shippingPrice = formatPrice(42500);
   const totalPrice = formatPrice(updatedOrderInfo?.post?.product?.price + 42500);
 
+
   const copiedOrderId = () => {
     Clipboard.setString(updatedOrderInfo?.id);
     // Alert.alert('>>> check copiedText: ', orderInfo.id)
   };
+
 
   useFocusEffect(
     useCallback(() => {
@@ -268,7 +270,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
               <Text style={{ fontSize: 18 }}>ID đơn hàng</Text>
             </View>
             <View style={styles.right}>
-              <TouchableOpacity style={styles.orderId} onPress={() => copiedOrderId()}>
+              <TouchableOpacity style={styles.orderId} onPress={() => {}}>
                 <Text style={{ fontSize: 18 }}>
                   {updatedOrderInfo?.id.length > 10 ? `${orderInfo.id.substring(0, 10)}...` : orderInfo.id}
                 </Text>
