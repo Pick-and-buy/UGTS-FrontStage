@@ -21,10 +21,8 @@ import OTPVerification from './app/screens/forgot password/OTPVerification';
 import ResetPassword from './app/screens/forgot password/ResetPassword';
 import PostDetail from './app/screens/post/PostDetail';
 import Onboarding from './app/components/Onboarding';
-import PosterInformation from './app/screens/posterInformation/PosterInformation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Profile from './app/screens/Profile';
-import { LoginContext, LoginProvider } from './app/context/LoginContext';
 import ChangePassword from './app/screens/change password/ChangePassword';
 import UpdateProfile from './app/screens/profile/UpdateProfile';
 import News from './app/screens/news/News';
@@ -52,14 +50,9 @@ import FaceMatch from './app/screens/verify/FaceMatch';
 import ScanBackIDScreen from './app/screens/verify/ScanBackIDScreen';
 import ScanFontIDScreen from './app/screens/verify/ScanFontIDScreen';
 import AddRating from './app/screens/payment/AddRating';
-
 import Notification from './app/screens/notification/Notification';
 import { NotificationProvider } from './app/context/NotificationContext';
-
-import { UserProvider } from './app/context/UserContext';
 import SellerOrderDetails from './app/screens/payment/SellerOrderDetails';
-
-
 import { AuthProvider } from './app/context/AuthContext';
 import OrderTracking from './app/screens/payment/OrderTracking';
 import Following from './app/screens/profile/Following';
@@ -212,12 +205,6 @@ export default function App() {
                   component={PostDetail}
                   options={{ headerShown: false }}
                 />
-                <Stack.Screen
-                  name='poster-information'
-                  component={PosterInformation}
-                  options={{ headerShown: false }}
-                />
-
                 <Stack.Screen
                   name='user-profile-details'
                   component={UserProfile}

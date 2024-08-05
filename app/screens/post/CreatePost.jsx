@@ -12,7 +12,7 @@ import {
   Alert,
   // Button,
 } from "react-native";
-import { FontAwesome, AntDesign, MaterialIcons, FontAwesome6, Ionicons } from '@expo/vector-icons';
+import { FontAwesome, AntDesign, MaterialCommunityIcons, FontAwesome6, Ionicons } from '@expo/vector-icons';
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { NavigationContaine, useNavigation } from '@react-navigation/native';
 import { COLORS } from "../../constants/theme";
@@ -441,12 +441,12 @@ const CreatePost = () => {
                   style={styles.imageBrandLogo}
                   source={item.logoUrl}
                 />
-                <FontAwesome name="camera" size={14} color={COLORS.gray} style={{ position: 'absolute', left: 3, top: 5 }} />
+                {/* <FontAwesome name="camera" size={14} color={COLORS.gray} style={{ position: 'absolute', left: 3, top: 5 }} /> */}
               </TouchableOpacity>
             </View>
             <TouchableOpacity style={styles.viewBrandLogo} onPress={() => onGalleryMultiplePress(index)}>
               <Text style={styles.textBrandLogo}>{item.label}</Text>
-              <AntDesign name="cloudupload" size={16} color={COLORS.gray} style={{ textAlign: 'center' }} />
+              {/* <AntDesign name="cloudupload" size={16} color={COLORS.gray} style={{ textAlign: 'center' }} /> */}
             </TouchableOpacity>
           </View>
         )
@@ -469,7 +469,15 @@ const CreatePost = () => {
   };
 
   return (
-    <ScrollView style={{ backgroundColor: COLORS.white }}>
+    <View style={styles.container}>
+      {/* Header */}
+      <View style={styles.headerContainer}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
+        </TouchableOpacity>
+        <Text style={styles.textName}>Thông tin bài đăng</Text>
+      </View>
+      <View style={styles.shadow} />
       <Formik
         initialValues={{
           title: '', productName: '', brandName: '', brandLineName: '', condition: '',
@@ -487,14 +495,13 @@ const CreatePost = () => {
           const formatTotal = formatPrice(total);
 
           return (
-            <View style={styles.container}>
-              {/* Header */}
-              <View style={styles.headerContainer}>
-                <Text style={[styles.textName, { marginLeft: 50 }]}>Thông Tin Bài Đăng</Text>
-              </View>
-              <View style={styles.shadow}>{/* Tạo Khoảng Trống */}</View>
-
+            <ScrollView style={styles.wrapper}>
               {/* Image Upload */}
+              <Text
+                style={styles.labelText}
+              >Tải lên ảnh sản phẩm
+                <Text style={{ color: 'red', fontSize: 18, fontFamily: 'bold' }}> *</Text>
+              </Text>
               <View style={styles.imageUploadContaniner}>
                 <View style={styles.imageUpload}>
                   <FlatList
@@ -504,29 +511,24 @@ const CreatePost = () => {
                     renderItem={renderImages}
                   />
                 </View>
-                <View style={{ marginTop: 20, flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10 }}>
-                  <Text style={{ fontSize: 16, color: '#6e6d6d' }}>Thông tin sản phẩm</Text>
-                  <TouchableOpacity
-                    style={{ flexDirection: "row", gap: 10 }}
-                    onPress={() => console.warn("Quy Tắc")}
-                  >
-                    <AntDesign name="questioncircle" size={20} color="#6e6d6d" />
-                    <Text style={{ color: '#6e6d6d' }}>Quy tắc</Text>
-                  </TouchableOpacity>
-
-                </View>
               </View>
 
               {/* Check box */}
               <View style={styles.checkboxContainer}>
+                <View style={{ width: "100%", flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
+                  <Text style={styles.labelText}>Các mức xác minh</Text>
+                  <TouchableOpacity
+                    onPress={() => console.warn("Quy Tắc")}
+                  >
+                    <FontAwesome6 name="circle-question" size={14} color="gray" />
+                  </TouchableOpacity>
+                </View>
                 <View style={styles.checkboxView}>
                   <Checkbox
                     value={isChecked_2}
                     onValueChange={setChecked_2}
                   />
-                  <View style={{ height: '70%' }}>
-                    <Text style={styles.textVerified}>Verified Level 2</Text>
-                  </View>
+                  <Text style={styles.textVerified}>Xác minh cấp 2</Text>
                 </View>
 
                 <View style={styles.checkboxView}>
@@ -534,25 +536,31 @@ const CreatePost = () => {
                     value={isChecked_3}
                     onValueChange={setChecked_3}
                   />
-                  <View style={{ height: '70%' }}>
-                    <Text style={styles.textVerified}>Ticket Box Check Authentic</Text>
-                  </View>
+                  <Text style={styles.textVerified}>Xác minh cấp 3</Text>
                 </View>
               </View>
 
               {isChecked_2 ?
                 (
-                  <View>
+                  <View style={styles.checkboxContainer}>
+                    <View style={{ width: "100%", flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
+                      <Text style={styles.labelText}>Bạn cần bổ sung ở cấp 2</Text>
+                      {/* <TouchableOpacity
+                        onPress={() => console.warn("Quy Tắc")}
+                      >
+                        <FontAwesome6 name="circle-question" size={14} color="gray" />
+                      </TouchableOpacity> */}
+                    </View>
                     <View View style={styles.selectOption}>
                       {invoice === "" ? (
                         <TouchableOpacity
                           onPress={onGalleryUploadInvoice}
-                          style={[styles.uploadContainer, { marginLeft: 10 }]}>
+                          style={styles.uploadContainer}>
                           <Image
                             style={styles.imageSelect}
                             source={require('../../../assets/images/gallery.png')}
                           />
-                          <Text style={{ fontSize: 16 }}>Tải Ảnh Hóa Đơn</Text>
+                          <Text style={{ fontSize: 16 }}>Ảnh hóa đơn</Text>
                         </TouchableOpacity>
                       )
                         :
@@ -576,9 +584,9 @@ const CreatePost = () => {
                           style={styles.uploadContainer}>
                           <Image
                             style={styles.imageSelect}
-                            source={require('../../../assets/images/camera.png')}
+                            source={require('../../../assets/images/video-player.png')}
                           />
-                          <Text style={{ fontSize: 16 }}>Upload video</Text>
+                          <Text style={{ fontSize: 16 }}>Video chi tiết</Text>
                         </TouchableOpacity>
                       )
                         :
@@ -614,7 +622,15 @@ const CreatePost = () => {
                   <View></View>
                 )
               }
+              <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
+                <Text style={styles.labelText}>Thông tin sản phẩm</Text>
+                <TouchableOpacity
+                  onPress={() => console.warn("Quy Tắc")}
+                >
+                  <FontAwesome6 name="circle-question" size={14} color="gray" />
+                </TouchableOpacity>
 
+              </View>
               {/* Product Information */}
               <View style={styles.productContainer}>
                 {/* Title */}
@@ -1136,11 +1152,11 @@ const CreatePost = () => {
                   <Text style={styles.buttonText}>Đăng Bài</Text>
                 </TouchableOpacity>
               </View>
-            </View>
+            </ScrollView>
           )
         }}
       </Formik>
-    </ScrollView>
+    </View>
   );
 }
 
