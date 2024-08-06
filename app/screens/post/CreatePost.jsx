@@ -490,7 +490,7 @@ const CreatePost = () => {
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue, setFieldTouched }) => {
 
-          const total = values.price ? parseInt(values.price, 10) - FEE : '';
+          const total = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - FEE : '';
           const formatFee = formatPrice(FEE);
           const formatTotal = formatPrice(total);
 
@@ -516,7 +516,7 @@ const CreatePost = () => {
               {/* Check box */}
               <View style={styles.checkboxContainer}>
                 <View style={{ width: "100%", flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
-                  <Text style={styles.labelText}>Các mức xác minh</Text>
+                  <Text style={[styles.labelText, { marginLeft: 0 }]}>Các mức xác minh</Text>
                   <TouchableOpacity
                     onPress={() => console.warn("Quy Tắc")}
                   >
@@ -634,61 +634,55 @@ const CreatePost = () => {
               {/* Product Information */}
               <View style={styles.productContainer}>
                 {/* Title */}
-                <View style={{ marginHorizontal: 5 }}>
-                  <View>
-                    <Text style={{ fontSize: 16 }}>Tiêu đề bài đăng <Text style={{ color: 'red', fontSize: 18, fontFamily: 'bold' }}>*</Text></Text>
-                  </View>
-                  <View style={{ height: 40 }}>
-                    <TextInput
-                      value={values.title}
-                      placeholder="Nhập tiêu đề bài đăng"
-                      style={styles.inputProduct}
-                      onFocus={() => {
-                        setFieldTouched("title");
-                      }}
-                      onBlur={() => {
-                        setFieldTouched("title", "");
-                      }}
-                      onChangeText={handleChange("title")}
-                      autoCorrect={false}
-                    />
-                  </View>
+                <View style={styles.productField}>
+                  <Text style={styles.title}>Tiêu đề sản phẩm <Text style={styles.required}>*</Text></Text>
+                  <TextInput
+                    value={values.title}
+                    placeholder="..."
+                    style={styles.inputProduct}
+                    onFocus={() => {
+                      setFieldTouched("title");
+                    }}
+                    onBlur={() => {
+                      setFieldTouched("title", "");
+                    }}
+                    onChangeText={handleChange("title")}
+                    autoCorrect={false}
+                  />
                   {touched.title && errors.title && (
                     <Text style={styles.errorText}>{errors.title}</Text>
                   )}
                 </View>
-                <View style={styles.shadow}></View>
 
                 {/* Tên sản phẩm */}
-                <View style={{ marginHorizontal: 5 }}>
-                  <View>
-                    <Text style={{ fontSize: 16 }}>Tên sản phẩm <Text style={{ color: 'red', fontSize: 18, fontFamily: 'bold' }}>*</Text></Text>
-                  </View>
-                  <View style={{ height: 40 }}>
-                    <TextInput
-                      value={values.productName}
-                      placeholder="Nhập tên sản phẩm"
-                      style={styles.inputProduct}
-                      onFocus={() => {
-                        setFieldTouched("productName");
-                      }}
-                      onBlur={() => {
-                        setFieldTouched("productName", "");
-                      }}
-                      onChangeText={handleChange("productName")}
-                      autoCorrect={false}
-                    />
-                  </View>
+                <View style={styles.productField}>
+                  <Text style={styles.title}>Tên sản phẩm <Text style={styles.required}>*</Text></Text>
+                  <TextInput
+                    value={values.productName}
+                    placeholder="..."
+                    style={styles.inputProduct}
+                    onFocus={() => {
+                      setFieldTouched("productName");
+                    }}
+                    onBlur={() => {
+                      setFieldTouched("productName", "");
+                    }}
+                    onChangeText={handleChange("productName")}
+                    autoCorrect={false}
+                  />
                   {touched.productName && errors.productName && (
                     <Text style={styles.errorText}>{errors.productName}</Text>
                   )}
                 </View>
-                <View style={styles.shadow}></View>
+
 
                 {/* Brand Name */}
                 <View style={styles.dropdownContainer}>
-                  <Text style={styles.label}>Nhãn Hàng <Text style={{ color: 'red', fontSize: 18, fontFamily: 'bold' }}>*</Text></Text>
+                  <Text style={styles.label}>Nhãn Hàng <Text style={styles.required}>*</Text></Text>
                   <Dropdown
+                    placeholderStyle={{ color: "#ccc" }}
+                    iconColor={COLORS.primary}
+                    placeholder="Bấm để chọn nhãn hàng"
                     style={styles.dropdown}
                     data={listBrandName}
                     labelField="label"
@@ -703,12 +697,15 @@ const CreatePost = () => {
                     <Text style={styles.errorText}>{errors.brandName}</Text>
                   )}
                 </View>
-                <View style={styles.shadow}></View>
+
 
                 {/* Brand Line */}
                 <View style={styles.dropdownContainer}>
                   <Text style={styles.label}>Dòng Thương Hiệu</Text>
                   <Dropdown
+                    placeholderStyle={{ color: "#ccc" }}
+                    placeholder="Bấm để chọn dòng thương hiệu"
+                    iconColor={COLORS.primary}
                     style={styles.dropdown}
                     data={listBrandLines}
                     labelField="label"
@@ -720,12 +717,15 @@ const CreatePost = () => {
                     }}
                   />
                 </View>
-                <View style={styles.shadow}></View>
+
 
                 {/* Category Name */}
                 <View style={styles.dropdownContainer}>
                   <Text style={styles.label}>Thể Loại</Text>
                   <Dropdown
+                    placeholder="Bấm để chọn thể loại"
+                    placeholderStyle={{ color: "#ccc" }}
+                    iconColor={COLORS.primary}
                     style={styles.dropdown}
                     data={listCategory}
                     labelField="label"
@@ -736,12 +736,15 @@ const CreatePost = () => {
                     }}
                   />
                 </View>
-                <View style={styles.shadow}></View>
+
 
                 {/* Trạng Thái Sản Phẩm */}
                 <View style={styles.dropdownContainer}>
-                  <Text style={styles.label}>Trạng Thái Sản Phẩm <Text style={{ color: 'red', fontSize: 18, fontFamily: 'bold' }}>*</Text></Text>
+                  <Text style={styles.label}>Trạng Thái Sản Phẩm <Text style={styles.required}>*</Text></Text>
                   <Dropdown
+                    placeholder="Bấm để chọn trạng thái sản phẩm"
+                    placeholderStyle={{ color: "#ccc" }}
+                    iconColor={COLORS.primary}
                     style={styles.dropdown}
                     data={dataProductCondition}
                     labelField="label"
@@ -755,12 +758,15 @@ const CreatePost = () => {
                     <Text style={styles.errorText}>{errors.condition}</Text>
                   )}
                 </View>
-                <View style={styles.shadow}></View>
+
 
                 {/* Size */}
                 <View style={styles.dropdownContainer}>
                   <Text style={styles.label}>Kích Thước</Text>
                   <Dropdown
+                    placeholder="Bấm để chọn kích thước"
+                    placeholderStyle={{ color: "#ccc" }}
+                    iconColor={COLORS.primary}
                     style={styles.dropdown}
                     data={dataSize}
                     labelField="label"
@@ -774,300 +780,243 @@ const CreatePost = () => {
                     <Text style={styles.errorText}>{errors.size}</Text>
                   )}
                 </View>
-                <View style={styles.shadow}></View>
 
                 {/* Exterior Material */}
-                <View style={styles.viewContainer}>
-                  <View style={styles.textCenter}>
-                    <Text style={{ fontSize: 16 }}>Chất Liệu Bên Ngoài: </Text>
-                  </View>
-                  <View style={[styles.textCenter, { width: "60%" }]}>
-                    <TextInput
-                      value={values.exteriorMaterial}
-                      placeholder="Nhập chất liệu bên ngoài"
-                      style={styles.inputProduct}
-                      onFocus={() => {
-                        setFieldTouched("exteriorMaterial");
-                      }}
-                      onBlur={() => {
-                        setFieldTouched("exteriorMaterial", "");
-                      }}
-                      onChangeText={handleChange("exteriorMaterial")}
-                      autoCorrect={false}
-                    />
-                  </View>
+                <View style={styles.productField}>
+                  <Text style={styles.title}>Chất Liệu Bên Ngoài</Text>
+                  <TextInput
+                    value={values.exteriorMaterial}
+                    placeholder="VD: Da, lông, giấy,..."
+                    style={styles.inputProduct}
+                    onFocus={() => {
+                      setFieldTouched("exteriorMaterial");
+                    }}
+                    onBlur={() => {
+                      setFieldTouched("exteriorMaterial", "");
+                    }}
+                    onChangeText={handleChange("exteriorMaterial")}
+                    autoCorrect={false}
+                  />
                 </View>
-                <View style={styles.shadow}></View>
+
 
                 {/* Interior Material */}
-                <View style={styles.viewContainer}>
-                  <View style={styles.textCenter}>
-                    <Text style={{ fontSize: 16 }}>Chất Liệu Bên Trong: </Text>
-                  </View>
-                  <View style={[styles.textCenter, { width: "60%" }]}>
-                    <TextInput
-                      value={values.interiorMaterial}
-                      placeholder="Nhập chất liệu bên trong"
-                      style={styles.inputProduct}
-                      onFocus={() => {
-                        setFieldTouched("interiorMaterial");
-                      }}
-                      onBlur={() => {
-                        setFieldTouched("interiorMaterial", "");
-                      }}
-                      onChangeText={handleChange("interiorMaterial")}
-                      autoCorrect={false}
-                    />
-                  </View>
+                <View style={styles.productField}>
+                  <Text style={styles.title}>Chất Liệu Bên Trong</Text>
+                  <TextInput
+                    value={values.interiorMaterial}
+                    placeholder="VD: Da, lông, giấy,..."
+                    style={styles.inputProduct}
+                    onFocus={() => {
+                      setFieldTouched("interiorMaterial");
+                    }}
+                    onBlur={() => {
+                      setFieldTouched("interiorMaterial", "");
+                    }}
+                    onChangeText={handleChange("interiorMaterial")}
+                    autoCorrect={false}
+                  />
                 </View>
-                <View style={styles.shadow}></View>
+
 
                 {/* Width */}
-                <View style={styles.viewContainer}>
-                  <View style={styles.textCenter}>
-                    <Text style={{ fontSize: 16 }}>Chiều Rộng: </Text>
-                  </View>
-                  <View style={styles.textCenter}>
-                    <TextInput
-                      keyboardType='number-pad'
-                      value={values.width}
-                      placeholder="Nhập chiều rộng sản phẩm"
-                      style={styles.inputProduct}
-                      onFocus={() => {
-                        setFieldTouched("width");
-                      }}
-                      onBlur={() => {
-                        setFieldTouched("width", "");
-                      }}
-                      onChangeText={handleChange("width")}
-                      autoCorrect={false}
-                    />
-                  </View>
+                <View style={styles.productField}>
+                  <Text style={styles.title}>Chiều Rộng (cm):</Text>
+                  <TextInput
+                    keyboardType='number-pad'
+                    value={values.width}
+                    placeholder="Nhập chiều rộng sản phẩm"
+                    style={styles.inputProduct}
+                    onFocus={() => {
+                      setFieldTouched("width");
+                    }}
+                    onBlur={() => {
+                      setFieldTouched("width", "");
+                    }}
+                    onChangeText={handleChange("width")}
+                    autoCorrect={false}
+                  />
                 </View>
-                <View style={styles.shadow}></View>
+
 
                 {/* Height */}
-                <View style={styles.viewContainer}>
-                  <View style={styles.textCenter}>
-                    <Text style={{ fontSize: 16 }}>Chiều Cao: </Text>
-                  </View>
-                  <View style={styles.textCenter}>
-                    <TextInput
-                      keyboardType='number-pad'
-                      value={values.height}
-                      placeholder="Nhập chiều cao sản phẩm"
-                      style={styles.inputProduct}
-                      onFocus={() => {
-                        setFieldTouched("height");
-                      }}
-                      onBlur={() => {
-                        setFieldTouched("height", "");
-                      }}
-                      onChangeText={handleChange("height")}
-                      autoCorrect={false}
-                    />
-                  </View>
+                <View style={styles.productField}>
+                  <Text style={styles.title}>Chiều Cao (cm):</Text>
+                  <TextInput
+                    keyboardType='number-pad'
+                    value={values.height}
+                    placeholder="Nhập chiều cao sản phẩm"
+                    style={styles.inputProduct}
+                    onFocus={() => {
+                      setFieldTouched("height");
+                    }}
+                    onBlur={() => {
+                      setFieldTouched("height", "");
+                    }}
+                    onChangeText={handleChange("height")}
+                    autoCorrect={false}
+                  />
+
                 </View>
-                <View style={styles.shadow}></View>
+
 
                 {/* Length */}
-                <View style={styles.viewContainer}>
-                  <View style={styles.textCenter}>
-                    <Text style={{ fontSize: 16 }}>Chiều Dài: </Text>
-                  </View>
-                  <View style={styles.textCenter}>
-                    <TextInput
-                      keyboardType='number-pad'
-                      value={values.length}
-                      placeholder="Nhập chiều dài sản phẩm"
-                      style={styles.inputProduct}
-                      onFocus={() => {
-                        setFieldTouched("length");
-                      }}
-                      onBlur={() => {
-                        setFieldTouched("length", "");
-                      }}
-                      onChangeText={handleChange("length")}
-                      autoCorrect={false}
-                    />
-                  </View>
+                <View style={styles.productField}>
+                  <Text style={styles.title}>Chiều Dài (cm):</Text>
+
+                  <TextInput
+                    keyboardType='number-pad'
+                    value={values.length}
+                    placeholder="Nhập chiều dài sản phẩm"
+                    style={styles.inputProduct}
+                    onFocus={() => {
+                      setFieldTouched("length");
+                    }}
+                    onBlur={() => {
+                      setFieldTouched("length", "");
+                    }}
+                    onChangeText={handleChange("length")}
+                    autoCorrect={false}
+                  />
+
                 </View>
-                <View style={styles.shadow}></View>
 
                 {/* Reference Code */}
-                <View style={styles.viewContainer}>
-                  <View style={styles.textCenter}>
-                    <Text style={{ fontSize: 16 }}>Mã Tham Chiếu: </Text>
-                  </View>
-                  <View style={[styles.textCenter, { width: "67%" }]}>
-                    <TextInput
-                      value={values.referenceCode}
-                      placeholder="Nhập mã tham chiếu sản phẩm"
-                      style={styles.inputProduct}
-                      onFocus={() => {
-                        setFieldTouched("referenceCode");
-                      }}
-                      onBlur={() => {
-                        setFieldTouched("referenceCode", "");
-                      }}
-                      onChangeText={handleChange("referenceCode")}
-                      autoCorrect={false}
-                    />
-                  </View>
+                <View style={styles.productField}>
+                  <Text style={styles.title}>Mã Tham Chiếu: </Text>
+                  <TextInput
+                    value={values.referenceCode}
+                    placeholder="Nhập mã tham chiếu sản phẩm"
+                    style={styles.inputProduct}
+                    onFocus={() => {
+                      setFieldTouched("referenceCode");
+                    }}
+                    onBlur={() => {
+                      setFieldTouched("referenceCode", "");
+                    }}
+                    onChangeText={handleChange("referenceCode")}
+                    autoCorrect={false}
+                  />
                 </View>
-                <View style={styles.shadow}></View>
 
                 {/* manufactureYear */}
-                <View style={styles.viewContainer}>
-                  <View style={styles.textCenter}>
-                    <Text style={{ fontSize: 16 }}>Năm Sản Xuất: </Text>
-                  </View>
-                  <View style={[styles.textCenter, { width: "65%" }]}>
-                    <TextInput
-                      keyboardType='number-pad'
-                      value={values.manufactureYear}
-                      placeholder="VD: 2024"
-                      style={styles.inputProduct}
-                      onFocus={() => {
-                        setFieldTouched("manufactureYear");
-                      }}
-                      onBlur={() => {
-                        setFieldTouched("manufactureYear", "");
-                      }}
-                      onChangeText={handleChange("manufactureYear")}
-                      autoCorrect={false}
-                    />
-                  </View>
+                <View style={styles.productField}>
+                  <Text style={styles.title}>Năm Sản Xuất: </Text>
+                  <TextInput
+                    keyboardType='number-pad'
+                    value={values.manufactureYear}
+                    placeholder="VD: 2024"
+                    style={styles.inputProduct}
+                    onFocus={() => {
+                      setFieldTouched("manufactureYear");
+                    }}
+                    onBlur={() => {
+                      setFieldTouched("manufactureYear", "");
+                    }}
+                    onChangeText={handleChange("manufactureYear")}
+                    autoCorrect={false}
+                  />
                 </View>
-                <View style={styles.shadow}></View>
 
                 {/* color */}
-                <View style={styles.viewContainer}>
-                  <View style={styles.textCenter}>
-                    <Text style={{ fontSize: 16 }}>Màu Sắc: </Text>
-                  </View>
-                  <View style={[styles.textCenter, { width: "78%" }]}>
-                    <TextInput
-                      value={values.color}
-                      placeholder="Nhập màu sắc của sản phẩm"
-                      style={styles.inputProduct}
-                      onFocus={() => {
-                        setFieldTouched("color");
-                      }}
-                      onBlur={() => {
-                        setFieldTouched("color", "");
-                      }}
-                      onChangeText={handleChange("color")}
-                      autoCorrect={false}
-                    />
-                  </View>
+                <View style={styles.productField}>
+                  <Text style={styles.title}>Màu Sắc: </Text>
+                  <TextInput
+                    value={values.color}
+                    placeholder="Nhập màu sắc của sản phẩm"
+                    style={styles.inputProduct}
+                    onFocus={() => {
+                      setFieldTouched("color");
+                    }}
+                    onBlur={() => {
+                      setFieldTouched("color", "");
+                    }}
+                    onChangeText={handleChange("color")}
+                    autoCorrect={false}
+                  />
                 </View>
-                <View style={styles.shadow}></View>
 
                 {/* accessories */}
-                <View style={styles.viewContainer}>
-                  <View style={styles.textCenter}>
-                    <Text style={{ fontSize: 16 }}>Phụ kiện sản phẩm: </Text>
-                  </View>
-                  <View style={[styles.textCenter, { width: "62%" }]}>
-                    <TextInput
-                      value={values.accessories}
-                      placeholder="Nhập phụ kiện (nếu có)"
-                      style={styles.inputProduct}
-                      onFocus={() => {
-                        setFieldTouched("accessories");
-                      }}
-                      onBlur={() => {
-                        setFieldTouched("accessories", "");
-                      }}
-                      onChangeText={handleChange("accessories")}
-                      autoCorrect={false}
-                    />
-                  </View>
+                <View style={styles.productField}>
+                  <Text style={styles.title}>Phụ kiện sản phẩm: </Text>
+                  <TextInput
+                    value={values.accessories}
+                    placeholder="Nhập phụ kiện (nếu có)"
+                    style={styles.inputProduct}
+                    onFocus={() => {
+                      setFieldTouched("accessories");
+                    }}
+                    onBlur={() => {
+                      setFieldTouched("accessories", "");
+                    }}
+                    onChangeText={handleChange("accessories")}
+                    autoCorrect={false}
+                  />
                 </View>
-                <View style={styles.shadow}></View>
 
                 {/* Date Code */}
-                <View style={styles.viewContainer}>
-                  <View style={styles.textCenter}>
-                    <Text style={{ fontSize: 16 }}>Date Code: </Text>
-                  </View>
-                  <View style={[styles.textCenter, { width: "75%" }]}>
-                    <TextInput
-                      value={values.dateCode}
-                      placeholder="Nhập Date Code (nếu có)"
-                      style={styles.inputProduct}
-                      onFocus={() => {
-                        setFieldTouched("dateCode");
-                      }}
-                      onBlur={() => {
-                        setFieldTouched("dateCode", "");
-                      }}
-                      onChangeText={handleChange("dateCode")}
-                      autoCorrect={false}
-                    />
-                  </View>
+                <View style={styles.productField}>
+                  <Text style={styles.title}>Date Code: </Text>
+                  <TextInput
+                    value={values.dateCode}
+                    placeholder="Nhập Date Code (nếu có)"
+                    style={styles.inputProduct}
+                    onFocus={() => {
+                      setFieldTouched("dateCode");
+                    }}
+                    onBlur={() => {
+                      setFieldTouched("dateCode", "");
+                    }}
+                    onChangeText={handleChange("dateCode")}
+                    autoCorrect={false}
+                  />
                 </View>
-                <View style={styles.shadow}></View>
 
                 {/* Serial Number */}
-                <View style={styles.viewContainer}>
-                  <View style={styles.textCenter}>
-                    <Text style={{ fontSize: 16 }}>Số sê-ri: </Text>
-                  </View>
-                  <View style={[styles.textCenter, { width: "80%" }]}>
-                    <TextInput
-                      value={values.serialNumber}
-                      placeholder="VD: #Gucci-012"
-                      style={styles.inputProduct}
-                      onFocus={() => {
-                        setFieldTouched("serialNumber");
-                      }}
-                      onBlur={() => {
-                        setFieldTouched("serialNumber", "");
-                      }}
-                      onChangeText={handleChange("serialNumber")}
-                      autoCorrect={false}
-                    />
-                  </View>
+                <View style={styles.productField}>
+                  <Text style={styles.title}>Số seri: </Text>
+                  <TextInput
+                    value={values.serialNumber}
+                    placeholder="VD: Gucci-012"
+                    style={styles.inputProduct}
+                    onFocus={() => {
+                      setFieldTouched("serialNumber");
+                    }}
+                    onBlur={() => {
+                      setFieldTouched("serialNumber", "");
+                    }}
+                    onChangeText={handleChange("serialNumber")}
+                    autoCorrect={false}
+                  />
                 </View>
-                <View style={styles.shadow}></View>
 
                 {/* Purchased Place */}
-                <View style={styles.viewContainer}>
-                  <View style={styles.textCenter}>
-                    <Text style={{ fontSize: 16 }}>Nơi Mua Sản Phẩm: </Text>
-                  </View>
-                  <View style={[styles.textCenter, { width: "60%" }]}>
-                    <TextInput
-                      value={values.purchasedPlace}
-                      placeholder="Nhập địa điểm"
-                      style={styles.inputProduct}
-                      onFocus={() => {
-                        setFieldTouched("purchasedPlace");
-                      }}
-                      onBlur={() => {
-                        setFieldTouched("purchasedPlace", "");
-                      }}
-                      onChangeText={handleChange("purchasedPlace")}
-                      autoCorrect={false}
-                    />
-                  </View>
+                <View style={styles.productField}>
+                  <Text style={styles.title}>Nơi Mua Sản Phẩm: </Text>
+                  <TextInput
+                    value={values.purchasedPlace}
+                    placeholder="Nhập địa điểm"
+                    style={styles.inputProduct}
+                    onFocus={() => {
+                      setFieldTouched("purchasedPlace");
+                    }}
+                    onBlur={() => {
+                      setFieldTouched("purchasedPlace", "");
+                    }}
+                    onChangeText={handleChange("purchasedPlace")}
+                    autoCorrect={false}
+                  />
                 </View>
-                <View style={styles.shadow}></View>
-
-              </View>
-
-              {/* Product Description */}
-              <View style={styles.productDescriptionContainer}>
-                <View style={{ marginVertical: 10 }}>
-                  <Text style={{ fontSize: 16 }}>Mô Tả Sản Phẩm</Text>
-                </View>
-                <View style={{ height: 40, width: "100%" }}>
+                {/* Product Description */}
+                <View style={styles.productField}>
+                  <Text style={styles.title}>Mô Tả Sản Phẩm:</Text>
                   <TextInput
                     value={values.description}
                     placeholder="Nhập mô tả sản phẩm"
-                    style={styles.inputProduct}
+                    style={[styles.inputProduct, { height: 150, textAlignVertical: 'top', backgroundColor: '#f9f9f9', paddingTop: 10, marginTop: 10 }]}
+                    editable
+                    multiline
+                    maxLength={5000}
                     onFocus={() => {
                       setFieldTouched("description");
                     }}
@@ -1080,72 +1029,59 @@ const CreatePost = () => {
                 </View>
               </View>
 
+
+
               {/* Shipping information */}
               <View style={styles.shippingInformation}>
-                <View style={{ marginVertical: 10 }}>
-                  <Text style={{ fontSize: 16 }}>Thông Tin Vận Chuyển</Text>
-                </View>
+                <Text style={styles.labelText}>Thông Tin Thanh Toán</Text>
                 <TouchableOpacity
-                  onPress={() => console.warn('Quy tắc')}
-                  style={{ flexDirection: 'row', marginTop: 10 }}>
-                  <AntDesign
-                    name="questioncircle"
-                    size={20}
-                    color="#5e5b55"
-                  />
-                  <Text style={{ marginLeft: 10, fontSize: 16 }}>Quy tắc</Text>
+                  onPress={() => console.warn("Quy Tắc")}
+                >
+                  <FontAwesome6 name="circle-question" size={14} color="gray" />
                 </TouchableOpacity>
               </View>
 
-              <View style={{ marginVertical: 20 }}>
+              <View style={styles.summary}>
                 {/* price */}
-                <View style={styles.viewContainer}>
-                  <View style={styles.textCenter}>
-                    <Text style={{ fontSize: 16 }}>Giá Tiền: <Text style={{ color: 'red', fontSize: 18, fontFamily: 'bold' }}>* </Text></Text>
-                  </View>
-                  <View style={[styles.textCenter, { width: "70%" }]}>
-                    <TextInput
-                      keyboardType='number-pad'
-                      value={values.price}
-                      placeholder="Nhập giá tiền"
-                      style={styles.inputProduct}
-                      onFocus={() => {
-                        setFieldTouched("price");
-                      }}
-                      onBlur={() => {
-                        setFieldTouched("price", "");
-                      }}
-                      onChangeText={handleChange("price")}
-                      autoCorrect={false}
-                    />
-                  </View>
+                <View style={styles.productField}>
+                  <Text style={styles.title}>Giá Tiền (VND) <Text style={styles.required}>*</Text></Text>
+                  <TextInput
+                    keyboardType='number-pad'
+                    value={values.price}
+                    placeholder="Nhập giá tiền"
+                    style={[styles.inputProduct, { color: "red" }]}
+                    onFocus={() => {
+                      setFieldTouched("price");
+                    }}
+                    onBlur={() => {
+                      setFieldTouched("price", "");
+                    }}
+                    onChangeText={(text) => {
+                      const numericText = text.replace(/\./g, "");
+                      const formatted = formatPrice(numericText);
+                      setFieldValue("price", formatted);
+                    }}
+                    autoCorrect={false}
+                  />
                 </View>
                 {touched.price && errors.price && (
                   <Text style={[styles.errorText, { marginLeft: 5, marginTop: 5 }]}>{errors.price}</Text>
                 )}
-                <View style={styles.shadow}></View>
 
                 {/* Fee */}
-                <View style={styles.viewContainer}>
-                  <View style={styles.textCenter}>
-                    <Text style={{ fontSize: 16 }}>Phí Sàn: <Text style={{ color: 'blue' }}>Miễn phí</Text></Text>
-                  </View>
-                </View>
-                <View style={styles.shadow}></View>
+                {/* <View style={styles.productField}>
+                  <Text style={{ fontSize: 16 }}>: <Text style={{ color: 'blue' }}>Miễn phí</Text></Text>
+                </View> */}
               </View>
 
               {/* Thành Tiền */}
-              <View style={{ marginTop: -20 }}>
-                <View style={styles.viewContainer}>
-                  <View style={styles.textCenter}>
-                    <Text style={{ fontSize: 16 }}>Tiền: <Text style={{ color: 'red', paddingLeft: 25 }}>{formatTotal}VND</Text></Text>
-                  </View>
-
+              {/* <View style={{ marginTop: -20 }}>
+                <View style={styles.productField}>
+                  <Text style={{ fontSize: 16 }}>Tiền: <Text style={{ color: 'red', paddingLeft: 25 }}>{formatTotal}VND</Text></Text>
                 </View>
-                <View style={styles.shadow}></View>
-              </View>
+              </View> */}
 
-              <View style={{ marginTop: 30 }}>
+              <View style={styles.buttonWrapper}>
                 <TouchableOpacity style={styles.button}
                   onPress={handleSubmit}
                 >

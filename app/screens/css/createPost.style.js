@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "flex-end",
-        paddingBottom:5
+        paddingBottom: 5
     },
     textName: {
         width: windowWidth,
@@ -52,7 +52,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: COLORS.gray,
         // marginHorizontal: 20,
-        marginVertical: 5
+        marginVertical: 5,
+        marginLeft:10
     },
     //Image Upload
     imageUploadContaniner: {
@@ -94,12 +95,6 @@ const styles = StyleSheet.create({
         top: 3,
         left: 18
     },
-
-    viewContainer: {
-        flexDirection: 'row',
-        marginHorizontal: 5,
-        width: "100%",
-    },
     //error message
     errorMessage: {
         color: COLORS.red,
@@ -118,7 +113,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginHorizontal: 'auto',
         gap: 10,
-        marginBottom:10
+        marginBottom: 10
     },
     checkboxView: {
         height: 50,
@@ -189,40 +184,54 @@ const styles = StyleSheet.create({
 
     //Product Information
     productContainer: {
-        width: Dimensions.get('window').width,
-        backgroundColor: COLORS.lightWhite,
+        width: "96%",
+        marginHorizontal: "auto",
+        backgroundColor: COLORS.white,
+        borderRadius: 10,
+    },
+    productField:{
+        width: "100%",
+        marginTop:10
     },
     inputProduct: {
-        flex: 1,
-        width: "100%",
-        marginVertical: 5,
+        width: "94%",
+        marginHorizontal: "auto",
+        marginBottom: 10,
+        height: 40,
+        borderColor: "#ddd",
+        borderBottomWidth: 1,
         fontSize: 16,
     },
     //Brand Name: Tên Nhãn Hiệu
     dropdownContainer: {
-        paddingHorizontal: 10,
-    },
-    label: {
-        marginBottom: 10,
-        fontSize: 16,
+        width: "94%",
+        marginHorizontal: "auto",
     },
     dropdown: {
-        marginBottom: 20,
+        marginBottom: 10,
         height: 50,
-        borderColor: 'gray',
-        borderWidth: 1,
-        borderRadius: 8,
-        paddingHorizontal: 8,
+        borderColor: "#ddd",
+        borderBottomWidth: 1,
     },
+    label: {
+        fontSize: 16,
+    },
+    required: {
+        color: 'red',
+        fontSize: 18,
+        fontFamily: 'bold'
+    },
+
     errorText: {
         fontSize: 14,
         color: 'red',
+        marginLeft: 10,
     },
 
-    //Exterior Color, Interior Color, width, height, length, Reference Code
-    textCenter: {
-        alignItems: 'center',
-        justifyContent: 'center',
+    title: {
+        fontSize: 16,
+        marginLeft: 10,
+        // marginBottom:-5
     },
 
     //Product Detail
@@ -255,13 +264,25 @@ const styles = StyleSheet.create({
 
     // Shipping information
     shippingInformation: {
-        width: Dimensions.get('window').width,
+        width: "98%",
         height: 50,
-        backgroundColor: '#dbd9d9',
-        paddingHorizontal: 10,
         paddingTop: 10,
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        gap:5,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+    },
+    summary: {
+        width: "96%",
+        marginHorizontal: "auto",
+        backgroundColor: COLORS.white,
+        borderRadius: 10,
+    },
+    buttonWrapper: {
+        width: "100%",
+        backgroundColor: COLORS.white,
+        marginBottom:100,
+        marginTop:50
     },
 
     button: {
