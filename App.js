@@ -21,13 +21,10 @@ import OTPVerification from './app/screens/forgot password/OTPVerification';
 import ResetPassword from './app/screens/forgot password/ResetPassword';
 import PostDetail from './app/screens/post/PostDetail';
 import Onboarding from './app/components/Onboarding';
-import PosterInformation from './app/screens/posterInformation/PosterInformation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Profile from './app/screens/Profile';
-import { LoginContext, LoginProvider } from './app/context/LoginContext';
 import ChangePassword from './app/screens/change password/ChangePassword';
 import UpdateProfile from './app/screens/profile/UpdateProfile';
-import CreatePostDetail from './app/screens/post/CreatePostDetail';
 import News from './app/screens/news/News';
 import Slider from './app/screens/home/Slider';
 import Search from './app/screens/Search';
@@ -53,20 +50,18 @@ import FaceMatch from './app/screens/verify/FaceMatch';
 import ScanBackIDScreen from './app/screens/verify/ScanBackIDScreen';
 import ScanFontIDScreen from './app/screens/verify/ScanFontIDScreen';
 import AddRating from './app/screens/payment/AddRating';
-
 import Notification from './app/screens/notification/Notification';
 import { NotificationProvider } from './app/context/NotificationContext';
-
-import { UserProvider } from './app/context/UserContext';
 import SellerOrderDetails from './app/screens/payment/SellerOrderDetails';
-
-
 import { AuthProvider } from './app/context/AuthContext';
 import OrderTracking from './app/screens/payment/OrderTracking';
 import Following from './app/screens/profile/Following';
 import Followers from './app/screens/profile/Followers';
 import Appreciation from './app/screens/profile/Appreciation';
 import Summary from './app/screens/profile/Summary';
+import CreatePostGuide from './app/screens/post/CreatePostGuide';
+import CreatePost from './app/screens/post/CreatePost';
+import QuickCreatePost from './app/screens/post/QuickCreatePost';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -212,12 +207,6 @@ export default function App() {
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
-                  name='poster-information'
-                  component={PosterInformation}
-                  options={{ headerShown: false }}
-                />
-
-                <Stack.Screen
                   name='user-profile-details'
                   component={UserProfile}
                   options={{ headerShown: false }}
@@ -243,11 +232,6 @@ export default function App() {
                 <Stack.Screen
                   name='list-all-brand'
                   component={ListBrands}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='create-post-details'
-                  component={CreatePostDetail}
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
@@ -352,6 +336,16 @@ export default function App() {
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
+                  name="create-post"
+                  component={CreatePost}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="quick-create-post"
+                  component={QuickCreatePost}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
                   name="update-post"
                   component={UpdatePost}
                   options={{ headerShown: false }}
@@ -389,6 +383,11 @@ export default function App() {
                 <Stack.Screen
                   name='appreciation'
                   component={Appreciation}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='create-post-guide'
+                  component={CreatePostGuide}
                   options={{ headerShown: false }}
                 />
               </Stack.Navigator>

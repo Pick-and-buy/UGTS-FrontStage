@@ -3,57 +3,63 @@ import {
     Dimensions,
 } from "react-native";
 import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
-
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 60,
-        marginBottom: 100,
-        backgroundColor: '#f0f2f5'
+        width: windowWidth,
+        height: windowHeight,
+        backgroundColor: COLORS.background
     },
-    viewContainer: {
-        flexDirection: 'row',
-        marginHorizontal: 5,
-        width: "100%",
-    },
-    //error message
-    errorMessage: {
-        color: COLORS.red,
-        fontFamily: "regular",
-        marginTop: 5,
-        marginLeft: 5,
-        fontSize: SIZES.xSmall
+    wrapper: {
+        width: "98%",
+        // marginTop: 40,
+        // marginBottom: 100,
+        backgroundColor: COLORS.background,
+        marginHorizontal: "auto"
     },
     // Header
     headerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 20,
-        marginBottom: 10,
-        paddingLeft: 10
+        width: "100%",
+        height: "10%",
+        backgroundColor: COLORS.white,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "flex-end",
+        paddingBottom: 5
     },
     textName: {
-        fontSize: 25,
+        width: windowWidth,
+        fontSize: 20,
         fontFamily: 'bold',
         color: COLORS.black,
         textAlign: 'center',
-        paddingLeft: 30
+    },
+    backButton: {
+        position: 'absolute',
+        top: 50,
+        left: 20,
+        zIndex: 999
     },
     //Space
     shadow: {
-        borderWidth: 1,
-        borderColor: '#C0C0C0',
-        backgroundColor: '#D3D3D3',
-        width: Dimensions.get('window').width,
-        marginVertical: 5
+        height: 3,
+        backgroundColor: "#F3F3F3",
+        // marginTop: 15
+    },
+    labelText: {
+        fontSize: 16,
+        color: COLORS.gray,
+        // marginHorizontal: 20,
+        marginVertical: 5,
+        marginLeft:10
     },
     //Image Upload
     imageUploadContaniner: {
-        marginVertical: 20,
-        width: Dimensions.get('window').width,
-        height: 210,
-        backgroundColor: '#dbd9d9',
-        paddingLeft: 5
+        width: windowWidth,
+        height: 150,
+        backgroundColor: COLORS.white,
     },
     imageUpload: {
         flexDirection: "row",
@@ -63,9 +69,8 @@ const styles = StyleSheet.create({
         marginHorizontal: 'auto'
     },
     image: {
-        // position: 'relative',
-        width: Dimensions.get('window').width / 5,
-        height: Dimensions.get('window').width / 4.7,
+        width: windowWidth / 5,
+        height: windowWidth / 4.7,
         backgroundColor: COLORS.lightWhite,
         borderRadius: 5,
         alignItems: 'center',
@@ -90,59 +95,63 @@ const styles = StyleSheet.create({
         top: 3,
         left: 18
     },
+    //error message
+    errorMessage: {
+        color: COLORS.red,
+        fontFamily: "regular",
+        marginTop: 5,
+        marginLeft: 5,
+        fontSize: SIZES.xSmall
+    },
 
     //Check box
     checkboxContainer: {
-        flex: 1,
-        marginBottom: 30,
+        width: "96%",
         flexDirection: "row",
+        flexWrap: "wrap",
         alignItems: 'center',
         justifyContent: 'center',
         marginHorizontal: 'auto',
-        gap: 10
+        gap: 10,
+        marginBottom: 10
     },
     checkboxView: {
+        height: 50,
+        width: "48%",
+        flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        // borderWidth: 1, 
-        width: '30%',
-        height: "100%",
         borderRadius: 10,
         backgroundColor: '#fff',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: -5 },
-        shadowOpacity: 0.2,
-        shadowRadius: 10,
-        
+        gap: 5,
     },
     textVerified: {
-        marginTop: 10,
         textAlign: 'center'
     },
 
-    //Upload Image by gallery and Camera Option
-    selectOption: {
-        flexDirection: 'row',
-        marginBottom: 20,
-        marginHorizontal: "5%",
-        gap: 20,
-    },
     uploadContainer: {
-        flexDirection: 'column',
-        borderWidth: 2,
-        borderRadius: 20,
-        width: '45%',
-        backgroundColor: 'white',
-        borderColor: COLORS.lightWhite,
-        ...SHADOWS.medium,
+        width: '48%',
+        borderRadius: 10,
+        flexDirection: 'row',
+        backgroundColor: COLORS.white,
+        ...SHADOWS.small,
         justifyContent: "center",
         alignItems: "center",
-        height: Dimensions.get('window').width / 3,
+        marginHorizontal: 'auto',
+        gap: 10,
+        padding: 10,
     },
     imageSelect: {
-        marginVertical: 10,
+        width: 30,
+        height: 30,
     },
-
+    //Upload Image by gallery and Camera Option
+    selectOption: {
+        width: "100%",
+        flexDirection: 'row',
+        // marginBottom: 20,
+        gap: 10,
+    },
     //Upload Invoice
     uploadInvoiceContainer: {
         width: '45%',
@@ -175,40 +184,54 @@ const styles = StyleSheet.create({
 
     //Product Information
     productContainer: {
-        width: Dimensions.get('window').width,
-        backgroundColor: COLORS.lightWhite,
+        width: "96%",
+        marginHorizontal: "auto",
+        backgroundColor: COLORS.white,
+        borderRadius: 10,
+    },
+    productField:{
+        width: "100%",
+        marginTop:10
     },
     inputProduct: {
-        flex: 1,
-        width: "100%",
-        marginVertical: 5,
+        width: "94%",
+        marginHorizontal: "auto",
+        marginBottom: 10,
+        height: 40,
+        borderColor: "#ddd",
+        borderBottomWidth: 1,
         fontSize: 16,
     },
     //Brand Name: Tên Nhãn Hiệu
     dropdownContainer: {
-        paddingHorizontal: 10,
-    },
-    label: {
-        marginBottom: 10,
-        fontSize: 16,
+        width: "94%",
+        marginHorizontal: "auto",
     },
     dropdown: {
-        marginBottom: 20,
+        marginBottom: 10,
         height: 50,
-        borderColor: 'gray',
-        borderWidth: 1,
-        borderRadius: 8,
-        paddingHorizontal: 8,
+        borderColor: "#ddd",
+        borderBottomWidth: 1,
     },
+    label: {
+        fontSize: 16,
+    },
+    required: {
+        color: 'red',
+        fontSize: 18,
+        fontFamily: 'bold'
+    },
+
     errorText: {
         fontSize: 14,
         color: 'red',
+        marginLeft: 10,
     },
 
-    //Exterior Color, Interior Color, width, height, length, Reference Code
-    textCenter: {
-        alignItems: 'center',
-        justifyContent: 'center',
+    title: {
+        fontSize: 16,
+        marginLeft: 10,
+        // marginBottom:-5
     },
 
     //Product Detail
@@ -241,13 +264,25 @@ const styles = StyleSheet.create({
 
     // Shipping information
     shippingInformation: {
-        width: Dimensions.get('window').width,
+        width: "98%",
         height: 50,
-        backgroundColor: '#dbd9d9',
-        paddingHorizontal: 10,
         paddingTop: 10,
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        gap:5,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+    },
+    summary: {
+        width: "96%",
+        marginHorizontal: "auto",
+        backgroundColor: COLORS.white,
+        borderRadius: 10,
+    },
+    buttonWrapper: {
+        width: "100%",
+        backgroundColor: COLORS.white,
+        marginBottom:100,
+        marginTop:50
     },
 
     button: {
@@ -273,21 +308,21 @@ const styles = StyleSheet.create({
         padding: 20,
         borderRadius: 10,
         alignItems: "center",
-      },
-      modalText: {
+    },
+    modalText: {
         fontSize: SIZES.large,
         textAlign: "center",
         marginBottom: 20,
-      },
-      modalButton: {
+    },
+    modalButton: {
         backgroundColor: COLORS.primary,
         padding: 10,
         borderRadius: 5,
-      },
-      modalButtonText: {
+    },
+    modalButtonText: {
         color: COLORS.white,
         fontSize: SIZES.medium,
-      },
+    },
 })
 
 export default styles;
