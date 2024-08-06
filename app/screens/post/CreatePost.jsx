@@ -25,7 +25,6 @@ import { createPost_Level_1, createPost_Level_2 } from "../../api/post";
 import { getAllCategoriesByBrandLineName } from "../../api/category";
 import { getAllBrandLinesByBrandName } from "../../api/brandLine";
 import * as ImagePicker from "expo-image-picker";
-import Button from "../../components/Button";
 import { Video } from 'expo-av';
 import Checkbox from 'expo-checkbox';
 

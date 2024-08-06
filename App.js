@@ -61,6 +61,7 @@ import Appreciation from './app/screens/profile/Appreciation';
 import Summary from './app/screens/profile/Summary';
 import CreatePostGuide from './app/screens/post/CreatePostGuide';
 import CreatePost from './app/screens/post/CreatePost';
+import QuickCreatePost from './app/screens/post/QuickCreatePost';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -337,6 +338,11 @@ export default function App() {
                 <Stack.Screen
                   name="create-post"
                   component={CreatePost}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="quick-create-post"
+                  component={QuickCreatePost}
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen

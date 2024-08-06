@@ -28,7 +28,7 @@ const CreatePostGuide = ({ navigation }) => {
             <View style={styles.optionsWrapper}>
                 <Text style={styles.title}>Tùy chọn</Text>
                 <View style={styles.options}>
-                    <TouchableOpacity style={styles.option}>
+                    <TouchableOpacity style={styles.option} onPress={() => navigation.navigate("quick-create-post")}>
                         <FontAwesome6 name="bolt-lightning" size={28} color="black" />
                         <Text style={styles.text}>Đăng bài nhanh</Text>
                     </TouchableOpacity>
