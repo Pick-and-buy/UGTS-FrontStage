@@ -21,7 +21,9 @@ const Profile = ({ navigation }) => {
   const bkImg = "https://d326fntlu7tb1e.cloudfront.net/uploads/ab6356de-429c-45a1-b403-d16f7c20a0bc-bkImg-min.png";
 
   useEffect(() => {
-    fetchRatings();
+    if (user) {
+      fetchRatings();
+    }
   }, [user]);
 
   const fetchRatings = async () => {
