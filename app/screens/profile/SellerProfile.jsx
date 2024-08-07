@@ -10,7 +10,7 @@ import {
     RefreshControl,
     Alert
 } from "react-native";
-import { MaterialCommunityIcons, Feather, AntDesign, Octicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Feather, AntDesign, Octicons, MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from "../../constants/theme";
 import { Rating } from 'react-native-stock-star-rating';
 import Post from "../post/Post";
