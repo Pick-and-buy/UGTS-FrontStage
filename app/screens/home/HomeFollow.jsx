@@ -16,7 +16,7 @@ import { COLORS } from "../../constants/theme";
 
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
-const HomeExplore = ({ navigation }) => {
+const HomeFollow = ({ navigation }) => {
     const [user, setUser] = useState(null);
     const [followings, setFollowings] = useState([]);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -145,7 +145,7 @@ const HomeExplore = ({ navigation }) => {
     );
 };
 
-export default HomeExplore;
+export default HomeFollow;
 
 const styles = StyleSheet.create({
     container: {

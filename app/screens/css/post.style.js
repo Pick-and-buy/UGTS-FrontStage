@@ -1,12 +1,17 @@
-import { StyleSheet } from "react-native";
+import {
+    StyleSheet,
+    Dimensions,
+} from "react-native";
 import { COLORS, SHADOWS } from "../../constants/theme";
-
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
     container: {
-        width: 130,
-        height: 130,
+        width: (windowWidth / 3) - 12,
+        height: (windowWidth / 3) - 12,
         borderRadius: 10,
         overflow: 'hidden',
+        margin: 4.6, // Added margin between posts
     },
     wrapper: {
         width: "100%",
@@ -19,17 +24,6 @@ const styles = StyleSheet.create({
         flex: 1,
         resizeMode: 'cover',
         justifyContent: 'center',
-    },
-    triangle: {
-        width: 0,
-        height: 0,
-        backgroundColor: 'transparent',
-        borderStyle: 'solid',
-        borderBottomWidth: 50,
-        borderLeftWidth: 50,
-        borderBottomColor: 'transparent',
-        borderLeftColor: COLORS.primary,
-        borderLeftRadius: 10
     },
     label: {
         position: 'absolute',
