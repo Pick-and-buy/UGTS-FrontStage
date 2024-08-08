@@ -299,22 +299,12 @@ const QuickCreatePost = () => {
                     brandLineName: '',
                     condition: '',
                     category: '',
-                    exteriorMaterial: '',
-                    interiorMaterial: '',
                     size: '',
-                    width: '',
-                    height: '',
-                    length: '',
-                    referenceCode: '',
-                    manufactureYear: '',
                     color: '',
-                    accessories: '',
-                    dateCode: '',
-                    serialNumber: '',
-                    purchasedPlace: '',
-                    story: '',
                     description: '',
                     price: '',
+                    exteriorMaterial: '', 
+                    interiorMaterial: ''
                 })
             } else {
                 Alert.alert(
@@ -476,9 +466,8 @@ const QuickCreatePost = () => {
             <Formik
                 initialValues={{
                     title: '', productName: '', brandName: '', brandLineName: '', condition: '',
-                    category: '', exteriorMaterial: '', interiorMaterial: '', size: '', width: '',
-                    height: '', length: '', referenceCode: '', manufactureYear: '', color: '',
-                    accessories: '', dateCode: '', serialNumber: '', purchasedPlace: '', description: '', price: '',
+                    category: '', exteriorMaterial: '', interiorMaterial: '', size: '', color: '',
+                    description: '', price: '',
                 }}
                 validationSchema={validationSchema}
                 onSubmit={handleCreatePost}
