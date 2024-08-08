@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     },
     notificationItem: {
         width: "96%",
-        height: 55,
+        minHeight: 65,
         marginHorizontal: "auto",
         backgroundColor: COLORS.white,
         flexDirection: "row",
@@ -43,11 +43,10 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginTop: 10,
         ...SHADOWS.medium,
-        // backgroundColor:"#e6f2ff"
     },
     image: {
-        width: 45,
-        height: 45,
+        width: 55,
+        height: 55,
         borderRadius: 50,
         marginLeft: 10,
         marginRight: 10,
