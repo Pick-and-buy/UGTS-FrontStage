@@ -124,8 +124,6 @@ const styles = StyleSheet.create({
         flexWrap: "wrap",
         justifyContent: "flex-start",
         alignItems: "center",
-        gap: 6,
-        marginHorizontal: 10,
         marginTop: 10,
         marginHorizontal: "auto",
     },
