@@ -8,12 +8,12 @@ const styles = StyleSheet.create({
     container: {
         width: windowWidth,
         height: windowHeight,
-        marginBottom: "15%",
     },
     posts: {
         width: '98%',
         marginHorizontal: "auto",
-        marginTop: 10
+        marginTop: 10,
+        marginBottom: "20%",
     },
     row: {
         width: "100%",
