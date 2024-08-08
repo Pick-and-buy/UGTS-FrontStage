@@ -161,24 +161,38 @@ const QuickCreatePost = () => {
     ];
 
     const validateImages = () => {
-        // check điều kiện khi 4 ảnh đầu có giá trị = ''
+        let valid = true;
+        let message = '';
+
+        // Kiểm tra 4 ảnh đầu tiên
         for (let i = 0; i < 4; i++) {
             if (images[i].value === '') {
-                return false;
+                valid = false;
+                message = 'Hãy tải đủ 4 ảnh đầu tiên';
+                break;
             }
         }
-        // check điều kiện khi người dùng bấm vào xác thực level 2 và ảnh hóa đơn + video bị lỗi
-        if (isChecked_2) {
-            if (invoice === '' || videoUri === '') {
-                return false;
+
+        // Kiểm tra điều kiện khi người dùng bấm vào xác thực level 2
+        if (valid && isChecked_2) {
+            if (invoice === '' && videoUri === '') {
+                valid = false;
+                message = 'Hãy cập nhật ảnh hóa đơn và video để xác thực level 2';
+            } else if (invoice === '') {
+                valid = false;
+                message = 'Hãy cập nhật ảnh hóa đơn để xác thực level 2';
+            } else if (videoUri === '') {
+                valid = false;
+                message = 'Hãy cập nhật video để xác thực level 2';
             }
         }
-        return true;
+        return { valid, message };
     };
 
     const handleCreatePost = async (values, actions) => {
         try {
-            if (validateImages() === true) {
+            const { valid, message } = validateImages();
+            if (valid) {
                 // Handle form submission here
                 let { title, brandName, productName, brandLineName, condition, category, exteriorMaterial,
                     interiorMaterial, size, width, height, length, referenceCode, manufactureYear, color, accessories, dateCode,
@@ -204,20 +218,21 @@ const QuickCreatePost = () => {
                         price: calculatedPrice,
                         color: color,
                         size: size,
-                        width: width,
-                        height: height,
-                        length: length,
-                        referenceCode: referenceCode,
-                        manufactureYear: manufactureYear,
+                        width: '',
+                        height: '',
+                        length: '',
+                        referenceCode: '',
+                        manufactureYear: '',
                         exteriorMaterial: exteriorMaterial,
                         interiorMaterial: interiorMaterial,
-                        accessories: accessories,
-                        dateCode: dateCode,
-                        serialNumber: serialNumber,
-                        purchasedPlace: purchasedPlace,
+                        accessories: '',
+                        dateCode: '',
+                        serialNumber: '',
+                        purchasedPlace: '',
                         story: '',
                     },
                     condition: condition,
+                    boosted: true,
                 };
 
                 formData.append('request', JSON.stringify(request));
@@ -302,33 +317,11 @@ const QuickCreatePost = () => {
                     price: '',
                 })
             } else {
-                if (isChecked_2) {
-                    if (!invoice && !videoUri) {
-                        Alert.alert(
-                            "Thiếu thông tin",
-                            "Hãy cập nhật ảnh hóa đơn và video",
-                            [{ text: "OK" }]
-                        );
-                    } else if (!invoice) {
-                        Alert.alert(
-                            "Thiếu thông tin",
-                            "Hãy cập nhật ảnh hóa đơn để xác thực level 2",
-                            [{ text: "OK" }]
-                        );
-                    } else if (!videoUri) {
-                        Alert.alert(
-                            "Thiếu thông tin",
-                            "Hãy cập nhật video để xác thực level 2",
-                            [{ text: "OK" }]
-                        );
-                    }
-                } else {
-                    Alert.alert(
-                        "Thiếu thông tin",
-                        "Hãy cập nhật 4 ảnh đầu tiên có dấu *",
-                        [{ text: "OK" }]
-                    );
-                }
+                Alert.alert(
+                    "Thiếu thông tin",
+                    message,
+                    [{ text: "OK" }]
+                );
             }
         } catch (error) {
             console.error('ERROR handle create post: ', error);

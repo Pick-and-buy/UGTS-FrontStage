@@ -176,7 +176,7 @@ const CreatePost = () => {
     if (valid && isChecked_2) {
       if (invoice === '' && videoUri === '') {
         valid = false;
-        message = 'Hãy cập nhật ảnh hóa đơn và video';
+        message = 'Hãy cập nhật ảnh hóa đơn và video để xác thực level 2';
       } else if (invoice === '') {
         valid = false;
         message = 'Hãy cập nhật ảnh hóa đơn để xác thực level 2';
