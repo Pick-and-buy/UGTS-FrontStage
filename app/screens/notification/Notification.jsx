@@ -10,11 +10,16 @@ const Notification = ({ navigation }) => {
     const { user } = useAuth();
     const { notifications, markNotificationAsRead, markAllNotificationAsRead } = useNotifications();
 
-    const handleNotificationRead = async (notificationId, postId, isRead) => {
+    const handleNotificationRead = async (notificationId, notificationType, postId, orderId, isRead) => {
         if (!isRead) {
             await markNotificationAsRead(notificationId);
         }
-        navigation.navigate('post-details', { postId: postId });
+
+        if (notificationType === 'LIKE' || notificationType === 'COMMENT' || notificationType === 'POST_VERIFY') {
+            navigation.navigate('post-details', { postId: postId });
+        } else if (notificationType === 'BUY' || notificationType === 'RATE') {
+            navigation.navigate('order-details', { orderId: orderId });
+        }
     };
 
     const handleAllNotificationRead = async () => {
@@ -28,7 +33,7 @@ const Notification = ({ navigation }) => {
         return (
             <TouchableOpacity
                 style={styles.notificationItem}
-                onPress={() => handleNotificationRead(item.notificationId, item.postId, item.read)}
+                onPress={() => handleNotificationRead(item.notificationId, item.notificationType, item.postId, item.orderId, item.read)}
             >
                 <Image
                     source={{ uri: item.userFromAvatar ? item.userFromAvatar : profile }}
