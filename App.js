@@ -28,7 +28,6 @@ import UpdateProfile from './app/screens/profile/UpdateProfile';
 import News from './app/screens/news/News';
 import Slider from './app/screens/home/Slider';
 import Search from './app/screens/Search';
-import SellerProfile from './app/screens/profile/SellerProfile';
 import UserProfile from './app/screens/profile/UserProfile';
 import ListBrands from './app/screens/brand/ListBrands';
 import ListsPostOfBrandLine from './app/screens/brand/ListsPostOfBrandLine';
@@ -252,11 +251,6 @@ export default function App() {
                 <Stack.Screen
                   name='search-navigation'
                   component={Search}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='seller-profile-navigation'
-                  component={SellerProfile}
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
