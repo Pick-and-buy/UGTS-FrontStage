@@ -8,13 +8,19 @@ const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6
 
 const Notification = ({ navigation }) => {
     const { user } = useAuth();
-    const { notifications, markNotificationAsRead } = useNotifications();
+    const { notifications, markNotificationAsRead, markAllNotificationAsRead } = useNotifications();
 
     const handleNotificationRead = async (notificationId, postId, isRead) => {
         if (!isRead) {
             await markNotificationAsRead(notificationId);
         }
         navigation.navigate('post-details', { postId: postId });
+    };
+
+    const handleAllNotificationRead = async () => {
+        if (user) {
+            await markAllNotificationAsRead(user.id);
+        }
     };
 
     const renderNotificationItem = ({ item }) => {
@@ -39,11 +45,11 @@ const Notification = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                     <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
                 </TouchableOpacity>
                 <Text style={styles.headerText}>Thông báo của tôi</Text>
-                <TouchableOpacity style={styles.checkAll} onPress={() => navigation.navigate("")}>
+                <TouchableOpacity style={styles.checkAll} onPress={handleAllNotificationRead}>
                     <MaterialCommunityIcons name="check-all" size={26} color="black" />
                 </TouchableOpacity>
             </View>

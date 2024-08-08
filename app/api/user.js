@@ -246,6 +246,16 @@ export const updateNotificationsReadStatus = async (notificationId) => {
   }
 };
 
+export const updateAllNotificationsReadStatus = async (userId) => {
+  try {
+    const response = await axiosInstance.patch(`/notifications/read-all/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error update all notifications as read:', error);
+    throw error;
+  }
+};
+
 export const verifyInformation = async (user, fontData, backData, faceMatchData) => {
   try {
 
