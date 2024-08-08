@@ -43,7 +43,9 @@ const PostDetail = ({ navigation, route }) => {
     const [type, setType] = useState('buyer');
     const [ratings, setRatings] = useState();
     const [averageRating, setAverageRating] = useState(0);
-    console.log(postDetails?.user?.isVerified);
+    console.log(postDetails?.user?.id);
+
+    
     useEffect(() => {
         fetchPostDetails();
         checkAuthentication();
@@ -202,7 +204,7 @@ const PostDetail = ({ navigation, route }) => {
             setRatings(response.result);
             calculateAverageRating(response.result);
         } catch (error) {
-            console.error('Error fetching ratings in profile', error);
+            console.error('Error fetching ratings in post details', error);
         }
     };
 
