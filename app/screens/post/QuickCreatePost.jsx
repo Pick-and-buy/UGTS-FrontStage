@@ -140,8 +140,8 @@ const QuickCreatePost = () => {
         productName: Yup.string().required('Hãy nhập tên sản phẩm'),
         brandName: Yup.string().required('Hãy chọn thương hiệu'),
         condition: Yup.string().required('Hãy chọn trạng thái sản phẩm'),
-        //brandLineName: Yup.string().required('Hãy chọn dòng thương hiệu'),
-        //category: Yup.string().required('Hãy chọn thể loại'),
+        brandLineName: Yup.string().required('Hãy chọn dòng thương hiệu'),
+        category: Yup.string().required('Hãy chọn thể loại'),
         price: Yup.string().required('Hãy nhập giá tiền'),
     });
 
@@ -186,7 +186,10 @@ const QuickCreatePost = () => {
                     // dataShippingMethod, dataShippingTime, shippingAddress, fee, saleProfit,
                 } = values;
 
-                const calculatedPrice = parseInt(values.price, 10) - FEE;
+                //convert String price: VD: "12.500.000" => "12500000"
+                const convertStringPrice = values.price.replace(/\./g, '');
+                //conver String sang số nguyên hệ cơ số 10
+                const calculatedPrice = parseInt(convertStringPrice, 10) - FEE;
 
                 const formData = new FormData();
 
@@ -700,7 +703,7 @@ const QuickCreatePost = () => {
 
                                 {/* Brand Line */}
                                 <View style={styles.dropdownContainer}>
-                                    <Text style={styles.label}>Dòng Thương Hiệu</Text>
+                                    <Text style={styles.label}>Dòng Thương Hiệu <Text style={styles.required}>*</Text></Text>
                                     <Dropdown
                                         placeholderStyle={{ color: "#ccc" }}
                                         placeholder="Bấm để chọn dòng thương hiệu"
@@ -715,12 +718,15 @@ const QuickCreatePost = () => {
                                             setSelectedBrandLine(item.value);
                                         }}
                                     />
+                                    {touched.brandLineName && errors.brandLineName && (
+                                        <Text style={styles.errorText}>{errors.brandLineName}</Text>
+                                    )}
                                 </View>
 
 
                                 {/* Category Name */}
                                 <View style={styles.dropdownContainer}>
-                                    <Text style={styles.label}>Thể Loại</Text>
+                                    <Text style={styles.label}>Thể Loại <Text style={styles.required}>*</Text></Text>
                                     <Dropdown
                                         placeholder="Bấm để chọn thể loại"
                                         placeholderStyle={{ color: "#ccc" }}
@@ -734,6 +740,9 @@ const QuickCreatePost = () => {
                                             setFieldValue('category', item.value);
                                         }}
                                     />
+                                    {touched.category && errors.category && (
+                                        <Text style={styles.errorText}>{errors.category}</Text>
+                                    )}
                                 </View>
 
 

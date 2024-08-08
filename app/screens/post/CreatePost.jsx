@@ -199,7 +199,10 @@ const CreatePost = () => {
           serialNumber, purchasedPlace, description, price,
         } = values;
 
-        const calculatedPrice = parseInt(values.price, 10) - FEE;
+        //convert String price: VD: "12.500.000" => "12500000"
+        const convertStringPrice = values.price.replace(/\./g, '');
+        //conver String sang số nguyên hệ cơ số 10
+        const calculatedPrice = parseInt(convertStringPrice, 10) - FEE;
 
         const formData = new FormData();
         const request = {
