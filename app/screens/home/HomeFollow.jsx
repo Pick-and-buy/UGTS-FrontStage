@@ -13,6 +13,7 @@ import { getListsFollowing, getUserByToken } from "../../api/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Post from "../post/Post";
 import { COLORS } from "../../constants/theme";
+import styles from "../css/homeFollow.style";
 
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
@@ -68,26 +69,28 @@ const HomeFollow = ({ navigation }) => {
     };
 
     const transformData = (response) => {
-        return response.map(user => ({
-            id: user.id,
-            username: user.username,
-            avatar: user.avatar,
-            lastName: user.lastName,
-            firstName: user.firstName,
-            email: user.email,
-            phoneNumber: user.phoneNumber,
-            dob: user.dob,
-            createdPosts: user.createdPosts.map(post => ({
-                id: post.id,
-                title: post.title,
-                description: post.description,
-                isAvailable: post.isAvailable,
-                createdAt: post.createdAt,
-                updatedAt: post.updatedAt,
-                product: post.product,
-                comments: post.comments
+        return response
+            .map(user => ({
+                id: user.id,
+                username: user.username,
+                avatar: user.avatar,
+                lastName: user.lastName,
+                firstName: user.firstName,
+                email: user.email,
+                phoneNumber: user.phoneNumber,
+                dob: user.dob,
+                createdPosts: user.createdPosts.map(post => ({
+                    id: post.id,
+                    title: post.title,
+                    description: post.description,
+                    isAvailable: post.isAvailable,
+                    createdAt: post.createdAt,
+                    updatedAt: post.updatedAt,
+                    product: post.product,
+                    comments: post.comments
+                }))
             }))
-        }));
+            .filter(user => user.createdPosts.length > 0); // Only keep users who have posts
     };
 
     const handleRefresh = async () => {
@@ -147,55 +150,3 @@ const HomeFollow = ({ navigation }) => {
 
 export default HomeFollow;
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    posts: {
-        width: '98%',
-        marginHorizontal: "auto",
-        marginTop: 15
-    },
-    row: {
-        width: "100%",
-        justifyContent: "flex-start",
-        flexDirection: "row",
-        flexWrap: "wrap",
-        alignItems: "center",
-        gap: 6,
-        marginHorizontal: "auto",
-    },
-    userContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 6
-    },
-    userInfo: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    avatar: {
-        width: 25,
-        height: 25,
-        borderRadius: 25,
-        marginRight: 10,
-    },
-    userName: {
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    viewAll: {
-        fontSize: 16,
-        color: COLORS.primary,
-    },
-    emptyMessageContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    emptyMessage: {
-        fontSize: 16,
-        color: COLORS.gray,
-    },
-});
