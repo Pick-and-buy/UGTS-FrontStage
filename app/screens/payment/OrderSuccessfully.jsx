@@ -34,9 +34,6 @@ const OrderSuccessfully = ({ navigation, route }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.wrapper}>
-                <TouchableOpacity style={styles.header}>
-                    <MaterialCommunityIcons name="keyboard-backspace" size={32} color="black" />
-                </TouchableOpacity>
                 <View style={styles.notification}>
                     <Ionicons name="checkmark-circle-sharp" size={100} color="#4BE289" />
                     <Text style={styles.title}>Đặt hàng thành công</Text>
