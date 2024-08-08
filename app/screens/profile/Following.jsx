@@ -89,7 +89,7 @@ const Following = ({ navigation, route }) => {
     const UserItem = ({ item }) => {
         const isFollowing = followStatus[item.id];
         return (
-            <TouchableOpacity style={styles.user} onPress={()=> navigation.navigate("")}>
+            <TouchableOpacity style={styles.user} onPress={() => navigation.navigate("user-profile-details", { user: item, userIdLogged: user.id })}>
                 <Image
                     style={styles.avatar}
                     source={{ uri: item.avatar ? item.avatar : profile }}

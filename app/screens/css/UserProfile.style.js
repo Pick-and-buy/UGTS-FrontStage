@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     number: {
-        fontSize: 18, 
+        fontSize: 18,
         fontWeight: "600",
     },
     buttonWrapper: {
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginTop: 15,
     },
-    editBtn:{
+    editBtn: {
         backgroundColor: COLORS.primary,
         borderRadius: 5,
         paddingHorizontal: 25,
@@ -87,13 +87,15 @@ const styles = StyleSheet.create({
         color: COLORS.white
     },
     followBtn: {
-        backgroundColor: COLORS.primary,
+        backgroundColor: COLORS.white,
+        borderWidth: 1,
         borderRadius: 5,
         paddingHorizontal: 25,
         paddingVertical: 10,
+        borderColor: COLORS.primary,
     },
     followBtnText: {
-        color: COLORS.white,
+        color: COLORS.primary,
         textAlign: 'center',
         fontWeight: '500'
     },
