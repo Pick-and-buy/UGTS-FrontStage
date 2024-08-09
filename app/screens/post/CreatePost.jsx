@@ -615,6 +615,11 @@ const CreatePost = () => {
                   <View></View>
                 )
               }
+              {isChecked_3 &&
+                <View style={{ width: "80%", flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5, marginHorizontal: '10%' }}>
+                  <Text style={styles.labelText}>Mức phí để sử dụng cho việc xác minh sản phẩm từ bên thứ ba là: $20</Text>
+                </View>
+              }
               <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
                 <Text style={styles.labelText}>Thông tin sản phẩm</Text>
                 <TouchableOpacity

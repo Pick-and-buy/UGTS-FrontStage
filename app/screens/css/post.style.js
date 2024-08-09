@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
         height: (windowWidth / 3) - 12,
         borderRadius: 10,
         overflow: 'hidden',
-        margin: 4.6, // Added margin between posts
+        margin: 4.5, // Added margin between posts
     },
     wrapper: {
         width: "100%",
