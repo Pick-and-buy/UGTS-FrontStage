@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
         marginHorizontal: "auto",
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 30
+        marginTop: "30%"
     },
     title: {
         fontWeight: "bold",

@@ -24,6 +24,9 @@ const styles = StyleSheet.create({
         marginBottom: 4,
         fontWeight: "bold",
     },
+    backButton:{
+        marginLeft:"18%"
+    },
     addAddressContainer: {
         width: "100%",
         height: "5%",

@@ -66,24 +66,49 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     number: {
-        fontSize: 18
-        , fontWeight: "600",
+        fontSize: 18,
+        fontWeight: "600",
     },
     buttonWrapper: {
         width: "100%",
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 15
+        marginTop: 15,
+    },
+    editBtn: {
+        backgroundColor: COLORS.primary,
+        borderRadius: 5,
+        paddingHorizontal: 25,
+        paddingVertical: 10,
+    },
+    editText: {
+        fontSize: 16,
+        color: COLORS.white
     },
     followBtn: {
+        backgroundColor: COLORS.white,
+        borderWidth: 1,
         borderRadius: 5,
-        paddingHorizontal: 20,
+        paddingHorizontal: 25,
         paddingVertical: 10,
-        backgroundColor: "#EEE"
+        borderColor: COLORS.primary,
+    },
+    followBtnText: {
+        color: COLORS.primary,
+        textAlign: 'center',
+        fontWeight: '500'
+    },
+    followingBtn: {
+        backgroundColor: COLORS.primary,
+    },
+    followingBtnText: {
+        color: COLORS.white,
+        textAlign: 'center',
     },
     btnText: {
         fontSize: 16,
+        color: COLORS.white
     },
     containerPost: {
         flex: 1,
@@ -99,8 +124,6 @@ const styles = StyleSheet.create({
         flexWrap: "wrap",
         justifyContent: "flex-start",
         alignItems: "center",
-        gap: 6,
-        marginHorizontal: 10,
         marginTop: 10,
         marginHorizontal: "auto",
     },

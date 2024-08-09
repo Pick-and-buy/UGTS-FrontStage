@@ -12,7 +12,7 @@ import {
     Button,
     RefreshControl,
 } from "react-native";
-import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo, FontAwesome, Octicons,MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo, FontAwesome, Octicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
 import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
 import Carousel from "../../components/carousel/Carousel";
@@ -43,7 +43,9 @@ const PostDetail = ({ navigation, route }) => {
     const [type, setType] = useState('buyer');
     const [ratings, setRatings] = useState();
     const [averageRating, setAverageRating] = useState(0);
-    // console.log(postDetails?.user?.verified);
+    console.log(postDetails?.user?.id);
+
+    
     useEffect(() => {
         fetchPostDetails();
         checkAuthentication();
@@ -202,7 +204,7 @@ const PostDetail = ({ navigation, route }) => {
             setRatings(response.result);
             calculateAverageRating(response.result);
         } catch (error) {
-            console.error('Error fetching ratings in profile', error);
+            console.error('Error fetching ratings in post details', error);
         }
     };
 
@@ -268,11 +270,10 @@ const PostDetail = ({ navigation, route }) => {
                         <View style={styles.wallet}>
                             <AntDesign name="creditcard" size={20} color="gray" />
                             <Text style={styles.walletTitle}>
-                                Sử dụng ví GIATOTPAY để mua với giá
+                                Sử dụng ví GIATOTPAY để mua với giá{' '}
                                 <Text style={styles.walletTitlePrice}>
-                                    <Text> </Text>
                                     <Text style={styles.currency}>đ</Text>
-                                    260
+                                    {formattedPrice}
                                 </Text>
                             </Text>
                         </View>
@@ -512,7 +513,7 @@ const PostDetail = ({ navigation, route }) => {
                     {/* Profile seller */}
                     <TouchableOpacity
                         style={styles.personalContainer}
-                        onPress={() => navigation.navigate("seller-profile-navigation", { userOfPost: postDetails?.user, userIdLogged: userId })}
+                        onPress={() => navigation.navigate("user-profile-details", { user: postDetails?.user, userIdLogged: userId })}
                     >
                         <View style={[styles.detailContainer, { alignItems: 'flex-start' }]}>
                             <Image
@@ -529,7 +530,7 @@ const PostDetail = ({ navigation, route }) => {
                                     />
                                     <Text style={{ fontSize: 12, marginLeft: 4 }}>({averageRating})</Text>
 
-                                    {postDetails?.user?.verified === true ? (<>
+                                    {postDetails?.user?.isVerified === true ? (<>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 40 }}>
                                             <MaterialIcons name="verified-user" size={12} color="#699BF7" style={{ marginTop: 0, marginLeft: 0 }} />
                                             <Text style={{ fontSize: 12 }}>Tài khoản đã xác minh</Text>

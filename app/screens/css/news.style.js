@@ -1,3 +1,4 @@
+// Updated styles
 import { StyleSheet } from "react-native";
 import { COLORS, SIZES } from "../../constants/theme";
 
@@ -6,10 +7,25 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
     },
+    contentContainer: {
+        flex: 1,
+    },
     wrapper: {
         padding: "2%",
-        marginTop: "10%",
         marginBottom: "10%"
+    },
+    header: {
+        width: "100%",
+        height: "10%",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-end",
+        backgroundColor: COLORS.white,
+        paddingBottom: 12,
+        paddingHorizontal: 15
+    },
+    backButton: {
+        // style for the back button, if needed
     },
     banner: {
         alignItems: 'center',
@@ -30,19 +46,18 @@ const styles = StyleSheet.create({
     },
     lunchDate: {
         textAlign: 'center',
-        // fontSize: 24,
         color: COLORS.black
     },
-    button:{
-        width:"50%",
-        height:40,
+    button: {
+        width: "50%",
+        height: 40,
         backgroundColor: "#003bc3",
-        marginHorizontal:"auto",
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 20,
+        alignSelf: 'center', // Center the button horizontally
     },
-    buttonText:{
+    buttonText: {
         color: COLORS.white,
         fontSize: 16,
     },
@@ -73,43 +88,43 @@ const styles = StyleSheet.create({
     },
     subContent1: {
         textAlign: 'center',
-        marginBottom:20
+        marginBottom: 20
     },
     subContent2: {
         textAlign: 'center',
-        marginBottom:20
+        marginBottom: 20
     },
     subContent3: {
         textAlign: 'center',
-        marginBottom:20
+        marginBottom: 20
     },
     subContent4: {
         textAlign: 'center',
-        marginBottom:20
+        marginBottom: 20
     },
     subContent5: {
         textAlign: 'center',
-        marginBottom:20
+        marginBottom: 20
     },
     subContent6: {
         textAlign: 'center',
-        marginBottom:20
+        marginBottom: 20
     },
     subContent7: {
         textAlign: 'center',
-        marginBottom:20
+        marginBottom: 20
     },
     subContent8: {
         textAlign: 'center',
-        marginBottom:20
+        marginBottom: 20
     },
     subContent9: {
         textAlign: 'center',
-        marginBottom:20
+        marginBottom: 20
     },
     subContent10: {
         textAlign: 'center',
-        marginBottom:20
+        marginBottom: 20
     },
 });
 

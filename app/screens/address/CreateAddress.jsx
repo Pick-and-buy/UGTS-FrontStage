@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, SafeAreaView, TouchableOpacity, TextInput, Switch } from 'react-native';
 import { Formik } from 'formik';
-import { Ionicons, Feather } from '@expo/vector-icons';
+import { Ionicons, Feather,MaterialCommunityIcons } from '@expo/vector-icons';
 import { Dropdown } from 'react-native-element-dropdown';
 import { COLORS } from '../../constants/theme';
 import styles from '../css/createAddress.style';
@@ -91,9 +91,9 @@ const CreateAddress = ({ navigation, route }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <Feather
-                    style={{ marginLeft: 10 }}
-                    name="chevron-left" size={30} color={COLORS.primary} onPress={() => navigation.goBack()} />
+                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                    <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
+                </TouchableOpacity>
                 <Text style={styles.headerText}>
                     Tạo mới địa chỉ
                 </Text>

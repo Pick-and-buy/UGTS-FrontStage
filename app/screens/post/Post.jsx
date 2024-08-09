@@ -1,14 +1,10 @@
 import React from 'react';
-import { Image, ImageBackground, StyleSheet, Text, View } from 'react-native';
+import { ImageBackground, Text, View } from 'react-native';
 import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
 import styles from '../css/post.style';
 import { useNavigation } from '@react-navigation/native';
-import Svg, { Polygon } from 'react-native-svg';
-const image = { uri: "https://docs.expo.dev/static/images/tutorial/background-image.png" };
 
 const Post = ({ post, type }) => {
-    // console.log(product.product.images[0].imageUrl);
-    // console.log(product.id);
     const navigation = useNavigation();
 
     const formatPrice = (price) => {
@@ -18,7 +14,6 @@ const Post = ({ post, type }) => {
         }).format(price);
     }
 
-    // Format the price using the helper function
     const formattedPrice = formatPrice(post?.product?.price);
 
     return (

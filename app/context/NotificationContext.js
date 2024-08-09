@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getNotificationsByUserId, updateNotificationsReadStatus } from '../api/user';
+import { getNotificationsByUserId, updateAllNotificationsReadStatus, updateNotificationsReadStatus } from '../api/user';
 import { useAuth } from './AuthContext';
 
 const NotificationContext = createContext();
@@ -32,6 +32,15 @@ export const NotificationProvider = ({ children }) => {
         }
     };
 
+    const markAllNotificationAsRead = async (userId) => {
+        try {
+            await updateAllNotificationsReadStatus(userId);
+            fetchNotifications();
+        } catch (error) {
+            console.error('Updating notification read all status failed:', error);
+        }
+    };
+
     useEffect(() => {
         let interval;
         if (user) {
@@ -46,7 +55,7 @@ export const NotificationProvider = ({ children }) => {
     }, [user]);
 
     return (
-        <NotificationContext.Provider value={{ notifications, markNotificationAsRead }}>
+        <NotificationContext.Provider value={{ notifications, markNotificationAsRead, markAllNotificationAsRead }}>
             {children}
         </NotificationContext.Provider>
     );

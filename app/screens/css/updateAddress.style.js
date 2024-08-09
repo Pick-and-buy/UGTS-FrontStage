@@ -17,6 +17,9 @@ const styles = StyleSheet.create({
         paddingBottom: 12,
         ...SHADOWS.small
     },
+    backButton: {
+        marginLeft: "3%"
+    },
     headerText: {
         color: COLORS.black,
         fontSize: 20,
@@ -32,24 +35,24 @@ const styles = StyleSheet.create({
     },
     formContainer: {
         width: "96%",
-        marginHorizontal:"auto",
-        backgroundColor:COLORS.white,
+        marginHorizontal: "auto",
+        backgroundColor: COLORS.white,
         borderRadius: 10,
     },
     dropdownContainer: {
-        width:"94%",
-        marginHorizontal:"auto",
+        width: "94%",
+        marginHorizontal: "auto",
         // paddingHorizontal: 10,
     },
     label: {
         marginBottom: 10,
-        marginTop:30,
+        marginTop: 30,
         backgroundColor: COLORS.background,
     },
-    labelText:{
+    labelText: {
         fontSize: 16,
-        color:COLORS.gray,
-        marginHorizontal:20,
+        color: COLORS.gray,
+        marginHorizontal: 20,
     },
     dropdown: {
         marginBottom: 10,
@@ -62,8 +65,8 @@ const styles = StyleSheet.create({
         color: 'red',
     },
     input: {
-        width:"94%",
-        marginHorizontal:"auto",
+        width: "94%",
+        marginHorizontal: "auto",
         marginBottom: 10,
         height: 50,
         borderColor: "#ddd",
@@ -82,7 +85,7 @@ const styles = StyleSheet.create({
         elevation: 10,
         zIndex: 999,
         backgroundColor: COLORS.white,
-        position:"absolute",
+        position: "absolute",
         bottom: 0,
         width: "100%",
     },
@@ -102,15 +105,15 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
     },
-    toggle:{
+    toggle: {
         backgroundColor: COLORS.white,
-        width:"94%",
-        marginHorizontal:"auto",
+        width: "94%",
+        marginHorizontal: "auto",
         borderRadius: 8,
-        marginTop:10,
-        flexDirection:"row",
-        justifyContent:"space-between",
-        alignItems:"center",
+        marginTop: 10,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
     }
 
 });

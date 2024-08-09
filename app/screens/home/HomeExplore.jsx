@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
     StyleSheet,
     ScrollView,
@@ -8,18 +9,18 @@ import {
     TouchableOpacity,
 } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
-import React, { useState, useEffect } from "react";
 import { COLORS, SHADOWS } from "../../constants/theme";
 import Slider from './Slider';
 import { getAllPosts } from "../../api/post";
 import Post from "../post/Post";
 import Brands from "./Brands";
+import styles from "../css/homeExplore.style";
 
-const HomeFollow = ({ navigation }) => {
+const HomeExplore = ({ navigation }) => {
     const [posts, setPosts] = useState([]);
     const [filteredPosts, setFilteredPosts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [refreshing, setRefreshing] = useState(false); // State for refreshing
+    const [refreshing, setRefreshing] = useState(false);
     const [filter, setFilter] = useState('All');
 
     const fetchPosts = async () => {
@@ -28,7 +29,7 @@ const HomeFollow = ({ navigation }) => {
             const response = await getAllPosts();
             const posts = response.data.result;
             setPosts(posts);
-            setFilteredPosts(posts); // Initialize filteredPosts with all posts
+            setFilteredPosts(posts);
         } catch (error) {
             console.error(error);
         } finally {
@@ -68,7 +69,6 @@ const HomeFollow = ({ navigation }) => {
             <View style={styles.posts}>
                 <Text style={styles.heading}>Bài đăng</Text>
                 <View style={styles.filterContainer}>
-                    {/* <Text style={styles.filterLabel}>Lọc sản phẩm</Text> */}
                     <AntDesign name="filter" size={26} color="black" />
                     <TouchableOpacity
                         style={[styles.filterButton, filter === 'All' && styles.activeFilter]}
@@ -103,62 +103,4 @@ const HomeFollow = ({ navigation }) => {
     );
 };
 
-export default HomeFollow;
-
-const styles = StyleSheet.create({
-    container: {
-        width: '100%',
-        marginBottom: "18%",
-    },
-    posts: {
-        width: '98%',
-        marginTop: "-10%",
-        marginHorizontal: "auto",
-    },
-    row: {
-        width: "100%",
-        justifyContent: "flex-start",
-        flexDirection: "row",
-        flexWrap: "wrap",
-        alignItems: "center",
-        gap: 6,
-        marginHorizontal: "auto",
-    },
-    heading: {
-        fontSize: 18,
-        marginBottom: 8,
-        fontWeight: 'bold',
-    },
-    filterContainer: {
-        flexDirection: "row",
-        justifyContent: "flex-start",
-        alignItems: "center",
-        // marginLeft: "3%",
-        marginBottom: 12,
-        gap: 10
-    },
-    filterLabel: {
-        fontSize: 16,
-        color: COLORS.black,
-        fontWeight: "bold"
-    },
-    filterButton: {
-        paddingVertical: 5,
-        paddingHorizontal: 20,
-        borderRadius: 20,
-        backgroundColor: COLORS.white,
-        ...SHADOWS.medium,
-    },
-    filterButtonText: {
-        color: COLORS.black,
-    },
-    activeFilter: {
-        backgroundColor: COLORS.primary,
-    },
-    activeFilterText: {
-        color: 'white',
-    },
-    inactiveFilterText: {
-        color: COLORS.black,
-    },
-});
+export default HomeExplore;
