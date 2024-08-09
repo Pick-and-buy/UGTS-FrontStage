@@ -53,10 +53,10 @@ const styles = StyleSheet.create({
         color: COLORS.gray,
         // marginHorizontal: 20,
         marginVertical: 5,
-        marginLeft:10
+        marginLeft:5
     },
     //Image Upload
-    imageUploadContaniner: {
+    imageUploadContainer: {
         width: windowWidth,
         height: 150,
         backgroundColor: COLORS.white,
