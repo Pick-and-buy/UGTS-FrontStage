@@ -621,6 +621,24 @@ const QuickCreatePost = () => {
                                     <View></View>
                                 )
                             }
+
+                            {isChecked_3 && (
+                                <View style={styles.checkboxContainer}>
+                                    <View style={{ width: "100%", flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
+                                        <Text style={styles.labelText}>Bạn cần bổ sung ở cấp 3</Text>
+                                    </View>
+                                    <View View style={styles.selectOption}>
+                                        <Text style={styles.labelText}>Ở xác minh cấp 3 bạn nên bổ sung đầy đủ ảnh chi tiết cho sản phẩm.
+                                            Chúng tôi sẽ gửi thông tin sản phẩm của bạn đến LEGITGRAILS để xác nhận đó là hàng chính hãng.
+                                            Phí dịch vụ sẽ là <Text style={{ color: "red" }}>500.000đ</Text>
+                                        </Text>
+                                    </View>
+
+                                    <View style={styles.shadow}></View>
+                                </View>
+                            )
+
+                            }
                             <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
                                 <Text style={styles.labelText}>Thông tin sản phẩm</Text>
                                 <TouchableOpacity
@@ -1071,6 +1089,23 @@ const QuickCreatePost = () => {
                                 {/* <View style={styles.productField}>
                     <Text style={{ fontSize: 16 }}>: <Text style={{ color: 'blue' }}>Miễn phí</Text></Text>
                   </View> */}
+                                {
+                                    isChecked_3 && (
+                                        <View View style={styles.productField}>
+                                            <View style={styles.inputProduct}>
+                                                <Text style={[styles.title, { marginLeft: -2 }]}>Phí kiểm tra cấp 3 (VND):
+                                                    <Text style={{ color: "red" }}> 500.000đ</Text>
+                                                </Text>
+                                            </View>
+                                            <View style={styles.inputProduct}>
+                                                <Text style={[styles.title, { marginLeft: -2 }]}>
+                                                    Số tiền thực nhận (VND): <Text style={{ color: "red" }}>3500.000đ</Text>
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    )
+
+                                }
                             </View>
 
                             {/* Thành Tiền */}
