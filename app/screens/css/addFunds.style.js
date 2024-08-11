@@ -97,8 +97,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    activeButton: {
+        backgroundColor: COLORS.primary,
+    },
     quickAmountButtonText: {
         fontSize: 16,
+    },
+    activeButtonText: {
+        color: '#fff', // Active text color
     },
     divider: {
         height: 3,
@@ -151,8 +157,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
-    buttonContainer:{
-        
+    buttonContainer: {
+
     },
     submitButton: {
         width: "96%",
@@ -172,9 +178,9 @@ const styles = StyleSheet.create({
         marginTop: 16,
         fontSize: 12,
         color: '#aaa',
-        marginHorizontal:"auto"
+        marginHorizontal: "auto"
     },
-    highlightText:{
+    highlightText: {
         color: 'blue'
     }
 });

@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, TextInput } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -25,6 +25,8 @@ const removeDots = (amount) => {
 };
 
 const AddFunds = ({ navigation }) => {
+    const [activeButton, setActiveButton] = useState(null);
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -55,6 +57,8 @@ const AddFunds = ({ navigation }) => {
                                             // Handle raw input, format it for display
                                             const rawAmount = text.replace(/\D/g, '');
                                             setFieldValue('amount', formatMoney(rawAmount));
+                                            // Clear active button when input changes
+                                            setActiveButton(null);
                                         }}
                                         onBlur={() => {
                                             // Ensure amount is formatted correctly on blur
@@ -75,10 +79,23 @@ const AddFunds = ({ navigation }) => {
                                 {['100000', '200000', '500000', '1000000', '2000000', '5000000'].map((amount, index) => (
                                     <TouchableOpacity
                                         key={index}
-                                        style={styles.quickAmountButton}
-                                        onPress={() => setFieldValue('amount', formatMoney(amount))}
+                                        style={[
+                                            styles.quickAmountButton,
+                                            activeButton === index && styles.activeButton // Apply activeButton style
+                                        ]}
+                                        onPress={() => {
+                                            setFieldValue('amount', formatMoney(amount));
+                                            setActiveButton(index);
+                                        }}
                                     >
-                                        <Text style={styles.quickAmountButtonText}>{formatMoney(amount)}</Text>
+                                        <Text
+                                            style={[
+                                                styles.quickAmountButtonText,
+                                                activeButton === index && styles.activeButtonText // Apply activeButtonText style
+                                            ]}
+                                        >
+                                            {formatMoney(amount)}
+                                        </Text>
                                     </TouchableOpacity>
                                 ))}
                             </View>
