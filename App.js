@@ -61,6 +61,8 @@ import Summary from './app/screens/profile/Summary';
 import CreatePostGuide from './app/screens/post/CreatePostGuide';
 import CreatePost from './app/screens/post/CreatePost';
 import QuickCreatePost from './app/screens/post/QuickCreatePost';
+import AddFunds from './app/screens/payment/AddFunds';
+
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -382,6 +384,11 @@ export default function App() {
                 <Stack.Screen
                   name='create-post-guide'
                   component={CreatePostGuide}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='add-funds'
+                  component={AddFunds}
                   options={{ headerShown: false }}
                 />
               </Stack.Navigator>
