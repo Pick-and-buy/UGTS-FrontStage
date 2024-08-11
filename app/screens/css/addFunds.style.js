@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     container: {
         width: windowWidth,
         height: windowHeight,
-        backgroundColor: COLORS.background
+        backgroundColor: COLORS.background,
     },
     header: {
         width: "100%",
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 16,
         marginHorizontal: "2%",
-        marginTop:10
+        marginTop: 10
     },
     quickAmounts: {
         width: "96%",
@@ -97,13 +97,24 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    quickAmountButtonText:{
+    quickAmountButtonText: {
         fontSize: 16,
     },
+    divider: {
+        height: 3,
+        width: "94%",
+        backgroundColor: "#F3F3F3",
+        marginVertical: 10,
+        marginHorizontal: "auto"
+    },
     paymentMethod: {
+        width: "96%",
         flexDirection: 'row',
+        flexWrap: "wrap",
         alignItems: 'center',
+        justifyContent: 'flex-start',
         marginBottom: 16,
+        marginHorizontal: "auto"
     },
     paymentText: {
         marginLeft: 8,
@@ -114,34 +125,58 @@ const styles = StyleSheet.create({
         marginTop: 4,
         fontSize: 14,
         color: '#aaa',
+        marginLeft: "8%"
     },
     totalContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 16,
+        width: "96%",
+        marginHorizontal: "auto",
+        backgroundColor: COLORS.white,
+        borderRadius: 10,
+        marginTop: 15,
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "center"
+    },
+    total: {
+        width: "96%",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center"
     },
     totalLabel: {
-        fontSize: 16,
+        fontSize: 18,
+        marginVertical: 10,
     },
     totalAmount: {
         fontSize: 16,
         fontWeight: 'bold',
     },
+    buttonContainer:{
+        
+    },
     submitButton: {
-        backgroundColor: '#ccc',
+        width: "96%",
+        backgroundColor: COLORS.primary,
         padding: 12,
         borderRadius: 4,
         alignItems: 'center',
+        marginHorizontal: "auto",
+        marginTop: 40
     },
     submitText: {
         fontSize: 16,
         color: '#fff',
     },
     footerNote: {
+        width: "96%",
         marginTop: 16,
         fontSize: 12,
         color: '#aaa',
+        marginHorizontal:"auto"
     },
+    highlightText:{
+        color: 'blue'
+    }
 });
 
 export default styles;

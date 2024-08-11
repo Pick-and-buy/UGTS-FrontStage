@@ -10,7 +10,7 @@ const TopUpSchema = Yup.object().shape({
     amount: Yup.number().required('Vui lòng nhập số tiền bạn muốn nạp.'),
 });
 
-const AddFunds = () => {
+const AddFunds = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -70,26 +70,40 @@ const AddFunds = () => {
                                     <Text style={styles.quickAmountButtonText}>5.000.000</Text>
                                 </TouchableOpacity>
                             </View>
-
-                            <View style={styles.paymentMethod}>
-                                <Icon name="wallet" type="entypo" />
+                            <View style={styles.divider} />
+                            <TouchableOpacity style={styles.paymentMethod}>
+                                <Icon name="wallet" type="entypo" color={COLORS.primary} />
                                 <Text style={styles.paymentText}>Phương thức thanh toán</Text>
-                                <Text style={styles.paymentMethodInfo}>Please enter top up amount.</Text>
-                            </View>
+                                <Text style={styles.paymentMethodInfo}>Vui lòng chọn phương thức thanh toán</Text>
+                                <Entypo name="chevron-right" size={32} color="#aaa"
+                                    style={{ position: "absolute", right: 10 }}
+                                />
+                            </TouchableOpacity>
                         </View>
 
                         <View style={styles.totalContainer}>
-                            <Text style={styles.totalLabel}>Tổng thanh toán</Text>
-                            <Text style={styles.totalAmount}>₫0</Text>
+                            <View style={styles.total}>
+                                <Text style={[styles.totalLabel, { fontSize: 16, color: "#aaa" }]}>Nạp tiền</Text>
+                                <Text style={[styles.totalAmount, { fontSize: 16, color: "#aaa" }]}>₫0</Text>
+                            </View>
+                            <View style={styles.total}>
+                                <Text style={styles.totalLabel}>Tổng thanh toán</Text>
+                                <Text style={[styles.totalAmount, { color: COLORS.primary }]}>₫0</Text>
+                            </View>
                         </View>
 
-                        <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
-                            <Text style={styles.submitText}>Nạp tiền ngay</Text>
-                        </TouchableOpacity>
-
                         <Text style={styles.footerNote}>
-                            Nhấn “Nạp tiền ngay”, bạn đã đồng ý tuân theo Điều khoản sử dụng và Chính sách bảo mật của ShopeePay
+                            Nhấn “Nạp tiền ngay”, bạn đã đồng ý tuân theo {" "}
+                            <Text style={styles.highlightText}>Điều khoản sử dụng</Text> và {" "}
+                            <Text style={styles.highlightText}>Chính sách bảo mật </Text>
+                            của GiatotPay
                         </Text>
+
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
+                                <Text style={styles.submitText}>Nạp tiền ngay</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 )}
             </Formik>
