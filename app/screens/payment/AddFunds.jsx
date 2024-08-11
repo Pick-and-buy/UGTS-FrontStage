@@ -1,14 +1,28 @@
-import { View, Text, TouchableOpacity, TextInput } from 'react-native'
-import React from 'react'
-import { Ionicons, Feather, AntDesign, MaterialIcons, MaterialCommunityIcons, Entypo, FontAwesome6, SimpleLineIcons } from '@expo/vector-icons';
+import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import React from 'react';
+import { MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import styles from '../css/addFunds.style'
+import styles from '../css/addFunds.style';
 import { COLORS } from '../../constants/theme';
-import { Button, Icon } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
+
+// Validation Schema
 const TopUpSchema = Yup.object().shape({
-    amount: Yup.number().required('Vui lòng nhập số tiền bạn muốn nạp.'),
+    amount: Yup.string().required('Vui lòng nhập số tiền bạn muốn nạp.'),
 });
+
+// Function to format money for display
+const formatMoney = (amount) => {
+    return amount
+        .replace(/\D/g, '') // Remove non-numeric characters
+        .replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Add thousand separators
+};
+
+// Function to remove dots for internal calculations
+const removeDots = (amount) => {
+    return amount.replace(/\./g, ''); // Remove dots
+};
 
 const AddFunds = ({ navigation }) => {
     return (
@@ -17,19 +31,18 @@ const AddFunds = ({ navigation }) => {
                 <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                     <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
                 </TouchableOpacity>
-                <Text style={styles.headerText}>
-                    Nạp tiền
-                </Text>
+                <Text style={styles.headerText}>Nạp tiền</Text>
             </View>
 
             <Formik
                 initialValues={{ amount: '' }}
                 validationSchema={TopUpSchema}
                 onSubmit={values => {
-                    console.log(values);
+                    console.log('Raw amount:', removeDots(values.amount));
+                    // Handle the submission of raw amount
                 }}
             >
-                {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+                {({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue }) => (
                     <View style={styles.wrapper}>
                         <View style={styles.money}>
                             <View style={styles.inputContainer}>
@@ -38,8 +51,16 @@ const AddFunds = ({ navigation }) => {
                                     <Text style={styles.unit}>₫</Text>
                                     <TextInput
                                         style={styles.input}
-                                        onChangeText={handleChange('amount')}
-                                        onBlur={handleBlur('amount')}
+                                        onChangeText={(text) => {
+                                            // Handle raw input, format it for display
+                                            const rawAmount = text.replace(/\D/g, '');
+                                            setFieldValue('amount', formatMoney(rawAmount));
+                                        }}
+                                        onBlur={() => {
+                                            // Ensure amount is formatted correctly on blur
+                                            const rawAmount = removeDots(values.amount);
+                                            setFieldValue('amount', formatMoney(rawAmount));
+                                        }}
                                         value={values.amount}
                                         placeholder="0"
                                         keyboardType="numeric"
@@ -51,24 +72,15 @@ const AddFunds = ({ navigation }) => {
                             <Text style={styles.balance}>Số dư Ví hiện tại: ₫7.700</Text>
 
                             <View style={styles.quickAmounts}>
-                                <TouchableOpacity style={styles.quickAmountButton}>
-                                    <Text style={styles.quickAmountButtonText}>100.000</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.quickAmountButton}>
-                                    <Text style={styles.quickAmountButtonText}>200.000</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.quickAmountButton}>
-                                    <Text style={styles.quickAmountButtonText}>500.000</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.quickAmountButton}>
-                                    <Text style={styles.quickAmountButtonText}>1.000.000</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.quickAmountButton}>
-                                    <Text style={styles.quickAmountButtonText}>2.000.000</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.quickAmountButton}>
-                                    <Text style={styles.quickAmountButtonText}>5.000.000</Text>
-                                </TouchableOpacity>
+                                {['100000', '200000', '500000', '1000000', '2000000', '5000000'].map((amount, index) => (
+                                    <TouchableOpacity
+                                        key={index}
+                                        style={styles.quickAmountButton}
+                                        onPress={() => setFieldValue('amount', formatMoney(amount))}
+                                    >
+                                        <Text style={styles.quickAmountButtonText}>{formatMoney(amount)}</Text>
+                                    </TouchableOpacity>
+                                ))}
                             </View>
                             <View style={styles.divider} />
                             <TouchableOpacity style={styles.paymentMethod}>
@@ -84,11 +96,11 @@ const AddFunds = ({ navigation }) => {
                         <View style={styles.totalContainer}>
                             <View style={styles.total}>
                                 <Text style={[styles.totalLabel, { fontSize: 16, color: "#aaa" }]}>Nạp tiền</Text>
-                                <Text style={[styles.totalAmount, { fontSize: 16, color: "#aaa" }]}>₫0</Text>
+                                <Text style={[styles.totalAmount, { fontSize: 16, color: "#aaa" }]}>₫{values.amount || '0'}</Text>
                             </View>
                             <View style={styles.total}>
                                 <Text style={styles.totalLabel}>Tổng thanh toán</Text>
-                                <Text style={[styles.totalAmount, { color: COLORS.primary }]}>₫0</Text>
+                                <Text style={[styles.totalAmount, { color: COLORS.primary }]}>₫{values.amount || '0'}</Text>
                             </View>
                         </View>
 
