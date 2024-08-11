@@ -7,6 +7,7 @@ import {
     Image,
     TextInput,
     Alert,
+    Modal,
 } from "react-native";
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import Button from "../components/Button";
@@ -20,33 +21,25 @@ import { useAuth } from '../context/AuthContext';
 const Login = ({ navigation }) => {
     const [loader, setLoader] = useState(false);
     const [obsecureText, setObsecureText] = useState(true);
+    const [modalVisible, setModalVisible] = useState(false);
     const { login } = useAuth();
 
     const handleLogin = async (values, actions) => {
-        try {
-            await login(values.phoneNumber, values.password);
-            navigation.reset({
-                index: 0,
-                routes: [{ name: 'bottom-navigation' }],
+        setLoader(true);
+        login(values.phoneNumber, values.password)
+            .then((response) => {
+                setLoader(false);
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'bottom-navigation' }],
+                });
+            })
+            .catch((err) => {
+                setLoader(false);
+                setModalVisible(true);
             });
-        } catch (err) {
-            actions.setFieldError('general', 'Login failed. Please check your credentials and try again.');
-        }
     };
 
-    const inValidForm = () => {
-        Alert.alert("Invalid Form", "Please provide all required fields", [
-            {
-                text: "Cancel",
-                onPress: () => { },
-            },
-            {
-                text: "Continue",
-                onPress: () => { },
-            },
-            { defaultIndex: 1 },
-        ]);
-    };
     const validationSchema = Yup.object().shape({
         phoneNumber: Yup.string().matches(/^\d{10}$/, 'Số điện thoại phải có ít nhất 10 số').required('Vui lòng nhập số điện thoại').typeError("Có vẻ như đó không phải là số điện thoại"),
         password: Yup.string().min(8, 'Mật khẩu phải có ít nhất 8 ký tự').required('Vui lòng nhập mật khẩu'),
@@ -187,8 +180,8 @@ const Login = ({ navigation }) => {
                             <Button
                                 loader={loader}
                                 title={"ĐĂNG NHẬP"}
-                                onPress={isValid ? handleSubmit : inValidForm}
-                                isValid={isValid}
+                                onPress={handleSubmit}
+                                isValid={true}
                             />
 
                             <Text style={{ textAlign: "center" }}>
@@ -233,7 +226,38 @@ const Login = ({ navigation }) => {
                         </View>
                     )}
                 </Formik>
+
             </View>
+            {/* Modal for login error */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Đăng nhập thất bại!</Text>
+                        <Text style={styles.modalDetailText}>Vui lòng kiểm lại thông tin tài khoản hoặc mật khẩu</Text>
+                        <View style={styles.modalButtons}>
+                            <TouchableOpacity
+                                style={styles.modalCancelButton}
+                                onPress={() => setModalVisible(false)}
+                            >
+                                <Text style={styles.modalButtonText}>Thoát</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.modalButton}
+                                onPress={() => {
+                                    setModalVisible(false);
+                                }}
+                            >
+                                <Text style={styles.modalButtonText}>Xác nhận</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </ScrollView>
     );
 };
