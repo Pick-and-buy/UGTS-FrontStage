@@ -221,22 +221,23 @@ const PostDetail = ({ navigation, route }) => {
     // Format the price using the helper function
     const formattedPrice = formatPrice(postDetails?.product?.price);
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.wrapper}>
+        <View style={styles.container}>
+            <ScrollView contentContainerStyle={styles.contentContainer}
+                showsVerticalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
+            >
+                <Carousel data={data} />
                 <View style={styles.header}>
                     <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-                        <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
+                        <MaterialCommunityIcons name="keyboard-backspace" size={28} color={COLORS.white} />
                     </TouchableOpacity>
-                    <Text numberOfLines={1} style={styles.headerText}>{postDetails?.product?.name}</Text>
-                    <AntDesign style={{ marginRight: "2%" }} name="sharealt" size={24} color={COLORS.black} />
+                    <TouchableOpacity style={styles.backButton} onPress={() => { }}>
+                        <AntDesign style={{ marginRight: "2%" }} name="sharealt" size={24} color={COLORS.white} />
+                    </TouchableOpacity>
                 </View>
-                <ScrollView contentContainerStyle={styles.contentContainer}
-                    showsVerticalScrollIndicator={false}
-                    refreshControl={
-                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                    }
-                >
-                    <Carousel data={data} />
+                <View style={styles.wrapper}>
                     <View style={styles.informationContainer}>
                         <Pressable onPress={handleLike} style={styles.like}>
                             <AntDesign
@@ -245,7 +246,7 @@ const PostDetail = ({ navigation, route }) => {
                                 color={isLiked ? "red" : "gray"}
                             />
                         </Pressable>
-                        <Text numberOfLines={3} style={[styles.headerText, { width: "85%", textAlign: "left", fontSize: 24 }]}>{postDetails?.product?.name}</Text>
+                        <Text numberOfLines={3} style={[styles.headerText, { width: "85%", textAlign: "left", fontSize: 24, marginTop: 5 }]}>{postDetails?.product?.name}</Text>
                         <View style={styles.label}>
                             {postDetails?.product?.verifiedLevel === 'LEVEL_1' && (
                                 <View style={styles.verified}>
@@ -263,7 +264,6 @@ const PostDetail = ({ navigation, route }) => {
                                 </View>
                             )}
                         </View>
-                        <Text style={styles.labelTransport}>Miễn phí vận chuyển</Text>
                         <Text style={styles.price}>
                             <Text style={styles.currency}>đ</Text>
                             {formattedPrice}
@@ -271,11 +271,7 @@ const PostDetail = ({ navigation, route }) => {
                         <View style={styles.wallet}>
                             <AntDesign name="creditcard" size={20} color="gray" />
                             <Text style={styles.walletTitle}>
-                                Sử dụng ví GIATOTPAY để mua với giá{' '}
-                                <Text style={styles.walletTitlePrice}>
-                                    <Text style={styles.currency}>đ</Text>
-                                    {formattedPrice}
-                                </Text>
+                                Sử dụng ví GiaTotPay để mua hàng với giá ưu đãi
                             </Text>
                         </View>
                     </View>
@@ -314,7 +310,6 @@ const PostDetail = ({ navigation, route }) => {
                                     <Text
                                         style={{
                                             fontSize: 18,
-                                            // fontWeight: '500',
                                             color: COLORS.primary,
                                         }}>Bình luận</Text>
                                 </TouchableOpacity>
@@ -325,7 +320,6 @@ const PostDetail = ({ navigation, route }) => {
                                     <Text
                                         style={{
                                             fontSize: 18,
-                                            // fontWeight: '500',
                                             color: COLORS.gray,
                                         }}>Bình luận</Text>
                                 </View>
@@ -352,14 +346,20 @@ const PostDetail = ({ navigation, route }) => {
                     <View style={styles.divider} />
                     <View style={styles.description}>
                         <Text style={styles.descriptionTitle}>Mô tả sản phẩm</Text>
-                        <Text style={styles.descriptionText}>
-                            {showFullDescription ? postDetails?.description : `${postDetails?.description?.slice(0, 100)}...`}
+                        <View>
+                            <Text style={styles.descriptionText}>
+                                {showFullDescription ? postDetails?.description : `${postDetails?.description?.slice(0, 250)}...`}
+                            </Text>
                             {postDetails?.description?.length > 100 && (
                                 <Text style={styles.readMore} onPress={() => setShowFullDescription(!showFullDescription)}>
-                                    {showFullDescription ? ' Ẩn bớt' : ' Xem thêm'}
+                                    {showFullDescription ? (
+                                        <Text style={styles.seeMore}>Ẩn bớt</Text>
+                                    ) : (
+                                        <Text style={styles.seeMore}>Xem thêm chi tiết</Text>
+                                    )}
                                 </Text>
                             )}
-                        </Text>
+                        </View>
                         <Text style={styles.createdTime}>{postDetails?.createdAt}</Text>
                         <View style={styles.dividerLight} />
                         <View style={styles.hashtags}>
@@ -369,6 +369,9 @@ const PostDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                     <View style={styles.divider} />
+                    <View style={styles.description}>
+                        <Text style={styles.descriptionTitle}>Thông tin chi tiết</Text>
+                    </View>
                     {/* Thương hiệu */}
                     <View style={[styles.details, { marginTop: 4 }]}>
                         <View style={styles.left}>
@@ -378,7 +381,7 @@ const PostDetail = ({ navigation, route }) => {
                             <Text style={styles.rightText}>{postDetails?.product?.brand?.name.toLowerCase() === "none" ? "N/A" : postDetails?.product?.brand?.name}</Text>
                         </View>
                     </View>
-                    <View style={styles.dividerLight} />
+                    <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
                     {/* Tình trạng */}
                     <View style={styles.details}>
                         <View style={styles.left}>
@@ -388,7 +391,7 @@ const PostDetail = ({ navigation, route }) => {
                             <Text style={styles.rightText}>{postDetails?.product?.condition.toLowerCase() === "none" ? "N/A" : postDetails?.product?.condition}</Text>
                         </View>
                     </View>
-                    <View style={styles.dividerLight} />
+                    <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
 
                     {/* Size */}
                     <View style={styles.details}>
@@ -399,7 +402,7 @@ const PostDetail = ({ navigation, route }) => {
                             <Text style={styles.rightText}>{postDetails?.product?.size.toLowerCase() === "none" ? "N/A" : postDetails?.product?.size} </Text>
                         </View>
                     </View>
-                    <View style={styles.dividerLight} />
+                    <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
                     {/* Màu sắc */}
                     <View style={styles.details}>
                         <View style={styles.left}>
@@ -409,7 +412,7 @@ const PostDetail = ({ navigation, route }) => {
                             <Text style={styles.rightText}>{postDetails?.product?.color.toLowerCase() === "none" ? "N/A" : postDetails?.product?.color} </Text>
                         </View>
                     </View>
-                    <View style={styles.dividerLight} />
+                    <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
                     {/* Kích thước */}
                     <View style={styles.details}>
                         <View style={styles.left}>
@@ -419,7 +422,7 @@ const PostDetail = ({ navigation, route }) => {
                             <Text style={styles.rightText}>{postDetails?.product?.length} x {postDetails?.product?.width} x {postDetails?.product?.height} cm</Text>
                         </View>
                     </View>
-                    <View style={styles.dividerLight} />
+                    <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
                     {/* Năm sản xuất */}
                     <View style={styles.details}>
                         <View style={styles.left}>
@@ -429,7 +432,7 @@ const PostDetail = ({ navigation, route }) => {
                             <Text style={styles.rightText}>{postDetails?.product?.manufactureYear.toLowerCase() === "none" ? "N/A" : postDetails?.product?.manufactureYear} </Text>
                         </View>
                     </View>
-                    <View style={styles.dividerLight} />
+                    <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
                     {/* Reference Code */}
                     <View style={styles.details}>
                         <View style={styles.left}>
@@ -439,7 +442,7 @@ const PostDetail = ({ navigation, route }) => {
                             <Text style={styles.rightText}>{postDetails?.product?.referenceCode.toLowerCase() === "none" ? "N/A" : postDetails?.product?.referenceCode} </Text>
                         </View>
                     </View>
-                    <View style={styles.dividerLight} />
+                    <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
                     {/* Exterior Material */}
                     <View style={styles.details}>
                         <View style={styles.left}>
@@ -449,7 +452,7 @@ const PostDetail = ({ navigation, route }) => {
                             <Text style={styles.rightText}>{postDetails?.product?.exteriorMaterial.toLowerCase() === "none" ? " N/A" : postDetails?.product?.exteriorMaterial} </Text>
                         </View>
                     </View>
-                    <View style={styles.dividerLight} />
+                    <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
                     {/* Interior Material */}
                     <View style={styles.details}>
                         <View style={styles.left}>
@@ -459,7 +462,7 @@ const PostDetail = ({ navigation, route }) => {
                             <Text style={styles.rightText}>{postDetails?.product?.interiorMaterial.toLowerCase() === "none" ? " N/A" : postDetails?.product?.interiorMaterial} </Text>
                         </View>
                     </View>
-                    <View style={styles.dividerLight} />
+                    <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
                     {/* Accessories */}
                     <View style={styles.details}>
                         <View style={styles.left}>
@@ -469,7 +472,7 @@ const PostDetail = ({ navigation, route }) => {
                             <Text style={styles.rightText}>{postDetails?.product?.accessories.toLowerCase() === "none" ? " N/A" : postDetails?.product?.accessories} </Text>
                         </View>
                     </View>
-                    <View style={styles.dividerLight} />
+                    <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
                     {/* Date Code */}
                     <View style={styles.details}>
                         <View style={styles.left}>
@@ -479,7 +482,7 @@ const PostDetail = ({ navigation, route }) => {
                             <Text style={styles.rightText}>{postDetails?.product?.dateCode.toLowerCase() === "none" ? " N/A" : postDetails?.product?.dateCode} </Text>
                         </View>
                     </View>
-                    <View style={styles.dividerLight} />
+                    <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
                     {/* Serial Number */}
                     <View style={styles.details}>
                         <View style={styles.left}>
@@ -489,7 +492,7 @@ const PostDetail = ({ navigation, route }) => {
                             <Text style={styles.rightText}>{postDetails?.product?.serialNumber.toLowerCase() === "none" ? " N/A" : postDetails?.product?.serialNumber} </Text>
                         </View>
                     </View>
-                    <View style={styles.dividerLight} />
+                    <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
                     {/* Purchased Place */}
                     <View style={styles.details}>
                         <View style={styles.left}>
@@ -499,7 +502,7 @@ const PostDetail = ({ navigation, route }) => {
                             <Text style={styles.rightText}>{postDetails?.product?.purchasedPlace.toLowerCase() === "none" ? " N/A" : postDetails?.product?.purchasedPlace} </Text>
                         </View>
                     </View>
-                    <View style={styles.dividerLight} />
+                    <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
                     {/* story */}
                     <View style={[styles.details, { marginBottom: 6 }]}>
                         <View style={styles.left}>
@@ -516,37 +519,45 @@ const PostDetail = ({ navigation, route }) => {
                         style={styles.personalContainer}
                         onPress={() => navigation.navigate("user-profile-details", { user: postDetails?.user, userIdLogged: userId })}
                     >
-                        <View style={[styles.detailContainer, { alignItems: 'flex-start' }]}>
+                        <View style={[styles.detailContainer, { alignItems: 'flex-start', width: "100%" }]}>
                             <Image
                                 style={styles.avatar}
                                 source={{ uri: postDetails?.user?.avatar ? postDetails?.user?.avatar : profile }}
                             />
-                            <View style={{}}>
-                                <Text style={{ fontSize: 18 }}>{postDetails?.user?.username}</Text>
-                                <View style={{ flexDirection: 'row', justifyContent: "center", alignItems: 'center' }}>
+
+                            <View style={styles.userDetails}>
+                                <Text numberOfLines={1} style={{ fontSize: 18 }}>{postDetails?.user?.lastName} {postDetails?.user?.firstName}</Text>
+                                <View style={styles.oneLine}>
                                     <Rating
                                         stars={averageRating}
                                         maxStars={5}
                                         size={16}
                                     />
-                                    <Text style={{ fontSize: 12, marginLeft: 4 }}>({averageRating})</Text>
-
-                                    {postDetails?.user?.isVerified === true ? (<>
-                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 40 }}>
-                                            <MaterialIcons name="verified-user" size={12} color="#699BF7" style={{ marginTop: 0, marginLeft: 0 }} />
-                                            <Text style={{ fontSize: 12 }}>Tài khoản đã xác minh</Text>
-                                        </View></>
-                                    ) : (
-                                        <>
-                                            <Octicons name="unverified" size={14} color="gray" style={{ marginTop: 6, marginLeft: 10 }} />
-                                            <Text style={{ fontSize: 12, marginTop: 4, marginLeft: 2 }}>Tài khoản chưa xác minh</Text>
-                                        </>
-                                    )
-
-                                    }
-
-
+                                    <Text style={{ fontSize: 12, marginLeft: 4, marginTop: 2 }}>({averageRating})</Text>
                                 </View>
+                                {postDetails?.user?.isVerified === true ? (
+                                    <View style={styles.oneLine}>
+                                        <MaterialIcons name="verified-user" size={12} color="#699BF7" style={{ marginTop: 0, marginLeft: 0 }} />
+                                        <Text style={{ fontSize: 12 }}>Tài khoản đã xác minh</Text>
+                                    </View>
+                                ) : (
+                                    <View style={styles.oneLine}>
+                                        <Octicons name="unverified" size={14} color="gray" style={{ marginTop: 4 }} />
+                                        <Text style={{ fontSize: 12, marginTop: 2, marginLeft: 2 }}>Tài khoản chưa xác minh</Text>
+                                    </View>
+                                )
+                                }
+                            </View>
+
+                            <View style={{
+                                backgroundColor: COLORS.primary,
+                                paddingVertical: 6,
+                                paddingHorizontal: 10,
+                                borderRadius: 6,
+                                right: 10,
+                                marginVertical: 'auto'
+                            }}>
+                                <Text style={{ color: COLORS.white }}>Ghé thăm</Text>
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -562,32 +573,32 @@ const PostDetail = ({ navigation, route }) => {
                             </Text>
                         </View>
                     </View>
-                </ScrollView>
+                </View>
+            </ScrollView>
 
-                {
-                    postDetails?.isAvailable && (
-                        <View style={styles.bottomBtn}>
-                            {type === "buyer" && (
-                                <TouchableOpacity style={styles.button} onPress={handlePress}>
-                                    <Text style={styles.buttonText}>Mua ngay</Text>
-                                </TouchableOpacity>
-                            )
-                            }
-                            {type === "seller" && (
-                                <TouchableOpacity style={styles.button}
-                                    onPress={() => navigation.navigate('update-post', { postId: postId })}
-                                >
-                                    <Text style={styles.buttonText}>Chỉnh sửa</Text>
-                                </TouchableOpacity>
-                            )
-                            }
-                        </View>
+            {
+                postDetails?.isAvailable && (
+                    <View style={styles.bottomBtn}>
+                        {type === "buyer" && (
+                            <TouchableOpacity style={styles.button} onPress={handlePress}>
+                                <Text style={styles.buttonText}>Mua ngay</Text>
+                            </TouchableOpacity>
+                        )
+                        }
+                        {type === "seller" && (
+                            <TouchableOpacity style={styles.button}
+                                onPress={() => navigation.navigate('update-post', { postId: postId })}
+                            >
+                                <Text style={styles.buttonText}>Chỉnh sửa</Text>
+                            </TouchableOpacity>
+                        )
+                        }
+                    </View>
 
-                    )
-                }
+                )
+            }
 
-            </View>
-        </SafeAreaView>
+        </View>
     );
 };
 
