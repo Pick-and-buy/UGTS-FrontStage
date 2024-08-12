@@ -45,7 +45,7 @@ const PostDetail = ({ navigation, route }) => {
     const [averageRating, setAverageRating] = useState(0);
     console.log(postDetails?.user?.id);
 
-    
+
     useEffect(() => {
         fetchPostDetails();
         checkAuthentication();
@@ -245,22 +245,23 @@ const PostDetail = ({ navigation, route }) => {
                                 color={isLiked ? "red" : "gray"}
                             />
                         </Pressable>
-                        <Text numberOfLines={3} style={[styles.headerText, { width: "85%", textAlign: "left" }]}>{postDetails?.product?.name}</Text>
+                        <Text numberOfLines={3} style={[styles.headerText, { width: "85%", textAlign: "left", fontSize: 24 }]}>{postDetails?.product?.name}</Text>
                         <View style={styles.label}>
-                            <Text style={styles.keyword}>Túi xách</Text>
-
-                            {postDetails?.product?.isVerify ? (
+                            {postDetails?.product?.verifiedLevel === 'LEVEL_1' && (
                                 <View style={styles.verified}>
-                                    <MaterialIcons name="verified" size={14} color="green" />
-                                    <Text style={styles.verifiedText}>Đã được xác minh</Text>
-                                </View>
-                            ) : (
-                                <View style={styles.verified}>
-                                    <Entypo name="circle-with-cross" size={15} color="red" />
-                                    <Text style={styles.verifiedText}>Chưa được xác minh</Text>
+                                    <Text style={styles.verifiedText}>Xác minh cấp 1</Text>
                                 </View>
                             )}
-
+                            {postDetails?.product?.verifiedLevel === 'LEVEL_2' && (
+                                <View style={[styles.verified, { backgroundColor: '#ff8000' }]}>
+                                    <Text style={styles.verifiedText}>Xác minh cấp 2</Text>
+                                </View>
+                            )}
+                            {postDetails?.product?.verifiedLevel === 'LEVEL_3' && (
+                                <View style={[styles.verified, { backgroundColor: '#33cc33' }]}>
+                                    <Text style={styles.verifiedText}>Xác minh cấp 3</Text>
+                                </View>
+                            )}
                         </View>
                         <Text style={styles.labelTransport}>Miễn phí vận chuyển</Text>
                         <Text style={styles.price}>
