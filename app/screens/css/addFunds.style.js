@@ -182,6 +182,11 @@ const styles = StyleSheet.create({
     },
     highlightText: {
         color: 'blue'
+    },
+    WebView: {
+        width: windowWidth,
+        height: windowHeight,
+        backgroundColor: COLORS.white,
     }
 });
 

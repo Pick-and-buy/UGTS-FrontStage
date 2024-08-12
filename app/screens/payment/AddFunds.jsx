@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import { Formik } from 'formik';
@@ -6,7 +6,8 @@ import * as Yup from 'yup';
 import styles from '../css/addFunds.style';
 import { COLORS } from '../../constants/theme';
 import { Icon } from 'react-native-elements';
-import { createPayment } from '../../api/payment';
+import { createPayment, getPaymentStatus } from '../../api/payment';
+import { WebView } from 'react-native-webview';
 
 // Validation Schema
 const TopUpSchema = Yup.object().shape({
@@ -25,21 +26,49 @@ const removeDots = (amount) => {
     return amount.replace(/\./g, ''); // Remove dots
 };
 
-
 const AddFunds = ({ navigation }) => {
     const [activeButton, setActiveButton] = useState(null);
-
-
+    const [paymentUrl, setPaymentUrl] = useState(null); // State for the payment URL
+    const [urlStatus, setUrlStatus] = useState(null);
     const handleSubmit = async (amount) => {
         try {
             const response = await createPayment(amount);
-            console.log(response.data);
+            console.log(response.result);
+            setPaymentUrl(response.data.result);
 
         } catch (error) {
             console.error('Fetching VNpay', error);
         }
     };
 
+    const handleStatusPayment = async (statusUrl) => {
+        try {
+            const status = await getPaymentStatus(statusUrl);
+            console.log(status);
+            Alert.alert(status.result);
+        } catch (error) {
+            console.error('Fetching get VNpay status', error);
+        }
+    }
+
+    if (paymentUrl) {
+        return (
+            <WebView
+                source={{ uri: paymentUrl }}
+                style={styles.WebView}
+                onNavigationStateChange={(event) => {
+                    console.log(event.url);
+                    if (event.url.includes("payment-info")) {
+                        handleStatusPayment(event.url);
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'add-funds' }],
+                        });
+                    }
+                }}
+            />
+        );
+    }
 
     return (
         <View style={styles.container}>
@@ -55,7 +84,6 @@ const AddFunds = ({ navigation }) => {
                 validationSchema={TopUpSchema}
                 onSubmit={values => {
                     console.log('Raw amount:', removeDots(values.amount));
-                    // Handle the submission of raw amount
                     const amount = removeDots(values.amount);
                     handleSubmit(amount);
                 }}
@@ -70,14 +98,11 @@ const AddFunds = ({ navigation }) => {
                                     <TextInput
                                         style={styles.input}
                                         onChangeText={(text) => {
-                                            // Handle raw input, format it for display
                                             const rawAmount = text.replace(/\D/g, '');
                                             setFieldValue('amount', formatMoney(rawAmount));
-                                            // Clear active button when input changes
                                             setActiveButton(null);
                                         }}
                                         onBlur={() => {
-                                            // Ensure amount is formatted correctly on blur
                                             const rawAmount = removeDots(values.amount);
                                             setFieldValue('amount', formatMoney(rawAmount));
                                         }}
@@ -97,7 +122,7 @@ const AddFunds = ({ navigation }) => {
                                         key={index}
                                         style={[
                                             styles.quickAmountButton,
-                                            activeButton === index && styles.activeButton // Apply activeButton style
+                                            activeButton === index && styles.activeButton
                                         ]}
                                         onPress={() => {
                                             setFieldValue('amount', formatMoney(amount));
@@ -107,7 +132,7 @@ const AddFunds = ({ navigation }) => {
                                         <Text
                                             style={[
                                                 styles.quickAmountButtonText,
-                                                activeButton === index && styles.activeButtonText // Apply activeButtonText style
+                                                activeButton === index && styles.activeButtonText
                                             ]}
                                         >
                                             {formatMoney(amount)}
