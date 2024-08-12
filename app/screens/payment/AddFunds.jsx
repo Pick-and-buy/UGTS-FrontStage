@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import styles from '../css/addFunds.style';
 import { COLORS } from '../../constants/theme';
 import { Icon } from 'react-native-elements';
+import { createPayment } from '../../api/payment';
 
 // Validation Schema
 const TopUpSchema = Yup.object().shape({
@@ -24,8 +25,21 @@ const removeDots = (amount) => {
     return amount.replace(/\./g, ''); // Remove dots
 };
 
+
 const AddFunds = ({ navigation }) => {
     const [activeButton, setActiveButton] = useState(null);
+
+
+    const handleSubmit = async (amount) => {
+        try {
+            const response = await createPayment(amount);
+            console.log(response.data);
+
+        } catch (error) {
+            console.error('Fetching VNpay', error);
+        }
+    };
+
 
     return (
         <View style={styles.container}>
@@ -42,6 +56,8 @@ const AddFunds = ({ navigation }) => {
                 onSubmit={values => {
                     console.log('Raw amount:', removeDots(values.amount));
                     // Handle the submission of raw amount
+                    const amount = removeDots(values.amount);
+                    handleSubmit(amount);
                 }}
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue }) => (
