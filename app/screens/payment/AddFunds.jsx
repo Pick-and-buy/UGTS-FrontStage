@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -9,6 +9,7 @@ import { Icon } from 'react-native-elements';
 import { charge, createPayment, getPaymentStatus } from '../../api/payment';
 import { WebView } from 'react-native-webview';
 import { useAuth } from "../../context/AuthContext";
+import { useFocusEffect } from '@react-navigation/native';
 // Validation Schema
 const TopUpSchema = Yup.object().shape({
     amount: Yup.string().required('Vui lòng nhập số tiền bạn muốn nạp.'),
@@ -27,11 +28,17 @@ const removeDots = (amount) => {
 };
 
 const AddFunds = ({ navigation }) => {
-    const { user } = useAuth();
+    const { user, fetchUserData } = useAuth();
     const [amount, setAmount] = useState();
     const [activeButton, setActiveButton] = useState(null);
     const [paymentUrl, setPaymentUrl] = useState(null);
-    console.log(user.wallet);
+    // console.log(user.wallet);
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchUserData(); // Reload user data when screen is focused
+        }, [])
+    );
 
     const handleSubmit = async (amount) => {
         try {
@@ -52,10 +59,11 @@ const AddFunds = ({ navigation }) => {
                 // console.log(status);
                 if (status.message === 'Transaction Failed') {
                     Alert.alert(status.message);
-                    navigation.reset({
-                        index: 0,
-                        routes: [{ name: 'add-funds' }],
-                    });
+                    // navigation.reset({
+                    //     index: 0,
+                    //     routes: [{ name: 'add-funds' }],
+                    // });
+                    navigation.navigate("add-funds");
                 }
                 if (status.message === 'Transaction Success') {
                     const rs = await charge(user?.wallet?.walletId, amount);
@@ -162,10 +170,10 @@ const AddFunds = ({ navigation }) => {
                             <TouchableOpacity style={styles.paymentMethod}>
                                 <Icon name="wallet" type="entypo" color={COLORS.primary} />
                                 <Text style={styles.paymentText}>Phương thức thanh toán</Text>
-                                <Text style={styles.paymentMethodInfo}>Vui lòng chọn phương thức thanh toán</Text>
-                                <Entypo name="chevron-right" size={32} color="#aaa"
+                                <Text style={styles.paymentMethodInfo}>Phương thức thanh toán ví VNPay</Text>
+                                {/* <Entypo name="chevron-right" size={32} color="#aaa"
                                     style={{ position: "absolute", right: 10 }}
-                                />
+                                /> */}
                             </TouchableOpacity>
                         </View>
 

@@ -11,9 +11,10 @@ import { Rating } from 'react-native-stock-star-rating';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from "../context/AuthContext";
 import { getRatingByUserId } from "../api/user";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Profile = ({ navigation }) => {
-  const { logout, user, isAuthenticated } = useAuth();
+  const { logout, user, isAuthenticated, fetchUserData } = useAuth();
   const [ratings, setRatings] = useState();
   const [averageRating, setAverageRating] = useState(0);
 
@@ -25,6 +26,14 @@ const Profile = ({ navigation }) => {
       fetchRatings();
     }
   }, [user]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (isAuthenticated) {
+        fetchUserData();
+      }
+    }, [isAuthenticated])
+  );
 
   const fetchRatings = async () => {
     try {
