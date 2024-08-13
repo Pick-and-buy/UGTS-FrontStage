@@ -76,7 +76,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 16,
         marginHorizontal: "2%",
-        marginTop: 10
+        marginTop: 10,
+        color: COLORS.red
     },
     quickAmounts: {
         width: "96%",

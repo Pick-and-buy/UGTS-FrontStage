@@ -28,7 +28,7 @@ const removeDots = (amount) => {
 };
 
 const AddFunds = ({ navigation }) => {
-    const { user, fetchUserData } = useAuth();
+    const { user, fetchUserData, isAuthenticated } = useAuth();
     const [amount, setAmount] = useState();
     const [activeButton, setActiveButton] = useState(null);
     const [paymentUrl, setPaymentUrl] = useState(null);
@@ -36,8 +36,10 @@ const AddFunds = ({ navigation }) => {
 
     useFocusEffect(
         useCallback(() => {
-            fetchUserData(); // Reload user data when screen is focused
-        }, [])
+            if (isAuthenticated) {
+                fetchUserData();
+            }
+        }, [isAuthenticated])
     );
 
     const handleSubmit = async (amount) => {
