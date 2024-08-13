@@ -43,6 +43,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
     try {
       const data = await getOrderByOrderId(orderInfo.id);
       setUpdatedOrderInfo(data.result);
+      setVideoUri(data?.result?.orderDetails?.receivePackageVideo)
     } catch (error) {
       console.error('Fetching order data by order id failed:', error);
     }
@@ -382,7 +383,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
 
         {updatedOrderInfo?.orderDetails?.status === "RECEIVED" && !showAddRating &&
           <View style={styles.receivedContainer}>
-            {videoUri === "" ?
+            {videoUri === "" || videoUri === null ?
               (
                 <TouchableOpacity
                   onPress={UploadVideoScreen}
