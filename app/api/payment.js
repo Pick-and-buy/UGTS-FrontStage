@@ -16,7 +16,7 @@ export const getPaymentStatus = async (url) => {
         // Retrieve the token from AsyncStorage
         const token = await AsyncStorage.getItem('token');
         console.log(token);
-        
+
         // Define the URL with the amount parameter
         // const url = `http://10.0.2.2:8080/api/v1/vnpay/payment-info?${url}`;
 
@@ -42,3 +42,13 @@ export const getPaymentStatus = async (url) => {
         throw error;
     }
 };
+
+export const charge = async (walletId, amount) => {
+    try {
+        const response = await axiosInstance.post(`/wallets/charge?walletId=${walletId}&amount=${amount}`);
+        return response;
+    } catch (error) {
+        console.error('Error charge payment:', error);
+        throw error;
+    }
+}

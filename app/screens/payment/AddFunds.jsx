@@ -6,9 +6,9 @@ import * as Yup from 'yup';
 import styles from '../css/addFunds.style';
 import { COLORS } from '../../constants/theme';
 import { Icon } from 'react-native-elements';
-import { createPayment, getPaymentStatus } from '../../api/payment';
+import { charge, createPayment, getPaymentStatus } from '../../api/payment';
 import { WebView } from 'react-native-webview';
-
+import { useAuth } from "../../context/AuthContext";
 // Validation Schema
 const TopUpSchema = Yup.object().shape({
     amount: Yup.string().required('Vui lòng nhập số tiền bạn muốn nạp.'),
@@ -27,9 +27,12 @@ const removeDots = (amount) => {
 };
 
 const AddFunds = ({ navigation }) => {
+    const { user } = useAuth();
+    const [amount, setAmount] = useState();
     const [activeButton, setActiveButton] = useState(null);
-    const [paymentUrl, setPaymentUrl] = useState(null); // State for the payment URL
-    const [urlStatus, setUrlStatus] = useState(null);
+    const [paymentUrl, setPaymentUrl] = useState(null);
+    // console.log(user.wallet.walletId);
+
     const handleSubmit = async (amount) => {
         try {
             const response = await createPayment(amount);
@@ -41,14 +44,34 @@ const AddFunds = ({ navigation }) => {
         }
     };
 
-    const handleStatusPayment = async (statusUrl) => {
-        try {
-            const status = await getPaymentStatus(statusUrl);
-            console.log(status);
-            Alert.alert(status.message);
-        } catch (error) {
-            console.error('Fetching get VNpay status', error);
+    const handleStatusPayment = async (event) => {
+        console.log(event.url);
+        if (event.url.includes("payment-info")) {
+            try {
+                const status = await getPaymentStatus(event.url);
+                // console.log(status);
+                if (status.message === 'Transaction Failed') {
+                    Alert.alert(status.message);
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'add-funds' }],
+                    });
+                }
+                if (status.message === 'Transaction Success') {
+                    const rs = await charge(user?.wallet?.walletId, amount);
+                    console.log(rs);
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'add-funds' }],
+                    });
+                    Alert.alert(rs.data.message);
+                }
+
+            } catch (error) {
+                console.error('Fetching get VNpay status', error);
+            }
         }
+
     }
 
     if (paymentUrl) {
@@ -57,16 +80,7 @@ const AddFunds = ({ navigation }) => {
                 <WebView
                     source={{ uri: paymentUrl }}
                     style={styles.webView}
-                    onNavigationStateChange={(event) => {
-                        console.log(event.url);
-                        if (event.url.includes("payment-info")) {
-                            handleStatusPayment(event.url);
-                            navigation.reset({
-                                index: 0,
-                                routes: [{ name: 'add-funds' }],
-                            });
-                        }
-                    }}
+                    onNavigationStateChange={(event) => handleStatusPayment(event)}
                 />
             </View>
 
@@ -89,6 +103,7 @@ const AddFunds = ({ navigation }) => {
                     console.log('Raw amount:', removeDots(values.amount));
                     const amount = removeDots(values.amount);
                     handleSubmit(amount);
+                    setAmount(amount);
                 }}
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue }) => (
