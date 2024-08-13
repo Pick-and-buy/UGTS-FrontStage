@@ -10,7 +10,7 @@ import { getUserByToken } from '../../api/user';
 const AddressLists = ({ navigation, route }) => {
     const { type, postDetails, orderInfo } = route.params;
     const [user, setUser] = useState(null);
-    
+
     const fetchUserData = async () => {
         try {
             const userData = await getUserByToken();
@@ -100,9 +100,9 @@ const AddressLists = ({ navigation, route }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <Feather
-                    style={{ marginLeft: 10 }}
-                    name="chevron-left" size={30} color={COLORS.primary} onPress={() => navigation.goBack()} />
+                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                    <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
+                </TouchableOpacity>
                 <Text style={styles.headerText}>
                     Địa chỉ của bạn
                 </Text>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   StyleSheet,
   ScrollView,
@@ -8,29 +8,40 @@ import {
   Image,
   SafeAreaView,
   ActivityIndicator,
+  RefreshControl,
+  Alert
 } from "react-native";
-import { MaterialCommunityIcons, Feather, AntDesign } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Feather, AntDesign, Octicons, MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from "../../constants/theme";
-import { Rating } from 'react-native-stock-star-rating';
-import { MaterialIcons, Octicons } from '@expo/vector-icons';
-import styles from "../css/UserProfile.style";
 import Post from "../post/Post";
-import { getListsFollowers, getListsFollowing, getRatingByUserId } from "../../api/user";
-import { useAuth } from "../../context/AuthContext";
-const UserProfile = ({ navigation }) => {
-  const { user } = useAuth();
-  const createdPosts = user.createdPosts;
+import { checkIfFollowing, followUser, getListsFollowers, getListsFollowing, getRatingByUserId, unfollowUser } from "../../api/user";
+import styles from "../css/UserProfile.style"; // Unified style
+import { getPostsByUserId } from "../../api/post";
+
+const UserProfile = ({ navigation, route }) => {
+  const { user, userIdLogged } = route.params || {};
+  const isMyProfile = user?.id === userIdLogged || userIdLogged === undefined;
+  const isSellerProfile = !isMyProfile;
+
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const [isFollowing, setIsFollowing] = useState(false);
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
-  const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
+  const profileImage = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
   useEffect(() => {
     fetchFollowersCount();
     fetchFollowingCount();
     fetchRating();
-  }, []);
+    fetchPostsByUserId();
+
+    if (isSellerProfile && userIdLogged) {
+      checkFollowStatus();
+    }
+  }, [userIdLogged]);
 
   const fetchFollowersCount = async () => {
     try {
@@ -55,9 +66,80 @@ const UserProfile = ({ navigation }) => {
       const response = await getRatingByUserId(user.id);
       setRatingCount(response.result.length);
     } catch (error) {
-      console.error('Error fetching following count:', error);
+      console.error('Error fetching rating:', error);
     }
   };
+
+  const fetchPostsByUserId = async () => {
+    setLoading(true);
+    try {
+      const response = await getPostsByUserId(user.id);
+      setPosts(response?.data?.result);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const checkFollowStatus = async () => {
+    try {
+      const status = await checkIfFollowing(userIdLogged, user.id);
+      setIsFollowing(status);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleFollowToggle = async () => {
+    if (!userIdLogged) {
+      Alert.alert(
+        "Đăng nhập",
+        "Bạn cần đăng nhập để theo dõi người bán.",
+        [
+          {
+            text: "Cancel",
+            style: "cancel"
+          },
+          {
+            text: "Đăng nhập",
+            onPress: () => navigation.navigate('login-navigation')
+          }
+        ]
+      );
+      return;
+    }
+
+    try {
+      setLoading(true);
+      if (isFollowing) {
+        const response = await unfollowUser(userIdLogged, user.id);
+        console.log(response);
+        setFollowersCount(prevCount => prevCount - 1);
+      } else {
+        const response = await followUser(userIdLogged, user.id);
+        console.log(response);
+        setFollowersCount(prevCount => prevCount + 1);
+      }
+      setIsFollowing(!isFollowing);
+    } catch (error) {
+      console.error('Error in handleFollowToggle:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchFollowersCount();
+    fetchFollowingCount();
+    fetchRating();
+    fetchPostsByUserId().then(() => setRefreshing(false));
+
+    if (isSellerProfile && userIdLogged) {
+      checkFollowStatus();
+    }
+  }, [userIdLogged]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -74,20 +156,21 @@ const UserProfile = ({ navigation }) => {
             size={35}
             color="gray" />
         </View>
-
         {/* Personal Information */}
         <View style={styles.personalContainer}>
           <TouchableOpacity
             style={styles.avatarTouchable}
-            onPress={() => navigation.navigate('upload-photo-navigation', user)}
+            onPress={() => navigation.navigate(isSellerProfile ? 'upload-photo-navigation' : 'update-profile', user)}
           >
             <Image
               style={styles.avatar}
-              source={{ uri: user?.avatar ? user?.avatar : profile }}
+              source={{ uri: user?.avatar ? user?.avatar : profileImage }}
             />
-            <View style={styles.editIcon}>
-              <AntDesign name="pluscircle" size={24} color="#06bcee" />
-            </View>
+            {!isSellerProfile && (
+              <View style={styles.editIcon}>
+                <AntDesign name="pluscircle" size={24} color="#06bcee" />
+              </View>
+            )}
           </TouchableOpacity>
           <Text style={styles.username}>
             @{user?.username}
@@ -114,7 +197,7 @@ const UserProfile = ({ navigation }) => {
             </Text>
             <Text>Đánh giá</Text>
           </TouchableOpacity>
-          {user.verified === true ? (
+          {user?.isVerified === true ? (
             <View style={styles.blockView}>
               <MaterialIcons name="verified-user" size={19} color="#699BF7" style={{ marginTop: 6 }} />
               <Text>Đã xác minh</Text>
@@ -124,38 +207,65 @@ const UserProfile = ({ navigation }) => {
               <Octicons name="unverified" size={19} color="gray" style={{ marginTop: 6 }} />
               <Text>Chưa xác minh</Text>
             </View>
-          )
-
-          }
-
+          )}
         </View>
+
         {/* Button */}
         <View style={styles.buttonWrapper}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('update-profile', user)}
-            style={styles.followBtn}
-          >
-            <Text style={styles.btnText}>Sửa hồ sơ</Text>
-          </TouchableOpacity>
+          {isMyProfile ? (
+            <TouchableOpacity
+              onPress={() => navigation.navigate('update-profile', user)}
+              style={styles.editBtn}
+            >
+              <Text style={styles.editText}>Sửa hồ sơ</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={handleFollowToggle}
+              style={[
+                styles.followBtn,
+                isFollowing && styles.followingBtn
+              ]}
+            >
+              <Text style={[
+                styles.followBtnText,
+                isFollowing && styles.followingBtnText
+              ]}>
+                {isFollowing ? 'Đang theo dõi' : 'Theo dõi'}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
+
         {/* User product */}
         <View style={styles.containerPost}>
           <View style={{ marginTop: 20, justifyContent: "center", alignItems: "center" }}>
             <Text style={{ fontSize: 20, fontWeight: "bold" }}>Sản phẩm</Text>
           </View>
-          <ScrollView contentContainerStyle={styles.scrollViewContent}>
+          <ScrollView
+            contentContainerStyle={styles.scrollViewContent}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                colors={[COLORS.primary]}
+              />
+            }
+          >
             {loading ? (
               <ActivityIndicator size="large" color={COLORS.primary} />
             ) : (
-              createdPosts.length > 0 ? (
+              posts.length > 0 ? (
                 <View style={styles.row}>
-                  {createdPosts.map(post => (
-                    <Post key={post.id} post={post} type="seller" />
+                  {posts.map(post => (
+                    <Post key={post.id} post={post} type={isSellerProfile ? "buyer" : "seller"} />
                   ))}
                 </View>
               ) : (
                 <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-                  <Text style={{ fontSize: 16, color: 'gray' }}>Bạn chưa có sản phẩm nào</Text>
+                  <Text style={{ fontSize: 16, color: 'gray' }}>
+                    {isSellerProfile ? "Người bán chưa có sản phẩm nào" : "Bạn chưa có sản phẩm nào"}
+                  </Text>
                 </View>
               )
             )}
@@ -163,7 +273,7 @@ const UserProfile = ({ navigation }) => {
         </View>
       </View>
     </SafeAreaView>
-  )
+  );
 }
 
 export default UserProfile;

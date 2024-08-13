@@ -149,7 +149,7 @@ const Seller = ({ navigation }) => {
   };
 
   const renderItem = ({ item }) => (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={() => handleSellerOrderDetail(item)}>
       <Image source={{ uri: item?.post?.product?.images[0]?.imageUrl }} style={styles.image} />
       <View style={styles.info}>
         <Text numberOfLines={1} style={styles.itemTitle}>
@@ -214,7 +214,7 @@ const Seller = ({ navigation }) => {
           </View>
         }
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (

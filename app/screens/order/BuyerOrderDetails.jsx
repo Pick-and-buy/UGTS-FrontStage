@@ -173,7 +173,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
               source={{ uri: updatedOrderInfo?.post?.user?.avatar ? updatedOrderInfo?.post?.user?.avatar : profile }}
             />
             <Text style={styles.sellerText}>
-              {updatedOrderInfo?.post?.user?.username}
+              {updatedOrderInfo?.post?.user?.username} (Người bán)
             </Text>
           </View>
           <View style={styles.product}>

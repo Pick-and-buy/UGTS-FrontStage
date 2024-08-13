@@ -11,16 +11,19 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "10%",
         flexDirection: "row",
-        justifyContent: "space-around",
+        justifyContent: "space-between",
         alignItems: "flex-end",
         backgroundColor: COLORS.white,
         paddingBottom: 12,
-        ...SHADOWS.medium
+        ...SHADOWS.small
+    },
+    backButton: {
+        marginLeft: "2%"
     },
     headerText: {
         color: COLORS.black,
         fontSize: 20,
-        width: "65%",
+        width: "70%",
         marginBottom: 4,
         fontWeight: "bold",
     },
@@ -50,7 +53,7 @@ const styles = StyleSheet.create({
     locationDetails: {
         width: "85%",
         marginLeft: "7%",
-        marginTop:6
+        marginTop: 6
     },
     locationText: {
         color: COLORS.gray
@@ -194,7 +197,7 @@ const styles = StyleSheet.create({
     note: {
         width: "96%",
         marginHorizontal: "auto",
-        marginVertical:10
+        marginVertical: 10
     },
     bottomBtn: {
         flexDirection: 'row',

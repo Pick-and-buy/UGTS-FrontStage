@@ -82,7 +82,7 @@ const Appreciation = ({ navigation, route }) => {
   const UserItem = ({ item }) => {
     const isFollowing = followStatus[item?.ratingUser?.id];
     return (
-      <View style={styles.user}>
+      <TouchableOpacity style={styles.user} onPress={() => navigation.navigate("user-profile-details", { user: item?.ratingUser, userIdLogged: user.id })}>
         <Image
           style={styles.avatar}
           source={{ uri: item?.ratingUser?.avatar ? item?.ratingUser?.avatar : profile }}
@@ -141,9 +141,12 @@ const Appreciation = ({ navigation, route }) => {
             <Text style={styles.commentText}>
               {item?.comment}
             </Text>
+            <View style={styles.time}>
+              <Text style={styles.timeText}>{item?.ratedAt}</Text>
+            </View>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     )
   };
 

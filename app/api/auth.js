@@ -1,24 +1,6 @@
 import axiosInstance from './axiosInstance';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const login = async (phoneNumber, password) => {
-    try {
-        const response = await axiosInstance.post('/auth/login', { phoneNumber, password });
-        const token = response.data.result.accessToken;
-        if (token) {
-            await AsyncStorage.setItem('token', token);
-        }
-        return token;
-    } catch (error) {
-        throw error;
-    }
-};
-
-export const logout = async () => {
-    await AsyncStorage.removeItem('token');
-    await AsyncStorage.removeItem('refreshToken');
-};
-
 export const register = async (userData) => {
     try {
         const response = await axiosInstance.post('/auth/register', {

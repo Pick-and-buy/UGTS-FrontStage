@@ -7,7 +7,6 @@ const styles = StyleSheet.create({
     container: {
         width: windowWidth,
         height: windowHeight,
-        marginBottom: "20%",
     },
     posts: {
         width: '98%',
@@ -21,6 +20,7 @@ const styles = StyleSheet.create({
         flexWrap: "wrap",
         alignItems: "center",
         marginHorizontal: "auto",
+        marginBottom: "20%",
     },
     heading: {
         fontSize: 18,

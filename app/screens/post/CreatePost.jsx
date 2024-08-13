@@ -135,7 +135,7 @@ const CreatePost = () => {
   }
 
   const validationSchema = Yup.object().shape({
-    title: Yup.string().required('Hãy nhập tiêu đề bài đăng'),
+    // title: Yup.string().required('Hãy nhập tiêu đề bài đăng'),
     productName: Yup.string().required('Hãy nhập tên sản phẩm'),
     brandName: Yup.string().required('Hãy chọn thương hiệu'),
     condition: Yup.string().required('Hãy chọn trạng thái sản phẩm'),
@@ -206,7 +206,7 @@ const CreatePost = () => {
 
         const formData = new FormData();
         const request = {
-          title: title,
+          title: "",
           description: description,
           brand: { name: brandName },
           brandLine: { lineName: brandLineName },
@@ -230,7 +230,7 @@ const CreatePost = () => {
             story: '',
           },
           condition: condition,
-          boosted: true,
+          boosted: false,
         };
 
         formData.append('request', JSON.stringify(request));
@@ -473,7 +473,8 @@ const CreatePost = () => {
       <View style={styles.shadow} />
       <Formik
         initialValues={{
-          title: '', productName: '', brandName: '', brandLineName: '', condition: '',
+          // title: '', 
+          productName: '', brandName: '', brandLineName: '', condition: '',
           category: '', exteriorMaterial: '', interiorMaterial: '', size: '', width: '',
           height: '', length: '', referenceCode: '', manufactureYear: '', color: '',
           accessories: '', dateCode: '', serialNumber: '', purchasedPlace: '', description: '', price: '',
@@ -495,7 +496,7 @@ const CreatePost = () => {
               >Tải lên ảnh sản phẩm
                 <Text style={{ color: 'red', fontSize: 18, fontFamily: 'bold' }}> *</Text>
               </Text>
-              <View style={styles.imageUploadContaniner}>
+              <View style={styles.imageUploadContainer}>
                 <View style={styles.imageUpload}>
                   <FlatList
                     data={images}
@@ -615,10 +616,23 @@ const CreatePost = () => {
                   <View></View>
                 )
               }
-              {isChecked_3 &&
-                <View style={{ width: "80%", flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5, marginHorizontal: '10%' }}>
-                  <Text style={styles.labelText}>Mức phí để sử dụng cho việc xác minh sản phẩm từ bên thứ ba là: $20</Text>
+
+              {isChecked_3 && (
+                <View style={styles.checkboxContainer}>
+                  <View style={{ width: "100%", flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
+                    <Text style={styles.labelText}>Bạn cần bổ sung ở cấp 3</Text>
+                  </View>
+                  <View View style={styles.selectOption}>
+                    <Text style={styles.labelText}>Ở xác minh cấp 3 bạn nên bổ sung đầy đủ ảnh chi tiết cho sản phẩm.
+                      Chúng tôi sẽ gửi thông tin sản phẩm của bạn đến LEGITGRAILS để xác nhận đó là hàng chính hãng.
+                      Phí dịch vụ sẽ là <Text style={{ color: "red" }}>500.000đ</Text>
+                    </Text>
+                  </View>
+
+                  <View style={styles.shadow}></View>
                 </View>
+              )
+
               }
               <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
                 <Text style={styles.labelText}>Thông tin sản phẩm</Text>
@@ -632,7 +646,7 @@ const CreatePost = () => {
               {/* Product Information */}
               <View style={styles.productContainer}>
                 {/* Title */}
-                <View style={styles.productField}>
+                {/* <View style={styles.productField}>
                   <Text style={styles.title}>Tiêu đề sản phẩm <Text style={styles.required}>*</Text></Text>
                   <TextInput
                     value={values.title}
@@ -650,7 +664,7 @@ const CreatePost = () => {
                   {touched.title && errors.title && (
                     <Text style={styles.errorText}>{errors.title}</Text>
                   )}
-                </View>
+                </View> */}
 
                 {/* Tên sản phẩm */}
                 <View style={styles.productField}>
@@ -1069,11 +1083,23 @@ const CreatePost = () => {
                 {touched.price && errors.price && (
                   <Text style={[styles.errorText, { marginLeft: 5, marginTop: 5 }]}>{errors.price}</Text>
                 )}
+                {
+                  isChecked_3 && (
+                    <View View style={styles.productField}>
+                      <View style={styles.inputProduct}>
+                        <Text style={[styles.title,{marginLeft:-2}]}>Phí kiểm tra cấp 3 (VND):
+                          <Text style={{ color: "red" }}>500.000đ</Text>
+                        </Text>
+                      </View>
+                      <View style={styles.inputProduct}>
+                        <Text style={[styles.title,{marginLeft:-2}]}>
+                          Số tiền thực nhận (VND):<Text style={{ color: "red" }}>3500.000đ</Text>
+                        </Text>
+                      </View>
+                    </View>
+                  )
 
-                {/* Fee */}
-                {/* <View style={styles.productField}>
-                  <Text style={{ fontSize: 16 }}>: <Text style={{ color: 'blue' }}>Miễn phí</Text></Text>
-                </View> */}
+                }
               </View>
 
               {/* Thành Tiền */}

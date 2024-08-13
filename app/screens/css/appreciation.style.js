@@ -129,5 +129,13 @@ const styles = StyleSheet.create({
     selectedFilterButtonText: {
         color: '#fff',
     },
+    time:{
+        width: '100%',
+        marginTop:15
+    },
+    timeText: {
+        fontSize:12,
+        color: '#aaa'
+    }
 })
 export default styles

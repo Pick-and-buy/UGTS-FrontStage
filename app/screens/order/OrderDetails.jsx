@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Image, SafeAreaView, TouchableOpacity, ScrollView } from "react-native";
+import { StyleSheet, View, Text, Image, SafeAreaView, TouchableOpacity, ScrollView, Alert } from "react-native";
 import styles from "../css/orderDetails.style";
 import { Feather, AntDesign, MaterialIcons, MaterialCommunityIcons, SimpleLineIcons, FontAwesome6 } from '@expo/vector-icons';
 import { COLORS } from "../../constants/theme";
@@ -64,6 +64,15 @@ const OrderDetails = ({ navigation, route }) => {
     };
 
     const handleOrder = async () => {
+        if (!selectedAddress) {
+            Alert.alert(
+                "Chưa có địa chỉ",
+                "Vui lòng thêm địa chỉ để tiếp tục mua hàng.",
+                [{ text: "OK", onPress: () => navigation.navigate('address-lists', { postDetails, type: 'order' }) }]
+            );
+            return;
+        }
+
         console.log('Selected payment method:', checked);
         try {
             const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id);
@@ -125,7 +134,9 @@ const OrderDetails = ({ navigation, route }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <Feather name="chevron-left" size={30} color={COLORS.primary} onPress={() => navigation.goBack()} />
+                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                    <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
+                </TouchableOpacity>
                 <Text style={styles.headerText}>Tổng quan đơn hàng</Text>
             </View>
             <ScrollView style={styles.wrapper} showsVerticalScrollIndicator={false}>
@@ -155,7 +166,8 @@ const OrderDetails = ({ navigation, route }) => {
                             )
                         ))
                     ) : (
-                        <View style={styles.locationDetails}>
+                        <View style={[styles.locationDetails, { flexDirection: "row" ,justifyContent:"flex-start"}]}>
+                            <AntDesign name="plus" size={18} color="gray" style={{marginRight:2}} />
                             <Text style={styles.locationText}>Thêm địa chỉ để tiếp tục mua hàng</Text>
                         </View>
                     )}

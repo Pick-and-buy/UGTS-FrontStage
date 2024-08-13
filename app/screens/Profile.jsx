@@ -91,7 +91,7 @@ const Profile = ({ navigation }) => {
                 />
                 {isAuthenticated ? (
                   <TouchableOpacity style={{ flexDirection: "row" }}
-                    onPress={() => navigation.navigate("user-profile-details")}
+                    onPress={() => navigation.navigate("user-profile-details", { user: user })}
                   >
                     <View style={{ marginLeft: 4, marginTop: 2, flexDirection: "column" }}>
                       <Text style={styles.text}>
@@ -212,7 +212,7 @@ const Profile = ({ navigation }) => {
                   marginTop: 20
                 }}>
                   <Text style={{ fontSize: 20, color: "gray" }}>SỐ DƯ VÍ</Text>
-                  <Text style={{ fontSize: 32 }}>1000 VND</Text>
+                  <Text style={{ fontSize: 32 }}>0 VND</Text>
                   <View style={{
                     flexDirection: "row",
                     justifyContent: "center",
@@ -229,7 +229,9 @@ const Profile = ({ navigation }) => {
                       borderLeftWidth: 1,
                       borderColor: 'gray',
                     }}></View>
-                    <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
+                    <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
+                      onPress={() => navigation.navigate("add-funds")}
+                    >
                       <AntDesign name="pluscircleo" size={26} color="black" />
                       <Text style={{ fontSize: 16, marginTop: 10 }}>Nạp tiền</Text>
                     </TouchableOpacity>

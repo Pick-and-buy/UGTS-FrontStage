@@ -17,6 +17,9 @@ const styles = StyleSheet.create({
         paddingBottom: 12,
         ...SHADOWS.small
     },
+    backButton:{
+        marginLeft:"3%"
+    },
     headerText: {
         color: COLORS.black,
         fontSize: 20,
