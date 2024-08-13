@@ -53,10 +53,10 @@ const styles = StyleSheet.create({
         color: COLORS.gray,
         // marginHorizontal: 20,
         marginVertical: 5,
-        marginLeft:10
+        marginLeft:5
     },
     //Image Upload
-    imageUploadContaniner: {
+    imageUploadContainer: {
         width: windowWidth,
         height: 150,
         backgroundColor: COLORS.white,
@@ -209,9 +209,10 @@ const styles = StyleSheet.create({
     },
     dropdown: {
         marginBottom: 10,
-        height: 50,
+        height: 60,
         borderColor: "#ddd",
         borderBottomWidth: 1,
+        paddingBottom: 10
     },
     label: {
         fontSize: 16,
@@ -226,6 +227,8 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: 'red',
         marginLeft: 10,
+        marginTop: -28,
+        marginBottom: 10
     },
 
     title: {

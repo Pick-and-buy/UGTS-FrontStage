@@ -141,6 +141,9 @@ const Appreciation = ({ navigation, route }) => {
             <Text style={styles.commentText}>
               {item?.comment}
             </Text>
+            <View style={styles.time}>
+              <Text style={styles.timeText}>{item?.ratedAt}</Text>
+            </View>
           </View>
         </View>
       </TouchableOpacity>

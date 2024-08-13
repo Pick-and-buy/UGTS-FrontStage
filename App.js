@@ -31,15 +31,15 @@ import Search from './app/screens/Search';
 import UserProfile from './app/screens/profile/UserProfile';
 import ListBrands from './app/screens/brand/ListBrands';
 import ListsPostOfBrandLine from './app/screens/brand/ListsPostOfBrandLine';
-import OrderDetails from './app/screens/payment/OrderDetails';
+import OrderDetails from './app/screens/order/OrderDetails';
 import AddressLists from './app/screens/address/AddressLists';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import UpdateAddress from './app/screens/address/UpdateAddress';
 import TodoTask from './app/screens/todoTask/TodoTask';
 import CreateAddress from './app/screens/address/CreateAddress';
-import OrderSuccessfully from './app/screens/payment/OrderSuccessfully';
-import CancelSuccessfully from './app/screens/payment/CancelSuccessfully';
-import BuyerOrderDetails from './app/screens/payment/BuyerOrderDetails';
+import OrderSuccessfully from './app/screens/order/OrderSuccessfully';
+import CancelSuccessfully from './app/screens/order/CancelSuccessfully';
+import BuyerOrderDetails from './app/screens/order/BuyerOrderDetails';
 import UpdatePost from './app/screens/post/UpdatePost';
 import PostsOfFollowedUser from './app/screens/post/PostsOfFollowedUser';
 import GetIDScreen from './app/screens/verify/Onboarding/GetIDScreen';
@@ -48,12 +48,12 @@ import ScanIDScreen from './app/screens/verify/Onboarding/ScanIDScreen';
 import FaceMatch from './app/screens/verify/FaceMatch';
 import ScanBackIDScreen from './app/screens/verify/ScanBackIDScreen';
 import ScanFontIDScreen from './app/screens/verify/ScanFontIDScreen';
-import AddRating from './app/screens/payment/AddRating';
+import AddRating from './app/screens/order/AddRating';
 import Notification from './app/screens/notification/Notification';
 import { NotificationProvider } from './app/context/NotificationContext';
-import SellerOrderDetails from './app/screens/payment/SellerOrderDetails';
+import SellerOrderDetails from './app/screens/order/SellerOrderDetails';
 import { AuthProvider } from './app/context/AuthContext';
-import OrderTracking from './app/screens/payment/OrderTracking';
+import OrderTracking from './app/screens/order/OrderTracking';
 import Following from './app/screens/profile/Following';
 import Followers from './app/screens/profile/Followers';
 import Appreciation from './app/screens/profile/Appreciation';
@@ -61,6 +61,8 @@ import Summary from './app/screens/profile/Summary';
 import CreatePostGuide from './app/screens/post/CreatePostGuide';
 import CreatePost from './app/screens/post/CreatePost';
 import QuickCreatePost from './app/screens/post/QuickCreatePost';
+import AddFunds from './app/screens/payment/AddFunds';
+
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -382,6 +384,11 @@ export default function App() {
                 <Stack.Screen
                   name='create-post-guide'
                   component={CreatePostGuide}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='add-funds'
+                  component={AddFunds}
                   options={{ headerShown: false }}
                 />
               </Stack.Navigator>

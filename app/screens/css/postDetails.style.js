@@ -27,8 +27,8 @@ const styles = StyleSheet.create({
         marginBottom: 4,
         textAlign: "center",
     },
-    backButton:{
-        marginLeft:"2%"
+    backButton: {
+        marginLeft: "2%"
     },
     contentContainer: {
         paddingBottom: "10%",
@@ -66,11 +66,15 @@ const styles = StyleSheet.create({
     verified: {
         flexDirection: "row",
         alignItems: "center",
-        marginLeft: 10,
+        backgroundColor: COLORS.primary,
+        paddingVertical:2,
+        paddingHorizontal: 5,
+        borderRadius:3
     },
     verifiedText: {
-        color: COLORS.blue,
+        color: COLORS.white,
         marginLeft: 2,
+        fontSize:12
     },
     labelTransport: {
         marginTop: 20,
@@ -297,8 +301,8 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.white,
     },
     button: {
-        width:"96%",
-        height:50,
+        width: "96%",
+        height: 50,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: COLORS.primary,

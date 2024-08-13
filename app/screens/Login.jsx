@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     ScrollView,
     Text,
@@ -7,6 +7,7 @@ import {
     Image,
     TextInput,
     Alert,
+    Modal,
 } from "react-native";
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import Button from "../components/Button";
@@ -16,41 +17,64 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { COLORS, SIZES } from "../constants/theme";
 import styles from "./css/login.style";
 import { useAuth } from '../context/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({ navigation }) => {
     const [loader, setLoader] = useState(false);
     const [obsecureText, setObsecureText] = useState(true);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [saveLogin, setSaveLogin] = useState(false);
     const { login } = useAuth();
+    const formikRef = useRef();
+    
+    useEffect(() => {
+        const loadUserCredentials = async () => {
+            try {
+                const savedCredentials = await AsyncStorage.getItem('userCredentials');
+                if (savedCredentials) {
+                    const { phoneNumber, password } = JSON.parse(savedCredentials);
+                    formikRef.current.setFieldValue('phoneNumber', phoneNumber);
+                    formikRef.current.setFieldValue('password', password);
+                    setSaveLogin(true); // Set checkbox as checked if credentials are saved
+                }
+            } catch (error) {
+                console.log('Failed to load user credentials:', error);
+            }
+        };
 
-    const handleLogin = async (values, actions) => {
+        loadUserCredentials();
+    }, []);
+
+    const handleLogin = async (values) => {
+        setLoader(true);
         try {
             await login(values.phoneNumber, values.password);
+            setLoader(false);
+
+            if (saveLogin) {
+                await AsyncStorage.setItem('userCredentials', JSON.stringify({
+                    phoneNumber: values.phoneNumber,
+                    password: values.password,
+                }));
+            } else {
+                await AsyncStorage.removeItem('userCredentials');
+            }
+
             navigation.reset({
                 index: 0,
                 routes: [{ name: 'bottom-navigation' }],
             });
         } catch (err) {
-            actions.setFieldError('general', 'Login failed. Please check your credentials and try again.');
+            setLoader(false);
+            setModalVisible(true);
         }
     };
 
-    const inValidForm = () => {
-        Alert.alert("Invalid Form", "Please provide all required fields", [
-            {
-                text: "Cancel",
-                onPress: () => { },
-            },
-            {
-                text: "Continue",
-                onPress: () => { },
-            },
-            { defaultIndex: 1 },
-        ]);
-    };
     const validationSchema = Yup.object().shape({
         phoneNumber: Yup.string().matches(/^\d{10}$/, 'Số điện thoại phải có ít nhất 10 số').required('Vui lòng nhập số điện thoại').typeError("Có vẻ như đó không phải là số điện thoại"),
         password: Yup.string().min(8, 'Mật khẩu phải có ít nhất 8 ký tự').required('Vui lòng nhập mật khẩu'),
     });
+
     return (
         <ScrollView style={{ backgroundColor: COLORS.white }}>
             <View style={{ marginHorizontal: 20, marginTop: 50 }}>
@@ -67,6 +91,7 @@ const Login = ({ navigation }) => {
                 <Text style={styles.titleLogin}>ĐĂNG NHẬP</Text>
 
                 <Formik
+                    innerRef={formikRef}
                     initialValues={{ phoneNumber: '', password: '' }}
                     onSubmit={handleLogin}
                     validationSchema={validationSchema}
@@ -109,7 +134,6 @@ const Login = ({ navigation }) => {
                                 </View>
                                 {touched.phoneNumber && errors.phoneNumber && <Text style={styles.errorMessage}>{errors.phoneNumber}</Text>}
                             </View>
-
 
                             <View style={styles.wrapper}>
                                 <View
@@ -155,13 +179,12 @@ const Login = ({ navigation }) => {
                                 )}
                             </View>
 
-
                             <View style={{ flex: 1, marginLeft: 8, marginBottom: 20 }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <BouncyCheckbox
-                                        onPress={isChecked => {
-                                            Alert.alert(`Checked:: ${isChecked}`);
-                                        }}
+                                        key={saveLogin.toString()} // Force re-render on state change
+                                        isChecked={saveLogin}
+                                        onPress={(isChecked) => setSaveLogin(isChecked)}
                                         size={20}
                                         fillColor={COLORS.primary}
                                         unFillColor={COLORS.white}
@@ -180,21 +203,18 @@ const Login = ({ navigation }) => {
                                         }}
                                     >Quên mật khẩu ?</Text>
                                 </View>
-
                             </View>
-
 
                             <Button
                                 loader={loader}
                                 title={"ĐĂNG NHẬP"}
-                                onPress={isValid ? handleSubmit : inValidForm}
-                                isValid={isValid}
+                                onPress={handleSubmit}
+                                isValid={true}
                             />
 
                             <Text style={{ textAlign: "center" }}>
                                 {" "}Hoặc tiếp tục với{" "}
                             </Text>
-
 
                             <View
                                 style={{
@@ -234,8 +254,40 @@ const Login = ({ navigation }) => {
                     )}
                 </Formik>
             </View>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Đăng nhập thất bại!</Text>
+                        <Text style={styles.modalDetailText}>Vui lòng kiểm lại thông tin tài khoản hoặc mật khẩu</Text>
+                        <View style={styles.modalButtons}>
+                            <TouchableOpacity
+                                style={styles.modalCancelButton}
+                                onPress={() => setModalVisible(false)}
+                            >
+                                <Text style={styles.modalButtonText}>Thoát</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.modalButton}
+                                onPress={() => {
+                                    setModalVisible(false);
+                                }}
+                            >
+                                <Text style={styles.modalButtonText}>Xác nhận</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </ScrollView>
     );
 };
 
 export default Login;
+
+

@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getUserByToken, sendImageToAPI } from "../api/user";
-import { login as loginAPI } from '../api/auth';
+import axiosInstance from '../api/axiosInstance';
+import { Modal, View, Text, Button, StyleSheet } from 'react-native';
 
 const AuthContext = createContext();
 
@@ -22,16 +23,18 @@ export const AuthProvider = ({ children }) => {
     };
 
     const login = async (phoneNumber, password) => {
-        try {
-            const token = await loginAPI(phoneNumber, password);
+        // try {
+            const response = await axiosInstance.post('/auth/login', { phoneNumber, password });
+            const token = response.data.result.accessToken;
             if (token) {
                 await AsyncStorage.setItem('token', token);
                 setIsAuthenticated(true);
-                fetchUserData();
+                await fetchUserData();
             }
-        } catch (error) {
-            console.error('Login failed:', error);
-        }
+            return response;
+        // } catch (error) {
+        //     console.error('Login failed:', error);
+        // }
     };
 
     const logout = async () => {
