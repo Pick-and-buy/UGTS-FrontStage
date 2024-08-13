@@ -4,7 +4,7 @@ import { COLORS, SHADOWS, SIZES } from "../../constants/theme";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.white,
+        backgroundColor: COLORS.background,
 
     },
     header: {
@@ -33,11 +33,15 @@ const styles = StyleSheet.create({
         marginHorizontal: "auto",
     },
     address: {
-        width: "92%",
+        width: "96%",
         justifyContent: "center",
         alignItems: "flex-start",
         marginHorizontal: "auto",
-        marginVertical: 10
+        marginVertical: 10,
+        backgroundColor: COLORS.white,
+        borderRadius: 10,
+        padding: 15,
+        ...SHADOWS.medium
     },
     ownerAddress: {
         width: "100%",
@@ -65,15 +69,20 @@ const styles = StyleSheet.create({
     },
     information: {
         width: "100%",
+        marginHorizontal: "auto"
     },
     product: {
-        // flex:1,
         width: "96%",
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
         marginHorizontal: "auto",
-        marginTop: 20
+        marginHorizontal: "auto",
+        marginTop: 20,
+        backgroundColor: COLORS.white,
+        borderRadius: 10,
+        padding: 15,
+        ...SHADOWS.small
     },
     productImage: {
         width: 135,
@@ -130,6 +139,11 @@ const styles = StyleSheet.create({
     relatedInformation: {
         width: "96%",
         marginHorizontal: "auto",
+        backgroundColor: COLORS.white,
+        borderRadius: 10,
+        padding: 15,
+        marginTop: 5,
+        ...SHADOWS.small
     },
     transport: {
         flexDirection: "row",
@@ -139,13 +153,14 @@ const styles = StyleSheet.create({
     transportFrom: {
         flexDirection: "row",
         gap: 3,
-        marginTop: 2
+        marginTop: 10
 
     },
     transportTime: {
         flexDirection: "row",
         gap: 5,
-        marginTop: 2
+        marginTop: 10,
+        alignItems:"center"
     },
     summary: {
         width: "100%",
@@ -154,17 +169,21 @@ const styles = StyleSheet.create({
         marginTop: 6
     },
     divider: {
-        height: 10,
+        height: 5,
         backgroundColor: "#F3F3F3",
         marginTop: 15
     },
     total: {
         width: "96%",
         marginHorizontal: "auto",
+        backgroundColor: COLORS.white,
+        borderRadius: 10,
+        padding: 15,
+        ...SHADOWS.small
     },
     totalHeader: {
         fontSize: 18,
-        fontWeight: "400",
+        fontWeight: "bold",
         marginVertical: 10,
 
     },
@@ -180,24 +199,38 @@ const styles = StyleSheet.create({
         alignItems: "flex-end",
     },
     totalText: {
-        fontSize: 14,
+        fontSize: 16,
         color: COLORS.gray
     },
     paymentMethods: {
         width: "96%",
         marginHorizontal: "auto",
+        backgroundColor: COLORS.white,
+        borderRadius: 10,
+        padding: 15,
+        ...SHADOWS.small
     },
     paymentMethodsHeader: {
         fontSize: 18,
-        fontWeight: "400",
-        marginVertical: 10,
+        fontWeight: "bold",
+        marginBottom:5
     },
-
-
+    method: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    methodText: {
+        fontSize: 16
+    },
     note: {
         width: "96%",
         marginHorizontal: "auto",
-        marginVertical: 10
+        marginVertical: 10,
+        backgroundColor: COLORS.white,
+        borderRadius: 10,
+        padding: 15,
+        ...SHADOWS.small
     },
     bottomBtn: {
         flexDirection: 'row',
@@ -227,6 +260,9 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
     },
+    highlight: {
+        color: COLORS.blue
+    }
 
 });
 

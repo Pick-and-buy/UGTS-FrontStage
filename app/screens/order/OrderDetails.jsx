@@ -22,7 +22,7 @@ const OrderDetails = ({ navigation, route }) => {
     const [deliveryDateFrom, setDeliveryDateFrom] = useState(null);
     const [deliveryDateTo, setDeliveryDateTo] = useState(null);
     const [selectedAddress, setSelectedAddress] = useState(null);
-    // console.log(selectedAddress);
+    console.log(postDetails.user);
     useEffect(() => {
         const initialize = async () => {
             await checkToken();
@@ -102,7 +102,7 @@ const OrderDetails = ({ navigation, route }) => {
 
     const calculatePrices = () => {
         setProductPrice(postDetails?.product?.price || 0);
-        setShippingPrice(42500);
+        setShippingPrice(50000);
     };
 
     const calculateDeliveryDate = () => {
@@ -166,14 +166,14 @@ const OrderDetails = ({ navigation, route }) => {
                             )
                         ))
                     ) : (
-                        <View style={[styles.locationDetails, { flexDirection: "row" ,justifyContent:"flex-start"}]}>
-                            <AntDesign name="plus" size={18} color="gray" style={{marginRight:2}} />
+                        <View style={[styles.locationDetails, { flexDirection: "row", justifyContent: "flex-start" }]}>
+                            <AntDesign name="plus" size={18} color="gray" style={{ marginRight: 2 }} />
                             <Text style={styles.locationText}>Thêm địa chỉ để tiếp tục mua hàng</Text>
                         </View>
                     )}
                     <FontAwesome6
                         name="angle-right" size={20}
-                        style={{ position: 'absolute', right: 0, top: 10 }}
+                        style={{ position: 'absolute', right: 15, top: "50%" }}
                         color="gray"
                     />
                 </TouchableOpacity>
@@ -219,11 +219,11 @@ const OrderDetails = ({ navigation, route }) => {
                         </View>
                         <View style={styles.transportFrom}>
                             <MaterialCommunityIcons name="truck-delivery-outline" size={18} color={COLORS.gray} />
-                            <Text style={{ fontSize: 12, color: COLORS.gray }}>Từ Buôn Ma Thuột</Text>
+                            <Text style={{ fontSize: 14, color: COLORS.gray,marginTop:-2 }}>Đơn vị: Nhất Tín Logistics</Text>
                         </View>
                         <View style={styles.transportTime}>
                             <AntDesign name="clockcircleo" size={16} color={COLORS.gray} />
-                            <Text style={{ fontSize: 12, color: COLORS.gray }}>Ngày giao hàng dự kiến: {deliveryDateFrom ? format(deliveryDateFrom, 'MMM d') : ''} - {deliveryDateTo ? format(deliveryDateTo, 'MMM d') : ''}</Text>
+                            <Text style={{ fontSize: 14, color: COLORS.gray,marginTop:-2 }}>Ngày giao hàng dự kiến: {deliveryDateFrom ? format(deliveryDateFrom, 'MMM d') : ''} - {deliveryDateTo ? format(deliveryDateTo, 'MMM d') : ''}</Text>
                         </View>
                         <View style={styles.summary}>
                             <Text style={{ fontSize: 16 }}>1 mặt hàng, tổng cộng: {formattedTotalPrice}đ</Text>
@@ -247,7 +247,7 @@ const OrderDetails = ({ navigation, route }) => {
                         </View>
                         <View style={styles.totalPrice}>
                             <Text style={styles.totalHeader}>Tổng</Text>
-                            <Text style={styles.totalHeader}>{formattedTotalPrice}đ</Text>
+                            <Text style={styles.totalHeader}>{formattedTotalPrice}₫</Text>
                         </View>
                     </View>
 
@@ -255,26 +255,31 @@ const OrderDetails = ({ navigation, route }) => {
 
                     <View style={styles.paymentMethods}>
                         <Text style={styles.paymentMethodsHeader}>Phương thức thanh toán</Text>
-                        <View style={{ padding: 20 }}>
+                        <View style={{ paddingHorizontal: 20, paddingVertical: 10 }}>
                             <RadioButton.Group
                                 onValueChange={newValue => setChecked(newValue)}
                                 value={checked}
                             >
-                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <Text>VNPay</Text>
-                                    <RadioButton value="VNPay" />
-                                </View>
-                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <Text>Credit card</Text>
-                                    <RadioButton value="Credit card" />
-                                </View>
+                                <TouchableOpacity style={styles.method} onPress={() => setChecked('COD')}>
+                                    <Text style={styles.methodText}>Thanh toán khi nhận hàng</Text>
+                                    <RadioButton value="COD" />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.method} onPress={() => setChecked('GiaTotPay')}>
+                                    <Text style={styles.methodText}>GiaTotPay</Text>
+                                    <RadioButton value="GiaTotPay" />
+                                </TouchableOpacity>
                             </RadioButton.Group>
                         </View>
                     </View>
 
-                    <View style={styles.divider} />
                     <View style={styles.note}>
-                        <Text>Bằng cách đặt đơn hàng, bạn đồng ý với Điều Khoản Sử Dụng và Bán Hàng của Giá Tốt và xác nhận rằng bạn đã đọc Chính sách Quyền riêng tư của Giá Tốt. Thanh toán sẽ được PIPO xử lý riêng theo Chính sách quyền riêng tư của PIPO.</Text>
+                        <Text>Bằng cách đặt đơn hàng, bạn đồng ý với
+                            <Text style={styles.highlight}> Điều Khoản Sử Dụng và Bán Hàng </Text>
+
+                            của Giá Tốt và xác nhận rằng bạn đã đọc
+                            <Text style={styles.highlight}> Chính sách Quyền riêng tư </Text>
+
+                            của Giá Tốt. Thanh toán sẽ được PIPO xử lý riêng theo Chính sách quyền riêng tư của PIPO.</Text>
                     </View>
                 </View>
             </ScrollView>
