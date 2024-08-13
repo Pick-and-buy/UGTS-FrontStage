@@ -45,7 +45,7 @@ const AddFunds = ({ navigation }) => {
         try {
             const status = await getPaymentStatus(statusUrl);
             console.log(status);
-            Alert.alert(status.result);
+            Alert.alert(status.message);
         } catch (error) {
             console.error('Fetching get VNpay status', error);
         }
@@ -53,20 +53,23 @@ const AddFunds = ({ navigation }) => {
 
     if (paymentUrl) {
         return (
-            <WebView
-                source={{ uri: paymentUrl }}
-                style={styles.WebView}
-                onNavigationStateChange={(event) => {
-                    console.log(event.url);
-                    if (event.url.includes("payment-info")) {
-                        handleStatusPayment(event.url);
-                        navigation.reset({
-                            index: 0,
-                            routes: [{ name: 'add-funds' }],
-                        });
-                    }
-                }}
-            />
+            <View style={styles.webViewContainer}>
+                <WebView
+                    source={{ uri: paymentUrl }}
+                    style={styles.webView}
+                    onNavigationStateChange={(event) => {
+                        console.log(event.url);
+                        if (event.url.includes("payment-info")) {
+                            handleStatusPayment(event.url);
+                            navigation.reset({
+                                index: 0,
+                                routes: [{ name: 'add-funds' }],
+                            });
+                        }
+                    }}
+                />
+            </View>
+
         );
     }
 

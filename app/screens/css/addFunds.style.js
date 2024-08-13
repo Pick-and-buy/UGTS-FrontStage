@@ -183,11 +183,16 @@ const styles = StyleSheet.create({
     highlightText: {
         color: 'blue'
     },
-    WebView: {
+    webViewContainer: {
         width: windowWidth,
         height: windowHeight,
         backgroundColor: COLORS.white,
+    },
+    webView: {
+        width: windowWidth,
+        marginTop: 40,
     }
+
 });
 
 export default styles;
