@@ -1,4 +1,7 @@
-import { StyleSheet } from "react-native";
+import {
+    StyleSheet,
+    Dimensions,
+} from "react-native";
 import { COLORS, SHADOWS, SIZES } from "../../constants/theme";
 
 const styles = StyleSheet.create({
@@ -359,7 +362,110 @@ const styles = StyleSheet.create({
         width: "60%",
         color: COLORS.gray,
         fontSize: 12
-    }
+    },
+
+    //upload video
+    uploadVideoContainer: {
+        width: "48%",
+        borderRadius: 10,
+        flexDirection: 'row',
+        backgroundColor: COLORS.white,
+        ...SHADOWS.small,
+        marginHorizontal: "auto",
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 10,
+        padding: 10,
+        marginBottom: 30,
+    },
+    imageSelect: {
+        width: 30,
+        height: 30,
+    },
+
+    uploadVideo: {
+        width: '48%',
+        height: Dimensions.get('window').width / 3,
+        marginHorizontal: "auto",
+        marginBottom: 30,
+    },
+    uploadVideoStyle: {
+        width: '100%', 
+        height: '100%',
+        borderRadius: 10,
+    },
+
+    //update button "đã nhận được hàng"
+    receivedContainer: {
+        width: "100%",
+        flexDirection: 'row',
+        marginHorizontal: "auto",
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 8,
+    },
+
+    confirm_1: {
+        width: "48%",
+        flexDirection: 'column',
+        marginHorizontal: "auto",
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 30,
+        marginTop: 8,
+        marginBottom: 30,
+    },
+    confirmButton_1: {
+        width: "98%",
+        flex: 1,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: COLORS.primary,
+        marginVertical: 'auto',
+        borderRadius: 8,
+        paddingHorizontal: 6,
+    },
+    confirmTextButton_1: {
+        color: COLORS.white,
+    },
+    confirmText_1: {
+        width: "90%",
+        color: COLORS.gray,
+        fontSize: 12,
+    },
+
+    //update upload video
+    uploadVideoContainer_1: {
+        width: "45%",
+        height: Dimensions.get('window').width / 3,
+        borderRadius: 10,
+        flexDirection: 'row',
+        backgroundColor: COLORS.white,
+        ...SHADOWS.small,
+        marginHorizontal: "auto",
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 10,
+        padding: 10,
+        marginBottom: 30,
+    },
+    imageSelect_1: {
+        width: 30,
+        height: 30,
+    },
+
+    uploadVideo_1: {
+        width: '45%',
+        height: Dimensions.get('window').width / 3,
+        marginHorizontal: "auto",
+        marginBottom: 30,
+    },
+    uploadVideoStyle_1: {
+        width: '100%', 
+        height: '100%',
+        borderRadius: 10,
+    },
 
 });
 
