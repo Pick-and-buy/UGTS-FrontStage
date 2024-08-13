@@ -54,6 +54,11 @@ const Profile = ({ navigation }) => {
     });
   };
 
+  const formatMoney = (amount) => {
+    return amount
+      .replace(/\D/g, '') // Remove non-numeric characters
+      .replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Add thousand separators
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -212,7 +217,7 @@ const Profile = ({ navigation }) => {
                   marginTop: 20
                 }}>
                   <Text style={{ fontSize: 20, color: "gray" }}>SỐ DƯ VÍ</Text>
-                  <Text style={{ fontSize: 32 }}>0 VND</Text>
+                  <Text style={{ fontSize: 32 }}>{formatMoney(String(user?.wallet?.balance))} VND</Text>
                   <View style={{
                     flexDirection: "row",
                     justifyContent: "center",

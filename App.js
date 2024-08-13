@@ -22,7 +22,7 @@ import ResetPassword from './app/screens/forgot password/ResetPassword';
 import PostDetail from './app/screens/post/PostDetail';
 import Onboarding from './app/components/Onboarding';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Profile from './app/screens/Profile';
+// import Profile from './app/screens/Profile';
 import ChangePassword from './app/screens/change password/ChangePassword';
 import UpdateProfile from './app/screens/profile/UpdateProfile';
 import News from './app/screens/news/News';
@@ -192,11 +192,11 @@ export default function App() {
                   component={Home}
                   options={{ headerShown: false }}
                 />
-                <Stack.Screen
+                {/* <Stack.Screen
                   name='profile-navigation'
                   component={Profile}
                   options={{ headerShown: false }}
-                />
+                /> */}
                 <Stack.Screen
                   name='brand-detail'
                   component={BrandDetail}

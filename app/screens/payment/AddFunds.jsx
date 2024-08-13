@@ -31,7 +31,7 @@ const AddFunds = ({ navigation }) => {
     const [amount, setAmount] = useState();
     const [activeButton, setActiveButton] = useState(null);
     const [paymentUrl, setPaymentUrl] = useState(null);
-    // console.log(user.wallet.walletId);
+    console.log(user.wallet);
 
     const handleSubmit = async (amount) => {
         try {
@@ -90,7 +90,7 @@ const AddFunds = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Profile')}>
                     <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
                 </TouchableOpacity>
                 <Text style={styles.headerText}>Nạp tiền</Text>
@@ -132,7 +132,7 @@ const AddFunds = ({ navigation }) => {
                                 {errors.amount && <Text style={styles.error}>{errors.amount}</Text>}
                             </View>
 
-                            <Text style={styles.balance}>Số dư Ví hiện tại: ₫7.700</Text>
+                            <Text style={styles.balance}>Số dư ví hiện tại: ₫ {formatMoney(String(user?.wallet?.balance))}</Text>
 
                             <View style={styles.quickAmounts}>
                                 {['100000', '200000', '500000', '1000000', '2000000', '5000000'].map((amount, index) => (
