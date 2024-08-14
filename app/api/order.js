@@ -145,6 +145,24 @@ export const uploadReceivePackageVideoByBuyer = async (orderId, formData) => {
     }
 };
 
+export const uploadPackageVideoBySeller = async (orderId, formData) => {
+    try {
+        const token = await getAuthToken();
+        const response = await fetch(`http://192.168.1.10:8080/api/v1/orders/package-video?orderId=${orderId}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data'
+            },
+            body: formData,
+        });
+        return response;
+    } catch (error) {
+        console.error('Error Update Receive Package Video:', error);
+        throw error;
+    }
+};
+
 const getAuthToken = async () => {
     try {
         const token = await AsyncStorage.getItem('token');

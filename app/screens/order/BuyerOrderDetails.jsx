@@ -159,6 +159,11 @@ const BuyerOrderDetails = ({ navigation, route }) => {
           name: videoFileName,
         });
         await uploadReceivePackageVideoByBuyer(orderId, formData);
+        Alert.alert(
+          "oke",
+          "upload video successful",
+          [{ text: "OK" }]
+        );
       }
       setShowAddRating(true)
     } catch (error) {

@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
 
     //upload video
     uploadVideoContainer: {
-        width: "48%",
+        width: "55%",
         borderRadius: 10,
         flexDirection: 'row',
         backgroundColor: COLORS.white,

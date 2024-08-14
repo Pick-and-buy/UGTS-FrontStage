@@ -7,7 +7,7 @@ import { COLORS } from "../../constants/theme";
 import { G, Line, Svg } from "react-native-svg";
 import { getUserByToken } from "../../api/user";
 import { format, addDays } from 'date-fns';
-import { cancelOrderSeller, getOrderByOrderId, updateOrderSeller } from '../../api/order';
+import { cancelOrderSeller, getOrderByOrderId, updateOrderSeller, uploadPackageVideoBySeller } from '../../api/order';
 import OrderTracking from './OrderTracking';
 import SellerAddRating from './SellerAddRating';
 import { Video } from 'expo-av';
@@ -89,13 +89,36 @@ const SellerOrderDetails = ({ navigation, route }) => {
                 ]
             );
         } catch (error) {
-            console.error('Submit cancel buyer order: ', error);
+            console.error('Submit cancel seller order: ', error);
         }
     };
 
     const handleTransportation = async () => {
-        await updateOrderSeller(updatedOrderInfo?.id);
-        navigation.navigate('seller');
+        try {
+            if (videoUri) {
+                let orderId = updatedOrderInfo?.id;
+                const formData = new FormData();
+                const videoFileName = videoUri.split('/').pop();
+                formData.append('productVideo', {
+                    uri: videoUri,
+                    type: 'video/mp4',
+                    name: videoFileName,
+                });
+                await uploadPackageVideoBySeller(orderId, formData);
+                await updateOrderSeller(updatedOrderInfo?.id);
+                navigation.navigate('seller');
+            } else {
+                Alert.alert(
+                    "Thiếu thông tin",
+                    "Vui lòng tải thêm video đóng gói sản phẩm để tiến hành sắp xếp vận chuyển",
+                    [{ text: "OK" }]
+                );
+            }
+
+        } catch (error) {
+            console.error('Submit Accept seller order: ', error);
+        }
+
     }
 
     //Upload video
@@ -265,7 +288,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
                         <View style={styles.right}>
                             <TouchableOpacity style={styles.orderId} >
                                 <Text style={{ color: COLORS.gray }}>
-                                    Nhật Tín Express
+                                    Nhật Tín Logistics
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -309,7 +332,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
                                         style={styles.imageSelect}
                                         source={require('../../../assets/images/video-player.png')}
                                     />
-                                    <Text style={{ fontSize: 16 }}>Video nhận hàng</Text>
+                                    <Text style={{ fontSize: 16 }}>Video đóng gói sản phẩm</Text>
                                 </TouchableOpacity>
                             )
                             :
