@@ -28,7 +28,7 @@ const Login = ({ navigation }) => {
     const [saveLogin, setSaveLogin] = useState(false);
     const { login } = useAuth();
     const formikRef = useRef();
-    
+
     useEffect(() => {
         const loadUserCredentials = async () => {
             try {
@@ -262,6 +262,7 @@ const Login = ({ navigation }) => {
                     </Formik>
                 </View>
 
+                {/* Modal for login error */}
                 <Modal
                     animationType="slide"
                     transparent={true}
@@ -277,7 +278,15 @@ const Login = ({ navigation }) => {
                                     style={styles.modalCancelButton}
                                     onPress={() => setModalVisible(false)}
                                 >
-                                    <Text style={styles.modalButtonText}>Đóng</Text>
+                                    <Text style={styles.modalButtonText}>Thoát</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.modalButton}
+                                    onPress={() => {
+                                        setModalVisible(false);
+                                    }}
+                                >
+                                    <Text style={styles.modalButtonText}>Xác nhận</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
