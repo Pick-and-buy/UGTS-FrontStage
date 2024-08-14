@@ -10,19 +10,20 @@ import { RadioButton } from 'react-native-paper';
 import { format, addDays } from 'date-fns';
 import { order } from '../../api/order';
 import { useFocusEffect } from '@react-navigation/native';
+import { payOrder } from '../../api/payment';
 
 const OrderDetails = ({ navigation, route }) => {
     const postDetails = route.params.postDetails;
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [checked, setChecked] = useState('VNPay');
+    const [checked, setChecked] = useState('COD');
     const [productPrice, setProductPrice] = useState(0);
     const [shippingPrice, setShippingPrice] = useState(0);
     const [deliveryDateFrom, setDeliveryDateFrom] = useState(null);
     const [deliveryDateTo, setDeliveryDateTo] = useState(null);
     const [selectedAddress, setSelectedAddress] = useState(null);
-    console.log(postDetails.user);
+    console.log(user);
     useEffect(() => {
         const initialize = async () => {
             await checkToken();
@@ -75,13 +76,27 @@ const OrderDetails = ({ navigation, route }) => {
 
         console.log('Selected payment method:', checked);
         try {
+            // Make order
             const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id);
             console.log('Submit order successfully!');
+            if (response.result.orderDetails.paymentMethod === 'GiaTotPay') {
+                if (user.result.wallet.balance === 0) {
+                    Alert.alert('Số dư tài khoản của bạn không đủ');
+                    return;
+                } else {
+                    // Calculate total price without formatting
+                    const totalPrice = productPrice + shippingPrice;
+                    // Deposit
+                    const responsePaymentOrder = await payOrder(user.result.wallet.walletId, response.result.id, totalPrice);
+                    console.log(responsePaymentOrder);
+                }
+            }
             navigation.navigate('order-successfully', { orderInfo: response.result });
         } catch (error) {
             console.error('Submit order', error);
         }
     };
+
 
     const fetchUserData = async () => {
         try {
@@ -219,11 +234,11 @@ const OrderDetails = ({ navigation, route }) => {
                         </View>
                         <View style={styles.transportFrom}>
                             <MaterialCommunityIcons name="truck-delivery-outline" size={18} color={COLORS.gray} />
-                            <Text style={{ fontSize: 14, color: COLORS.gray,marginTop:-2 }}>Đơn vị: Nhất Tín Logistics</Text>
+                            <Text style={{ fontSize: 14, color: COLORS.gray, marginTop: -2 }}>Đơn vị: Nhất Tín Logistics</Text>
                         </View>
                         <View style={styles.transportTime}>
                             <AntDesign name="clockcircleo" size={16} color={COLORS.gray} />
-                            <Text style={{ fontSize: 14, color: COLORS.gray,marginTop:-2 }}>Ngày giao hàng dự kiến: {deliveryDateFrom ? format(deliveryDateFrom, 'MMM d') : ''} - {deliveryDateTo ? format(deliveryDateTo, 'MMM d') : ''}</Text>
+                            <Text style={{ fontSize: 14, color: COLORS.gray, marginTop: -2 }}>Ngày giao hàng dự kiến: {deliveryDateFrom ? format(deliveryDateFrom, 'MMM d') : ''} - {deliveryDateTo ? format(deliveryDateTo, 'MMM d') : ''}</Text>
                         </View>
                         <View style={styles.summary}>
                             <Text style={{ fontSize: 16 }}>1 mặt hàng, tổng cộng: {formattedTotalPrice}đ</Text>

@@ -52,3 +52,13 @@ export const charge = async (walletId, amount) => {
         throw error;
     }
 }
+
+export const payOrder = async (walletId, orderId, amount) => {
+    try {
+        const response = await axiosInstance.put(`/wallets/pay-order?walletId=${walletId}&orderId=${orderId}&payAmount=${amount}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error order payment:', error);
+        throw error;
+    }
+}
