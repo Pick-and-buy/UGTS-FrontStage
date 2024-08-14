@@ -65,7 +65,10 @@ const CreatePost = () => {
 
   const [isChecked_2, setChecked_2] = useState(false);
   const [isChecked_3, setChecked_3] = useState(false);
+  const [isBoosted, setBoosted] = useState(false);
   const FEE = 0;
+  const feeLegitgrails = 500000;
+  const feeBoosted = 100000;
 
   useEffect(() => {
     fetchAllBrands();
@@ -201,8 +204,21 @@ const CreatePost = () => {
 
         //convert String price: VD: "12.500.000" => "12500000"
         const convertStringPrice = values.price.replace(/\./g, '');
+        const originPrice = parseInt(convertStringPrice, 10)
         //conver String sang số nguyên hệ cơ số 10
-        const calculatedPrice = parseInt(convertStringPrice, 10) - FEE;
+        // const calculatedPrice = parseInt(convertStringPrice, 10) - FEE;
+        // const calculatedPrice = isChecked_3 ? parseInt(convertStringPrice, 10) : (parseInt(convertStringPrice, 10) - feeLegitgrails);
+
+        let calculatedPrice = "";
+        if (isChecked_3 && isBoosted) {
+          calculatedPrice = parseInt(convertStringPrice, 10) - feeLegitgrails - feeBoosted;
+        } else if (isBoosted) {
+          calculatedPrice = parseInt(convertStringPrice, 10) - feeBoosted;
+        } else if (isChecked_3) {
+          calculatedPrice = parseInt(convertStringPrice, 10) - feeLegitgrails;
+        } else {
+          calculatedPrice = "";
+        }
 
         const formData = new FormData();
         const request = {
@@ -213,7 +229,7 @@ const CreatePost = () => {
           category: { categoryName: category },
           product: {
             name: productName,
-            price: calculatedPrice,
+            price: originPrice,
             color: color,
             size: size,
             width: width,
@@ -230,7 +246,8 @@ const CreatePost = () => {
             story: '',
           },
           condition: condition,
-          boosted: false,
+          boosted: isBoosted,
+          lastPriceForSeller: calculatedPrice,
         };
 
         formData.append('request', JSON.stringify(request));
@@ -484,9 +501,21 @@ const CreatePost = () => {
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue, setFieldTouched }) => {
 
-          const total = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - FEE : '';
-          const formatFee = formatPrice(FEE);
-          const formatTotal = formatPrice(total);
+          const formatFeeBoosted = formatPrice(feeBoosted);
+          const formatFeeLegitgrails = formatPrice(feeLegitgrails);
+
+          const lastPriceBoth = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted - feeLegitgrails : '';
+          const lastPriceLegitgrails = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeLegitgrails : '';
+          const lastPriceBoosted = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted : '';
+          // const formatlLastPriceForSeller = formatPrice(lastPriceLegitgrails);
+          let formatlLastPriceForSeller = "";
+          if(isChecked_3 && isBoosted) {
+            formatlLastPriceForSeller = formatPrice(lastPriceBoth);
+          } else if (isBoosted) {
+            formatlLastPriceForSeller = formatPrice(lastPriceBoosted);
+          } else if(isChecked_3) {
+            formatlLastPriceForSeller = formatPrice(lastPriceLegitgrails);
+          }
 
           return (
             <ScrollView style={styles.wrapper}>
@@ -625,7 +654,7 @@ const CreatePost = () => {
                   <View View style={styles.selectOption}>
                     <Text style={styles.labelText}>Ở xác minh cấp 3 bạn nên bổ sung đầy đủ ảnh chi tiết cho sản phẩm.
                       Chúng tôi sẽ gửi thông tin sản phẩm của bạn đến LEGITGRAILS để xác nhận đó là hàng chính hãng.
-                      Phí dịch vụ sẽ là <Text style={{ color: "red" }}>500.000đ</Text>
+                      Phí dịch vụ sẽ là <Text style={{ color: "red" }}>{formatPrice(feeLegitgrails)}đ</Text>
                     </Text>
                   </View>
 
@@ -1047,6 +1076,36 @@ const CreatePost = () => {
                 </View>
               </View>
 
+              {/* Boosted */}
+              <View style={{marginTop: 10}}>
+                <Text style={styles.labelText}>Dịch Vụ Quảng Cáo Boosted</Text>
+              </View>
+              <View style={styles.checkboxBoostedContainer}>
+                <View style={styles.checkboxBoosted}>
+                  <Checkbox
+                    value={isBoosted}
+                    onValueChange={setBoosted}
+                  />
+                  <Text style={{ textAlign: 'center' }}>Boosted</Text>
+                </View>
+                {isBoosted ?
+                  (
+                    <View style={{ width: "100%" }}>
+                      <Text style={styles.labelText}>
+                        Chúng tôi sử dụng dịch vụ quảng cáo cho phép sản phẩm của bạn được hiển thị lên đầu ứng dụng.
+                        Phí dịch vụ sẽ là <Text style={{ color: "red" }}>{formatPrice(feeBoosted)}đ</Text>
+                      </Text>
+                    </View>
+                  )
+                  :
+                  (
+                    <View>
+                    </View>
+                  )
+                }
+
+              </View>
+
               {/* Shipping information */}
               <View style={styles.shippingInformation}>
                 <Text style={styles.labelText}>Thông Tin Thanh Toán</Text>
@@ -1073,9 +1132,13 @@ const CreatePost = () => {
                       setFieldTouched("price", "");
                     }}
                     onChangeText={(text) => {
-                      const numericText = text.replace(/\./g, "");
-                      const formatted = formatPrice(numericText);
-                      setFieldValue("price", formatted);
+                      if (text === "") {
+                        setFieldValue("price", "");
+                      } else {
+                        const numericText = text.replace(/\./g, "");
+                        const formatted = formatPrice(numericText);
+                        setFieldValue("price", formatted);
+                      }
                     }}
                     autoCorrect={false}
                   />
@@ -1084,21 +1147,53 @@ const CreatePost = () => {
                   <Text style={[styles.errorText, { marginLeft: 5, marginTop: 5 }]}>{errors.price}</Text>
                 )}
                 {
-                  isChecked_3 && (
+                  isChecked_3 && isBoosted && (
                     <View View style={styles.productField}>
                       <View style={styles.inputProduct}>
-                        <Text style={[styles.title,{marginLeft:-2}]}>Phí kiểm tra cấp 3 (VND):
-                          <Text style={{ color: "red" }}>500.000đ</Text>
+                        <Text style={[styles.title, { marginLeft: -2 }]}>Phí kiểm tra cấp 3 (VND): <Text style={{ color: "red" }}>{formatFeeLegitgrails}đ</Text>
                         </Text>
                       </View>
                       <View style={styles.inputProduct}>
-                        <Text style={[styles.title,{marginLeft:-2}]}>
-                          Số tiền thực nhận (VND):<Text style={{ color: "red" }}>3500.000đ</Text>
+                        <Text style={[styles.title, { marginLeft: -2 }]}>Phí quảng cáo (VND): <Text style={{ color: "red" }}>{formatFeeBoosted}đ</Text>
+                        </Text>
+                      </View>
+                      <View style={styles.inputProduct}>
+                        <Text style={[styles.title, { marginLeft: -2 }]}>
+                          Số tiền thực nhận (VND): <Text style={{ color: "red" }}>{formatlLastPriceForSeller}đ</Text>
                         </Text>
                       </View>
                     </View>
                   )
-
+                }
+                {
+                  isChecked_3 && !isBoosted && (
+                    <View View style={styles.productField}>
+                      <View style={styles.inputProduct}>
+                        <Text style={[styles.title, { marginLeft: -2 }]}>Phí kiểm tra cấp 3 (VND): <Text style={{ color: "red" }}>{formatFeeLegitgrails}đ</Text>
+                        </Text>
+                      </View>
+                      <View style={styles.inputProduct}>
+                        <Text style={[styles.title, { marginLeft: -2 }]}>
+                          Số tiền thực nhận (VND): <Text style={{ color: "red" }}>{formatlLastPriceForSeller}đ</Text>
+                        </Text>
+                      </View>
+                    </View>
+                  )
+                }
+                {
+                  isBoosted && !isChecked_3 && (
+                    <View View style={styles.productField}>
+                      <View style={styles.inputProduct}>
+                        <Text style={[styles.title, { marginLeft: -2 }]}>Phí quảng cáo (VND): <Text style={{ color: "red" }}>{formatFeeBoosted}đ</Text>
+                        </Text>
+                      </View>
+                      <View style={styles.inputProduct}>
+                        <Text style={[styles.title, { marginLeft: -2 }]}>
+                          Số tiền thực nhận (VND): <Text style={{ color: "red" }}>{formatlLastPriceForSeller}đ</Text>
+                        </Text>
+                      </View>
+                    </View>
+                  )
                 }
               </View>
 

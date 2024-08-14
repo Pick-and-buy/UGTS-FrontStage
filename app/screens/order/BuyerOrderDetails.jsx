@@ -425,7 +425,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
               </Text>
               <TouchableOpacity
                 style={styles.confirmButton_1}
-                onPress={handleSubmitReceived}
+                onPress={() => handleSubmitReceived(orderInfo)}
               >
                 <Text style={styles.confirmTextButton_1}>Đã nhận được hàng</Text>
               </TouchableOpacity>
