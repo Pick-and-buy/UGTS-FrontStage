@@ -248,6 +248,7 @@ const QuickCreatePost = () => {
                     condition: condition,
                     boosted: isBoosted,
                     lastPriceForSeller: calculatedPrice,
+
                 };
 
                 formData.append('request', JSON.stringify(request));
@@ -481,8 +482,10 @@ const QuickCreatePost = () => {
             <View style={styles.shadow} />
             <Formik
                 initialValues={{
+
                     // title: '', 
                     productName: '', brandName: '', brandLineName: '', condition: '',
+
                     category: '', exteriorMaterial: '', interiorMaterial: '', size: '', color: '',
                     description: '', price: '',
                 }}

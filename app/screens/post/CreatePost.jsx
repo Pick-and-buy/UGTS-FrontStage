@@ -246,8 +246,10 @@ const CreatePost = () => {
             story: '',
           },
           condition: condition,
+
           boosted: isBoosted,
           lastPriceForSeller: calculatedPrice,
+
         };
 
         formData.append('request', JSON.stringify(request));
@@ -647,6 +649,7 @@ const CreatePost = () => {
                 )
               }
 
+
               {isChecked_3 && (
                 <View style={styles.checkboxContainer}>
                   <View style={{ width: "100%", flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
@@ -662,6 +665,7 @@ const CreatePost = () => {
                   <View style={styles.shadow}></View>
                 </View>
               )
+
 
               }
               <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
