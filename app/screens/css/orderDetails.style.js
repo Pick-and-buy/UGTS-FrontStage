@@ -18,7 +18,8 @@ const styles = StyleSheet.create({
         ...SHADOWS.small
     },
     backButton: {
-        marginLeft: "2%"
+        marginLeft: "2%",
+        zIndex:999
     },
     headerText: {
         color: COLORS.black,

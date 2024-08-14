@@ -92,7 +92,7 @@ const OrderDetails = ({ navigation, route }) => {
 
         try {
             if (checked === 'COD') {
-                const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id);
+                const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id, shippingPrice);
                 console.log('Order placed successfully!');
                 navigation.navigate('order-successfully', { orderInfo: response.result });
             } else if (checked === 'GiaTotPay') {
@@ -106,7 +106,7 @@ const OrderDetails = ({ navigation, route }) => {
                     });
                     setModalVisible(true);
                 } else {
-                    const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id);
+                    const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id, shippingPrice);
                     console.log('Order placed successfully!');
 
                     const responsePaymentOrder = await payOrder(user.result.wallet.walletId, response.result.id, totalPrice);
@@ -307,8 +307,8 @@ const OrderDetails = ({ navigation, route }) => {
                                 <TouchableOpacity style={styles.method} onPress={() => setChecked('GiaTotPay')}>
                                     <View style={styles.column}>
                                         <Text style={styles.methodText}>GiaTotPay</Text>
-                                        <Text style={styles.currentAmount}>Số dư hiện tại: 
-                                            <Text style={{color:'red'}}> {formatPrice(user?.result?.wallet?.balance)}₫</Text>
+                                        <Text style={styles.currentAmount}>Số dư hiện tại:
+                                            <Text style={{ color: 'red' }}> {formatPrice(user?.result?.wallet?.balance)}₫</Text>
                                         </Text>
                                     </View>
                                     <RadioButton value="GiaTotPay" />
