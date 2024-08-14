@@ -351,8 +351,18 @@ const styles = StyleSheet.create({
     },
 
     //upload video
+    videoPackageContainer: {
+        width: "100%",
+        flexDirection: 'row',
+        marginHorizontal: "auto",
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
     uploadVideoContainer: {
-        width: "55%",
+        // width: "55%",
+        width: '48%',
+        height: Dimensions.get('window').width / 3,
         borderRadius: 10,
         flexDirection: 'row',
         backgroundColor: COLORS.white,
@@ -367,6 +377,12 @@ const styles = StyleSheet.create({
     imageSelect: {
         width: 30,
         height: 30,
+    },
+
+    confirmText: {
+        width: "45%",
+        color: COLORS.gray,
+        fontSize: 14,
     },
 
     uploadVideo: {

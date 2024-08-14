@@ -130,7 +130,7 @@ export const updateOrderSeller = async (orderId) => {
 export const uploadReceivePackageVideoByBuyer = async (orderId, formData) => {
     try {
         const token = await getAuthToken();
-        const response = await fetch(`http://192.168.1.10:8080/api/v1/orders/package-video?orderId=${orderId}`, {
+        const response = await fetch(`http://192.168.1.8:8080/api/v1/orders/package-video?orderId=${orderId}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -148,7 +148,7 @@ export const uploadReceivePackageVideoByBuyer = async (orderId, formData) => {
 export const uploadPackageVideoBySeller = async (orderId, formData) => {
     try {
         const token = await getAuthToken();
-        const response = await fetch(`http://192.168.1.10:8080/api/v1/orders/package-video?orderId=${orderId}`, {
+        const response = await fetch(`http://192.168.1.8:8080/api/v1/orders/package-video?orderId=${orderId}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
