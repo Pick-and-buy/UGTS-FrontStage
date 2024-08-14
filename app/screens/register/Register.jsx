@@ -35,11 +35,7 @@ const Register = ({ navigation }) => {
     const [obsecureText, setObsecureText] = useState(true);
     const [obsecureText2, setObsecureText2] = useState(true);
 
-    const inValidForm = () => {
-        Alert.alert("Invalid Form", "Please provide all required fields", [
-            { text: "OK" },
-        ]);
-    };
+
 
     return (
         <KeyboardAvoidingView
@@ -200,8 +196,8 @@ const Register = ({ navigation }) => {
                                 <Button
                                     loader={loader}
                                     title={"TIẾP TỤC"}
-                                    isValid={isValid}
-                                    onPress={isValid ? handleSubmit : inValidForm}
+                                    isValid={true}
+                                    onPress={handleSubmit}
                                 />
 
                                 <Text style={{ textAlign: "center" }}>
