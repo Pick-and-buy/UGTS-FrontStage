@@ -7,21 +7,39 @@ import { OtpInput } from "react-native-otp-entry";
 import Button from '../../components/Button.jsx';
 import BackBtn from '../../components/BackBtn.jsx';
 import styles from "../css/OTPVerification.style.js";
-import { verifyOtp } from '../../api/auth.js';
+import { verifyOtpFromEmail, verifyOtpFromSMS } from '../../api/auth.js';
 
 const OTPVerification = ({ navigation, route }) => {
     const { type, value } = route.params;
     const [otp, setOtp] = useState('');
 
-
-    const handleVerifyOtp = async () => {
+    const handleVerifyOtpEmail = async () => {
         try {
-            await verifyOtp(value, otp);
+            await verifyOtpFromEmail(value, otp);
             Alert.alert('Success', 'OTP verified successfully');
             navigation.navigate("reset-password-navigation", { value });
         } catch (error) {
             Alert.alert('Error', 'Failed to verify OTP. Please try again.');
             console.log('OTP Verification Error:', error.response ? error.response.data : error.message);
+        }
+    };
+
+    const handleVerifyOtpSMS = async () => {
+        try {
+            await verifyOtpFromSMS(value, otp);
+            Alert.alert('Success', 'OTP verified successfully');
+            navigation.navigate("reset-password-navigation", { type, value });
+        } catch (error) {
+            Alert.alert('Error', 'Failed to verify OTP. Please try again.');
+            console.log('OTP Verification Error:', error.response ? error.response.data : error.message);
+        }
+    };
+
+    const handleVerifyOtp = () => {
+        if (type === 'email') {
+            handleVerifyOtpEmail();
+        } else if (type === 'phone') {
+            handleVerifyOtpSMS();
         }
     };
 
