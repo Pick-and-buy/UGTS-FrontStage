@@ -330,6 +330,7 @@ const CreatePost = () => {
           story: '',
           description: '',
           price: '',
+          lastPriceForSeller: '',
         })
       } else {
         Alert.alert(
