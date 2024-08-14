@@ -52,3 +52,23 @@ export const changePassword = async (userId, oldPassword, newPassword) => {
         throw error.response.data;
     }
 };
+
+export const sendOtpToSMS = async (phoneNumber) => {
+    try {
+        const response = await axiosInstance.post('/otp/send-sms-otp', {
+            phoneNumber: phoneNumber
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response.data;
+    }
+};
+
+export const verifyOtpFromSMS = async (phoneNumber, otpCode) => {
+    try {
+        const response = await axiosInstance.post('/otp/verify-sms-otp', { otpCode: otpCode, phoneNumber: phoneNumber });
+        return response.data;
+    } catch (error) {
+        throw error.response.data;
+    }
+};

@@ -16,6 +16,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { COLORS, SIZES } from "../../constants/theme.js";
 import styles from "../css/register.style.js";
 import Button from "../../components/Button.jsx";
+import { sendOtpToSMS } from "../../api/auth.js";
 
 const validationSchema = Yup.object().shape({
     phoneNumber: Yup.string()
@@ -36,7 +37,14 @@ const Register = ({ navigation }) => {
     const [obsecureText2, setObsecureText2] = useState(true);
 
 
+    const formatPhoneNumber = (phoneNumber) => {
+        // Remove leading 0 and prepend +84
+        if (phoneNumber.startsWith('0')) {
+            phoneNumber = phoneNumber.substring(1); // Remove the leading 0
+        }
 
+        return `+84 ${phoneNumber}`;
+    };
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -61,11 +69,13 @@ const Register = ({ navigation }) => {
                     <Formik
                         initialValues={{ phoneNumber: "", password: "", passwordConfirmation: "" }}
                         validationSchema={validationSchema}
-                        onSubmit={(values, { resetForm }) => {
+                        onSubmit={async (values, { resetForm }) => {
                             setLoader(true);
                             try {
+                                const rs = await sendOtpToSMS(formatPhoneNumber(values.phoneNumber));
+                                console.log(rs);
                                 // Navigate to the next screen with the form data
-                                navigation.navigate('register-infor-navigation', { formData: values });
+                                navigation.navigate('otp-sms-verification', { formData: values });
                                 resetForm();
                             } catch (error) {
                                 console.error(error);
