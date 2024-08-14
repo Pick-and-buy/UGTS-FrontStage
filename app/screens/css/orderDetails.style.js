@@ -218,10 +218,12 @@ const styles = StyleSheet.create({
     method: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        marginVertical:4
     },
     methodText: {
-        fontSize: 16
+        fontSize: 18,
+        fontWeight:"500"
     },
     note: {
         width: "96%",
@@ -262,6 +264,14 @@ const styles = StyleSheet.create({
     },
     highlight: {
         color: COLORS.blue
+    },
+    column: {
+        flexDirection:"column"
+    },
+    currentAmount:{
+        // marginLeft:10,
+        color:"#aaa",
+
     }
 
 });

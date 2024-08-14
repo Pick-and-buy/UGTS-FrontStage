@@ -246,7 +246,7 @@ const OrderDetails = ({ navigation, route }) => {
                                 </View>
                             </View>
                             <Text style={styles.price}>
-                                <Text style={styles.currency}>đ</Text>
+                                <Text style={styles.currency}>₫</Text>
                                 {formattedProductPrice}
                             </Text>
                         </View>
@@ -255,7 +255,7 @@ const OrderDetails = ({ navigation, route }) => {
                     <View style={styles.relatedInformation}>
                         <View style={styles.transport}>
                             <Text style={{ fontSize: 16, color: COLORS.gray }}>Vận chuyển tiêu chuẩn</Text>
-                            <Text style={{ fontSize: 16, color: COLORS.gray }}>{formattedShippingPrice}đ</Text>
+                            <Text style={{ fontSize: 16, color: COLORS.gray }}>{formattedShippingPrice}₫</Text>
                         </View>
                         <View style={styles.transportFrom}>
                             <MaterialCommunityIcons name="truck-delivery-outline" size={18} color={COLORS.gray} />
@@ -266,7 +266,7 @@ const OrderDetails = ({ navigation, route }) => {
                             <Text style={{ fontSize: 14, color: COLORS.gray, marginTop: -2 }}>Ngày giao hàng dự kiến: {deliveryDateFrom ? format(deliveryDateFrom, 'MMM d') : ''} - {deliveryDateTo ? format(deliveryDateTo, 'MMM d') : ''}</Text>
                         </View>
                         <View style={styles.summary}>
-                            <Text style={{ fontSize: 16 }}>1 mặt hàng, tổng cộng: {formattedTotalPrice}đ</Text>
+                            <Text style={{ fontSize: 16 }}>1 mặt hàng, tổng cộng: {formattedTotalPrice}₫</Text>
                         </View>
                     </View>
 
@@ -281,8 +281,8 @@ const OrderDetails = ({ navigation, route }) => {
                             </View>
 
                             <View style={styles.totalRight}>
-                                <Text style={styles.totalText}>{formattedProductPrice}đ</Text>
-                                <Text style={styles.totalText}>{formattedShippingPrice}đ</Text>
+                                <Text style={styles.totalText}>{formattedProductPrice}₫</Text>
+                                <Text style={styles.totalText}>{formattedShippingPrice}₫</Text>
                             </View>
                         </View>
                         <View style={styles.totalPrice}>
@@ -305,7 +305,12 @@ const OrderDetails = ({ navigation, route }) => {
                                     <RadioButton value="COD" />
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.method} onPress={() => setChecked('GiaTotPay')}>
-                                    <Text style={styles.methodText}>GiaTotPay</Text>
+                                    <View style={styles.column}>
+                                        <Text style={styles.methodText}>GiaTotPay</Text>
+                                        <Text style={styles.currentAmount}>Số dư hiện tại: 
+                                            <Text style={{color:'red'}}> {formatPrice(user?.result?.wallet?.balance)}₫</Text>
+                                        </Text>
+                                    </View>
                                     <RadioButton value="GiaTotPay" />
                                 </TouchableOpacity>
                             </RadioButton.Group>
