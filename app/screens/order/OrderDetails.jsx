@@ -11,7 +11,7 @@ import { format, addDays } from 'date-fns';
 import { order } from '../../api/order';
 import { useFocusEffect } from '@react-navigation/native';
 import { payOrder } from '../../api/payment';
-
+import CustomModal from '../../components/CustomModal';
 const OrderDetails = ({ navigation, route }) => {
     const postDetails = route.params.postDetails;
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -23,6 +23,14 @@ const OrderDetails = ({ navigation, route }) => {
     const [deliveryDateFrom, setDeliveryDateFrom] = useState(null);
     const [deliveryDateTo, setDeliveryDateTo] = useState(null);
     const [selectedAddress, setSelectedAddress] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState({
+        title: '',
+        detailText: '',
+        confirmText: '',
+        cancelText: '',
+        onConfirm: () => { },
+    });
     // console.log(user);
     useEffect(() => {
         const initialize = async () => {
@@ -66,11 +74,17 @@ const OrderDetails = ({ navigation, route }) => {
 
     const handleOrder = async () => {
         if (!selectedAddress) {
-            Alert.alert(
-                "Chưa có địa chỉ",
-                "Vui lòng thêm địa chỉ để tiếp tục mua hàng.",
-                [{ text: "OK", onPress: () => navigation.navigate('address-lists', { postDetails, type: 'order' }) }]
-            );
+            setModalContent({
+                title: 'Chưa có địa chỉ',
+                detailText: 'Vui lòng thêm địa chỉ để tiếp tục mua hàng.',
+                confirmText: 'Xác nhận',
+                cancelText: 'Thoát',
+                onConfirm: () => {
+                    setModalVisible(false);
+                    navigation.navigate('address-lists', { postDetails, type: 'order' });
+                },
+            });
+            setModalVisible(true);
             return;
         }
 
@@ -78,16 +92,20 @@ const OrderDetails = ({ navigation, route }) => {
 
         try {
             if (checked === 'COD') {
-                // Make order with COD
                 const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id);
                 console.log('Order placed successfully!');
                 navigation.navigate('order-successfully', { orderInfo: response.result });
             } else if (checked === 'GiaTotPay') {
-                // Check wallet balance before proceeding with order
                 if (user.result.wallet.balance < totalPrice) {
-                    Alert.alert('Số dư tài khoản của bạn không đủ');
+                    setModalContent({
+                        title: 'Số dư tài khoản không đủ',
+                        detailText: 'Vui lòng nạp thêm tiền vào tài khoản hoặc chọn phương thức thanh toán khác.',
+                        confirmText: 'Xác nhận',
+                        cancelText: 'Thoát',
+                        onConfirm: () => setModalVisible(false),
+                    });
+                    setModalVisible(true);
                 } else {
-                    // Make order and process payment
                     const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id);
                     console.log('Order placed successfully!');
 
@@ -101,6 +119,7 @@ const OrderDetails = ({ navigation, route }) => {
             console.error('Failed to place order:', error);
         }
     };
+
 
 
 
@@ -309,6 +328,15 @@ const OrderDetails = ({ navigation, route }) => {
                     <Text style={styles.buttonText}>Đặt hàng</Text>
                 </TouchableOpacity>
             </View>
+            <CustomModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                onConfirm={modalContent.onConfirm}
+                title={modalContent.title}
+                detailText={modalContent.detailText}
+                confirmText={modalContent.confirmText}
+                cancelText={modalContent.cancelText}
+            />
         </SafeAreaView>
     );
 };
