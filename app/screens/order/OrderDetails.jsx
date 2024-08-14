@@ -23,7 +23,7 @@ const OrderDetails = ({ navigation, route }) => {
     const [deliveryDateFrom, setDeliveryDateFrom] = useState(null);
     const [deliveryDateTo, setDeliveryDateTo] = useState(null);
     const [selectedAddress, setSelectedAddress] = useState(null);
-    console.log(user);
+    // console.log(user);
     useEffect(() => {
         const initialize = async () => {
             await checkToken();
@@ -74,28 +74,34 @@ const OrderDetails = ({ navigation, route }) => {
             return;
         }
 
-        console.log('Selected payment method:', checked);
+        const totalPrice = productPrice + shippingPrice;
+
         try {
-            // Make order
-            const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id);
-            console.log('Submit order successfully!');
-            if (response.result.orderDetails.paymentMethod === 'GiaTotPay') {
-                if (user.result.wallet.balance === 0) {
+            if (checked === 'COD') {
+                // Make order with COD
+                const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id);
+                console.log('Order placed successfully!');
+                navigation.navigate('order-successfully', { orderInfo: response.result });
+            } else if (checked === 'GiaTotPay') {
+                // Check wallet balance before proceeding with order
+                if (user.result.wallet.balance < totalPrice) {
                     Alert.alert('Số dư tài khoản của bạn không đủ');
-                    return;
                 } else {
-                    // Calculate total price without formatting
-                    const totalPrice = productPrice + shippingPrice;
-                    // Deposit
+                    // Make order and process payment
+                    const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id);
+                    console.log('Order placed successfully!');
+
                     const responsePaymentOrder = await payOrder(user.result.wallet.walletId, response.result.id, totalPrice);
-                    console.log(responsePaymentOrder);
+                    console.log('Payment successful!', responsePaymentOrder);
+
+                    navigation.navigate('order-successfully', { orderInfo: response.result });
                 }
             }
-            navigation.navigate('order-successfully', { orderInfo: response.result });
         } catch (error) {
-            console.error('Submit order', error);
+            console.error('Failed to place order:', error);
         }
     };
+
 
 
     const fetchUserData = async () => {
