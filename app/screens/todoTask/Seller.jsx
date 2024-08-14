@@ -156,7 +156,7 @@ const Seller = ({ navigation }) => {
           {item?.post?.title}
         </Text>
         <Text style={styles.shop}>Người mua: {item?.buyer?.username}</Text>
-        <Text style={styles.price}>đ{formatPrice(item?.orderDetails?.price)}</Text>
+        <Text style={styles.price}>đ{formatPrice((item?.orderDetails?.price ?? 0) + (item?.orderDetails?.shippingCost ?? 0))}</Text>
 
         {item?.orderDetails?.status === "PENDING" &&
           <View style={styles.buttonWrapper}>

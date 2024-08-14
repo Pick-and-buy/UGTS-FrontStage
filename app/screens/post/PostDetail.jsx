@@ -217,6 +217,9 @@ const PostDetail = ({ navigation, route }) => {
         setAverageRating(average);
     };
 
+    const getFieldValue = (value) => {
+        return (value === "None" || value === "none" || value === null) ? "N/A" : value;
+    };
 
     // Format the price using the helper function
     const formattedPrice = formatPrice(postDetails?.product?.price);
@@ -378,17 +381,18 @@ const PostDetail = ({ navigation, route }) => {
                             <Text>Thương hiệu</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.brand?.name.toLowerCase() === "none" ? "N/A" : postDetails?.product?.brand?.name}</Text>
+                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.brand?.name)}</Text>
                         </View>
                     </View>
                     <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
+
                     {/* Tình trạng */}
                     <View style={styles.details}>
                         <View style={styles.left}>
                             <Text>Tình trạng</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.condition.toLowerCase() === "none" ? "N/A" : postDetails?.product?.condition}</Text>
+                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.condition)}</Text>
                         </View>
                     </View>
                     <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
@@ -399,57 +403,64 @@ const PostDetail = ({ navigation, route }) => {
                             <Text>Size</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.size.toLowerCase() === "none" ? "N/A" : postDetails?.product?.size} </Text>
+                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.size)}</Text>
                         </View>
                     </View>
                     <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
+
                     {/* Màu sắc */}
                     <View style={styles.details}>
                         <View style={styles.left}>
                             <Text>Màu sắc</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.color.toLowerCase() === "none" ? "N/A" : postDetails?.product?.color} </Text>
+                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.color)}</Text>
                         </View>
                     </View>
                     <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
+
                     {/* Kích thước */}
                     <View style={styles.details}>
                         <View style={styles.left}>
                             <Text>Kích thước</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.length} x {postDetails?.product?.width} x {postDetails?.product?.height} cm</Text>
+                            <Text style={styles.rightText}>
+                                {`${getFieldValue(postDetails?.product?.length)} x ${getFieldValue(postDetails?.product?.width)} x ${getFieldValue(postDetails?.product?.height)} cm`}
+                            </Text>
                         </View>
                     </View>
                     <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
+
                     {/* Năm sản xuất */}
                     <View style={styles.details}>
                         <View style={styles.left}>
                             <Text>Năm sản xuất</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.manufactureYear.toLowerCase() === "none" ? "N/A" : postDetails?.product?.manufactureYear} </Text>
+                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.manufactureYear)}</Text>
                         </View>
                     </View>
                     <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
+
                     {/* Reference Code */}
                     <View style={styles.details}>
                         <View style={styles.left}>
                             <Text>Reference Code</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.referenceCode.toLowerCase() === "none" ? "N/A" : postDetails?.product?.referenceCode} </Text>
+                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.referenceCode)}</Text>
                         </View>
                     </View>
                     <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
-                    {/* Exterior Material */}
+
+                    {/* Chất liệu bên ngoài */}
                     <View style={styles.details}>
                         <View style={styles.left}>
                             <Text>Chất liệu bên ngoài</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.exteriorMaterial.toLowerCase() === "none" ? " N/A" : postDetails?.product?.exteriorMaterial} </Text>
+                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.exteriorMaterial)}</Text>
                         </View>
                     </View>
                     <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
@@ -459,57 +470,62 @@ const PostDetail = ({ navigation, route }) => {
                             <Text>Chất liệu bên trong</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.interiorMaterial.toLowerCase() === "none" ? " N/A" : postDetails?.product?.interiorMaterial} </Text>
+                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.interiorMaterial)}</Text>
                         </View>
                     </View>
                     <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
+
                     {/* Accessories */}
                     <View style={styles.details}>
                         <View style={styles.left}>
                             <Text>Phụ kiện</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.accessories.toLowerCase() === "none" ? " N/A" : postDetails?.product?.accessories} </Text>
+                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.accessories)}</Text>
                         </View>
                     </View>
                     <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
+
                     {/* Date Code */}
                     <View style={styles.details}>
                         <View style={styles.left}>
                             <Text>Date Code</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.dateCode.toLowerCase() === "none" ? " N/A" : postDetails?.product?.dateCode} </Text>
+                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.dateCode)}</Text>
                         </View>
                     </View>
                     <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
+
                     {/* Serial Number */}
                     <View style={styles.details}>
                         <View style={styles.left}>
                             <Text>Serial Number</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.serialNumber.toLowerCase() === "none" ? " N/A" : postDetails?.product?.serialNumber} </Text>
+                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.serialNumber)}</Text>
                         </View>
                     </View>
                     <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
+
                     {/* Purchased Place */}
                     <View style={styles.details}>
                         <View style={styles.left}>
                             <Text>Purchased Place</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.purchasedPlace.toLowerCase() === "none" ? " N/A" : postDetails?.product?.purchasedPlace} </Text>
+                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.purchasedPlace)}</Text>
                         </View>
                     </View>
                     <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
-                    {/* story */}
+
+                    {/* Story */}
                     <View style={[styles.details, { marginBottom: 6 }]}>
                         <View style={styles.left}>
                             <Text>Story</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{postDetails?.product?.story.toLowerCase() === "none" ? " N/A" : postDetails?.product?.story} </Text>
+                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.story)}</Text>
                         </View>
                     </View>
                     <View style={styles.divider} />

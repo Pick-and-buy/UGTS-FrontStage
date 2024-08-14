@@ -111,7 +111,7 @@ const Buyer = ({ navigation }) => {
                 </Text>
                 <Text style={styles.shop}>{item?.post?.user?.username}</Text>
                 <View style={{ flex: 1, flexDirection: "row", justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Text style={styles.price}>đ{formatPrice(item?.orderDetails?.price)}</Text>
+                    <Text style={styles.price}>đ{formatPrice((item?.orderDetails?.price ?? 0) + (item?.orderDetails?.shippingCost ?? 0))}</Text>
 
                     {item?.orderDetails?.status === "PENDING" &&
                         <View style={styles.statusButton}>
