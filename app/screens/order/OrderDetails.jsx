@@ -194,12 +194,21 @@ const OrderDetails = ({ navigation, route }) => {
                                     <View style={styles.ownerAddress}>
                                         <SimpleLineIcons name="location-pin" size={20} color="black" />
                                         <Text style={styles.ownerName}>
-                                            {user?.result?.firstName} {user?.result?.lastName} {maskPhoneNumber(user?.result?.phoneNumber, '+84')}
+                                            {user?.result?.username} {maskPhoneNumber(user?.result?.phoneNumber, '+84')}
                                         </Text>
                                     </View>
                                     <View style={styles.locationDetails}>
                                         <Text style={styles.locationText}>
-                                            {address.addressLine}, {address.street}, {address.district}, {address.province}, {address.country}
+                                            {address.addressLine ?
+                                                (
+                                                    `${address.addressLine}, ${address.street}, ${address.district}, ${address.province}, ${address.country}`
+                                                )
+                                                :
+                                                (
+                                                    `${address.street}, ${address.district}, ${address.province}, ${address.country}`
+                                                )
+
+                                            }
                                         </Text>
                                     </View>
                                 </View>

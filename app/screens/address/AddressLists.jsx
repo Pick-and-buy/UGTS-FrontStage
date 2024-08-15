@@ -46,7 +46,17 @@ const AddressLists = ({ navigation, route }) => {
                     {maskPhoneNumber(user?.result?.phoneNumber, '+84')}
                 </Text>
                 <Text style={styles.addressDetails}>
-                    {item.addressLine}, {item.street}, {item.district}, {item.province}, {item.country}
+                    {item.addressLine ?
+                        (
+                            `${item.addressLine}, ${item.street}, ${item.district}, ${item.province}, ${item.country}`
+                        )
+                        :
+                        (
+                            `${item.street}, ${item.district}, ${item.province}, ${item.country}`
+                        )
+
+                    }
+
                 </Text>
                 {item?.default && (
                     <View style={styles.addressDefault}>
