@@ -10,13 +10,22 @@ import axios from 'axios';  // Import axios
 import { getAuthToken, sendImageToAPI } from '../api/user.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '../context/AuthContext';
-
+import CustomModal from '../components/CustomModal';
 const UploadPhoto = ({ navigation, route }) => {
     // const user = route.params;
     // const userId = user.id;
 
     const [image, setImage] = useState();
     const { updateAvatar, user, fetchUserData } = useAuth();
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState({
+        title: '',
+        detailText: '',
+        confirmText: '',
+        cancelText: '',
+        onConfirm: () => { },
+    });
+
 
     const uploadImage = async (mode) => {
         try {
@@ -60,14 +69,30 @@ const UploadPhoto = ({ navigation, route }) => {
     const handleContinue = async () => {
         if (image) {
             try {
-                // Get the authentication token
                 const authToken = await getAuthToken();
-                // Update avatar in context
                 const response = await updateAvatar(image, user?.id, authToken);
+
                 if (response.code === 1000) {
-                    // Navigate to the user profile details screen
-                    navigation.navigate("user-profile-details", { user: response.result, userIdLogged: user.id });
-                    Alert.alert(response.message);
+                    setModalContent({
+                        title: 'Thành công',
+                        detailText: 'Bạn đã cập nhật lại ảnh đại diện của mình thành công!',
+                        confirmText: 'Xác nhận',
+                        onConfirm: () => {
+                            setModalVisible(false);
+                            navigation.navigate("user-profile-details", { user: response.result, userIdLogged: user.id });
+                        },
+                        cancelText:''
+                    });
+                    setModalVisible(true);
+                } else {
+                    setModalContent({
+                        title: 'Thất bại',
+                        detailText: 'Bạn đã cập nhật lại ảnh đại diện của mình không thành công!',
+                        confirmText: 'Thử lại',
+                        onConfirm: () => setModalVisible(false),
+                        cancelText: 'Thoát',
+                    });
+                    setModalVisible(true);
                 }
             } catch (err) {
                 alert("Error updating image profile: " + err.message);
@@ -138,6 +163,15 @@ const UploadPhoto = ({ navigation, route }) => {
                     />
                 </View>
             </View>
+            <CustomModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                onConfirm={modalContent.onConfirm}
+                title={modalContent.title}
+                detailText={modalContent.detailText}
+                confirmText={modalContent.confirmText}
+                cancelText={modalContent.cancelText}
+            />
         </View>
     );
 }
