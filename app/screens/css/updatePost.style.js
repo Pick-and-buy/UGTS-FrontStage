@@ -3,13 +3,42 @@ import {
     Dimensions,
 } from "react-native";
 import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
-
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 60,
-        marginBottom: 100,
+        width: windowWidth,
+        height: windowHeight,
+        backgroundColor: COLORS.background
     },
+    wrapper: {
+        width: "98%",
+        backgroundColor: COLORS.background,
+        marginHorizontal: "auto"
+    },
+    // Header
+    headerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignItems: "flex-end",
+        gap: 20,
+        backgroundColor: COLORS.white,
+        width: "100%",
+        height: "10%",
+        marginTop: 10,
+        paddingLeft: 10,
+        paddingBottom: 5,
+    },
+
+    labelText: {
+        fontSize: 16,
+        color: COLORS.gray,
+        // marginHorizontal: 20,
+        marginVertical: 5,
+        marginLeft:5
+    },
+
     viewContainer: {
         flexDirection: 'row',
         marginHorizontal: 10,
@@ -29,14 +58,7 @@ const styles = StyleSheet.create({
         marginLeft: 5,
         fontSize: SIZES.xSmall
     },
-    // Header
-    headerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 20,
-        marginBottom: 10,
-        paddingLeft: 10
-    },
+    
     textName: {
         fontSize: 25,
         fontFamily: 'bold',
@@ -46,31 +68,26 @@ const styles = StyleSheet.create({
     },
     //Space
     shadow: {
-        borderWidth: 1,
-        borderColor: '#C0C0C0',
-        backgroundColor: '#D3D3D3',
-        width: Dimensions.get('window').width,
-        marginVertical: 5
+        height: 3,
+        backgroundColor: "#F3F3F3",
     },
     //Image Upload
     imageUploadContaniner: {
-        marginVertical: 20,
-        width: Dimensions.get('window').width,
-        height: 370,
-        backgroundColor: '#dbd9d9',
-        paddingLeft: 5,
+        width: windowWidth,
+        backgroundColor: COLORS.white,
+        paddingBottom: 5,
     },
     imageUpload: {
         flexDirection: "row",
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 15,
-        marginHorizontal: 'auto'
+        marginTop: 10,
+        marginHorizontal: 'auto',
     },
     image: {
         position: 'relative',
         width: Dimensions.get('window').width / 5,
-        height: Dimensions.get('window').width / 4.7,
+        height: Dimensions.get('window').width / 4.8,
         backgroundColor: COLORS.lightWhite,
         borderRadius: 5,
         alignItems: 'center',
@@ -100,30 +117,58 @@ const styles = StyleSheet.create({
 
     //Upload Image by gallery and Camera Option
     selectOption: {
+        width: "100%",
         flexDirection: 'row',
-        marginHorizontal: "5%",
-        gap: 20,
+        gap: 10,
     },
     uploadContainer: {
-        flexDirection: 'column',
-        borderWidth: 2,
-        borderRadius: 20,
-        width: '40%',
-        backgroundColor: 'white',
-        borderColor: COLORS.lightWhite,
-        ...SHADOWS.medium,
+        width: '48%',
+        borderRadius: 10,
+        flexDirection: 'row',
+        backgroundColor: COLORS.white,
+        ...SHADOWS.small,
         justifyContent: "center",
         alignItems: "center",
+        marginHorizontal: 'auto',
+        gap: 10,
+        padding: 10,
     },
     imageSelect:{
-        marginVertical:10,
+        width: 30,
+        height: 30,
+    },
+
+    //Check box
+    checkboxContainer: {
+        width: "96%",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 'auto',
+        gap: 10,
+        marginBottom: 10
+    },
+    checkboxView: {
+        height: 50,
+        width: "48%",
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
+        backgroundColor: '#fff',
+        gap: 5,
+    },
+    textVerified: {
+        textAlign: 'center'
     },
 
     //Upload Invoice
     uploadInvoiceContainer: {
-        width: '45%',
-        height: Dimensions.get('window').width / 3 + 30,
+        width: '48%',
+        height: Dimensions.get('window').width / 3,
         marginLeft: 10,
+        marginLeft: 0,
     },
 
     uploadInvoiceImage: {
@@ -140,8 +185,8 @@ const styles = StyleSheet.create({
 
     //Upload Video
     uploadVideoContainer: {
-        width: '45%',
-        height: Dimensions.get('window').width / 3 + 30,
+        width: '48%',
+        height: Dimensions.get('window').width / 3,
         marginLeft: 5,
     },
 
@@ -161,15 +206,52 @@ const styles = StyleSheet.create({
 
     //Product Information
     productContainer: {
-        width: Dimensions.get('window').width,
-        backgroundColor: COLORS.lightWhite,
+        width: "98%",
+        marginHorizontal: "auto",
+        backgroundColor: COLORS.white,
+        borderRadius: 10,
+    },
+    productField:{
+        width: "100%",
+        marginTop:10
+    },
+
+    required: {
+        color: 'red',
+        fontSize: 18,
+        fontFamily: 'bold'
+    },
+
+    title: {
+        fontSize: 16,
+        marginLeft: 10,
+        // marginBottom:-5
     },
     inputProduct: {
-        flex: 1,
-        width: "100%",
-        marginVertical: 5,
+        width: "94%",
+        marginHorizontal: "auto",
+        marginBottom: 10,
+        height: 40,
+        borderColor: "#ddd",
+        borderBottomWidth: 1,
         fontSize: 16,
         color: COLORS.blue
+    },
+
+    //Brand Name: Tên Nhãn Hiệu
+    dropdownContainer: {
+        width: "94%",
+        marginHorizontal: "auto",
+    },
+    dropdown: {
+        marginBottom: 10,
+        height: 60,
+        borderColor: "#ddd",
+        borderBottomWidth: 1,
+        paddingBottom: 10
+    },
+    label: {
+        fontSize: 16,
     },
 
     leftText: {
@@ -182,25 +264,13 @@ const styles = StyleSheet.create({
         color: COLORS.blue,
         marginVertical: 5,
     },
-    //Brand Name: Tên Nhãn Hiệu
-    dropdownContainer: {
-        paddingHorizontal: 10,
-    },
-    label: {
-        marginBottom: 10,
-        fontSize: 16,
-    },
-    dropdown: {
-        marginBottom: 20,
-        height: 50,
-        borderColor: 'gray',
-        borderWidth: 1,
-        borderRadius: 8,
-        paddingHorizontal: 8,
-    },
+    
     errorText: {
         fontSize: 14,
         color: 'red',
+        marginLeft: 10,
+        marginTop: -28,
+        marginBottom: 10
     },
 
     //Exterior Color, Interior Color, width, height, length, Reference Code
