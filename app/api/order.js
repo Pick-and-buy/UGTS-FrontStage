@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axiosInstance from './axiosInstance';
 
 
-export const order = async (paymentMethod, addressId, deliveryDate, receivedDate, postId,shippingCost) => {
+export const order = async (paymentMethod, addressId, deliveryDate, receivedDate, postId, shippingCost) => {
     try {
         const response = await axiosInstance.post(`/orders`, {
             paymentMethod: paymentMethod,
@@ -15,7 +15,7 @@ export const order = async (paymentMethod, addressId, deliveryDate, receivedDate
             post: {
                 id: postId
             },
-            shippingCost:shippingCost,
+            shippingCost: shippingCost,
         });
         return response.data;
     } catch (error) {
@@ -39,6 +39,9 @@ export const updateOrderBuyer = async (orderInfo, selectedAddress) => {
                 province: selectedAddress?.province,
                 country: selectedAddress?.country,
                 addressLine: selectedAddress?.addressLine
+            },
+            post: {
+                id: orderInfo?.post?.id
             }
         });
         return response.data;
@@ -77,35 +80,35 @@ export const cancelOrderBuyer = async (orderInfo, selectedAddress) => {
 
 export const callFetchListOrders = async () => {
     try {
-      const response = await axiosInstance.get('/orders');
-      return response.data;
+        const response = await axiosInstance.get('/orders');
+        return response.data;
     } catch (error) {
-      console.error('Error fetching List Orders:', error);
+        console.error('Error fetching List Orders:', error);
         throw error;
     }
-  }
+}
 
-  export const getOrderByOrderId = async (orderId) => {
+export const getOrderByOrderId = async (orderId) => {
     try {
-      const response = await axiosInstance.get(`/orders/details?orderId=${orderId}`);
-      return response.data;
+        const response = await axiosInstance.get(`/orders/details?orderId=${orderId}`);
+        return response.data;
     } catch (error) {
-      console.error('Error fetching Order By OrderId: ', error);
+        console.error('Error fetching Order By OrderId: ', error);
         throw error;
     }
-  }
+}
 
-  export const getOrdersByOrderStatus = async (orderStatus) => {
+export const getOrdersByOrderStatus = async (orderStatus) => {
     try {
-      const response = await axiosInstance.get(`/orders/status?orderStatus=${orderStatus}`);
-      return response.data;
+        const response = await axiosInstance.get(`/orders/status?orderStatus=${orderStatus}`);
+        return response.data;
     } catch (error) {
-      console.error('Error fetching Orders By Order Status: ', error);
+        console.error('Error fetching Orders By Order Status: ', error);
         throw error;
     }
-  }
+}
 
-  export const cancelOrderSeller = async (orderId) => {
+export const cancelOrderSeller = async (orderId) => {
     try {
 
         const response = await axiosInstance.put(`/orders?orderId=${orderId}`, {

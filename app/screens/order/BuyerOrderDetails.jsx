@@ -97,7 +97,14 @@ const BuyerOrderDetails = ({ navigation, route }) => {
   const handleUpdateOrder = async (newAddress) => {
     try {
       await updateOrderBuyer(orderInfo, newAddress || selectedAddress);
-      alert('Update Order Successfully')
+      setModalVisible(true);
+      setModalContent({
+        title: 'Thành công',
+        detailText: 'Thay đổi địa chỉ thành công!',
+        confirmText: 'Xác Nhận',
+        cancelText: '',
+        onConfirm: () => setModalVisible(false)
+      });
     } catch (error) {
       console.error('Submit update buyer order', error);
     }
@@ -153,16 +160,14 @@ const BuyerOrderDetails = ({ navigation, route }) => {
           </View>
           <View style={styles.locationDetails}>
             <Text style={styles.locationText}>
-              {selectedAddress ?
-                (
-                  `${selectedAddress?.addressLine},${selectedAddress?.street}, ${selectedAddress?.district}, ${selectedAddress?.province}, ${selectedAddress?.country}`
-                )
-                :
-                (
-                  `${updatedOrderInfo?.orderDetails?.address?.addressLine}, ${updatedOrderInfo?.orderDetails?.address?.street}, ${updatedOrderInfo?.orderDetails?.address?.district}, ${updatedOrderInfo?.orderDetails?.address?.province}, ${updatedOrderInfo?.orderDetails?.address?.country}`
-                )
+              {selectedAddress?.addressLine
+                ? `${selectedAddress?.addressLine}, ${selectedAddress?.street}, ${selectedAddress?.district}, ${selectedAddress?.province}, ${selectedAddress?.country}`
+                : updatedOrderInfo?.orderDetails?.address?.addressLine
+                  ? `${updatedOrderInfo?.orderDetails?.address?.addressLine}, ${updatedOrderInfo?.orderDetails?.address?.street}, ${updatedOrderInfo?.orderDetails?.address?.district}, ${updatedOrderInfo?.orderDetails?.address?.province}, ${updatedOrderInfo?.orderDetails?.address?.country}`
+                  : `${updatedOrderInfo?.orderDetails?.address?.street}, ${updatedOrderInfo?.orderDetails?.address?.district}, ${updatedOrderInfo?.orderDetails?.address?.province}, ${updatedOrderInfo?.orderDetails?.address?.country}`
               }
             </Text>
+
           </View>
         </View>
         <View style={styles.slanted}>
