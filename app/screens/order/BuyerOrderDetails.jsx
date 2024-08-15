@@ -11,16 +11,18 @@ import { cancelOrderBuyer, getOrderByOrderId, updateOrderBuyer } from '../../api
 import OrderTracking from './OrderTracking';
 import * as Clipboard from 'expo-clipboard';
 import AddRating from './AddRating';
-
+import { useAuth } from '../../context/AuthContext'
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
 const BuyerOrderDetails = ({ navigation, route }) => {
+
   const orderInfo = route.params.orderInfo;
-  // const [user, setUser] = useState(null);
+  const { user } = useAuth();
   const [updatedOrderInfo, setUpdatedOrderInfo] = useState();
   const [phoneUserOrder, setPhoneUserOrder] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [showAddRating, setShowAddRating] = useState(false);
+
   useEffect(() => {
     if (orderInfo) {
       fetchOrderInfo();
@@ -63,8 +65,8 @@ const BuyerOrderDetails = ({ navigation, route }) => {
   };
 
   const formattedProductPrice = formatPrice(updatedOrderInfo?.post?.product?.price);
-  const shippingPrice = formatPrice(42500);
-  const totalPrice = formatPrice(updatedOrderInfo?.post?.product?.price + 42500);
+  const shippingPrice = formatPrice(updatedOrderInfo?.orderDetails?.shippingCost);
+  const totalPrice = formatPrice(updatedOrderInfo?.post?.product?.price + updatedOrderInfo?.orderDetails?.shippingCost);
 
 
   const copiedOrderId = () => {
@@ -189,17 +191,30 @@ const BuyerOrderDetails = ({ navigation, route }) => {
                 Color: {updatedOrderInfo?.post?.product?.color}, Size: {updatedOrderInfo?.post?.product?.size}
               </Text>
               <View style={styles.label}>
-                <View style={styles.verifiedLabel}>
-                  <MaterialIcons name="verified" size={14} color="#FFBB00" />
-                  <Text style={{ fontSize: 12 }}>Đã xác minh</Text>
-                </View>
+
+                {updatedOrderInfo?.post?.product?.verifiedLevel === 'LEVEL_1' && (
+                  <View style={styles.verified}>
+                    <Text style={styles.verifiedText}>Xác minh cấp 1</Text>
+                  </View>
+                )}
+                {updatedOrderInfo?.post?.product?.verifiedLevel === 'LEVEL_2' && (
+                  <View style={[styles.verified, { backgroundColor: '#ff8000' }]}>
+                    <Text style={styles.verifiedText}>Xác minh cấp 2</Text>
+                  </View>
+                )}
+                {updatedOrderInfo?.post?.product?.verifiedLevel === 'LEVEL_3' && (
+                  <View style={[styles.verified, { backgroundColor: '#33cc33' }]}>
+                    <Text style={styles.verifiedText}>Xác minh cấp 3</Text>
+                  </View>
+                )}
+
                 <View style={styles.returnLabel}>
                   <AntDesign name="retweet" size={14} color="#FFBB00" />
                   <Text style={{ fontSize: 12 }}>Trả hàng miễn phí</Text>
                 </View>
               </View>
               <Text style={styles.price}>
-                <Text style={styles.currency}>đ</Text>
+                <Text style={styles.currency}>₫</Text>
                 {formattedProductPrice}
               </Text>
             </View>
@@ -209,7 +224,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
             <View style={styles.transport}>
               <Text style={{ fontSize: 16, color: COLORS.gray }}>Vận chuyển tiêu chuẩn</Text>
               <Text style={{ fontSize: 16, color: COLORS.gray }}>
-                {shippingPrice}đ
+                {shippingPrice}₫
               </Text>
             </View>
             <View style={styles.transportFrom}>
@@ -236,17 +251,17 @@ const BuyerOrderDetails = ({ navigation, route }) => {
 
               <View style={styles.totalRight}>
                 <Text style={styles.totalText}>
-                  {formattedProductPrice}đ
+                  {formattedProductPrice}₫
                 </Text>
                 <Text style={styles.totalText}>
-                  {shippingPrice}đ
+                  {shippingPrice}₫
                 </Text>
               </View>
             </View>
             <View style={styles.totalPrice}>
               <Text style={styles.totalHeader}>Tổng</Text>
               <Text style={styles.totalHeader}>
-                {totalPrice}đ
+                {totalPrice}₫
               </Text>
             </View>
           </View>
@@ -270,7 +285,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
               <Text style={{ fontSize: 18 }}>ID đơn hàng</Text>
             </View>
             <View style={styles.right}>
-              <TouchableOpacity style={styles.orderId} onPress={() => {}}>
+              <TouchableOpacity style={styles.orderId} onPress={() => { }}>
                 <Text style={{ fontSize: 18 }}>
                   {updatedOrderInfo?.id.length > 10 ? `${orderInfo.id.substring(0, 10)}...` : orderInfo.id}
                 </Text>
@@ -280,13 +295,13 @@ const BuyerOrderDetails = ({ navigation, route }) => {
           </View>
           <View style={styles.redirect}>
             <TouchableOpacity style={styles.redirectBtn} onPress={() => { }}>
-              <Ionicons name="chatbubble-ellipses-outline" size={24} color="black" />
+              <Ionicons name="chatbubble-ellipses-outline" size={22} color="black" />
               <Text style={styles.redirectBtnText}>Liên hệ người bán</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.redirectBtn}
-              onPress={() => navigation.navigate("seller-profile-navigation", { userOfPost: updatedOrderInfo?.post?.user, userIdLogged: updatedOrderInfo?.post?.id })}
+              onPress={() => navigation.navigate("user-profile-details", { user: updatedOrderInfo?.post?.user, userIdLogged: user?.id })}
             >
-              <Entypo name="shop" size={24} color="black" />
+              <Entypo name="shop" size={22} color="black" />
               <Text style={styles.redirectBtnText}>Ghé thăm người bán</Text>
             </TouchableOpacity>
           </View>

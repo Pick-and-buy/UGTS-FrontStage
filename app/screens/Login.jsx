@@ -73,7 +73,7 @@ const Login = ({ navigation }) => {
     };
 
     const validationSchema = Yup.object().shape({
-        phoneNumber: Yup.string().matches(/^\d{10}$/, 'Số điện thoại phải có ít nhất 10 số').required('Vui lòng nhập số điện thoại').typeError("Có vẻ như đó không phải là số điện thoại"),
+        phoneNumber: Yup.string().matches(/^\d{10}$/, 'Số điện thoại phải có 10 số').required('Vui lòng nhập số điện thoại').typeError("Có vẻ như đó không phải là số điện thoại"),
         password: Yup.string().min(8, 'Mật khẩu phải có ít nhất 8 ký tự').required('Vui lòng nhập mật khẩu'),
     });
 
