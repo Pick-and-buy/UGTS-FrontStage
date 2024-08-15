@@ -205,7 +205,7 @@ const Buyer = ({ navigation }) => {
 
                         {listOrdersBuyer.length > 0 ? (
                             <FlatList
-                                data={listOrdersBuyer}
+                                data={listOrdersBuyer.reverse()}
                                 renderItem={renderItem}
                                 keyExtractor={item => item.id}
                             />

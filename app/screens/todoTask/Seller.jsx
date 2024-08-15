@@ -266,7 +266,7 @@ const Seller = ({ navigation }) => {
             </View>
             {listOrdersSeller.length > 0 ? (
               <FlatList
-                data={listOrdersSeller}
+                data={listOrdersSeller.reverse()}
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
               />
