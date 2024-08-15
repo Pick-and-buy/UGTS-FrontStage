@@ -13,6 +13,7 @@ import * as Clipboard from 'expo-clipboard';
 import AddRating from './AddRating';
 import { useAuth } from '../../context/AuthContext'
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
+import CustomModal from '../../components/CustomModal';
 
 const BuyerOrderDetails = ({ navigation, route }) => {
 
@@ -22,6 +23,15 @@ const BuyerOrderDetails = ({ navigation, route }) => {
   const [phoneUserOrder, setPhoneUserOrder] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [showAddRating, setShowAddRating] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState({
+    title: '',
+    detailText: '',
+    confirmText: '',
+    cancelText: '',
+    onConfirm: () => { },
+  });
+
 
   useEffect(() => {
     if (orderInfo) {
@@ -93,33 +103,29 @@ const BuyerOrderDetails = ({ navigation, route }) => {
     }
   };
 
-  const handleCancelOrder = async () => {
-    try {
-      Alert.alert(
-        "Hủy đơn hàng",
-        "Bạn có chắc chắn muốn hủy đơn hàng không?",
-        [
-          {
-            text: "Hủy",
-          },
-          {
-            text: "Xác Nhận",
-            onPress: async () => {
-              await cancelOrderBuyer(orderInfo, selectedAddress);
-              navigation.navigate('cancel-successfully', { orderInfo: orderInfo });
-            },
-          }
-        ]
-      );
-    } catch (error) {
-      console.error('Submit cancel buyer order: ', error);
-    }
+  const handleCancelOrder = () => {
+    setModalContent({
+      title: 'Hủy đơn hàng',
+      detailText: 'Bạn có chắc chắn muốn hủy đơn hàng không?',
+      confirmText: 'Xác Nhận',
+      cancelText: 'Hủy',
+      onConfirm: async () => {
+        try {
+          await cancelOrderBuyer(orderInfo, selectedAddress);
+          navigation.navigate('cancel-successfully', { orderInfo: orderInfo });
+          setModalVisible(false); // Close the modal after the order is canceled
+        } catch (error) {
+          console.error('Submit cancel buyer order: ', error);
+        }
+      },
+    });
+    setModalVisible(true); // Show the modal
   };
 
   console.log('>>>> check order: ', orderInfo.id);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
@@ -352,8 +358,16 @@ const BuyerOrderDetails = ({ navigation, route }) => {
         </View>
       )}
 
-
-    </SafeAreaView>
+      <CustomModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onConfirm={modalContent.onConfirm}
+        title={modalContent.title}
+        detailText={modalContent.detailText}
+        confirmText={modalContent.confirmText}
+        cancelText={modalContent.cancelText}
+      />
+    </View>
   )
 }
 
