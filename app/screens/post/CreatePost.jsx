@@ -71,6 +71,13 @@ const CreatePost = () => {
   const feeBoosted = 100000;
 
   useEffect(() => {
+    if(isChecked_2 === false) {
+        setInvoice("");
+        setVideoUri("");
+    }
+}, [isChecked_2])
+
+  useEffect(() => {
     fetchAllBrands();
   }, [])
 
@@ -512,11 +519,11 @@ const CreatePost = () => {
           const lastPriceBoosted = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted : '';
           // const formatlLastPriceForSeller = formatPrice(lastPriceLegitgrails);
           let formatlLastPriceForSeller = "";
-          if(isChecked_3 && isBoosted) {
+          if (isChecked_3 && isBoosted) {
             formatlLastPriceForSeller = formatPrice(lastPriceBoth);
           } else if (isBoosted) {
             formatlLastPriceForSeller = formatPrice(lastPriceBoosted);
-          } else if(isChecked_3) {
+          } else if (isChecked_3) {
             formatlLastPriceForSeller = formatPrice(lastPriceLegitgrails);
           }
 
@@ -1082,7 +1089,7 @@ const CreatePost = () => {
               </View>
 
               {/* Boosted */}
-              <View style={{marginTop: 10}}>
+              <View style={{ marginTop: 10 }}>
                 <Text style={styles.labelText}>Dịch Vụ Quảng Cáo Boosted</Text>
               </View>
               <View style={styles.checkboxBoostedContainer}>
@@ -1097,7 +1104,7 @@ const CreatePost = () => {
                   (
                     <View style={{ width: "100%" }}>
                       <Text style={styles.labelText}>
-                        Chúng tôi sử dụng dịch vụ quảng cáo cho phép sản phẩm của bạn được hiển thị lên đầu ứng dụng.
+                        Chúng tôi sử dụng dịch vụ quảng cáo cho phép sản phẩm của bạn được hiển thị lên đầu ứng dụng trong vòng <Text style={{ color: "red" }}>2 tiếng</Text>.
                         Phí dịch vụ sẽ là <Text style={{ color: "red" }}>{formatPrice(feeBoosted)}đ</Text>
                       </Text>
                     </View>

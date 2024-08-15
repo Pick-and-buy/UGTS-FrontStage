@@ -91,6 +91,8 @@ const UpdatePost = ({ route }) => {
     const [isChecked_3, setChecked_3] = useState(false);
     const [isBoosted, setBoosted] = useState(false);
 
+    const [checkVerifiedLevel, setCheckVerifiedLevel] = useState("");
+
     const FEE = 0;
     const feeLegitgrails = 500000;
     const feeBoosted = 100000;
@@ -117,8 +119,26 @@ const UpdatePost = ({ route }) => {
             setSelectedBrand(postInfo.product.brand.name);
             setSelectedBrandLine(postInfo.product.brandLine.lineName);
         }
+
+        // set giá trị ban đầu cho isChecked_2 nếu verifiedLevel: LEVEL_2
+        if(postInfo?.product?.verifiedLevel === "LEVEL_2") {
+            setChecked_2(true);
+            setCheckVerifiedLevel(postInfo?.product?.verifiedLevel)
+        }
+
+        // set giá trị ban đầu cho isBoosted nếu boosted: true
+        if(postInfo?.boosted === true) {
+            setBoosted(true);
+        }
         setIsDataLoaded(true);  // Set data loaded to true
     };
+
+    useEffect(() => {
+        if(isChecked_2 === false) {
+            setInvoice("");
+            setVideoUri("");
+        }
+    }, [isChecked_2])
 
     useEffect(() => {
         fetchPostDetails();
@@ -246,28 +266,93 @@ const UpdatePost = ({ route }) => {
         { label: 'Extra Large', value: 'Extra Large' },
     ];
 
+    const validateImages = () => {
+        let valid = true;
+        let message = '';
+
+        //Kiểm tra điều kiện nếu trạng thái khi create là LEVEL_2 mà khi update người dùng xóa bỏ ảnh hóa đơn và video
+        if (checkVerifiedLevel === "LEVEL_2") {
+            if (invoice === '' && videoUri === '') {
+                valid = false;
+                message = 'Vì sản phẩm của bạn đã được xác minh cấp 2 nên hãy cập nhật đầy đủ ảnh hóa đơn và video';
+            } 
+        }
+
+        // Kiểm tra điều kiện khi người dùng bấm vào xác thực level 2
+        if (isChecked_2) {
+            if (invoice === '' && videoUri === '') {
+                valid = false;
+                message = 'Hãy cập nhật ảnh hóa đơn và video để xác thực level 2';
+            } else if (invoice === '') {
+                valid = false;
+                message = 'Hãy cập nhật ảnh hóa đơn để xác thực level 2';
+            } else if (videoUri === '') {
+                valid = false;
+                message = 'Hãy cập nhật video để xác thực level 2';
+            }
+        }
+        return { valid, message };
+    };
+
     const handleUpdatePost = async (values, actions) => {
         try {
-            let { description } = values;
-            console.log('>>> check values: ', values);
-            let queryId = `${postDetails?.id}`;
-            const formData = new FormData();
-            const request = {
-                description: description,
-                product: {
-                    id: postDetails?.product?.id
+            const { valid, message } = validateImages();
+            if (valid) {
+                let queryId = `${postDetails?.id}`;
+
+                let { brandName, productName, brandLineName, condition, category, exteriorMaterial,
+                    interiorMaterial, size, width, height, length, referenceCode, manufactureYear, color, accessories, dateCode,
+                    serialNumber, purchasedPlace, description,
+                  } = values;
+
+                const convertStringPrice = values.price.replace(/\./g, '');
+                const originPrice = parseInt(convertStringPrice, 10)
+                let calculatedPrice = "";
+                if (isChecked_3 && isBoosted) {
+                    calculatedPrice = parseInt(convertStringPrice, 10) - feeLegitgrails - feeBoosted;
+                } else if (isBoosted) {
+                    calculatedPrice = parseInt(convertStringPrice, 10) - feeBoosted;
+                } else if (isChecked_3) {
+                    calculatedPrice = parseInt(convertStringPrice, 10) - feeLegitgrails;
+                } else {
+                    calculatedPrice = "";
                 }
-            };
 
-            formData.append('request', JSON.stringify(request));
+                const formData = new FormData();
+                const request = {
+                    description:description,
+                    brand: { name: brandName },
+                    brandLine: { lineName: brandLineName },
+                    category: { categoryName: category },
+                    product: {
+                        id: postDetails?.product?.id,
+                        name: productName,
+                        price: originPrice,
+                        color: color,
+                        size: size,
+                        width: width,
+                        height: height,
+                        length: length,
+                        referenceCode: referenceCode,
+                        manufactureYear: manufactureYear,
+                        exteriorMaterial: exteriorMaterial,
+                        interiorMaterial: interiorMaterial,
+                        accessories: accessories,
+                        dateCode: dateCode,
+                        serialNumber: serialNumber,
+                        purchasedPlace: purchasedPlace,
+                        story: '',
+                    },
+                    condition: condition,
+                    boosted: isBoosted,
+                    lastPriceForSeller: calculatedPrice,
 
-            const filteredImages = images.filter(image => image.value && image.value !== "");
+                };
 
-            if (filteredImages.length === 0) {
-                console.warn('Ảnh không được để trống!')
-                return;
-            } else {
-                filteredImages.forEach((image, index) => {
+                formData.append('request', JSON.stringify(request));
+
+                const filteredImages = images.filter(image => image.value && image.value !== "");
+                images.forEach((image, index) => {
                     if (image) {
                         const fileName = image.value.split('/').pop();
                         formData.append('productImages', {
@@ -277,34 +362,34 @@ const UpdatePost = ({ route }) => {
                         });
                     }
                 });
-            }
-            if (!invoice) {
+
+                if (invoice) {
+                    const invoiceFileName = invoice.split('/').pop();
+                    formData.append('originalReceiptProof', {
+                        uri: invoice,
+                        type: 'image/jpeg',
+                        name: invoiceFileName,
+                    });
+                }
+
+                if (videoUri) {
+                    const videoFileName = videoUri.split('/').pop();
+                    formData.append('productVideo', {
+                        uri: videoUri,
+                        type: 'video/mp4',
+                        name: videoFileName,
+                    });
+                }
+                
+                await updatePost(queryId, formData);
+                navigation.goBack();
+            } else {
                 Alert.alert(
                     "Thiếu thông tin",
-                    "Hãy cập nhật ảnh hóa đơn",
+                    message,
                     [{ text: "OK" }]
                 );
-            } else {
-                const invoiceFileName = invoice.split('/').pop();
-                formData.append('originalReceiptProof', {
-                    uri: invoice,
-                    type: 'image/jpeg',
-                    name: invoiceFileName,
-                });
             }
-
-            if (videoUri) {
-                const videoFileName = videoUri.split('/').pop();
-                formData.append('productVideo', {
-                    uri: videoUri,
-                    type: 'video/mp4',
-                    name: videoFileName,
-                });
-            }
-
-            await updatePost(queryId, formData);
-            navigation.goBack();
-
         } catch (error) {
             console.error('ERROR handle create post: ', error);
         }
@@ -1133,7 +1218,7 @@ const UpdatePost = ({ route }) => {
                                     (
                                         <View style={{ width: "100%" }}>
                                             <Text style={styles.labelText}>
-                                                Chúng tôi sử dụng dịch vụ quảng cáo cho phép sản phẩm của bạn được hiển thị lên đầu ứng dụng.
+                                                Chúng tôi sử dụng dịch vụ quảng cáo cho phép sản phẩm của bạn được hiển thị lên đầu ứng dụng trong vòng <Text style={{ color: "red" }}>2 tiếng</Text>.
                                                 Phí dịch vụ sẽ là <Text style={{ color: "red" }}>{formatPrice(feeBoosted)}đ</Text>
                                             </Text>
                                         </View>

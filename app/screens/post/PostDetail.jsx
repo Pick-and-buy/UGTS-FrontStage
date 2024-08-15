@@ -181,7 +181,7 @@ const PostDetail = ({ navigation, route }) => {
         } else {
             Alert.alert(
                 "Đăng nhập",
-                "Bạn cần đăng nhập để thêm sản phẩm vào danh mục yêu thích.",
+                "Bạn cần đăng nhập để mua sản phẩm.",
                 [
                     {
                         text: "Cancel",
