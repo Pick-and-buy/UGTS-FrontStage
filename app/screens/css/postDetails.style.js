@@ -62,6 +62,14 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
+    numberOfLike:{
+        color: COLORS.gray,
+        fontWeight: "bold",
+        position: "absolute",
+        right: 15,
+        top:50,
+        fontSize:18
+    },
     informationContainer: {
         width: "96%",
         // height: "16%",
@@ -69,6 +77,11 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.white,
         marginVertical: 10,
         // top: "-12%",
+    },
+    labelWrapper: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap:10
     },
     label: {
         flexDirection: "row",
@@ -89,6 +102,16 @@ const styles = StyleSheet.create({
         color: COLORS.white,
         marginLeft: 2,
         fontSize: 12
+    },
+    ads: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "#66bcb0",
+        paddingVertical: 2,
+        paddingHorizontal: 5,
+        borderRadius: 3,
+        justifyContent:"center",
+        alignItems:"center"
     },
     currency: {
         textDecorationLine: 'underline',

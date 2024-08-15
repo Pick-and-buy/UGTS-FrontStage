@@ -140,7 +140,7 @@ const Profile = ({ navigation }) => {
               ) : (
 
                 <View style={{ flexDirection: "row" }}>
-                  <View style={{ marginLeft: 10, marginTop: 10, flexDirection: "column" }}>
+                  <View style={{ marginLeft: 10, marginVertical:"auto", flexDirection: "column" }}>
                     <Text style={styles.text}>
                       Bạn chưa đăng nhập
                     </Text>

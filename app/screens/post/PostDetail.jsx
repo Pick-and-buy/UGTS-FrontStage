@@ -43,7 +43,7 @@ const PostDetail = ({ navigation, route }) => {
     const [type, setType] = useState('buyer');
     const [ratings, setRatings] = useState();
     const [averageRating, setAverageRating] = useState(0);
-    console.log(postDetails?.user?.id);
+    console.log(postId);
 
 
     useEffect(() => {
@@ -152,8 +152,10 @@ const PostDetail = ({ navigation, route }) => {
         try {
             if (isLiked) {
                 await unlikePost(userId, postId);
+                fetchPostDetails();
             } else {
                 await likePost(userId, postId);
+                fetchPostDetails();
             }
             setIsLiked(!isLiked);
         } catch (error) {
@@ -249,23 +251,35 @@ const PostDetail = ({ navigation, route }) => {
                                 color={isLiked ? "red" : "gray"}
                             />
                         </Pressable>
+
+                        <Text style={styles.numberOfLike}>{postDetails?.likedUsers.length}</Text>
+
                         <Text numberOfLines={3} style={[styles.headerText, { width: "85%", textAlign: "left", fontSize: 24, marginTop: 5 }]}>{postDetails?.product?.name}</Text>
-                        <View style={styles.label}>
-                            {postDetails?.product?.verifiedLevel === 'LEVEL_1' && (
-                                <View style={styles.verified}>
-                                    <Text style={styles.verifiedText}>Xác minh cấp 1</Text>
+                        <View style={styles.labelWrapper}>
+                            <View style={styles.label}>
+                                {postDetails?.product?.verifiedLevel === 'LEVEL_1' && (
+                                    <View style={styles.verified}>
+                                        <Text style={styles.verifiedText}>Xác minh cấp 1</Text>
+                                    </View>
+                                )}
+                                {postDetails?.product?.verifiedLevel === 'LEVEL_2' && (
+                                    <View style={[styles.verified, { backgroundColor: '#ff8000' }]}>
+                                        <Text style={styles.verifiedText}>Xác minh cấp 2</Text>
+                                    </View>
+                                )}
+                                {postDetails?.product?.verifiedLevel === 'LEVEL_3' && (
+                                    <View style={[styles.verified, { backgroundColor: '#33cc33' }]}>
+                                        <Text style={styles.verifiedText}>Xác minh cấp 3</Text>
+                                    </View>
+                                )}
+                            </View>
+                            {postDetails?.boosted &&
+                                <View style={styles.ads}>
+                                    <AntDesign name="rocket1" size={14} color="white" />
+                                    <Text style={[styles.verifiedText, { marginBottom: 1 }]}>Được trả phí để quảng cáo</Text>
                                 </View>
-                            )}
-                            {postDetails?.product?.verifiedLevel === 'LEVEL_2' && (
-                                <View style={[styles.verified, { backgroundColor: '#ff8000' }]}>
-                                    <Text style={styles.verifiedText}>Xác minh cấp 2</Text>
-                                </View>
-                            )}
-                            {postDetails?.product?.verifiedLevel === 'LEVEL_3' && (
-                                <View style={[styles.verified, { backgroundColor: '#33cc33' }]}>
-                                    <Text style={styles.verifiedText}>Xác minh cấp 3</Text>
-                                </View>
-                            )}
+                            }
+
                         </View>
                         <Text style={styles.price}>
                             <Text style={styles.currency}>đ</Text>
@@ -549,7 +563,7 @@ const PostDetail = ({ navigation, route }) => {
                                         maxStars={5}
                                         size={16}
                                     />
-                                    <Text style={{ fontSize: 12, marginLeft: 4, marginTop: 2 }}>({averageRating})</Text>
+                                    <Text style={{ fontSize: 12, marginLeft: 4, marginTop: 2 }}>({averageRating.toFixed(1)})</Text>
                                 </View>
                                 {postDetails?.user?.isVerified === true ? (
                                     <View style={styles.oneLine}>

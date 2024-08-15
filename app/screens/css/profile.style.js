@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         justifyContent: "flex-start",
         alignItems: "flex-start",
-        width:"100%"
+        width: "100%"
     },
     text: {
         marginLeft: 10,
@@ -58,8 +58,7 @@ const styles = StyleSheet.create({
         borderWidth: 0.5,
         justifyContent: "center",
         alignItems: "center",
-        marginVertical: "2.5%",
-        marginBottom: 20,
+        marginVertical: "auto",
         marginLeft: 40,
     },
     textbtn: {
