@@ -120,12 +120,12 @@ const Login = ({ navigation }) => {
                                     >
                                         <MaterialCommunityIcons
                                             name="phone"
-                                            size={20}
+                                            size={24}
                                             color={COLORS.primary}
                                             style={styles.iconStyle}
                                         />
                                         <TextInput
-                                            style={{ flex: 1 }}
+                                            style={{ flex: 1, fontSize: 18 }}
                                             keyboardType='phone-pad'
                                             placeholder="Số điện thoại"
                                             value={values.phoneNumber}
@@ -150,13 +150,13 @@ const Login = ({ navigation }) => {
                                     >
                                         <MaterialCommunityIcons
                                             name="lock"
-                                            size={20}
+                                            size={24}
                                             color={COLORS.primary}
                                             style={styles.iconStyle}
                                         />
 
                                         <TextInput
-                                            style={{ flex: 1 }}
+                                            style={{ flex: 1, fontSize: 18 }}
                                             secureTextEntry={obsecureText}
                                             placeholder="Mật khẩu"
                                             onFocus={() => {
@@ -177,7 +177,7 @@ const Login = ({ navigation }) => {
                                         >
                                             <MaterialCommunityIcons
                                                 name={obsecureText ? "eye-outline" : "eye-off-outline"}
-                                                size={18}
+                                                size={20}
                                             />
                                         </TouchableOpacity>
                                     </View>
@@ -219,7 +219,7 @@ const Login = ({ navigation }) => {
                                     isValid={true}
                                 />
 
-                                <Text style={{ textAlign: "center" }}>
+                                {/* <Text style={{ textAlign: "center" }}>
                                     {" "}Hoặc tiếp tục với{" "}
                                 </Text>
 
@@ -246,9 +246,9 @@ const Login = ({ navigation }) => {
                                     />
 
                                     <Text style={{ fontSize: 18, marginLeft: 8 }}>Google</Text>
-                                </View>
+                                </View> */}
 
-                                <Text style={{ textAlign: "center" }}>
+                                <Text style={{ textAlign: "center",marginTop:80 }}>
                                     {" "}Bạn chưa có tài khoản ? {" "}
                                     <Text
                                         style={{ color: COLORS.primary, fontWeight: "bold" }}

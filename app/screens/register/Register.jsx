@@ -104,7 +104,7 @@ const Register = ({ navigation }) => {
                                     >
                                         <MaterialCommunityIcons
                                             name="phone"
-                                            size={20}
+                                            size={24}
                                             color={COLORS.primary}
                                             style={styles.iconStyle}
                                         />
@@ -117,7 +117,7 @@ const Register = ({ navigation }) => {
                                             value={values.phoneNumber}
                                             onChangeText={handleChange("phoneNumber")}
                                             autoCorrect={false}
-                                            style={{ flex: 1 }}
+                                            style={{ flex: 1, fontSize: 18 }}
                                         />
                                     </View>
                                     {touched.phoneNumber && errors.phoneNumber && (
@@ -133,7 +133,7 @@ const Register = ({ navigation }) => {
                                     >
                                         <MaterialCommunityIcons
                                             name="lock"
-                                            size={20}
+                                            size={24}
                                             color={COLORS.primary}
                                             style={styles.iconStyle}
                                         />
@@ -147,7 +147,7 @@ const Register = ({ navigation }) => {
                                             onChangeText={handleChange("password")}
                                             autoCapitalize="none"
                                             autoCorrect={false}
-                                            style={{ flex: 1 }}
+                                            style={{ flex: 1, fontSize: 18 }}
                                         />
 
                                         <TouchableOpacity
@@ -155,7 +155,7 @@ const Register = ({ navigation }) => {
                                         >
                                             <MaterialCommunityIcons
                                                 name={obsecureText ? "eye-outline" : "eye-off-outline"}
-                                                size={18}
+                                                size={20}
                                             />
                                         </TouchableOpacity>
                                     </View>
@@ -172,7 +172,7 @@ const Register = ({ navigation }) => {
                                     >
                                         <MaterialCommunityIcons
                                             name="lock"
-                                            size={20}
+                                            size={24}
                                             color={COLORS.primary}
                                             style={styles.iconStyle}
                                         />
@@ -186,7 +186,7 @@ const Register = ({ navigation }) => {
                                             onChangeText={handleChange("passwordConfirmation")}
                                             autoCapitalize="none"
                                             autoCorrect={false}
-                                            style={{ flex: 1 }}
+                                            style={{ flex: 1,fontSize:18 }}
                                         />
 
                                         <TouchableOpacity
@@ -194,7 +194,7 @@ const Register = ({ navigation }) => {
                                         >
                                             <MaterialCommunityIcons
                                                 name={obsecureText2 ? "eye-outline" : "eye-off-outline"}
-                                                size={18}
+                                                size={20}
                                             />
                                         </TouchableOpacity>
                                     </View>
@@ -210,7 +210,7 @@ const Register = ({ navigation }) => {
                                     onPress={handleSubmit}
                                 />
 
-                                <Text style={{ textAlign: "center" }}>
+                                <Text style={{ textAlign: "center",marginTop:50 }}>
                                     {" "}Bạn đã có tài khoản ? {" "}
                                     <Text
                                         style={{ color: COLORS.primary, fontWeight: "bold" }}

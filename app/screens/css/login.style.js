@@ -1,15 +1,11 @@
 import { StyleSheet } from "react-native";
 import { COLORS, SIZES } from "../../constants/theme";
 
-
-
-
 const styles = StyleSheet.create({
     cover: {
         height: SIZES.height / 2.4,
         width: SIZES.width,
         marginBottom: SIZES.xxLarge
-
     },
 
     titleLogin: {
@@ -34,7 +30,7 @@ const styles = StyleSheet.create({
         borderColor: borderColor,
         backgroundColor: COLORS.lightWhite,
         borderWidth: 1,
-        height: 50,
+        height: 55,
         borderRadius: 12,
         flexDirection: 'row',
         paddingHorizontal: 15,
