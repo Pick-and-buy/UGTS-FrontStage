@@ -63,6 +63,9 @@ export const cancelOrderBuyer = async (orderInfo, selectedAddress) => {
                 province: selectedAddress?.province,
                 country: selectedAddress?.country,
                 addressLine: selectedAddress?.addressLine
+            },
+            post: {
+                id: orderInfo?.post?.id
             }
         });
         return response.data;
