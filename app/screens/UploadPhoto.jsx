@@ -12,10 +12,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '../context/AuthContext';
 
 const UploadPhoto = ({ navigation, route }) => {
-    const user = route.params;
-    const userId = user.id;
+    // const user = route.params;
+    // const userId = user.id;
+
     const [image, setImage] = useState();
-    const { updateAvatar } = useAuth();
+    const { updateAvatar, user, fetchUserData } = useAuth();
 
     const uploadImage = async (mode) => {
         try {
@@ -62,11 +63,11 @@ const UploadPhoto = ({ navigation, route }) => {
                 // Get the authentication token
                 const authToken = await getAuthToken();
                 // Update avatar in context
-                const respone = await updateAvatar(image, userId, authToken);
-                if (respone.code === 1000) {
+                const response = await updateAvatar(image, user?.id, authToken);
+                if (response.code === 1000) {
                     // Navigate to the user profile details screen
-                    navigation.navigate("user-profile-details");
-                    Alert.alert(respone.message);
+                    navigation.navigate("user-profile-details", { user: response.result, userIdLogged: user.id });
+                    Alert.alert(response.message);
                 }
             } catch (err) {
                 alert("Error updating image profile: " + err.message);
