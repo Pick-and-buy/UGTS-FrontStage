@@ -7,7 +7,7 @@ import { COLORS } from "../../constants/theme";
 import { G, Line, Svg } from "react-native-svg";
 import { getUserByToken } from "../../api/user";
 import { format, addDays } from 'date-fns';
-import { cancelOrderBuyer, getOrderByOrderId, updateOrderBuyer } from '../../api/order';
+import { cancelOrderBuyer, getOrderByOrderId, updateOrderBuyer, uploadReceivePackageVideoByBuyer } from '../../api/order';
 import OrderTracking from './OrderTracking';
 import * as Clipboard from 'expo-clipboard';
 import AddRating from './AddRating';
@@ -43,6 +43,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
     try {
       const data = await getOrderByOrderId(orderInfo.id);
       setUpdatedOrderInfo(data.result);
+      setVideoUri(data?.result?.orderDetails?.receivePackageVideo)
     } catch (error) {
       console.error('Fetching order data by order id failed:', error);
     }
@@ -143,6 +144,26 @@ const BuyerOrderDetails = ({ navigation, route }) => {
   //Remove Video
   const removeVideo = () => {
     setVideoUri("");
+  }
+
+  //submit received order
+  const handleSubmitReceived = async (orderInfo) => {
+    try {
+      if (videoUri) {
+        let orderId = orderInfo.id;
+        const formData = new FormData();
+        const videoFileName = videoUri.split('/').pop();
+        formData.append('productVideo', {
+          uri: videoUri,
+          type: 'video/mp4',
+          name: videoFileName,
+        });
+        await uploadReceivePackageVideoByBuyer(orderId, formData);
+      }
+      setShowAddRating(true)
+    } catch (error) {
+      console.error('ERROR handle update video: ', error);
+    }
   }
 
   return (
@@ -362,7 +383,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
 
         {updatedOrderInfo?.orderDetails?.status === "RECEIVED" && !showAddRating &&
           <View style={styles.receivedContainer}>
-            {videoUri === "" ?
+            {videoUri === "" || videoUri === null ?
               (
                 <TouchableOpacity
                   onPress={UploadVideoScreen}
@@ -404,7 +425,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
               </Text>
               <TouchableOpacity
                 style={styles.confirmButton_1}
-                onPress={() => setShowAddRating(true)}
+                onPress={() => handleSubmitReceived(orderInfo)}
               >
                 <Text style={styles.confirmTextButton_1}>Đã nhận được hàng</Text>
               </TouchableOpacity>

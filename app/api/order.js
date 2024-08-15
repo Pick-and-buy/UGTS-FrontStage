@@ -73,35 +73,35 @@ export const cancelOrderBuyer = async (orderInfo, selectedAddress) => {
 
 export const callFetchListOrders = async () => {
     try {
-      const response = await axiosInstance.get('/orders');
-      return response.data;
+        const response = await axiosInstance.get('/orders');
+        return response.data;
     } catch (error) {
-      console.error('Error fetching List Orders:', error);
+        console.error('Error fetching List Orders:', error);
         throw error;
     }
-  }
+}
 
-  export const getOrderByOrderId = async (orderId) => {
+export const getOrderByOrderId = async (orderId) => {
     try {
-      const response = await axiosInstance.get(`/orders/details?orderId=${orderId}`);
-      return response.data;
+        const response = await axiosInstance.get(`/orders/details?orderId=${orderId}`);
+        return response.data;
     } catch (error) {
-      console.error('Error fetching Order By OrderId: ', error);
+        console.error('Error fetching Order By OrderId: ', error);
         throw error;
     }
-  }
+}
 
-  export const getOrdersByOrderStatus = async (orderStatus) => {
+export const getOrdersByOrderStatus = async (orderStatus) => {
     try {
-      const response = await axiosInstance.get(`/orders/status?orderStatus=${orderStatus}`);
-      return response.data;
+        const response = await axiosInstance.get(`/orders/status?orderStatus=${orderStatus}`);
+        return response.data;
     } catch (error) {
-      console.error('Error fetching Orders By Order Status: ', error);
+        console.error('Error fetching Orders By Order Status: ', error);
         throw error;
     }
-  }
+}
 
-  export const cancelOrderSeller = async (orderId) => {
+export const cancelOrderSeller = async (orderId) => {
     try {
 
         const response = await axiosInstance.put(`/orders?orderId=${orderId}`, {
@@ -124,5 +124,50 @@ export const updateOrderSeller = async (orderId) => {
     } catch (error) {
         console.error('Error update order:', error);
         throw error;
+    }
+};
+
+export const uploadReceivePackageVideoByBuyer = async (orderId, formData) => {
+    try {
+        const token = await getAuthToken();
+        const response = await fetch(`http://192.168.1.8:8080/api/v1/orders/package-video?orderId=${orderId}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data'
+            },
+            body: formData,
+        });
+        return response;
+    } catch (error) {
+        console.error('Error Update Receive Package Video:', error);
+        throw error;
+    }
+};
+
+export const uploadPackageVideoBySeller = async (orderId, formData) => {
+    try {
+        const token = await getAuthToken();
+        const response = await fetch(`http://192.168.1.8:8080/api/v1/orders/package-video?orderId=${orderId}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data'
+            },
+            body: formData,
+        });
+        return response;
+    } catch (error) {
+        console.error('Error Update Receive Package Video:', error);
+        throw error;
+    }
+};
+
+const getAuthToken = async () => {
+    try {
+        const token = await AsyncStorage.getItem('token');
+        return token;
+    } catch (error) {
+        console.error("Error retrieving token: ", error);
     }
 };

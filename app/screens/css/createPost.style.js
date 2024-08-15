@@ -265,6 +265,28 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
 
+    //Boosted
+    checkboxBoostedContainer: {
+        width: "98%",
+        marginHorizontal: 'auto',
+        // flexDirection: 'row',
+        // alignItems: 'center',
+        // justifyContent: 'center',
+        gap: 5,
+    },
+
+    checkboxBoosted: {
+        height: 50,
+        width: "50%",
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 10,
+        borderRadius: 10,
+        backgroundColor: '#fff',
+        
+    },
+
     // Shipping information
     shippingInformation: {
         width: "98%",
