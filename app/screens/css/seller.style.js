@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
         ...SHADOWS.small
     },
     image: {
-        width: "28%",
+        width: "30%",
         height: "100%",
         borderRadius: 15,
         marginRight: 10,
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
 
     },
     primaryBtn: {
-        width: "65%",
+        width: "60%",
         backgroundColor: COLORS.primary,
         paddingVertical: 6,
         borderRadius: 5,
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     },
 
     processBtn: {
-        width: "65%",
+        width: "60%",
         backgroundColor: '#04AA6D',
         paddingVertical: 6,
         borderRadius: 5,
