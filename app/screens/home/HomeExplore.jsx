@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
     StyleSheet,
     ScrollView,
@@ -15,6 +15,7 @@ import { getAllPosts } from "../../api/post";
 import Post from "../post/Post";
 import Brands from "./Brands";
 import styles from "../css/homeExplore.style";
+import { useFocusEffect } from "@react-navigation/native";
 
 const HomeExplore = ({ navigation }) => {
     const [posts, setPosts] = useState([]);
@@ -37,9 +38,11 @@ const HomeExplore = ({ navigation }) => {
         }
     };
 
-    useEffect(() => {
-        fetchPosts();
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            fetchPosts();
+        }, [])
+    );
 
     const onRefresh = async () => {
         setRefreshing(true);
