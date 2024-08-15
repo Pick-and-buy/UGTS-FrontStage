@@ -91,7 +91,7 @@ const UpdatePost = ({ route }) => {
     const [isChecked_3, setChecked_3] = useState(false);
     const [isBoosted, setBoosted] = useState(false);
 
-    const FEE = 500000;
+    const FEE = 0;
     const feeLegitgrails = 500000;
     const feeBoosted = 100000;
 
@@ -231,14 +231,28 @@ const UpdatePost = ({ route }) => {
         price: Yup.string().required('Hãy nhập giá tiền'),
     });
 
+    const dataProductCondition = [
+        { label: 'BRAND_NEW', value: 'BRAND_NEW' },
+        { label: 'EXCELLENT', value: 'EXCELLENT' },
+        { label: 'VERY_GOOD', value: 'VERY_GOOD' },
+        { label: 'GOOD', value: 'GOOD' },
+        { label: 'FAIR', value: 'FAIR' },
+    ];
+
+    const dataSize = [
+        { label: 'Small', value: 'Small' },
+        { label: 'Media', value: 'Media' },
+        { label: 'Large', value: 'Large' },
+        { label: 'Extra Large', value: 'Extra Large' },
+    ];
+
     const handleUpdatePost = async (values, actions) => {
         try {
-            let { title, description } = values;
+            let { description } = values;
             console.log('>>> check values: ', values);
             let queryId = `${postDetails?.id}`;
             const formData = new FormData();
             const request = {
-                title: title,
                 description: description,
                 product: {
                     id: postDetails?.product?.id
@@ -511,14 +525,45 @@ const UpdatePost = ({ route }) => {
                     productName: postDetails?.product?.name || '',
                     brandName: postDetails?.product?.brand?.name || '',
                     brandLineName: postDetails?.product?.brandLine?.lineName || '',
-                    condition: postDetails?.product?.condition || '',
                     category: postDetails?.product?.category?.categoryName || '',
+                    condition: postDetails?.product?.condition || '',
+                    size: postDetails?.product?.size || '',
+                    exteriorMaterial: postDetails?.product?.exteriorMaterial || '',
+                    interiorMaterial: postDetails?.product?.interiorMaterial || '',
+                    width: postDetails?.product?.width || '',
+                    height: postDetails?.product?.height || '',
+                    length: postDetails?.product?.length || '',
+                    referenceCode: postDetails?.product?.referenceCode || '',
+                    manufactureYear: postDetails?.product?.manufactureYear || '',
+                    color: postDetails?.product?.color || '',
+                    accessories: postDetails?.product?.accessories || '',
+                    dateCode: postDetails?.product?.dateCode || '',
+                    serialNumber: postDetails?.product?.serialNumber || '',
+                    purchasedPlace: postDetails?.product?.purchasedPlace || '',
+                    verifiedLevel: postDetails?.product?.verifiedLevel || '',
                     description: postDetails?.description || '',
+                    price: postDetails?.product?.price ? formatPrice(postDetails?.product?.price) : '',
                 }}
                 validationSchema={validationSchema}
                 onSubmit={handleUpdatePost}
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue, setFieldTouched, setValues }) => {
+
+                    const formatFeeBoosted = formatPrice(feeBoosted);
+                    const formatFeeLegitgrails = formatPrice(feeLegitgrails);
+
+                    const lastPriceBoth = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted - feeLegitgrails : '';
+                    const lastPriceLegitgrails = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeLegitgrails : '';
+                    const lastPriceBoosted = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted : '';
+                    // const formatlLastPriceForSeller = formatPrice(lastPriceLegitgrails);
+                    let formatlLastPriceForSeller = "";
+                    if (isChecked_3 && isBoosted) {
+                        formatlLastPriceForSeller = formatPrice(lastPriceBoth);
+                    } else if (isBoosted) {
+                        formatlLastPriceForSeller = formatPrice(lastPriceBoosted);
+                    } else if (isChecked_3) {
+                        formatlLastPriceForSeller = formatPrice(lastPriceLegitgrails);
+                    }
 
                     return (
                         <ScrollView style={styles.wrapper}>
@@ -775,224 +820,288 @@ const UpdatePost = ({ route }) => {
                                 </View>
 
                                 {/* Trạng Thái Sản Phẩm */}
-                                <View style={styles.viewContainer}>
-                                    <View style={styles.left}>
-                                        <Text style={styles.leftText}>Trạng Thái Sản Phẩm </Text>
-                                    </View>
-                                    <View style={styles.right}>
-                                        <TextInput
-                                            value={values.condition}
-                                            style={styles.rightText}
-                                            onFocus={() => {
-                                                setFieldTouched("condition");
-                                            }}
-                                            onBlur={() => {
-                                                setFieldTouched("condition", "");
-                                            }}
-                                            onChangeText={handleChange("condition")}
-                                            autoCorrect={false}
-                                            editable={false}
-                                        />
-                                    </View>
+                                <View style={styles.dropdownContainer}>
+                                    <Text style={styles.label}>Trạng Thái Sản Phẩm <Text style={styles.required}>*</Text></Text>
+                                    <Dropdown
+                                        placeholder="Bấm để chọn trạng thái sản phẩm"
+                                        placeholderStyle={{ color: "#ccc" }}
+                                        iconColor={COLORS.primary}
+                                        style={styles.dropdown}
+                                        data={dataProductCondition}
+                                        labelField="label"
+                                        valueField="value"
+                                        value={values.condition}
+                                        onChange={(item) => {
+                                            setFieldValue('condition', item.value);
+                                        }}
+                                    />
+                                    {touched.condition && errors.condition && (
+                                        <Text style={styles.errorText}>{errors.condition}</Text>
+                                    )}
                                 </View>
-                                <View style={styles.shadow}></View>
 
                                 {/* Size */}
-                                <View style={styles.viewContainer}>
-                                    <View style={styles.left}>
-                                        <Text style={styles.leftText}>Kích Thước </Text>
-                                    </View>
-                                    <View style={styles.right}>
-                                        <Text style={styles.rightText}>
-                                            {postDetails?.product?.size.toLowerCase() === "none" || postDetails?.product?.size.toLowerCase() === "" ?
-                                                " N/A" : postDetails?.product?.size}
-                                        </Text>
-                                    </View>
+                                <View style={styles.dropdownContainer}>
+                                    <Text style={styles.label}>Kích Thước</Text>
+                                    <Dropdown
+                                        placeholder="Bấm để chọn kích thước"
+                                        placeholderStyle={{ color: "#ccc" }}
+                                        iconColor={COLORS.primary}
+                                        style={styles.dropdown}
+                                        data={dataSize}
+                                        labelField="label"
+                                        valueField="value"
+                                        value={values.size}
+                                        onChange={(item) => {
+                                            setFieldValue('size', item.value);
+                                        }}
+                                    />
+                                    {touched.size && errors.size && (
+                                        <Text style={styles.errorText}>{errors.size}</Text>
+                                    )}
                                 </View>
-                                <View style={styles.shadow}></View>
 
                                 {/* Exterior Material */}
-                                <View style={styles.viewContainer}>
-                                    <View style={styles.left}>
-                                        <Text style={styles.leftText}>Chất Liệu Bên Ngoài </Text>
-                                    </View>
-                                    <View style={styles.right}>
-                                        <Text style={styles.rightText}>
-                                            {postDetails?.product?.exteriorMaterial.toLowerCase() === "none" || postDetails?.product?.exteriorMaterial.toLowerCase() === "" ?
-                                                " N/A" : postDetails?.product?.exteriorMaterial}
-                                        </Text>
-                                    </View>
+                                <View style={styles.productField}>
+                                    <Text style={styles.title}>Chất Liệu Bên Ngoài</Text>
+                                    <TextInput
+                                        value={values.exteriorMaterial}
+                                        placeholder="VD: Da, lông, giấy,..."
+                                        style={styles.inputProduct}
+                                        onFocus={() => {
+                                            setFieldTouched("exteriorMaterial");
+                                        }}
+                                        onBlur={() => {
+                                            setFieldTouched("exteriorMaterial", "");
+                                        }}
+                                        onChangeText={handleChange("exteriorMaterial")}
+                                        autoCorrect={false}
+                                    />
                                 </View>
-                                <View style={styles.shadow}></View>
 
                                 {/* Interior Material */}
-                                <View style={styles.viewContainer}>
-                                    <View style={styles.left}>
-                                        <Text style={styles.leftText}>Chất Liệu Bên Trong: </Text>
-                                    </View>
-                                    <View style={styles.right}>
-                                        <Text style={styles.rightText}>
-                                            {postDetails?.product?.interiorMaterial.toLowerCase() === "none" || postDetails?.product?.interiorMaterial.toLowerCase() === "" ?
-                                                " N/A" : postDetails?.product?.interiorMaterial}
-                                        </Text>
-                                    </View>
+                                <View style={styles.productField}>
+                                    <Text style={styles.title}>Chất Liệu Bên Trong</Text>
+                                    <TextInput
+                                        value={values.interiorMaterial}
+                                        placeholder="VD: Da, lông, giấy,..."
+                                        style={styles.inputProduct}
+                                        onFocus={() => {
+                                            setFieldTouched("interiorMaterial");
+                                        }}
+                                        onBlur={() => {
+                                            setFieldTouched("interiorMaterial", "");
+                                        }}
+                                        onChangeText={handleChange("interiorMaterial")}
+                                        autoCorrect={false}
+                                    />
                                 </View>
-                                <View style={styles.shadow}></View>
 
                                 {/* Width */}
-                                <View style={styles.viewContainer}>
-                                    <View style={styles.left}>
-                                        <Text style={styles.leftText}>Chiều Rộng </Text>
-                                    </View>
-                                    <View style={styles.right}>
-                                        {postDetails?.product?.width.toLowerCase() === "none" || postDetails?.product?.width.toLowerCase() === "" ?
-                                            (
-                                                <Text style={[styles.rightText, { marginLeft: 4 }]}>N/A</Text>
-                                            )
-                                            :
-                                            (
-                                                <Text style={styles.rightText}>{postDetails?.product?.width} cm</Text>
-                                            )
-                                        }
-                                    </View>
+                                <View style={styles.productField}>
+                                    <Text style={styles.title}>Chiều Rộng (cm):</Text>
+                                    <TextInput
+                                        keyboardType='number-pad'
+                                        value={values.width}
+                                        placeholder="Nhập chiều rộng sản phẩm"
+                                        style={styles.inputProduct}
+                                        onFocus={() => {
+                                            setFieldTouched("width");
+                                        }}
+                                        onBlur={() => {
+                                            setFieldTouched("width", "");
+                                        }}
+                                        onChangeText={handleChange("width")}
+                                        autoCorrect={false}
+                                    />
                                 </View>
-                                <View style={styles.shadow}></View>
 
                                 {/* Height */}
-                                <View style={styles.viewContainer}>
-                                    <View style={styles.left}>
-                                        <Text style={styles.leftText}>Chiều Cao </Text>
-                                    </View>
-                                    <View style={styles.right}>
-                                        {postDetails?.product?.height.toLowerCase() === "none" || postDetails?.product?.height.toLowerCase() === "" ?
-                                            (
-                                                <Text style={[styles.rightText, { marginLeft: 4 }]}>N/A</Text>
-                                            )
-                                            :
-                                            (
-                                                <Text style={styles.rightText}>{postDetails?.product?.height} cm</Text>
-                                            )
-                                        }
-                                    </View>
+                                <View style={styles.productField}>
+                                    <Text style={styles.title}>Chiều Cao (cm):</Text>
+                                    <TextInput
+                                        keyboardType='number-pad'
+                                        value={values.height}
+                                        placeholder="Nhập chiều cao sản phẩm"
+                                        style={styles.inputProduct}
+                                        onFocus={() => {
+                                            setFieldTouched("height");
+                                        }}
+                                        onBlur={() => {
+                                            setFieldTouched("height", "");
+                                        }}
+                                        onChangeText={handleChange("height")}
+                                        autoCorrect={false}
+                                    />
                                 </View>
-                                <View style={styles.shadow}></View>
 
                                 {/* Length */}
-                                <View style={styles.viewContainer}>
-                                    <View style={styles.left}>
-                                        <Text style={styles.leftText}>Chiều Dài </Text>
-                                    </View>
-                                    <View style={styles.right}>
-                                        {postDetails?.product?.length.toLowerCase() === "none" || postDetails?.product?.length.toLowerCase() === "" ?
-                                            (
-                                                <Text style={[styles.rightText, { marginLeft: 4 }]}>N/A</Text>
-                                            )
-                                            :
-                                            (
-                                                <Text style={styles.rightText}>{postDetails?.product?.length} cm</Text>
-                                            )
-                                        }
-                                    </View>
+                                <View style={styles.productField}>
+                                    <Text style={styles.title}>Chiều Dài (cm):</Text>
+                                    <TextInput
+                                        keyboardType='number-pad'
+                                        value={values.length}
+                                        placeholder="Nhập chiều dài sản phẩm"
+                                        style={styles.inputProduct}
+                                        onFocus={() => {
+                                            setFieldTouched("length");
+                                        }}
+                                        onBlur={() => {
+                                            setFieldTouched("length", "");
+                                        }}
+                                        onChangeText={handleChange("length")}
+                                        autoCorrect={false}
+                                    />
+
                                 </View>
-                                <View style={styles.shadow}></View>
 
                                 {/* Reference Code */}
-                                <View style={styles.viewContainer}>
-                                    <View style={styles.left}>
-                                        <Text style={styles.leftText}>Mã Tham Chiếu </Text>
-                                    </View>
-                                    <View style={styles.right}>
-                                        <Text style={styles.rightText}>
-                                            {postDetails?.product?.referenceCode.toLowerCase() === "none" || postDetails?.product?.referenceCode.toLowerCase() === "" ?
-                                                " N/A" : postDetails?.product?.referenceCode}
-                                        </Text>
-                                    </View>
+                                <View style={styles.productField}>
+                                    <Text style={styles.title}>Mã Tham Chiếu: </Text>
+                                    <TextInput
+                                        value={values.referenceCode}
+                                        placeholder="Nhập mã tham chiếu sản phẩm"
+                                        style={styles.inputProduct}
+                                        onFocus={() => {
+                                            setFieldTouched("referenceCode");
+                                        }}
+                                        onBlur={() => {
+                                            setFieldTouched("referenceCode", "");
+                                        }}
+                                        onChangeText={handleChange("referenceCode")}
+                                        autoCorrect={false}
+                                    />
                                 </View>
-                                <View style={styles.shadow}></View>
 
                                 {/* manufactureYear */}
-                                <View style={styles.viewContainer}>
-                                    <View style={styles.left}>
-                                        <Text style={styles.leftText}>Năm Sản Xuất </Text>
-                                    </View>
-                                    <View style={styles.right}>
-                                        <Text style={styles.rightText}>
-                                            {postDetails?.product?.manufactureYear.toLowerCase() === "none" || postDetails?.product?.manufactureYear.toLowerCase() === "" ?
-                                                " N/A" : postDetails?.product?.manufactureYear}
-                                        </Text>
-                                    </View>
+                                <View style={styles.productField}>
+                                    <Text style={styles.title}>Năm Sản Xuất: </Text>
+                                    <TextInput
+                                        keyboardType='number-pad'
+                                        value={values.manufactureYear}
+                                        placeholder="VD: 2024"
+                                        style={styles.inputProduct}
+                                        onFocus={() => {
+                                            setFieldTouched("manufactureYear");
+                                        }}
+                                        onBlur={() => {
+                                            setFieldTouched("manufactureYear", "");
+                                        }}
+                                        onChangeText={handleChange("manufactureYear")}
+                                        autoCorrect={false}
+                                    />
                                 </View>
-                                <View style={styles.shadow}></View>
 
                                 {/* color */}
-                                <View style={styles.viewContainer}>
-                                    <View style={styles.left}>
-                                        <Text style={styles.leftText}>Màu Sắc </Text>
-                                    </View>
-                                    <View style={styles.right}>
-                                        <Text style={styles.rightText}>
-                                            {postDetails?.product?.color.toLowerCase() === "none" || postDetails?.product?.color.toLowerCase() === "" ?
-                                                " N/A" : postDetails?.product?.color}
-                                        </Text>
-                                    </View>
+                                <View style={styles.productField}>
+                                    <Text style={styles.title}>Màu Sắc: </Text>
+                                    <TextInput
+                                        value={values.color}
+                                        placeholder="Nhập màu sắc của sản phẩm"
+                                        style={styles.inputProduct}
+                                        onFocus={() => {
+                                            setFieldTouched("color");
+                                        }}
+                                        onBlur={() => {
+                                            setFieldTouched("color", "");
+                                        }}
+                                        onChangeText={handleChange("color")}
+                                        autoCorrect={false}
+                                    />
                                 </View>
-                                <View style={styles.shadow}></View>
 
                                 {/* accessories */}
-                                <View style={styles.viewContainer}>
-                                    <View style={styles.left}>
-                                        <Text style={styles.leftText}>Phụ kiện sản phẩm </Text>
-                                    </View>
-                                    <View style={styles.right}>
-                                        <Text style={styles.rightText}>
-                                            {postDetails?.product?.accessories.toLowerCase() === "none" || postDetails?.product?.accessories.toLowerCase() === "" ?
-                                                " N/A" : postDetails?.product?.accessories}
-                                        </Text>
-                                    </View>
+                                <View style={styles.productField}>
+                                    <Text style={styles.title}>Phụ kiện sản phẩm: </Text>
+                                    <TextInput
+                                        value={values.accessories}
+                                        placeholder="Nhập phụ kiện (nếu có)"
+                                        style={styles.inputProduct}
+                                        onFocus={() => {
+                                            setFieldTouched("accessories");
+                                        }}
+                                        onBlur={() => {
+                                            setFieldTouched("accessories", "");
+                                        }}
+                                        onChangeText={handleChange("accessories")}
+                                        autoCorrect={false}
+                                    />
                                 </View>
-                                <View style={styles.shadow}></View>
 
                                 {/* Date Code */}
-                                <View style={styles.viewContainer}>
-                                    <View style={styles.left}>
-                                        <Text style={styles.leftText}>Date Code </Text>
-                                    </View>
-                                    <View style={styles.right}>
-                                        <Text style={styles.rightText}>
-                                            {postDetails?.product?.dateCode.toLowerCase() === "none" || postDetails?.product?.dateCode.toLowerCase() === "" ?
-                                                " N/A" : postDetails?.product?.dateCode}
-                                        </Text>
-                                    </View>
+                                <View style={styles.productField}>
+                                    <Text style={styles.title}>Date Code: </Text>
+                                    <TextInput
+                                        value={values.dateCode}
+                                        placeholder="Nhập Date Code (nếu có)"
+                                        style={styles.inputProduct}
+                                        onFocus={() => {
+                                            setFieldTouched("dateCode");
+                                        }}
+                                        onBlur={() => {
+                                            setFieldTouched("dateCode", "");
+                                        }}
+                                        onChangeText={handleChange("dateCode")}
+                                        autoCorrect={false}
+                                    />
                                 </View>
-                                <View style={styles.shadow}></View>
 
                                 {/* Serial Number */}
-                                <View style={styles.viewContainer}>
-                                    <View style={styles.left}>
-                                        <Text style={styles.leftText}>Số sê-ri </Text>
-                                    </View>
-                                    <View style={styles.right}>
-                                        <Text style={styles.rightText}>
-                                            {postDetails?.product?.serialNumber.toLowerCase() === "none" || postDetails?.product?.serialNumber.toLowerCase() === "" ?
-                                                " N/A" : postDetails?.product?.serialNumber}
-                                        </Text>
-                                    </View>
+                                <View style={styles.productField}>
+                                    <Text style={styles.title}>Số seri: </Text>
+                                    <TextInput
+                                        value={values.serialNumber}
+                                        placeholder="VD: Gucci-012"
+                                        style={styles.inputProduct}
+                                        onFocus={() => {
+                                            setFieldTouched("serialNumber");
+                                        }}
+                                        onBlur={() => {
+                                            setFieldTouched("serialNumber", "");
+                                        }}
+                                        onChangeText={handleChange("serialNumber")}
+                                        autoCorrect={false}
+                                    />
                                 </View>
-                                <View style={styles.shadow}></View>
 
                                 {/* Purchased Place */}
-                                <View style={styles.viewContainer}>
-                                    <View style={styles.left}>
-                                        <Text style={styles.leftText}>Nơi Mua Sản Phẩm </Text>
-                                    </View>
-                                    <View style={styles.right}>
-                                        <Text style={styles.rightText}>
-                                            {postDetails?.product?.purchasedPlace.toLowerCase() === "none" || postDetails?.product?.purchasedPlace.toLowerCase() === "" ?
-                                                " N/A" : postDetails?.product?.purchasedPlace}
-                                        </Text>
-                                    </View>
+                                <View style={styles.productField}>
+                                    <Text style={styles.title}>Nơi Mua Sản Phẩm: </Text>
+                                    <TextInput
+                                        value={values.purchasedPlace}
+                                        placeholder="Nhập địa điểm"
+                                        style={styles.inputProduct}
+                                        onFocus={() => {
+                                            setFieldTouched("purchasedPlace");
+                                        }}
+                                        onBlur={() => {
+                                            setFieldTouched("purchasedPlace", "");
+                                        }}
+                                        onChangeText={handleChange("purchasedPlace")}
+                                        autoCorrect={false}
+                                    />
                                 </View>
-                                <View style={styles.shadow}></View>
+
+                                {/* Product Description */}
+                                <View style={styles.productField}>
+                                    <Text style={styles.title}>Mô Tả Sản Phẩm:</Text>
+                                    <TextInput
+                                        value={values.description}
+                                        placeholder="Nhập mô tả sản phẩm"
+                                        style={[styles.inputProduct, { height: 150, textAlignVertical: 'top', backgroundColor: '#f9f9f9', paddingTop: 10, marginTop: 10 }]}
+                                        editable
+                                        multiline
+                                        maxLength={5000}
+                                        onFocus={() => {
+                                            setFieldTouched("description");
+                                        }}
+                                        onBlur={() => {
+                                            setFieldTouched("description", "");
+                                        }}
+                                        onChangeText={handleChange("description")}
+                                        autoCorrect={false}
+                                    />
+                                </View>
 
                                 {/* Verify Level */}
                                 <View style={styles.viewContainer}>
@@ -1008,73 +1117,127 @@ const UpdatePost = ({ route }) => {
                                 <View style={styles.shadow}></View>
                             </View>
 
-                            {/* Product Description */}
-                            <View style={styles.productDescriptionContainer}>
-                                <View style={{ marginVertical: 10 }}>
-                                    <Text style={{ fontSize: 16 }}>Mô Tả Sản Phẩm</Text>
-                                </View>
-                                <View style={{ height: "80%", width: "100%" }}>
-                                    <TextInput
-                                        value={values.description}
-                                        placeholder="Nhập mô tả sản phẩm"
-                                        style={[styles.inputProduct, { textAlignVertical: 'top' }]}
-                                        onFocus={() => {
-                                            setFieldTouched("description");
-                                        }}
-                                        onBlur={() => {
-                                            setFieldTouched("description", "");
-                                        }}
-                                        onChangeText={handleChange("description")}
-                                        autoCorrect={false}
-                                        multiline={true}
+                            {/* Boosted */}
+                            <View style={{ marginTop: 10 }}>
+                                <Text style={styles.labelText}>Dịch Vụ Quảng Cáo Boosted</Text>
+                            </View>
+                            <View style={styles.checkboxBoostedContainer}>
+                                <View style={styles.checkboxBoosted}>
+                                    <Checkbox
+                                        value={isBoosted}
+                                        onValueChange={setBoosted}
                                     />
+                                    <Text style={{ textAlign: 'center' }}>Boosted</Text>
                                 </View>
+                                {isBoosted ?
+                                    (
+                                        <View style={{ width: "100%" }}>
+                                            <Text style={styles.labelText}>
+                                                Chúng tôi sử dụng dịch vụ quảng cáo cho phép sản phẩm của bạn được hiển thị lên đầu ứng dụng.
+                                                Phí dịch vụ sẽ là <Text style={{ color: "red" }}>{formatPrice(feeBoosted)}đ</Text>
+                                            </Text>
+                                        </View>
+                                    )
+                                    :
+                                    (
+                                        <View>
+                                        </View>
+                                    )
+                                }
                             </View>
 
                             {/* Shipping information */}
                             <View style={styles.shippingInformation}>
-                                <View style={{ marginVertical: 10 }}>
-                                    <Text style={{ fontSize: 16 }}>Thông Tin Vận Chuyển</Text>
-                                </View>
+                                <Text style={styles.labelText}>Thông Tin Thanh Toán</Text>
                                 <TouchableOpacity
-                                    onPress={() => console.warn('Quy tắc')}
-                                    style={{ flexDirection: 'row', marginTop: 10 }}>
-                                    <AntDesign
-                                        name="questioncircle"
-                                        size={20}
-                                        color="#5e5b55"
-                                    />
-                                    <Text style={{ marginLeft: 10, fontSize: 16 }}>Quy tắc</Text>
+                                    onPress={() => console.warn("Quy Tắc")}
+                                >
+                                    <FontAwesome6 name="circle-question" size={14} color="gray" />
                                 </TouchableOpacity>
                             </View>
 
-                            <View style={{ marginTop: 10 }}>
-                                {/* Fee */}
-                                <View style={styles.viewContainer}>
-                                    <View style={styles.left}>
-                                        <Text style={styles.leftText}>Phí Sàn</Text>
-                                    </View>
-                                    <View style={styles.right}>
-                                        <Text style={styles.rightText}>Miễn phí</Text>
-                                    </View>
+                            <View style={styles.summary}>
+                                {/* price */}
+                                <View style={styles.productField}>
+                                    <Text style={styles.title}>Giá Tiền (VND) <Text style={styles.required}>*</Text></Text>
+                                    <TextInput
+                                        keyboardType='number-pad'
+                                        value={values.price}
+                                        placeholder="Nhập giá tiền"
+                                        style={[styles.inputProduct, { color: "red" }]}
+                                        onFocus={() => {
+                                            setFieldTouched("price");
+                                        }}
+                                        onBlur={() => {
+                                            setFieldTouched("price", "");
+                                        }}
+                                        onChangeText={(text) => {
+                                            if (text === "") {
+                                                setFieldValue("price", "");
+                                            } else {
+                                                const numericText = text.replace(/\./g, "");
+                                                const formatted = formatPrice(numericText);
+                                                setFieldValue("price", formatted);
+                                            }
+                                        }}
+                                        autoCorrect={false}
+                                    />
                                 </View>
-                                <View style={styles.shadow}></View>
+                                {touched.price && errors.price && (
+                                    <Text style={[styles.errorText, { marginLeft: 5, marginTop: 5 }]}>{errors.price}</Text>
+                                )}
+                                {
+                                    isChecked_3 && isBoosted && (
+                                        <View View style={styles.productField}>
+                                            <View style={styles.inputProduct}>
+                                                <Text style={[styles.title, { marginLeft: -2 }]}>Phí kiểm tra cấp 3 (VND): <Text style={{ color: "red" }}>{formatFeeLegitgrails}đ</Text>
+                                                </Text>
+                                            </View>
+                                            <View style={styles.inputProduct}>
+                                                <Text style={[styles.title, { marginLeft: -2 }]}>Phí quảng cáo (VND): <Text style={{ color: "red" }}>{formatFeeBoosted}đ</Text>
+                                                </Text>
+                                            </View>
+                                            <View style={styles.inputProduct}>
+                                                <Text style={[styles.title, { marginLeft: -2 }]}>
+                                                    Số tiền thực nhận (VND): <Text style={{ color: "red" }}>{formatlLastPriceForSeller}đ</Text>
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    )
+                                }
+                                {
+                                    isChecked_3 && !isBoosted && (
+                                        <View View style={styles.productField}>
+                                            <View style={styles.inputProduct}>
+                                                <Text style={[styles.title, { marginLeft: -2 }]}>Phí kiểm tra cấp 3 (VND): <Text style={{ color: "red" }}>{formatFeeLegitgrails}đ</Text>
+                                                </Text>
+                                            </View>
+                                            <View style={styles.inputProduct}>
+                                                <Text style={[styles.title, { marginLeft: -2 }]}>
+                                                    Số tiền thực nhận (VND): <Text style={{ color: "red" }}>{formatlLastPriceForSeller}đ</Text>
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    )
+                                }
+                                {
+                                    isBoosted && !isChecked_3 && (
+                                        <View View style={styles.productField}>
+                                            <View style={styles.inputProduct}>
+                                                <Text style={[styles.title, { marginLeft: -2 }]}>Phí quảng cáo (VND): <Text style={{ color: "red" }}>{formatFeeBoosted}đ</Text>
+                                                </Text>
+                                            </View>
+                                            <View style={styles.inputProduct}>
+                                                <Text style={[styles.title, { marginLeft: -2 }]}>
+                                                    Số tiền thực nhận (VND): <Text style={{ color: "red" }}>{formatlLastPriceForSeller}đ</Text>
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    )
+                                }
                             </View>
 
-                            {/* Thành Tiền */}
-                            <View>
-                                <View style={styles.viewContainer}>
-                                    <View style={styles.left}>
-                                        <Text style={styles.leftText}>Lợi Nhuận Bán Hàng </Text>
-                                    </View>
-                                    <View style={styles.right}>
-                                        <Text style={[styles.rightText, { color: COLORS.primary }]}>{formattedPrice} VND</Text>
-                                    </View>
-                                </View>
-                                <View style={styles.shadow}></View>
-                            </View>
-
-                            <View style={{ marginTop: 30 }}>
+                            <View style={styles.buttonWrapper}>
                                 <TouchableOpacity style={styles.button}
                                     onPress={handleSubmit}
                                 >
@@ -1086,6 +1249,8 @@ const UpdatePost = ({ route }) => {
                     )
                 }}
             </Formik>
+
+
         </View>
     );
 }

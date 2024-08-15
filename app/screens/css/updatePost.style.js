@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
         color: COLORS.gray,
         // marginHorizontal: 20,
         marginVertical: 5,
-        marginLeft:5
+        marginLeft: 5
     },
 
     viewContainer: {
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
         marginLeft: 5,
         fontSize: SIZES.xSmall
     },
-    
+
     textName: {
         fontSize: 25,
         fontFamily: 'bold',
@@ -110,8 +110,8 @@ const styles = StyleSheet.create({
     },
 
     xmark: {
-        position: 'absolute', 
-        top: 3, 
+        position: 'absolute',
+        top: 3,
         left: 18
     },
 
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
         gap: 10,
         padding: 10,
     },
-    imageSelect:{
+    imageSelect: {
         width: 30,
         height: 30,
     },
@@ -196,12 +196,12 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         overflow: 'hidden', //Kết hợp với flex = 1 để tạo borderRadius cho ImageBackground
     },
-    
+
     imageUploadVideo: {
-        width: '50%', 
-        height: '60%', 
-        marginHorizontal: "auto", 
-        marginVertical: 20, 
+        width: '50%',
+        height: '60%',
+        marginHorizontal: "auto",
+        marginVertical: 20,
     },
 
     //Product Information
@@ -211,9 +211,9 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.white,
         borderRadius: 10,
     },
-    productField:{
+    productField: {
         width: "100%",
-        marginTop:10
+        marginTop: 10
     },
 
     required: {
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
         color: COLORS.blue,
         marginVertical: 5,
     },
-    
+
     errorText: {
         fontSize: 14,
         color: 'red',
@@ -307,27 +307,60 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
 
+    //Boosted
+    checkboxBoostedContainer: {
+        width: "98%",
+        marginHorizontal: 'auto',
+        gap: 5,
+    },
+
+    checkboxBoosted: {
+        height: 50,
+        width: "50%",
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 10,
+        borderRadius: 10,
+        backgroundColor: '#fff',
+
+    },
+
     // Shipping information
     shippingInformation: {
-        width: Dimensions.get('window').width,
+        width: "98%",
         height: 50,
-        backgroundColor: '#dbd9d9',
-        paddingHorizontal: 10,
         paddingTop: 10,
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        gap:5,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+    },
+
+    summary: {
+        width: "96%",
+        marginHorizontal: "auto",
+        backgroundColor: COLORS.white,
+        borderRadius: 10,
+    },
+
+    buttonWrapper: {
+        width: "100%",
+        backgroundColor: COLORS.white,
+        marginBottom:100,
+        marginTop:50
     },
 
     button: {
-        width:"96%",
-        height:50,
+        width: "96%",
+        height: 50,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: COLORS.primary,
         borderColor: COLORS.gray2,
-        marginHorizontal:"auto",
-        marginVertical:'auto',
-        borderRadius:8
+        marginHorizontal: "auto",
+        marginVertical: 'auto',
+        borderRadius: 8
     },
     buttonText: {
         color: 'white',
