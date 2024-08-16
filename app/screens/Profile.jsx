@@ -139,8 +139,8 @@ const Profile = ({ navigation }) => {
                 </TouchableOpacity>
               ) : (
 
-                <View style={{ flexDirection: "row" }}>
-                  <View style={{ marginLeft: 10, marginVertical:"auto", flexDirection: "column" }}>
+                <View style={{ flexDirection: "column",marginLeft:10 }}>
+                  <View style={{ marginLeft: 10, marginVertical:"auto", flexDirection: "column",marginBottom:5 }}>
                     <Text style={styles.text}>
                       Bạn chưa đăng nhập
                     </Text>
@@ -149,7 +149,7 @@ const Profile = ({ navigation }) => {
                     style={styles.loginbtn}
                     onPress={() => navigation.navigate("login-navigation")}
                   >
-                    <Text style={styles.textbtn}>Đăng nhập</Text>
+                    <Text style={styles.textbtn}>Đăng nhập ngay</Text>
                   </TouchableOpacity>
                 </View>
 

@@ -51,15 +51,17 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
     loginbtn: {
-        width: 90,
-        height: 30,
         borderRadius: 40,
         borderColor: COLORS.primary,
         borderWidth: 0.5,
         justifyContent: "center",
         alignItems: "center",
         marginVertical: "auto",
-        marginLeft: 40,
+        marginLeft: 30,
+        marginRight:20,
+        paddingVertical: 6,
+        paddingHorizontal:20,
+        marginBottom:10
     },
     textbtn: {
         color: COLORS.primary,
