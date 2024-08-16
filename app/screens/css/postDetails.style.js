@@ -9,14 +9,12 @@ const styles = StyleSheet.create({
     },
     header: {
         position: 'absolute',
-        top: "2.5%",
+        top: "5%",
         width: "96%",
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "flex-end",
-        // backgroundColor: COLORS.white,
-        // paddingBottom: 12,
-        // ...SHADOWS.medium
+        zIndex:9999,
     },
     headerText: {
         // flex:1,

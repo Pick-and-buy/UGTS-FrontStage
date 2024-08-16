@@ -238,6 +238,14 @@ const PostDetail = ({ navigation, route }) => {
     const formattedPrice = formatPrice(postDetails?.product?.price);
     return (
         <View style={styles.container}>
+            <View style={styles.header}>
+                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                    <MaterialCommunityIcons name="keyboard-backspace" size={28} color={COLORS.white} />
+                </TouchableOpacity>
+                {/* <TouchableOpacity style={styles.backButton} onPress={() => { }}>
+                    <AntDesign style={{ marginRight: "2%" }} name="sharealt" size={24} color={COLORS.white} />
+                </TouchableOpacity> */}
+            </View>
             <ScrollView contentContainerStyle={styles.contentContainer}
                 showsVerticalScrollIndicator={false}
                 refreshControl={
@@ -245,14 +253,6 @@ const PostDetail = ({ navigation, route }) => {
                 }
             >
                 <Carousel data={data} />
-                <View style={styles.header}>
-                    <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-                        <MaterialCommunityIcons name="keyboard-backspace" size={28} color={COLORS.white} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.backButton} onPress={() => { }}>
-                        <AntDesign style={{ marginRight: "2%" }} name="sharealt" size={24} color={COLORS.white} />
-                    </TouchableOpacity>
-                </View>
                 <View style={styles.wrapper}>
                     <View style={styles.informationContainer}>
                         <Pressable onPress={handleLike} style={styles.like}>
