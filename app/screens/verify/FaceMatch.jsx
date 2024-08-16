@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { View, Alert, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { useUser } from '../../context/UserContext'
+import { useAuth } from '../../context/AuthContext'
 import { verifyInformation } from '../../api/user';
 
 const FaceMatch = ({ navigation, route }) => {
     const { frontImageUri, fontData, backData } = route.params;
     const [loading, setLoading] = useState(false);
-    const { user } = useUser();
+    const { user } = useAuth();
 
     useEffect(() => {
         Alert.alert(
