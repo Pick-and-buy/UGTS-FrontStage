@@ -23,6 +23,7 @@ import { getRatingByUserId, getUserByToken, likePost, unlikePost } from "../../a
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Comment from "./Comment";
 import moment from "moment";
+import CustomModal from "../../components/CustomModal";
 
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
@@ -43,6 +44,16 @@ const PostDetail = ({ navigation, route }) => {
     const [type, setType] = useState('buyer');
     const [ratings, setRatings] = useState();
     const [averageRating, setAverageRating] = useState(0);
+    const [customModalVisible, setCustomModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState({
+        title: '',
+        detailText: '',
+        confirmText: '',
+        cancelText: '',
+        onConfirm: () => { },
+        onClose: () => { }
+    });
+
     console.log(postId);
 
 
@@ -132,20 +143,20 @@ const PostDetail = ({ navigation, route }) => {
 
     const handleLike = async () => {
         if (!userId) {
-            Alert.alert(
-                "Đăng nhập",
-                "Bạn cần đăng nhập để thêm sản phẩm vào danh mục yêu thích.",
-                [
-                    {
-                        text: "Cancel",
-                        style: "cancel"
-                    },
-                    {
-                        text: "Đăng nhập",
-                        onPress: () => navigation.navigate('login-navigation')
-                    }
-                ]
-            );
+            setModalContent({
+                title: "Đăng nhập",
+                detailText: "Bạn cần đăng nhập để thêm sản phẩm vào danh mục yêu thích.",
+                confirmText: "Đăng nhập",
+                cancelText: "Thoát",
+                onConfirm: () => {
+                    setCustomModalVisible(false);
+                    navigation.navigate('login-navigation');
+                },
+                onClose: () => {
+                    setCustomModalVisible(false);
+                },
+            });
+            setCustomModalVisible(true);
             return;
         }
 
@@ -181,20 +192,20 @@ const PostDetail = ({ navigation, route }) => {
         if (isAuthenticated) {
             navigation.navigate("order-details", { postDetails: postDetails });
         } else {
-            Alert.alert(
-                "Đăng nhập",
-                "Bạn cần đăng nhập để thêm sản phẩm vào danh mục yêu thích.",
-                [
-                    {
-                        text: "Cancel",
-                        style: "cancel"
-                    },
-                    {
-                        text: "Đăng nhập",
-                        onPress: () => navigation.navigate('login-navigation')
-                    }
-                ]
-            );
+            setModalContent({
+                title: "Đăng nhập",
+                detailText: "Bạn cần đăng nhập để mua sản phẩm này.",
+                confirmText: "Đăng nhập",
+                cancelText: "Thoát",
+                onConfirm: () => {
+                    setCustomModalVisible(false);
+                    navigation.navigate('login-navigation');
+                },
+                onClose: () => {
+                    setCustomModalVisible(false);
+                },
+            });
+            setCustomModalVisible(true);
             return;
         }
     };
@@ -627,7 +638,15 @@ const PostDetail = ({ navigation, route }) => {
 
                 )
             }
-
+            <CustomModal
+                visible={customModalVisible}
+                onClose={modalContent.onClose}
+                onConfirm={modalContent.onConfirm}
+                title={modalContent.title}
+                detailText={modalContent.detailText}
+                confirmText={modalContent.confirmText}
+                cancelText={modalContent.cancelText}
+            />
         </View>
     );
 };
