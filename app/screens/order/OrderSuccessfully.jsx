@@ -24,7 +24,7 @@ const OrderSuccessfully = ({ navigation, route }) => {
 
     useEffect(() => {
         fetchPhoneUserOder();
-    })
+    },[])
 
     const handleOrderDetail = async () => {
         // console.log('>>> check order infor: ', orderInfo);

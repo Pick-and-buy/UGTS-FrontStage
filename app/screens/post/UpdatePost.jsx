@@ -109,6 +109,8 @@ const UpdatePost = ({ route }) => {
     //Format Fee
     const formattedFee = formatPrice(FEE);
 
+
+
     const fetchPostDetails = async () => {
         const response = await getPostDetails(postId);
         const postInfo = response.data.result;
@@ -116,25 +118,25 @@ const UpdatePost = ({ route }) => {
 
         // Set giá trị ban đầu cho selectedBrand và selectedBrandLine từ dữ liệu bài đăng
         if (postInfo && postInfo.product) {
-            setSelectedBrand(postInfo.product.brand.name);
-            setSelectedBrandLine(postInfo.product.brandLine.lineName);
+            setSelectedBrand(postInfo?.product?.brand?.name);
+            setSelectedBrandLine(postInfo?.product?.brandLine?.lineName);
         }
 
         // set giá trị ban đầu cho isChecked_2 nếu verifiedLevel: LEVEL_2
-        if(postInfo?.product?.verifiedLevel === "LEVEL_2") {
+        if (postInfo?.product?.verifiedLevel === "LEVEL_2") {
             setChecked_2(true);
             setCheckVerifiedLevel(postInfo?.product?.verifiedLevel)
         }
 
         // set giá trị ban đầu cho isBoosted nếu boosted: true
-        if(postInfo?.boosted === true) {
+        if (postInfo?.boosted === true) {
             setBoosted(true);
         }
         setIsDataLoaded(true);  // Set data loaded to true
     };
 
     useEffect(() => {
-        if(isChecked_2 === false) {
+        if (isChecked_2 === false) {
             setInvoice("");
             setVideoUri("");
         }
@@ -275,7 +277,7 @@ const UpdatePost = ({ route }) => {
             if (invoice === '' && videoUri === '') {
                 valid = false;
                 message = 'Vì sản phẩm của bạn đã được xác minh cấp 2 nên hãy cập nhật đầy đủ ảnh hóa đơn và video';
-            } 
+            }
         }
 
         // Kiểm tra điều kiện khi người dùng bấm vào xác thực level 2
@@ -300,11 +302,6 @@ const UpdatePost = ({ route }) => {
             if (valid) {
                 let queryId = `${postDetails?.id}`;
 
-                let { brandName, productName, brandLineName, condition, category, exteriorMaterial,
-                    interiorMaterial, size, width, height, length, referenceCode, manufactureYear, color, accessories, dateCode,
-                    serialNumber, purchasedPlace, description,
-                  } = values;
-
                 const convertStringPrice = values.price.replace(/\./g, '');
                 const originPrice = parseInt(convertStringPrice, 10)
                 let calculatedPrice = "";
@@ -315,15 +312,26 @@ const UpdatePost = ({ route }) => {
                 } else if (isChecked_3) {
                     calculatedPrice = parseInt(convertStringPrice, 10) - feeLegitgrails;
                 } else {
-                    calculatedPrice = "";
+                    calculatedPrice = "0";
                 }
+
+                let { brandName, productName, brandLineName, condition, category, exteriorMaterial,
+                    interiorMaterial, size, width, height, length, referenceCode, manufactureYear, color, accessories, dateCode,
+                    serialNumber, purchasedPlace, description
+                } = values;
 
                 const formData = new FormData();
                 const request = {
-                    description:description,
-                    brand: { name: brandName },
-                    brandLine: { lineName: brandLineName },
-                    category: { categoryName: category },
+                    description: description,
+                    brand: { 
+                        name: brandName 
+                    },
+                    brandLine: { 
+                        lineName: brandLineName 
+                    },
+                    category: { 
+                        categoryName: category 
+                    },
                     product: {
                         id: postDetails?.product?.id,
                         name: productName,
@@ -341,20 +349,18 @@ const UpdatePost = ({ route }) => {
                         dateCode: dateCode,
                         serialNumber: serialNumber,
                         purchasedPlace: purchasedPlace,
-                        story: '',
                     },
                     condition: condition,
                     boosted: isBoosted,
                     lastPriceForSeller: calculatedPrice,
-
                 };
 
                 formData.append('request', JSON.stringify(request));
 
                 const filteredImages = images.filter(image => image.value && image.value !== "");
-                images.forEach((image, index) => {
+                filteredImages.forEach((image, index) => {
                     if (image) {
-                        const fileName = image.value.split('/').pop();
+                        const fileName = `${image.name}.jpg`;
                         formData.append('productImages', {
                             uri: image.value,
                             type: 'image/jpeg',
@@ -380,9 +386,9 @@ const UpdatePost = ({ route }) => {
                         name: videoFileName,
                     });
                 }
-                
+
                 await updatePost(queryId, formData);
-                navigation.goBack();
+                navigation.navigate('post-details', { postId: postDetails?.id })
             } else {
                 Alert.alert(
                     "Thiếu thông tin",
@@ -567,17 +573,17 @@ const UpdatePost = ({ route }) => {
                 (
                     <View key={index}>
                         <View key={index} style={styles.image} >
-                            <TouchableOpacity>
+                            <View>
                                 <Image
                                     style={styles.imageBrandLogo}
                                     source={item.logoUrl}
                                 />
-                            </TouchableOpacity>
+                            </View>
                         </View>
-                        <TouchableOpacity style={styles.viewBrandLogo}>
+                        <View style={styles.viewBrandLogo}>
                             <Text style={styles.textBrandLogo}>{item.label}</Text>
-                        </TouchableOpacity>
-                    </View>
+                        </View>
+                    </View>    
                 )
                 :
                 (
