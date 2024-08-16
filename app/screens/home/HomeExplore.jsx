@@ -11,7 +11,7 @@ import {
 import { AntDesign } from '@expo/vector-icons';
 import { COLORS, SHADOWS } from "../../constants/theme";
 import Slider from './Slider';
-import { getAllPosts } from "../../api/post";
+import { getAllBoostedPosts, getAllPosts } from "../../api/post";
 import Post from "../post/Post";
 import Brands from "./Brands";
 import styles from "../css/homeExplore.style";
@@ -19,6 +19,7 @@ import { useFocusEffect } from "@react-navigation/native";
 
 const HomeExplore = ({ navigation }) => {
     const [posts, setPosts] = useState([]);
+    const [boostedPosts, setBoostedPosts] = useState([]);
     const [filteredPosts, setFilteredPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
@@ -28,7 +29,11 @@ const HomeExplore = ({ navigation }) => {
         setLoading(true);
         try {
             const response = await getAllPosts();
-            const posts = response.data.result;
+            let posts = response.data.result;
+
+            // Sort posts to have boosted posts at the top
+            posts = posts.sort((a, b) => b.boosted - a.boosted);
+            
             setPosts(posts);
             setFilteredPosts(posts);
         } catch (error) {
@@ -50,12 +55,14 @@ const HomeExplore = ({ navigation }) => {
         setRefreshing(false);
     };
 
-    const filterPosts = (isAvailable) => {
-        setFilter(isAvailable);
-        if (isAvailable === 'All') {
+    const filterPosts = (filterType) => {
+        setFilter(filterType);
+        if (filterType === 'All') {
             setFilteredPosts(posts);
+        } else if (filterType === 'Hot') {
+            setFilteredPosts(posts.filter(post => post.boosted));
         } else {
-            setFilteredPosts(posts.filter(post => post.isAvailable === isAvailable));
+            setFilteredPosts(posts.filter(post => post.isAvailable === filterType));
         }
     };
 
@@ -78,6 +85,12 @@ const HomeExplore = ({ navigation }) => {
                         onPress={() => filterPosts('All')}
                     >
                         <Text style={[styles.filterButtonText, filter === 'All' ? styles.activeFilterText : styles.inactiveFilterText]}>Tất cả</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[styles.filterButton, filter === 'Hot' && styles.activeFilter]}
+                        onPress={() => filterPosts('Hot')}
+                    >
+                        <Text style={[styles.filterButtonText, filter === 'Hot' ? styles.activeFilterText : styles.inactiveFilterText]}>Nổi bật</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.filterButton, filter === true && styles.activeFilter]}
