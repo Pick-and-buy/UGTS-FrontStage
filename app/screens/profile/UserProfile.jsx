@@ -6,7 +6,6 @@ import {
   View,
   TouchableOpacity,
   Image,
-  SafeAreaView,
   ActivityIndicator,
   RefreshControl,
   Alert
@@ -142,137 +141,136 @@ const UserProfile = ({ navigation, route }) => {
   }, [userIdLogged]);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-            <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
-          </TouchableOpacity>
-          <Text style={{ fontSize: 20, fontWeight: "bold", color: COLORS.black }}>{user?.lastName} {user?.firstName}</Text>
-          <Feather
-            onPress={() => console.warn('More Function')}
-            name="more-horizontal"
-            size={35}
-            color="gray" />
-        </View>
-        {/* Personal Information */}
-        <View style={styles.personalContainer}>
-          <TouchableOpacity
-            style={styles.avatarTouchable}
-            onPress={() => navigation.navigate(isSellerProfile ? 'upload-photo-navigation' : 'update-profile', user)}
-          >
-            <Image
-              style={styles.avatar}
-              source={{ uri: user?.avatar ? user?.avatar : profileImage }}
-            />
-            {!isSellerProfile && (
-              <View style={styles.editIcon}>
-                <AntDesign name="pluscircle" size={24} color="#06bcee" />
-              </View>
-            )}
-          </TouchableOpacity>
-          <Text style={styles.username}>
-            @{user?.username}
-          </Text>
-        </View>
 
-        {/* Follower */}
-        <View style={styles.followerView}>
-          <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary', { screen: 'following', user: user })}>
-            <Text style={styles.number}>
-              {followingCount}
-            </Text>
-            <Text>Đã theo dõi</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary', { screen: 'follower', user: user })}>
-            <Text style={styles.number}>
-              {followersCount}
-            </Text>
-            <Text>Theo dõi</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary', { screen: 'appreciation', user: user })}>
-            <Text style={styles.number}>
-              {ratingCount}
-            </Text>
-            <Text>Đánh giá</Text>
-          </TouchableOpacity>
-          {user?.isVerified === true ? (
-            <View style={styles.blockView}>
-              <MaterialIcons name="verified-user" size={19} color="#699BF7" style={{ marginTop: 6 }} />
-              <Text>Đã xác minh</Text>
-            </View>
-          ) : (
-            <View style={styles.blockView}>
-              <Octicons name="unverified" size={19} color="gray" style={{ marginTop: 6 }} />
-              <Text>Chưa xác minh</Text>
-            </View>
-          )}
-        </View>
-
-        {/* Button */}
-        <View style={styles.buttonWrapper}>
-          {isMyProfile ? (
-            <TouchableOpacity
-              onPress={() => navigation.navigate('update-profile', user)}
-              style={styles.editBtn}
-            >
-              <Text style={styles.editText}>Sửa hồ sơ</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              onPress={handleFollowToggle}
-              style={[
-                styles.followBtn,
-                isFollowing && styles.followingBtn
-              ]}
-            >
-              <Text style={[
-                styles.followBtnText,
-                isFollowing && styles.followingBtnText
-              ]}>
-                {isFollowing ? 'Đang theo dõi' : 'Theo dõi'}
-              </Text>
-            </TouchableOpacity>
-          )}
-        </View>
-
-        {/* User product */}
-        <View style={styles.containerPost}>
-          <View style={{ marginTop: 20, justifyContent: "center", alignItems: "center" }}>
-            <Text style={{ fontSize: 20, fontWeight: "bold" }}>Sản phẩm</Text>
-          </View>
-          <ScrollView
-            contentContainerStyle={styles.scrollViewContent}
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-                colors={[COLORS.primary]}
-              />
-            }
-          >
-            {loading ? (
-              <ActivityIndicator size="large" color={COLORS.primary} />
-            ) : (
-              posts.length > 0 ? (
-                <View style={styles.row}>
-                  {posts.map(post => (
-                    <Post key={post.id} post={post} type={isSellerProfile ? "buyer" : "seller"} />
-                  ))}
-                </View>
-              ) : (
-                <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-                  <Text style={{ fontSize: 16, color: 'gray' }}>
-                    {isSellerProfile ? "Người bán chưa có sản phẩm nào" : "Bạn chưa có sản phẩm nào"}
-                  </Text>
-                </View>
-              )
-            )}
-          </ScrollView>
-        </View>
+    <View style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
+        </TouchableOpacity>
+        <Text style={{ fontSize: 20, fontWeight: "bold", color: COLORS.black }}>{user?.lastName} {user?.firstName}</Text>
+        <Feather
+          onPress={() => console.warn('More Function')}
+          name="more-horizontal"
+          size={35}
+          color="gray" />
       </View>
-    </SafeAreaView>
+      {/* Personal Information */}
+      <View style={styles.personalContainer}>
+        <TouchableOpacity
+          style={styles.avatarTouchable}
+          onPress={() => navigation.navigate('upload-photo-navigation', user)}
+        >
+          <Image
+            style={styles.avatar}
+            source={{ uri: user?.avatar ? user?.avatar : profileImage }}
+          />
+          {!isSellerProfile && (
+            <View style={styles.editIcon}>
+              <AntDesign name="pluscircle" size={24} color="#06bcee" />
+            </View>
+          )}
+        </TouchableOpacity>
+        <Text style={styles.username}>
+          @{user?.username}
+        </Text>
+      </View>
+
+      {/* Follower */}
+      <View style={styles.followerView}>
+        <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary', { screen: 'following', user: user })}>
+          <Text style={styles.number}>
+            {followingCount}
+          </Text>
+          <Text>Đã theo dõi</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary', { screen: 'follower', user: user })}>
+          <Text style={styles.number}>
+            {followersCount}
+          </Text>
+          <Text>Theo dõi</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.blockView} onPress={() => navigation.navigate('summary', { screen: 'appreciation', user: user })}>
+          <Text style={styles.number}>
+            {ratingCount}
+          </Text>
+          <Text>Đánh giá</Text>
+        </TouchableOpacity>
+        {user?.isVerified === true ? (
+          <View style={styles.blockView}>
+            <MaterialIcons name="verified-user" size={19} color="#699BF7" style={{ marginTop: 6 }} />
+            <Text>Đã xác minh</Text>
+          </View>
+        ) : (
+          <View style={styles.blockView}>
+            <Octicons name="unverified" size={19} color="gray" style={{ marginTop: 6 }} />
+            <Text>Chưa xác minh</Text>
+          </View>
+        )}
+      </View>
+
+      {/* Button */}
+      <View style={styles.buttonWrapper}>
+        {isMyProfile ? (
+          <TouchableOpacity
+            onPress={() => navigation.navigate('update-profile', user)}
+            style={styles.editBtn}
+          >
+            <Text style={styles.editText}>Sửa hồ sơ</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={handleFollowToggle}
+            style={[
+              styles.followBtn,
+              isFollowing && styles.followingBtn
+            ]}
+          >
+            <Text style={[
+              styles.followBtnText,
+              isFollowing && styles.followingBtnText
+            ]}>
+              {isFollowing ? 'Đang theo dõi' : 'Theo dõi'}
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
+
+      {/* User product */}
+      <View style={styles.containerPost}>
+        <View style={{ marginTop: 20, justifyContent: "center", alignItems: "center" }}>
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>Sản phẩm</Text>
+        </View>
+        <ScrollView
+          contentContainerStyle={styles.scrollViewContent}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={[COLORS.primary]}
+            />
+          }
+        >
+          {loading ? (
+            <ActivityIndicator size="large" color={COLORS.primary} />
+          ) : (
+            posts.length > 0 ? (
+              <View style={styles.row}>
+                {posts.map(post => (
+                  <Post key={post.id} post={post} type={isSellerProfile ? "buyer" : "seller"} />
+                ))}
+              </View>
+            ) : (
+              <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+                <Text style={{ fontSize: 16, color: 'gray' }}>
+                  {isSellerProfile ? "Người bán chưa có sản phẩm nào" : "Bạn chưa có sản phẩm nào"}
+                </Text>
+              </View>
+            )
+          )}
+        </ScrollView>
+      </View>
+    </View>
   );
 }
 

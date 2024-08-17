@@ -129,12 +129,13 @@ const styles = StyleSheet.create({
   },
   dottedLine: {
     width: 60,
-    borderTopWidth: 4,
-    borderTopColor: '#2490A9',
+    height: 3,
+    borderWidth: 3,
+    borderColor: '#2490A9',
     borderStyle: 'dotted',
     marginBottom: 35,
     marginLeft: -28,
-    marginRight: -32,
+    marginRight: -33,
   },
 });
 

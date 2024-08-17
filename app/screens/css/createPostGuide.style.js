@@ -38,11 +38,14 @@ const styles = StyleSheet.create({
     news: {
         width: "100%",
         marginTop: 20,
+        marginHorizontal:"auto",
         justifyContent: "center",
         alignItems: "center",
     },
     newsImage: {
-        transform: [{ scale: 1.15 }],
+        width: "100%",
+        objectFit:"contain",
+        transform: [{ scale: 1.05 }],
     },
     optionsWrapper: {
         width: "100%",
@@ -60,7 +63,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        gap: 20,
+        gap: 15,
         marginTop: 20
     },
     option: {
@@ -73,10 +76,11 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: 5
+        gap: 5,
+        width:"45%"
     },
     text: {
-        fontSize: 18,
+        fontSize: 16,
 
     },
     guide: {
@@ -89,9 +93,9 @@ const styles = StyleSheet.create({
     outline: {
         backgroundColor: COLORS.white,
         width: "95%",
-        height: "40%",
+        height: "45%",
         borderRadius: 15,
-        marginBottom: '40%'
+        marginBottom: '40%',
     },
     outlineHeader: {
         flexDirection: 'row',
@@ -112,7 +116,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         marginLeft: 20,
-        marginTop: 20
+        marginTop: 20,
     },
     button: {
         width: "45%",

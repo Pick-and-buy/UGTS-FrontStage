@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axiosInstance from './axiosInstance';
 
 
-export const order = async (paymentMethod, addressId, deliveryDate, receivedDate, postId) => {
+export const order = async (paymentMethod, addressId, deliveryDate, receivedDate, postId, shippingCost) => {
     try {
         const response = await axiosInstance.post(`/orders`, {
             paymentMethod: paymentMethod,
@@ -14,7 +14,8 @@ export const order = async (paymentMethod, addressId, deliveryDate, receivedDate
             receivedDate: receivedDate,
             post: {
                 id: postId
-            }
+            },
+            shippingCost: shippingCost,
         });
         return response.data;
     } catch (error) {
@@ -38,6 +39,9 @@ export const updateOrderBuyer = async (orderInfo, selectedAddress) => {
                 province: selectedAddress?.province,
                 country: selectedAddress?.country,
                 addressLine: selectedAddress?.addressLine
+            },
+            post: {
+                id: orderInfo?.post?.id
             }
         });
         return response.data;
@@ -62,6 +66,9 @@ export const cancelOrderBuyer = async (orderInfo, selectedAddress) => {
                 province: selectedAddress?.province,
                 country: selectedAddress?.country,
                 addressLine: selectedAddress?.addressLine
+            },
+            post: {
+                id: orderInfo?.post?.id
             }
         });
         return response.data;

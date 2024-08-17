@@ -28,10 +28,10 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 30
     },
-    btnWrapper:{
-        width:"90%",
-        flexDirection:"row",
-        marginHorizontal:"auto"
+    btnWrapper: {
+        width: "90%",
+        flexDirection: "row",
+        marginHorizontal: "auto"
     },
     button: {
         width: "50%",
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
         marginHorizontal: "auto",
         marginBottom: 40
     },
-    backButton:{
+    backButton: {
         width: "40%",
         height: 40,
         flexDirection: "row",
@@ -66,13 +66,27 @@ const styles = StyleSheet.create({
     recommendation: {
         width: "100%",
         marginTop: 10,
-        marginHorizontal:"auto",
+        marginHorizontal: "auto",
     },
     recommendationText: {
-        marginHorizontal:"2%",
-        fontSize:16,
+        marginHorizontal: "2%",
+        fontSize: 16,
         fontWeight: "bold",
-    }
+    },
+    posts: {
+        width: '98%',
+        // marginTop: "-10%",
+        marginHorizontal: "auto",
+    },
+    row: {
+        width: "100%",
+        justifyContent: "flex-start",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        alignItems: "center",
+        marginHorizontal: "auto",
+        marginBottom: "20%",
+    },
 
 });
 

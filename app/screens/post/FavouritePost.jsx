@@ -42,7 +42,7 @@ const Post = ({ post }) => {
                     />
                     <View style={styles.content}>
                         <Text numberOfLines={1} style={styles.title}>{post?.product?.name}</Text>
-                        <Text style={styles.price}>
+                        <Text numberOfLines={1} style={styles.price}>
                             <Text style={styles.currency}>đ</Text>
                             {formattedPrice}
                         </Text>
@@ -51,7 +51,7 @@ const Post = ({ post }) => {
                                 name="heart"
                                 color={COLORS.gray}
                                 size={20} />
-                            <Text style={{ fontSize: 18, color: COLORS.gray2, marginBottom: 2, marginLeft: 4 }}>1</Text>
+                            <Text style={{ fontSize: 18, color: COLORS.gray2, marginBottom: 2, marginLeft: 4 }}>{post?.likedUsers?.length}</Text>
                         </View>
                     </View>
                 </TouchableOpacity>

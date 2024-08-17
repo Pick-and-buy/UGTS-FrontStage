@@ -6,6 +6,8 @@ import {
     Image,
     TextInput,
     Alert,
+    KeyboardAvoidingView,
+    Platform
 } from "react-native";
 import React, { useState } from "react";
 import { Formik } from "formik";
@@ -14,6 +16,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { COLORS, SIZES } from "../../constants/theme.js";
 import styles from "../css/register.style.js";
 import Button from "../../components/Button.jsx";
+import { sendOtpToSMS } from "../../api/auth.js";
 
 const validationSchema = Yup.object().shape({
     phoneNumber: Yup.string()
@@ -33,184 +36,194 @@ const Register = ({ navigation }) => {
     const [obsecureText, setObsecureText] = useState(true);
     const [obsecureText2, setObsecureText2] = useState(true);
 
-    const inValidForm = () => {
-        Alert.alert("Invalid Form", "Please provide all required fields", [
-            { text: "OK" },
-        ]);
+
+    const formatPhoneNumber = (phoneNumber) => {
+        // Remove leading 0 and prepend +84
+        if (phoneNumber.startsWith('0')) {
+            phoneNumber = phoneNumber.substring(1); // Remove the leading 0
+        }
+
+        return `+84 ${phoneNumber}`;
     };
-
     return (
-        <ScrollView style={{ backgroundColor: COLORS.white }}>
-            <View style={{ marginHorizontal: 20, marginTop: 50 }}>
-                <View style={{ width: SIZES.width, height: SIZES.height / 3 }}>
-                    <Image
-                        style={{ position: "absolute", top: -30, right: -30, transform: [{ scale: 0.75 }] }}
-                        source={require('../../../assets/images/sky.png')}
-                    />
-                    <Image
-                        style={{ width: 380, height: 380 }}
-                        source={require('../../../assets/images/GiaTot_Logo.png')}
-                    />
-                </View>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}
+            style={{ flex: 1 }}
+        >
+            <ScrollView style={{ backgroundColor: COLORS.white }}>
+                <View style={{ marginHorizontal: 20, marginTop: 50 }}>
+                    <View style={{ width: SIZES.width, height: SIZES.height / 3 }}>
+                        <Image
+                            style={{ position: "absolute", top: -30, right: -30, transform: [{ scale: 0.75 }] }}
+                            source={require('../../../assets/images/sky.png')}
+                        />
+                        <Image
+                            style={{ width: 380, height: 380 }}
+                            source={require('../../../assets/images/GiaTot_Logo.png')}
+                        />
+                    </View>
 
-                <Text style={styles.titleLogin}>ĐĂNG KÝ</Text>
+                    <Text style={styles.titleLogin}>ĐĂNG KÝ</Text>
 
-                <Formik
-                    initialValues={{ phoneNumber: "", password: "", passwordConfirmation: "" }}
-                    validationSchema={validationSchema}
-                    onSubmit={(values, { resetForm }) => {
-                        setLoader(true);
-                        try {
-                            // Navigate to the next screen with the form data
-                            navigation.navigate('register-infor-navigation', { formData: values });
-                            resetForm();
-                        } catch (error) {
-                            console.error(error);
-                            Alert.alert("Registration Error", "Something went wrong, please try again.");
-                        } finally {
-                            setLoader(false);
-                        }
-                    }}
-                >
-                    {({
-                        handleChange,
-                        handleBlur,
-                        touched,
-                        handleSubmit,
-                        values,
-                        errors,
-                        isValid,
-                        setFieldTouched,
-                    }) => (
-                        <View>
-                            <View style={styles.wrapper}>
-                                <View
-                                    style={styles.inputWrapper(
-                                        touched.phoneNumber ? COLORS.secondary : COLORS.offwhite
-                                    )}
-                                >
-                                    <MaterialCommunityIcons
-                                        name="phone"
-                                        size={20}
-                                        color={COLORS.primary}
-                                        style={styles.iconStyle}
-                                    />
-
-                                    <TextInput
-                                        keyboardType='phoneNumber-pad'
-                                        placeholder="Số điện thoại"
-                                        onFocus={() => setFieldTouched("phoneNumber")}
-                                        onBlur={handleBlur("phoneNumber")}
-                                        value={values.phoneNumber}
-                                        onChangeText={handleChange("phoneNumber")}
-                                        autoCorrect={false}
-                                        style={{ flex: 1 }}
-                                    />
-                                </View>
-                                {touched.phoneNumber && errors.phoneNumber && (
-                                    <Text style={styles.errorMessage}>{errors.phoneNumber}</Text>
-                                )}
-                            </View>
-
-                            <View style={styles.wrapper}>
-                                <View
-                                    style={styles.inputWrapper(
-                                        touched.password ? COLORS.secondary : COLORS.offwhite
-                                    )}
-                                >
-                                    <MaterialCommunityIcons
-                                        name="lock"
-                                        size={20}
-                                        color={COLORS.primary}
-                                        style={styles.iconStyle}
-                                    />
-
-                                    <TextInput
-                                        secureTextEntry={obsecureText}
-                                        placeholder="Mật khẩu"
-                                        onFocus={() => setFieldTouched("password")}
-                                        onBlur={handleBlur("password")}
-                                        value={values.password}
-                                        onChangeText={handleChange("password")}
-                                        autoCapitalize="none"
-                                        autoCorrect={false}
-                                        style={{ flex: 1 }}
-                                    />
-
-                                    <TouchableOpacity
-                                        onPress={() => setObsecureText(!obsecureText)}
+                    <Formik
+                        initialValues={{ phoneNumber: "", password: "", passwordConfirmation: "" }}
+                        validationSchema={validationSchema}
+                        onSubmit={async (values, { resetForm }) => {
+                            setLoader(true);
+                            try {
+                                const rs = await sendOtpToSMS(formatPhoneNumber(values.phoneNumber));
+                                console.log(rs);
+                                // Navigate to the next screen with the form data
+                                navigation.navigate('otp-sms-verification', { formData: values });
+                                resetForm();
+                            } catch (error) {
+                                console.error(error);
+                                Alert.alert("Registration Error", "Something went wrong, please try again.");
+                            } finally {
+                                setLoader(false);
+                            }
+                        }}
+                    >
+                        {({
+                            handleChange,
+                            handleBlur,
+                            touched,
+                            handleSubmit,
+                            values,
+                            errors,
+                            isValid,
+                            setFieldTouched,
+                        }) => (
+                            <View>
+                                <View style={styles.wrapper}>
+                                    <View
+                                        style={styles.inputWrapper(
+                                            touched.phoneNumber ? COLORS.secondary : COLORS.offwhite
+                                        )}
                                     >
                                         <MaterialCommunityIcons
-                                            name={obsecureText ? "eye-outline" : "eye-off-outline"}
-                                            size={18}
+                                            name="phone"
+                                            size={24}
+                                            color={COLORS.primary}
+                                            style={styles.iconStyle}
                                         />
-                                    </TouchableOpacity>
-                                </View>
-                                {touched.password && errors.password && (
-                                    <Text style={styles.errorMessage}>{errors.password}</Text>
-                                )}
-                            </View>
 
-                            <View style={styles.wrapper}>
-                                <View
-                                    style={styles.inputWrapper(
-                                        touched.passwordConfirmation ? COLORS.secondary : COLORS.offwhite
+                                        <TextInput
+                                            keyboardType='phone-pad'
+                                            placeholder="Số điện thoại"
+                                            onFocus={() => setFieldTouched("phoneNumber")}
+                                            onBlur={handleBlur("phoneNumber")}
+                                            value={values.phoneNumber}
+                                            onChangeText={handleChange("phoneNumber")}
+                                            autoCorrect={false}
+                                            style={{ flex: 1, fontSize: 18 }}
+                                        />
+                                    </View>
+                                    {touched.phoneNumber && errors.phoneNumber && (
+                                        <Text style={styles.errorMessage}>{errors.phoneNumber}</Text>
                                     )}
-                                >
-                                    <MaterialCommunityIcons
-                                        name="lock"
-                                        size={20}
-                                        color={COLORS.primary}
-                                        style={styles.iconStyle}
-                                    />
+                                </View>
 
-                                    <TextInput
-                                        secureTextEntry={obsecureText2}
-                                        placeholder="Nhập lại mật khẩu"
-                                        onFocus={() => setFieldTouched("passwordConfirmation")}
-                                        onBlur={handleBlur("passwordConfirmation")}
-                                        value={values.passwordConfirmation}
-                                        onChangeText={handleChange("passwordConfirmation")}
-                                        autoCapitalize="none"
-                                        autoCorrect={false}
-                                        style={{ flex: 1 }}
-                                    />
-
-                                    <TouchableOpacity
-                                        onPress={() => setObsecureText2(!obsecureText2)}
+                                <View style={styles.wrapper}>
+                                    <View
+                                        style={styles.inputWrapper(
+                                            touched.password ? COLORS.secondary : COLORS.offwhite
+                                        )}
                                     >
                                         <MaterialCommunityIcons
-                                            name={obsecureText2 ? "eye-outline" : "eye-off-outline"}
-                                            size={18}
+                                            name="lock"
+                                            size={24}
+                                            color={COLORS.primary}
+                                            style={styles.iconStyle}
                                         />
-                                    </TouchableOpacity>
+
+                                        <TextInput
+                                            secureTextEntry={obsecureText}
+                                            placeholder="Mật khẩu"
+                                            onFocus={() => setFieldTouched("password")}
+                                            onBlur={handleBlur("password")}
+                                            value={values.password}
+                                            onChangeText={handleChange("password")}
+                                            autoCapitalize="none"
+                                            autoCorrect={false}
+                                            style={{ flex: 1, fontSize: 18 }}
+                                        />
+
+                                        <TouchableOpacity
+                                            onPress={() => setObsecureText(!obsecureText)}
+                                        >
+                                            <MaterialCommunityIcons
+                                                name={obsecureText ? "eye-outline" : "eye-off-outline"}
+                                                size={20}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
+                                    {touched.password && errors.password && (
+                                        <Text style={styles.errorMessage}>{errors.password}</Text>
+                                    )}
                                 </View>
-                                {touched.passwordConfirmation && errors.passwordConfirmation && (
-                                    <Text style={styles.errorMessage}>{errors.passwordConfirmation}</Text>
-                                )}
-                            </View>
 
-                            <Button
-                                loader={loader}
-                                title={"TIẾP TỤC"}
-                                isValid={isValid}
-                                onPress={isValid ? handleSubmit : inValidForm}
-                            />
+                                <View style={styles.wrapper}>
+                                    <View
+                                        style={styles.inputWrapper(
+                                            touched.passwordConfirmation ? COLORS.secondary : COLORS.offwhite
+                                        )}
+                                    >
+                                        <MaterialCommunityIcons
+                                            name="lock"
+                                            size={24}
+                                            color={COLORS.primary}
+                                            style={styles.iconStyle}
+                                        />
 
-                            <Text style={{ textAlign: "center" }}>
-                                {" "}Bạn đã có tài khoản ? {" "}
-                                <Text
-                                    style={{ color: COLORS.primary, fontWeight: "bold" }}
-                                    onPress={() => navigation.navigate("login-navigation")}
-                                >
-                                    Đăng nhập
+                                        <TextInput
+                                            secureTextEntry={obsecureText2}
+                                            placeholder="Nhập lại mật khẩu"
+                                            onFocus={() => setFieldTouched("passwordConfirmation")}
+                                            onBlur={handleBlur("passwordConfirmation")}
+                                            value={values.passwordConfirmation}
+                                            onChangeText={handleChange("passwordConfirmation")}
+                                            autoCapitalize="none"
+                                            autoCorrect={false}
+                                            style={{ flex: 1,fontSize:18 }}
+                                        />
+
+                                        <TouchableOpacity
+                                            onPress={() => setObsecureText2(!obsecureText2)}
+                                        >
+                                            <MaterialCommunityIcons
+                                                name={obsecureText2 ? "eye-outline" : "eye-off-outline"}
+                                                size={20}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
+                                    {touched.passwordConfirmation && errors.passwordConfirmation && (
+                                        <Text style={styles.errorMessage}>{errors.passwordConfirmation}</Text>
+                                    )}
+                                </View>
+
+                                <Button
+                                    loader={loader}
+                                    title={"TIẾP TỤC"}
+                                    isValid={true}
+                                    onPress={handleSubmit}
+                                />
+
+                                <Text style={{ textAlign: "center",marginTop:50 }}>
+                                    {" "}Bạn đã có tài khoản ? {" "}
+                                    <Text
+                                        style={{ color: COLORS.primary, fontWeight: "bold" }}
+                                        onPress={() => navigation.navigate("login-navigation")}
+                                    >
+                                        Đăng nhập
+                                    </Text>
                                 </Text>
-                            </Text>
-                        </View>
-                    )}
-                </Formik>
-            </View>
-        </ScrollView>
+                            </View>
+                        )}
+                    </Formik>
+                </View>
+            </ScrollView></KeyboardAvoidingView>
     );
 }
 

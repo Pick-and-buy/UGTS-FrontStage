@@ -6,7 +6,6 @@ import {
     TouchableOpacity,
     Image,
     Pressable,
-    SafeAreaView,
     TextInput,
     Alert,
     Button,
@@ -24,6 +23,7 @@ import { getRatingByUserId, getUserByToken, likePost, unlikePost } from "../../a
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Comment from "./Comment";
 import moment from "moment";
+import CustomModal from "../../components/CustomModal";
 
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
@@ -44,7 +44,17 @@ const PostDetail = ({ navigation, route }) => {
     const [type, setType] = useState('buyer');
     const [ratings, setRatings] = useState();
     const [averageRating, setAverageRating] = useState(0);
-    console.log(postDetails?.user?.id);
+    const [customModalVisible, setCustomModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState({
+        title: '',
+        detailText: '',
+        confirmText: '',
+        cancelText: '',
+        onConfirm: () => { },
+        onClose: () => { }
+    });
+
+    console.log(postId);
 
     // useEffect(() => {
     //     fetchPostDetails();
@@ -142,28 +152,30 @@ const PostDetail = ({ navigation, route }) => {
 
     const handleLike = async () => {
         if (!userId) {
-            Alert.alert(
-                "Đăng nhập",
-                "Bạn cần đăng nhập để thêm sản phẩm vào danh mục yêu thích.",
-                [
-                    {
-                        text: "Cancel",
-                        style: "cancel"
-                    },
-                    {
-                        text: "Đăng nhập",
-                        onPress: () => navigation.navigate('login-navigation')
-                    }
-                ]
-            );
+            setModalContent({
+                title: "Đăng nhập",
+                detailText: "Bạn cần đăng nhập để thêm sản phẩm vào danh mục yêu thích.",
+                confirmText: "Đăng nhập",
+                cancelText: "Thoát",
+                onConfirm: () => {
+                    setCustomModalVisible(false);
+                    navigation.navigate('login-navigation');
+                },
+                onClose: () => {
+                    setCustomModalVisible(false);
+                },
+            });
+            setCustomModalVisible(true);
             return;
         }
 
         try {
             if (isLiked) {
                 await unlikePost(userId, postId);
+                fetchPostDetails();
             } else {
                 await likePost(userId, postId);
+                fetchPostDetails();
             }
             setIsLiked(!isLiked);
         } catch (error) {
@@ -189,20 +201,20 @@ const PostDetail = ({ navigation, route }) => {
         if (isAuthenticated) {
             navigation.navigate("order-details", { postDetails: postDetails });
         } else {
-            Alert.alert(
-                "Đăng nhập",
-                "Bạn cần đăng nhập để mua sản phẩm.",
-                [
-                    {
-                        text: "Cancel",
-                        style: "cancel"
-                    },
-                    {
-                        text: "Đăng nhập",
-                        onPress: () => navigation.navigate('login-navigation')
-                    }
-                ]
-            );
+            setModalContent({
+                title: "Đăng nhập",
+                detailText: "Bạn cần đăng nhập để mua sản phẩm này.",
+                confirmText: "Đăng nhập",
+                cancelText: "Thoát",
+                onConfirm: () => {
+                    setCustomModalVisible(false);
+                    navigation.navigate('login-navigation');
+                },
+                onClose: () => {
+                    setCustomModalVisible(false);
+                },
+            });
+            setCustomModalVisible(true);
             return;
         }
     };
@@ -231,26 +243,26 @@ const PostDetail = ({ navigation, route }) => {
         return (value === "None" || value === "none" || value === null) ? "N/A" : value;
     };
 
-
     // Format the price using the helper function
     const formattedPrice = formatPrice(postDetails?.product?.price);
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.wrapper}>
-                <View style={styles.header}>
-                    <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-                        <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
-                    </TouchableOpacity>
-                    <Text numberOfLines={1} style={styles.headerText}>{postDetails?.product?.name}</Text>
-                    <AntDesign style={{ marginRight: "2%" }} name="sharealt" size={24} color={COLORS.black} />
-                </View>
-                <ScrollView contentContainerStyle={styles.contentContainer}
-                    showsVerticalScrollIndicator={false}
-                    refreshControl={
-                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                    }
-                >
-                    <Carousel data={data} />
+        <View style={styles.container}>
+            <View style={styles.header}>
+                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                    <MaterialCommunityIcons name="keyboard-backspace" size={28} color={COLORS.white} />
+                </TouchableOpacity>
+                {/* <TouchableOpacity style={styles.backButton} onPress={() => { }}>
+                    <AntDesign style={{ marginRight: "2%" }} name="sharealt" size={24} color={COLORS.white} />
+                </TouchableOpacity> */}
+            </View>
+            <ScrollView contentContainerStyle={styles.contentContainer}
+                showsVerticalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
+            >
+                <Carousel data={data} />
+                <View style={styles.wrapper}>
                     <View style={styles.informationContainer}>
                         <Pressable onPress={handleLike} style={styles.like}>
                             <AntDesign
@@ -259,25 +271,36 @@ const PostDetail = ({ navigation, route }) => {
                                 color={isLiked ? "red" : "gray"}
                             />
                         </Pressable>
-                        <Text numberOfLines={3} style={[styles.headerText, { width: "85%", textAlign: "left", fontSize: 24 }]}>{postDetails?.product?.name}</Text>
-                        <View style={styles.label}>
-                            {postDetails?.product?.verifiedLevel === 'LEVEL_1' && (
-                                <View style={styles.verified}>
-                                    <Text style={styles.verifiedText}>Xác minh cấp 1</Text>
+
+                        <Text style={styles.numberOfLike}>{postDetails?.likedUsers.length}</Text>
+
+                        <Text numberOfLines={3} style={[styles.headerText, { width: "85%", textAlign: "left", fontSize: 24, marginTop: 5 }]}>{postDetails?.product?.name}</Text>
+                        <View style={styles.labelWrapper}>
+                            <View style={styles.label}>
+                                {postDetails?.product?.verifiedLevel === 'LEVEL_1' && (
+                                    <View style={styles.verified}>
+                                        <Text style={styles.verifiedText}>Xác minh cấp 1</Text>
+                                    </View>
+                                )}
+                                {postDetails?.product?.verifiedLevel === 'LEVEL_2' && (
+                                    <View style={[styles.verified, { backgroundColor: '#ff8000' }]}>
+                                        <Text style={styles.verifiedText}>Xác minh cấp 2</Text>
+                                    </View>
+                                )}
+                                {postDetails?.product?.verifiedLevel === 'LEVEL_3' && (
+                                    <View style={[styles.verified, { backgroundColor: '#33cc33' }]}>
+                                        <Text style={styles.verifiedText}>Xác minh cấp 3</Text>
+                                    </View>
+                                )}
+                            </View>
+                            {postDetails?.boosted &&
+                                <View style={styles.ads}>
+                                    <AntDesign name="rocket1" size={14} color="white" />
+                                    <Text style={[styles.verifiedText, { marginBottom: 1 }]}>Được trả phí để quảng cáo</Text>
                                 </View>
-                            )}
-                            {postDetails?.product?.verifiedLevel === 'LEVEL_2' && (
-                                <View style={[styles.verified, { backgroundColor: '#ff8000' }]}>
-                                    <Text style={styles.verifiedText}>Xác minh cấp 2</Text>
-                                </View>
-                            )}
-                            {postDetails?.product?.verifiedLevel === 'LEVEL_3' && (
-                                <View style={[styles.verified, { backgroundColor: '#33cc33' }]}>
-                                    <Text style={styles.verifiedText}>Xác minh cấp 3</Text>
-                                </View>
-                            )}
+                            }
+
                         </View>
-                        <Text style={styles.labelTransport}>Miễn phí vận chuyển</Text>
                         <Text style={styles.price}>
                             <Text style={styles.currency}>đ</Text>
                             {formattedPrice}
@@ -285,11 +308,7 @@ const PostDetail = ({ navigation, route }) => {
                         <View style={styles.wallet}>
                             <AntDesign name="creditcard" size={20} color="gray" />
                             <Text style={styles.walletTitle}>
-                                Sử dụng ví GIATOTPAY để mua với giá{' '}
-                                <Text style={styles.walletTitlePrice}>
-                                    <Text style={styles.currency}>đ</Text>
-                                    {formattedPrice}
-                                </Text>
+                                Sử dụng ví GiaTotPay để mua hàng với giá ưu đãi
                             </Text>
                         </View>
                     </View>
@@ -328,7 +347,6 @@ const PostDetail = ({ navigation, route }) => {
                                     <Text
                                         style={{
                                             fontSize: 18,
-                                            // fontWeight: '500',
                                             color: COLORS.primary,
                                         }}>Bình luận</Text>
                                 </TouchableOpacity>
@@ -339,7 +357,6 @@ const PostDetail = ({ navigation, route }) => {
                                     <Text
                                         style={{
                                             fontSize: 18,
-                                            // fontWeight: '500',
                                             color: COLORS.gray,
                                         }}>Bình luận</Text>
                                 </View>
@@ -366,14 +383,20 @@ const PostDetail = ({ navigation, route }) => {
                     <View style={styles.divider} />
                     <View style={styles.description}>
                         <Text style={styles.descriptionTitle}>Mô tả sản phẩm</Text>
-                        <Text style={styles.descriptionText}>
-                            {showFullDescription ? postDetails?.description : `${postDetails?.description?.slice(0, 100)}...`}
+                        <View>
+                            <Text style={styles.descriptionText}>
+                                {showFullDescription ? postDetails?.description : `${postDetails?.description?.slice(0, 250)}...`}
+                            </Text>
                             {postDetails?.description?.length > 100 && (
                                 <Text style={styles.readMore} onPress={() => setShowFullDescription(!showFullDescription)}>
-                                    {showFullDescription ? ' Ẩn bớt' : ' Xem thêm'}
+                                    {showFullDescription ? (
+                                        <Text style={styles.seeMore}>Ẩn bớt</Text>
+                                    ) : (
+                                        <Text style={styles.seeMore}>Xem thêm chi tiết</Text>
+                                    )}
                                 </Text>
                             )}
-                        </Text>
+                        </View>
                         <Text style={styles.createdTime}>{postDetails?.createdAt}</Text>
                         <View style={styles.dividerLight} />
                         <View style={styles.hashtags}>
@@ -383,6 +406,9 @@ const PostDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                     <View style={styles.divider} />
+                    <View style={styles.description}>
+                        <Text style={styles.descriptionTitle}>Thông tin chi tiết</Text>
+                    </View>
                     {/* Thương hiệu */}
                     <View style={[styles.details, { marginTop: 4 }]}>
                         <View style={styles.left}>
@@ -544,37 +570,45 @@ const PostDetail = ({ navigation, route }) => {
                         style={styles.personalContainer}
                         onPress={() => navigation.navigate("user-profile-details", { user: postDetails?.user, userIdLogged: userId })}
                     >
-                        <View style={[styles.detailContainer, { alignItems: 'flex-start' }]}>
+                        <View style={[styles.detailContainer, { alignItems: 'flex-start', width: "100%" }]}>
                             <Image
                                 style={styles.avatar}
                                 source={{ uri: postDetails?.user?.avatar ? postDetails?.user?.avatar : profile }}
                             />
-                            <View style={{}}>
-                                <Text style={{ fontSize: 18 }}>{postDetails?.user?.username}</Text>
-                                <View style={{ flexDirection: 'row', justifyContent: "center", alignItems: 'center' }}>
+
+                            <View style={styles.userDetails}>
+                                <Text numberOfLines={1} style={{ fontSize: 18 }}>{postDetails?.user?.lastName} {postDetails?.user?.firstName}</Text>
+                                <View style={styles.oneLine}>
                                     <Rating
                                         stars={averageRating}
                                         maxStars={5}
                                         size={16}
                                     />
-                                    <Text style={{ fontSize: 12, marginLeft: 4 }}>({averageRating})</Text>
-
-                                    {postDetails?.user?.isVerified === true ? (<>
-                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 40 }}>
-                                            <MaterialIcons name="verified-user" size={12} color="#699BF7" style={{ marginTop: 0, marginLeft: 0 }} />
-                                            <Text style={{ fontSize: 12 }}>Tài khoản đã xác minh</Text>
-                                        </View></>
-                                    ) : (
-                                        <>
-                                            <Octicons name="unverified" size={14} color="gray" style={{ marginTop: 6, marginLeft: 10 }} />
-                                            <Text style={{ fontSize: 12, marginTop: 4, marginLeft: 2 }}>Tài khoản chưa xác minh</Text>
-                                        </>
-                                    )
-
-                                    }
-
-
+                                    <Text style={{ fontSize: 12, marginLeft: 4, marginTop: 2 }}>({averageRating.toFixed(1)})</Text>
                                 </View>
+                                {postDetails?.user?.isVerified === true ? (
+                                    <View style={styles.oneLine}>
+                                        <MaterialIcons name="verified-user" size={12} color="#699BF7" style={{ marginTop: 0, marginLeft: 0 }} />
+                                        <Text style={{ fontSize: 12 }}>Tài khoản đã xác minh</Text>
+                                    </View>
+                                ) : (
+                                    <View style={styles.oneLine}>
+                                        <Octicons name="unverified" size={14} color="gray" style={{ marginTop: 4 }} />
+                                        <Text style={{ fontSize: 12, marginTop: 2, marginLeft: 2 }}>Tài khoản chưa xác minh</Text>
+                                    </View>
+                                )
+                                }
+                            </View>
+
+                            <View style={{
+                                backgroundColor: COLORS.primary,
+                                paddingVertical: 6,
+                                paddingHorizontal: 10,
+                                borderRadius: 6,
+                                right: 10,
+                                marginVertical: 'auto'
+                            }}>
+                                <Text style={{ color: COLORS.white }}>Ghé thăm</Text>
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -590,32 +624,40 @@ const PostDetail = ({ navigation, route }) => {
                             </Text>
                         </View>
                     </View>
-                </ScrollView>
+                </View>
+            </ScrollView>
 
-                {
-                    postDetails?.isAvailable && (
-                        <View style={styles.bottomBtn}>
-                            {type === "buyer" && (
-                                <TouchableOpacity style={styles.button} onPress={handlePress}>
-                                    <Text style={styles.buttonText}>Mua ngay</Text>
-                                </TouchableOpacity>
-                            )
-                            }
-                            {type === "seller" && (
-                                <TouchableOpacity style={styles.button}
-                                    onPress={() => navigation.navigate('update-post', { postId: postId })}
-                                >
-                                    <Text style={styles.buttonText}>Chỉnh sửa</Text>
-                                </TouchableOpacity>
-                            )
-                            }
-                        </View>
+            {
+                postDetails?.isAvailable && (
+                    <View style={styles.bottomBtn}>
+                        {type === "buyer" && (
+                            <TouchableOpacity style={styles.button} onPress={handlePress}>
+                                <Text style={styles.buttonText}>Mua ngay</Text>
+                            </TouchableOpacity>
+                        )
+                        }
+                        {type === "seller" && (
+                            <TouchableOpacity style={styles.button}
+                                onPress={() => navigation.navigate('update-post', { postId: postId })}
+                            >
+                                <Text style={styles.buttonText}>Chỉnh sửa</Text>
+                            </TouchableOpacity>
+                        )
+                        }
+                    </View>
 
-                    )
-                }
-
-            </View>
-        </SafeAreaView>
+                )
+            }
+            <CustomModal
+                visible={customModalVisible}
+                onClose={modalContent.onClose}
+                onConfirm={modalContent.onConfirm}
+                title={modalContent.title}
+                detailText={modalContent.detailText}
+                confirmText={modalContent.confirmText}
+                cancelText={modalContent.cancelText}
+            />
+        </View>
     );
 };
 

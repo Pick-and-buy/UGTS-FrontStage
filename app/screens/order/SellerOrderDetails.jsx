@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { StyleSheet, View, Text, Image, SafeAreaView, TouchableOpacity, ScrollView, Alert } from "react-native";
+import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Alert } from "react-native";
 import styles from "../css/sellerOrderDetails.style";
 import { useFocusEffect } from '@react-navigation/native';
 import { Feather, AntDesign, MaterialIcons, MaterialCommunityIcons, SimpleLineIcons, Ionicons, Entypo, FontAwesome, FontAwesome6 } from '@expo/vector-icons';
@@ -68,8 +68,8 @@ const SellerOrderDetails = ({ navigation, route }) => {
     };
 
     const formattedProductPrice = formatPrice(updatedOrderInfo?.post?.product?.price);
-    const shippingPrice = formatPrice(42500);
-    const totalPrice = formatPrice(updatedOrderInfo?.post?.product?.price + 42500);
+    const shippingPrice = formatPrice(updatedOrderInfo?.orderDetails?.shippingCost);
+    const totalPrice = formatPrice(updatedOrderInfo?.post?.product?.price + updatedOrderInfo?.orderDetails?.shippingCost);
 
     const handleCancelOrder = async () => {
         try {
@@ -146,7 +146,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                     <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
@@ -202,7 +202,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
                             source={{ uri: updatedOrderInfo?.buyer?.avatar ? updatedOrderInfo?.buyer?.avatar : profile }}
                         />
                         <Text style={styles.sellerText}>
-                            {updatedOrderInfo?.buyer?.username} (Người mua)
+                            {updatedOrderInfo?.buyer?.lastName} {updatedOrderInfo?.buyer?.firstName} (Người mua)
                         </Text>
                     </View>
                     <View style={styles.product}>
@@ -218,17 +218,30 @@ const SellerOrderDetails = ({ navigation, route }) => {
                                 Color: {updatedOrderInfo?.post?.product?.color}, Size: {updatedOrderInfo?.post?.product?.size}
                             </Text>
                             <View style={styles.label}>
-                                <View style={styles.verifiedLabel}>
-                                    <MaterialIcons name="verified" size={14} color="#FFBB00" />
-                                    <Text style={{ fontSize: 12 }}>Đã xác minh</Text>
-                                </View>
+
+                                {updatedOrderInfo?.post?.product?.verifiedLevel === 'LEVEL_1' && (
+                                    <View style={styles.verified}>
+                                        <Text style={styles.verifiedText}>Xác minh cấp 1</Text>
+                                    </View>
+                                )}
+                                {updatedOrderInfo?.post?.product?.verifiedLevel === 'LEVEL_2' && (
+                                    <View style={[styles.verified, { backgroundColor: '#ff8000' }]}>
+                                        <Text style={styles.verifiedText}>Xác minh cấp 2</Text>
+                                    </View>
+                                )}
+                                {updatedOrderInfo?.post?.product?.verifiedLevel === 'LEVEL_3' && (
+                                    <View style={[styles.verified, { backgroundColor: '#33cc33' }]}>
+                                        <Text style={styles.verifiedText}>Xác minh cấp 3</Text>
+                                    </View>
+                                )}
+
                                 <View style={styles.returnLabel}>
                                     <AntDesign name="retweet" size={14} color="#FFBB00" />
                                     <Text style={{ fontSize: 12 }}>Trả hàng miễn phí</Text>
                                 </View>
                             </View>
                             <Text style={styles.price}>
-                                <Text style={styles.currency}>đ</Text>
+                                <Text style={styles.currency}>₫</Text>
                                 {formattedProductPrice}
                             </Text>
                         </View>
@@ -238,19 +251,19 @@ const SellerOrderDetails = ({ navigation, route }) => {
                         <View style={styles.feePrice}>
                             <Text style={{ fontSize: 16, color: COLORS.gray }}>Tổng tiền hàng</Text>
                             <Text style={{ fontSize: 16, color: COLORS.gray }}>
-                                {formattedProductPrice}đ
+                                {formattedProductPrice}₫
                             </Text>
                         </View>
                         <View style={styles.feePrice}>
                             <Text style={{ fontSize: 16, color: COLORS.gray }}>Vận chuyển</Text>
                             <Text style={{ fontSize: 16, color: COLORS.gray }}>
-                                {shippingPrice}đ
+                                {shippingPrice}₫
                             </Text>
                         </View>
                         <View style={styles.feePrice}>
                             <Text style={{ fontSize: 16 }}>Tổng cộng</Text>
                             <Text style={{ fontSize: 16 }}>
-                                {totalPrice}đ
+                                {totalPrice}₫
                             </Text>
                         </View>
                     </View>
@@ -436,7 +449,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
                     </TouchableOpacity>
                 </View>
             }
-        </SafeAreaView>
+        </View>
     )
 }
 

@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         ...SHADOWS.small
     },
     image: {
-        width: "25%",
+        width: "30%",
         height: "100%",
         borderRadius: 15,
         marginRight: 10,
@@ -43,13 +43,16 @@ const styles = StyleSheet.create({
         color: '#8F8F8F',
     },
     price: {
+        width:"100%",
         fontSize: 24,
         color: '#4CAF50',
+        marginBottom:2
     },
     statusButton: {
+        width:"60%",
         paddingHorizontal: 20,
-        paddingVertical: 8,
-        borderRadius: 20,
+        paddingVertical: 6,
+        borderRadius: 4,
         backgroundColor: COLORS.primary,
         justifyContent: 'center',
         alignItems: 'center',

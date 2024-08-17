@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, FlatList } from 'react-native';
+import { View, Text, FlatList } from 'react-native';
 import { Ionicons, Feather, AntDesign, MaterialIcons, MaterialCommunityIcons, Entypo, FontAwesome6, SimpleLineIcons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/theme';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -46,7 +46,17 @@ const AddressLists = ({ navigation, route }) => {
                     {maskPhoneNumber(user?.result?.phoneNumber, '+84')}
                 </Text>
                 <Text style={styles.addressDetails}>
-                    {item.addressLine}, {item.street}, {item.district}, {item.province}, {item.country}
+                    {item.addressLine ?
+                        (
+                            `${item.addressLine}, ${item.street}, ${item.district}, ${item.province}, ${item.country}`
+                        )
+                        :
+                        (
+                            `${item.street}, ${item.district}, ${item.province}, ${item.country}`
+                        )
+
+                    }
+
                 </Text>
                 {item?.default && (
                     <View style={styles.addressDefault}>
@@ -98,7 +108,7 @@ const AddressLists = ({ navigation, route }) => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                     <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
@@ -123,7 +133,7 @@ const AddressLists = ({ navigation, route }) => {
                 keyExtractor={(item) => item.id}
                 estimatedItemSize={100}
             />
-        </SafeAreaView>
+        </View>
     );
 }
 

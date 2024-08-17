@@ -7,7 +7,7 @@ import {
     TextInput,
     Alert,
 } from "react-native";
-import React, { useState, useRef, useContext } from "react";
+import React, { useState } from "react";
 import { AntDesign, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import styles from "../css/resetPassword.style.js";
 import Button from '../../components/Button.jsx';
@@ -15,8 +15,7 @@ import BackBtn from '../../components/BackBtn.jsx';
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { COLORS, SIZES } from "../../constants/theme.js";
-import { resetPassword } from "../../api/auth.js";
-
+import { resetPasswordByEmail, resetPasswordByPhoneNumber } from "../../api/auth.js";
 
 const validationSchema = Yup.object().shape({
     password: Yup.string()
@@ -28,18 +27,16 @@ const validationSchema = Yup.object().shape({
         })
 });
 
-
 const ResetPassword = ({ navigation, route }) => {
-    const email  = route.params.value;
+    const { type, value } = route.params; 
     const [loader, setLoader] = useState(false);
-    const [obsecureText, setObsecureText] = useState(false);
-    const [obsecureText2, setObsecureText2] = useState(false);
-
-    const handleResetPassword = async (values) => {
+    const [obsecureText, setObsecureText] = useState(true);
+    const [obsecureText2, setObsecureText2] = useState(true);
+    console.log(type, value);
+    
+    const handleResetPasswordByEmail = async (values) => {
         try {
-
-            await resetPassword(email, values.password, values.passwordConfirmation);
-            // After successful password reset, navigate to the appropriate screen
+            await resetPasswordByEmail(value, values.password, values.passwordConfirmation);
             navigation.navigate("congrats-navigation", {
                 title: "HOÀN THÀNH!",
                 content: "Cập nhật mật khẩu thành công!",
@@ -47,9 +44,31 @@ const ResetPassword = ({ navigation, route }) => {
                 btnTxt: "ĐĂNG NHẬP NGAY",
             });
         } catch (error) {
-            // Handle password reset error
             console.error("Password reset error:", error);
             Alert.alert("Error", "Failed to reset password. Please try again.");
+        }
+    };
+
+    const handleResetPasswordByPhoneNumber = async (values) => {
+        try {
+            await resetPasswordByPhoneNumber(value, values.password, values.passwordConfirmation);
+            navigation.navigate("congrats-navigation", {
+                title: "HOÀN THÀNH!",
+                content: "Cập nhật mật khẩu thành công!",
+                routerName: "login-navigation",
+                btnTxt: "ĐĂNG NHẬP NGAY",
+            });
+        } catch (error) {
+            console.error("Password reset error:", error);
+            Alert.alert("Error", "Failed to reset password. Please try again.");
+        }
+    };
+
+    const handleResetPassword = async (values) => {
+        if (type === "email") {
+            await handleResetPasswordByEmail(values);
+        } else if (type === "phone") {
+            await handleResetPasswordByPhoneNumber(values);
         }
     };
 
@@ -66,7 +85,7 @@ const ResetPassword = ({ navigation, route }) => {
                 <Formik
                     initialValues={{ password: "", passwordConfirmation: "" }}
                     validationSchema={validationSchema}
-                    onSubmit={handleResetPassword}
+                    onSubmit={handleResetPassword} // Call the appropriate handler
                 >
                     {({
                         handleChange,
@@ -172,7 +191,7 @@ const ResetPassword = ({ navigation, route }) => {
                             <View>
                                 <Button
                                     title={"CẬP NHẬT"}
-                                    onPress={handleSubmit}
+                                    onPress={handleSubmit} // Submits the form
                                     isValid={isValid}
                                 />
                             </View>

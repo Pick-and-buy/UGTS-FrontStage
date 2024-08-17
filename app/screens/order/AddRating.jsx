@@ -16,7 +16,6 @@ const AddRating = ({ navigation, orderInfo }) => {
       // console.log(response);
       alert("Cảm ơn bạn đã để lại đánh giá")
       navigation.navigate("bottom-navigation")
-      // navigation.navigate("buyer-order-details", { ratingSubmitted: true })
     } catch (error) {
       console.error('Fetching rating failed:', error.response ? error.response.data : error.message);
     }
@@ -56,7 +55,7 @@ const AddRating = ({ navigation, orderInfo }) => {
       </View>
       <View style={styles.seller}>
         <Text style={styles.sellerTitle}>
-          {orderInfo?.post?.user?.username}
+          {orderInfo?.post?.user?.lastName} {orderInfo?.post?.user?.firstName}
         </Text>
       </View>
       <View style={styles.ratingBox}>

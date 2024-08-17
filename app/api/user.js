@@ -260,7 +260,7 @@ export const verifyInformation = async (user, fontData, backData, faceMatchData)
   try {
 
     const response = await axiosInstance.post(`/verify-information`, {
-      userId: user?.result?.id,
+      userId: user?.id,
       cardId: fontData?.data[0]?.id,
       name: fontData?.data[0]?.name,
       dob: fontData?.data[0]?.dob,
@@ -282,7 +282,7 @@ export const verifyInformation = async (user, fontData, backData, faceMatchData)
 };
 
 export const ratingUser = async (stars, comment, ratingUserId, ratedUserId, orderId) => {
-  // console.log(stars, comment, ratingUserId, ratedUserId);
+  console.log(stars, comment, ratingUserId, ratedUserId);
   try {
     const response = await axiosInstance.post(`/rating`, {
       stars: stars,

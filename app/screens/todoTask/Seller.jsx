@@ -7,7 +7,6 @@ import {
   Image,
   TextInput,
   FlatList,
-  SafeAreaView,
   ActivityIndicator,
   Alert,
 } from "react-native";
@@ -155,8 +154,8 @@ const Seller = ({ navigation }) => {
         <Text numberOfLines={1} style={styles.itemTitle}>
           {item?.post?.title}
         </Text>
-        <Text style={styles.shop}>Người mua: {item?.buyer?.username}</Text>
-        <Text style={styles.price}>đ{formatPrice(item?.orderDetails?.price)}</Text>
+        <Text style={styles.shop}>Người mua: {item?.buyer?.lastName} {item?.buyer?.firstName}</Text>
+        <Text style={styles.price}>₫{formatPrice((item?.orderDetails?.price ?? 0) + (item?.orderDetails?.shippingCost ?? 0))}</Text>
 
         {item?.orderDetails?.status === "PENDING" &&
           <View style={styles.buttonWrapper}>
@@ -266,7 +265,7 @@ const Seller = ({ navigation }) => {
             </View>
             {listOrdersSeller.length > 0 ? (
               <FlatList
-                data={listOrdersSeller}
+                data={listOrdersSeller.reverse()}
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
               />

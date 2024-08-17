@@ -7,40 +7,30 @@ import { OtpInput } from "react-native-otp-entry";
 import Button from '../../components/Button.jsx';
 import BackBtn from '../../components/BackBtn.jsx';
 import styles from "../css/OTPVerification.style.js";
-import { verifyOtpFromEmail, verifyOtpFromSMS } from '../../api/auth.js';
+import { verifyOtpFromSMS } from "../../api/auth.js";
 
-const OTPVerification = ({ navigation, route }) => {
-    const { type, value } = route.params;
+const OTPSMSVerification = ({ navigation, route }) => {
+    const { formData } = route.params;
     const [otp, setOtp] = useState('');
 
-    const handleVerifyOtpEmail = async () => {
+
+    const handleVerifyOtp = async () => {
         try {
-            await verifyOtpFromEmail(value, otp);
+            await verifyOtpFromSMS(formatPhoneNumber(formData.phoneNumber), otp);
             Alert.alert('Success', 'OTP verified successfully');
-            navigation.navigate("reset-password-navigation", { value });
+            navigation.navigate("register-infor-navigation", { formData: formData });
         } catch (error) {
             Alert.alert('Error', 'Failed to verify OTP. Please try again.');
-            console.log('OTP Verification Error:', error.response ? error.response.data : error.message);
         }
     };
 
-    const handleVerifyOtpSMS = async () => {
-        try {
-            await verifyOtpFromSMS(value, otp);
-            Alert.alert('Success', 'OTP verified successfully');
-            navigation.navigate("reset-password-navigation", { type, value });
-        } catch (error) {
-            Alert.alert('Error', 'Failed to verify OTP. Please try again.');
-            console.log('OTP Verification Error:', error.response ? error.response.data : error.message);
+    const formatPhoneNumber = (phoneNumber) => {
+        // Remove leading 0 and prepend +84
+        if (phoneNumber.startsWith('0')) {
+            phoneNumber = phoneNumber.substring(1); // Remove the leading 0
         }
-    };
 
-    const handleVerifyOtp = () => {
-        if (type === 'email') {
-            handleVerifyOtpEmail();
-        } else if (type === 'phone') {
-            handleVerifyOtpSMS();
-        }
+        return `+84 ${phoneNumber}`;
     };
 
     return (
@@ -48,11 +38,16 @@ const OTPVerification = ({ navigation, route }) => {
             <View style={styles.wrapper}>
                 <View style={styles.view_1}>
                     <View>
-                        <BackBtn onPress={() => navigation.navigate('info-method-navigation', { type, value })} />
+                        <BackBtn onPress={() => navigation.goBack()} />
                     </View>
                     <View>
                         <Text style={styles.textHeader}>Nhập mã xác nhận</Text>
-                        <Text style={styles.textHeader_1}>Mã xác nhận được gửi tới {value}</Text>
+                        <Text style={styles.textHeader_1}>Mã xác nhận được gửi tới {''}
+                            <Text style={{ color: 'red' }}>
+                                {formatPhoneNumber(formData.phoneNumber)}
+                            </Text>
+
+                        </Text>
                         <Text style={styles.textHeader_1}>Mã sẽ hết hạn trong 01:30</Text>
                     </View>
 
@@ -90,4 +85,4 @@ const OTPVerification = ({ navigation, route }) => {
     );
 };
 
-export default OTPVerification;
+export default OTPSMSVerification;

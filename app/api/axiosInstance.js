@@ -8,8 +8,6 @@ const axiosInstance = axios.create({
     baseURL: 'http://192.168.1.8:8080/api/v1/', // replace with your API base URL
 
 
-
-
     // headers: {
     //     'Content-Type': 'application/json',
     // }

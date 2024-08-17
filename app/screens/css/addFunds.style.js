@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     },
     header: {
         width: "100%",
-        height: "10%",
+        height: "12%",
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "flex-end",
@@ -76,7 +76,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 16,
         marginHorizontal: "2%",
-        marginTop: 10
+        marginTop: 10,
+        color: COLORS.red
     },
     quickAmounts: {
         width: "96%",
@@ -183,11 +184,74 @@ const styles = StyleSheet.create({
     highlightText: {
         color: 'blue'
     },
-    WebView: {
+    webViewContainer: {
         width: windowWidth,
         height: windowHeight,
         backgroundColor: COLORS.white,
-    }
+    },
+    webView: {
+        width: windowWidth,
+        marginTop: 40,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalView: {
+        width: 300,
+        backgroundColor: 'white',
+        borderRadius: 15,
+        padding: 15,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    modalText: {
+        textAlign: 'center',
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
+
+    },
+    modalDetailText: {
+        textAlign: 'center',
+        fontSize: 16,
+        marginBottom: 25,
+    },
+    modalButtons: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: 15
+    },
+    modalButton: {
+        width: '45%',
+        backgroundColor: COLORS.primary,
+        borderRadius: 10,
+        padding: 10,
+        marginHorizontal: "auto",
+    },
+    modalCancelButton: {
+        width: '45%',
+        backgroundColor: "#ccc",
+        borderRadius: 10,
+        padding: 10,
+        marginHorizontal: "auto",
+    },
+    modalButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+
 });
 
 export default styles;

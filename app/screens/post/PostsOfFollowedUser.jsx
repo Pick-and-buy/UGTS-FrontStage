@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Feather, AntDesign, MaterialIcons, MaterialCommunityIcons, SimpleLineIcons, Ionicons, Entypo } from '@expo/vector-icons';
 import styles from '../css/postsOfFollowedUser.style';

@@ -1,35 +1,53 @@
 import React, { useEffect, useState } from 'react';
-import { View, Alert, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import FormData from 'form-data';
 import Spinner from 'react-native-loading-spinner-overlay';
+import CustomModal from '../../components/CustomModal'; // Assuming you have a CustomModal component
 
 const ScanBackIDScreen = ({ navigation, route }) => {
     const { frontImageUri, fontData } = route.params;
     const [image, setImage] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState({
+        title: '',
+        detailText: '',
+        confirmText: '',
+        cancelText: '',
+        onConfirm: () => { },
+        onClose: () => { }
+    });
 
     useEffect(() => {
-        Alert.alert(
-            "Chú ý",
-            "Hãy chuẩn bị CCCD mặt sau để tiếp tục xác thực.",
-            [
-                {
-                    text: "Thoát",
-                    onPress: () => navigation.goBack(),
-                },
-                {
-                    text: "Đồng ý",
-                    onPress: startIdentification,
-                }
-            ]
-        );
+        setModalContent({
+            title: "Chú ý",
+            detailText: "Hãy chuẩn bị CCCD mặt sau để tiếp tục xác thực.",
+            confirmText: "Đồng ý",
+            cancelText: "Thoát",
+            onConfirm: () => {
+                setModalVisible(false);
+                startIdentification();
+            },
+            onClose: () => {
+                setModalVisible(false);
+                navigation.navigate("GetID");
+            },
+        });
+        setModalVisible(true);
     }, []);
 
     const startIdentification = async () => {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
         if (status !== 'granted') {
-            Alert.alert('Permission Denied', 'Camera access is needed to take photos.');
+            setModalContent({
+                title: "Permission Denied",
+                detailText: "Camera access is needed to take photos.",
+                confirmText: "OK",
+                cancelText: "Cancel",
+                onConfirm: () => setModalVisible(false),
+            });
+            setModalVisible(true);
             return;
         }
 
@@ -44,7 +62,6 @@ const ScanBackIDScreen = ({ navigation, route }) => {
             setImage(result.assets[0].uri);
             setLoading(true);
             uploadImage(result.assets[0].uri);
-            // console.log(result.assets[0].uri);
         }
     };
 
@@ -67,25 +84,26 @@ const ScanBackIDScreen = ({ navigation, route }) => {
             });
 
             const result = await response.json();
-            // console.log(result);
-
             setLoading(false);
+
             if (result.errorCode === 0 && result.errorMessage === "") {
-                navigation.navigate("FaceMatch", { frontImageUri: frontImageUri, fontData: fontData, backData: result });
+                navigation.navigate("FaceMatch", { frontImageUri, fontData, backData: result });
             } else {
-                Alert.alert(
-                    "Nhận diện ID thất bại",
-                    "Hãy kiểm tra lại mặt sau ID của bạn và thử lại.",
-                    [
-                        {
-                            text: "Thoát",
-                        },
-                        {
-                            text: "Thử lại",
-                            onPress: startIdentification
-                        }
-                    ]
-                );
+                setModalContent({
+                    title: "Nhận diện ID thất bại",
+                    detailText: "Hãy kiểm tra lại mặt sau ID của bạn và thử lại.",
+                    confirmText: "Thử lại",
+                    cancelText: "Thoát",
+                    onConfirm: () => {
+                        setModalVisible(false);
+                        startIdentification();
+                    },
+                    onClose: () => {
+                        setModalVisible(false);
+                        navigation.navigate("GetID");
+                    },
+                });
+                setModalVisible(true);
             }
         } catch (error) {
             setLoading(false);
@@ -99,6 +117,15 @@ const ScanBackIDScreen = ({ navigation, route }) => {
                 visible={loading}
                 textContent={'Loading...'}
                 textStyle={styles.spinnerTextStyle}
+            />
+            <CustomModal
+                visible={modalVisible}
+                onClose={modalContent.onClose}
+                onConfirm={modalContent.onConfirm}
+                title={modalContent.title}
+                detailText={modalContent.detailText}
+                confirmText={modalContent.confirmText}
+                cancelText={modalContent.cancelText}
             />
         </View>
     );

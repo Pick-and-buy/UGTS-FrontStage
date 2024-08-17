@@ -1,6 +1,5 @@
 import { Image, Text, TouchableOpacity, View, Platform, StyleSheet } from 'react-native'
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context'
 import styles from "../screens/css/setLocation.style.js";
 import Button from '../components/Button.jsx';
 import BackBtn from '../components/BackBtn.jsx';

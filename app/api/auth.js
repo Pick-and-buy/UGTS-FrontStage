@@ -26,7 +26,7 @@ export const sendOtp = async (email) => {
     }
 };
 
-export const verifyOtp = async (email, otpCode) => {
+export const verifyOtpFromEmail = async (email, otpCode) => {
     try {
         const response = await axiosInstance.post('/otp/verify', { email, otpCode });
         return response.data;
@@ -35,9 +35,17 @@ export const verifyOtp = async (email, otpCode) => {
     }
 };
 
-export const resetPassword = async (email, password, confirmPassword) => {
+export const resetPasswordByEmail = async (email, password, confirmPassword) => {
     try {
         const response = await axiosInstance.post('/auth/forgot-password', { email, password, confirmPassword });
+        return response.data;
+    } catch (error) {
+        throw error.response.data;
+    }
+};
+export const resetPasswordByPhoneNumber = async (phoneNumber, password, confirmPassword) => {
+    try {
+        const response = await axiosInstance.post('/auth/forgot-password', { phoneNumber, password, confirmPassword });
         return response.data;
     } catch (error) {
         throw error.response.data;
@@ -47,6 +55,26 @@ export const resetPassword = async (email, password, confirmPassword) => {
 export const changePassword = async (userId, oldPassword, newPassword) => {
     try {
         const response = await axiosInstance.post(`/auth/change-password/${userId}`, { oldPassword, newPassword });
+        return response.data;
+    } catch (error) {
+        throw error.response.data;
+    }
+};
+
+export const sendOtpToSMS = async (phoneNumber) => {
+    try {
+        const response = await axiosInstance.post('/otp/send-sms-otp', {
+            phoneNumber: phoneNumber
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response.data;
+    }
+};
+
+export const verifyOtpFromSMS = async (phoneNumber, otpCode) => {
+    try {
+        const response = await axiosInstance.post('/otp/verify-sms-otp', { otpCode: otpCode, phoneNumber: phoneNumber });
         return response.data;
     } catch (error) {
         throw error.response.data;

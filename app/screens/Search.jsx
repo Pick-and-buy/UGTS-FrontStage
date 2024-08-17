@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import {
-  SafeAreaView,
   Text,
   View,
   TextInput,
@@ -133,7 +132,7 @@ const Search = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.search}>
@@ -215,7 +214,7 @@ const Search = () => {
           )}
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
