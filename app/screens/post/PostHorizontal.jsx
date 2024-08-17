@@ -107,8 +107,8 @@ const styles = StyleSheet.create({
     },
     label: {
         position: 'absolute',
-        top: 15,
-        left: -60,
+        top: 12,
+        left: -55,
         width: "45%",
         height: 20,
         backgroundColor: COLORS.primary,
