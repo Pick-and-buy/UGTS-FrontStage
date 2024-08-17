@@ -323,14 +323,14 @@ const UpdatePost = ({ route }) => {
                 const formData = new FormData();
                 const request = {
                     description: description,
-                    brand: { 
-                        name: brandName 
+                    brand: {
+                        name: brandName
                     },
-                    brandLine: { 
-                        lineName: brandLineName 
+                    brandLine: {
+                        lineName: brandLineName
                     },
-                    category: { 
-                        categoryName: category 
+                    category: {
+                        categoryName: category
                     },
                     product: {
                         id: postDetails?.product?.id,
@@ -583,7 +583,7 @@ const UpdatePost = ({ route }) => {
                         <View style={styles.viewBrandLogo}>
                             <Text style={styles.textBrandLogo}>{item.label}</Text>
                         </View>
-                    </View>    
+                    </View>
                 )
                 :
                 (
@@ -1214,10 +1214,25 @@ const UpdatePost = ({ route }) => {
                             </View>
                             <View style={styles.checkboxBoostedContainer}>
                                 <View style={styles.checkboxBoosted}>
-                                    <Checkbox
+                                    {postDetails?.boosted === true ?
+                                        (
+                                            <Checkbox
+                                                value={true}
+                                            />
+                                        )
+                                        :
+                                        (
+                                            <Checkbox
+                                                value={isBoosted}
+                                                onValueChange={setBoosted}
+                                            />
+                                        )
+
+                                    }
+                                    {/* <Checkbox
                                         value={isBoosted}
                                         onValueChange={setBoosted}
-                                    />
+                                    /> */}
                                     <Text style={{ textAlign: 'center' }}>Boosted</Text>
                                 </View>
                                 {isBoosted ?
