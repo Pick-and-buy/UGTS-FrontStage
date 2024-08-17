@@ -698,18 +698,38 @@ const UpdatePost = ({ route }) => {
                                     </TouchableOpacity>
                                 </View>
                                 <View style={styles.checkboxView}>
-                                    <Checkbox
-                                        value={isChecked_2}
-                                        onValueChange={setChecked_2}
-                                    />
+                                    {postDetails?.product?.verifiedLevel === "LEVEL_2" ?
+                                        (
+                                            <Checkbox
+                                                value={true}
+                                            />
+                                        )
+                                        :
+                                        (
+                                            <Checkbox
+                                                value={isChecked_2}
+                                                onValueChange={setChecked_2}
+                                            />
+                                        )
+                                    }
                                     <Text style={styles.textVerified}>Xác minh cấp 2</Text>
                                 </View>
 
                                 <View style={styles.checkboxView}>
-                                    <Checkbox
-                                        value={isChecked_3}
-                                        onValueChange={setChecked_3}
-                                    />
+                                    {postDetails?.product?.verifiedLevel === "LEVEL_3" ?
+                                        (
+                                            <Checkbox
+                                                value={true}
+                                            />
+                                        )
+                                        :
+                                        (
+                                            <Checkbox
+                                                value={isChecked_3}
+                                                onValueChange={setChecked_3}
+                                            />
+                                        )
+                                    }
                                     <Text style={styles.textVerified}>Xác minh cấp 3</Text>
                                 </View>
                             </View>
