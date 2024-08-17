@@ -64,7 +64,9 @@ export const createPost_Level_1 = async (formData) => {
   try {
     const token = await getAuthToken();
 
-    const response = await fetch('http://192.168.1.10:8080/api/v1/posts/level-1', {
+
+    const response = await fetch('http://192.168.1.6:8080/api/v1/posts/level-1', {
+
 
       method: 'POST',
       headers: {
@@ -83,7 +85,9 @@ export const createPost_Level_2 = async (formData) => {
   try {
     const token = await getAuthToken();
 
-    const response = await fetch('http://192.168.1.10:8080/api/v1/posts/level-2', {
+
+    const response = await fetch('http://192.168.1.6:8080/api/v1/posts/level-2', {
+
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -100,7 +104,9 @@ export const createPost_Level_2 = async (formData) => {
 export const updatePost = async (id, formData) => {
   try {
     const token = await getAuthToken();
-    const response = await fetch(`http://192.168.1.10:8080/api/v1/posts/${id}`, {
+
+    const response = await fetch(`http://192.168.1.6:8080/api/v1/posts/${id}`, {
+
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,

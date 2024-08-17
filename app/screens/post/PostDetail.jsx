@@ -12,7 +12,8 @@ import {
     RefreshControl,
 } from "react-native";
 import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo, FontAwesome, Octicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect } from "react";
+import { useFocusEffect } from '@react-navigation/native';
 import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
 import Carousel from "../../components/carousel/Carousel";
 import { getPostDetails, getComments, postComment, getLikedPostByUser } from "../../api/post";
@@ -55,12 +56,19 @@ const PostDetail = ({ navigation, route }) => {
 
     console.log(postId);
 
+    // useEffect(() => {
+    //     fetchPostDetails();
+    //     checkAuthentication();
+    //     fetchComments();
+    // }, []);
 
-    useEffect(() => {
-        fetchPostDetails();
-        checkAuthentication();
-        fetchComments();
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            fetchPostDetails();
+            checkAuthentication();
+            fetchComments();
+        }, [postId])
+    )
 
     useEffect(() => {
         if (postDetails?.user?.id) {
@@ -120,6 +128,8 @@ const PostDetail = ({ navigation, route }) => {
             const response = await getPostDetails(postId);
             const postInfo = response.data.result;
             setPostDetails(postInfo);
+            console.log('>>> check postInfor: ', postInfo);
+
         } catch (error) {
             console.error(error);
         } finally {
@@ -553,6 +563,7 @@ const PostDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                     <View style={styles.divider} />
+
 
                     {/* Profile seller */}
                     <TouchableOpacity

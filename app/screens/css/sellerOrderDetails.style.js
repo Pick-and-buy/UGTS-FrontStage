@@ -1,4 +1,7 @@
-import { StyleSheet } from "react-native";
+import {
+    StyleSheet,
+    Dimensions,
+} from "react-native";
 import { COLORS, SHADOWS, SIZES } from "../../constants/theme";
 
 const styles = StyleSheet.create({
@@ -351,7 +354,54 @@ const styles = StyleSheet.create({
         width: "60%",
         color: COLORS.gray,
         fontSize: 12
-    }
+    },
+
+    //upload video
+    videoPackageContainer: {
+        width: "100%",
+        flexDirection: 'row',
+        marginHorizontal: "auto",
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    uploadVideoContainer: {
+        // width: "55%",
+        width: '48%',
+        height: Dimensions.get('window').width / 3,
+        borderRadius: 10,
+        flexDirection: 'row',
+        backgroundColor: COLORS.white,
+        ...SHADOWS.small,
+        marginHorizontal: "auto",
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 10,
+        padding: 10,
+        marginVertical: 10,
+    },
+    imageSelect: {
+        width: 30,
+        height: 30,
+    },
+
+    confirmText: {
+        width: "45%",
+        color: COLORS.gray,
+        fontSize: 14,
+    },
+
+    uploadVideo: {
+        width: '48%',
+        height: Dimensions.get('window').width / 3,
+        marginHorizontal: "auto",
+        marginVertical: 10,
+    },
+    uploadVideoStyle: {
+        width: '100%', 
+        height: '100%',
+        borderRadius: 10,
+    },
 
 });
 

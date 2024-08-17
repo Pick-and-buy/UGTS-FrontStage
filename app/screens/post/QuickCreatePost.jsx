@@ -66,7 +66,10 @@ const QuickCreatePost = () => {
 
     const [isChecked_2, setChecked_2] = useState(false);
     const [isChecked_3, setChecked_3] = useState(false);
+    const [isBoosted, setBoosted] = useState(false);
     const FEE = 0;
+    const feeLegitgrails = 500000;
+    const feeBoosted = 100000;
 
     useEffect(() => {
         fetchAllBrands();
@@ -136,12 +139,12 @@ const QuickCreatePost = () => {
     }
 
     const validationSchema = Yup.object().shape({
-        title: Yup.string().required('Hãy nhập tiêu đề bài đăng'),
+        // title: Yup.string().required('Hãy nhập tiêu đề bài đăng'),
         productName: Yup.string().required('Hãy nhập tên sản phẩm'),
         brandName: Yup.string().required('Hãy chọn thương hiệu'),
         condition: Yup.string().required('Hãy chọn trạng thái sản phẩm'),
-        //brandLineName: Yup.string().required('Hãy chọn dòng thương hiệu'),
-        //category: Yup.string().required('Hãy chọn thể loại'),
+        brandLineName: Yup.string().required('Hãy chọn dòng thương hiệu'),
+        category: Yup.string().required('Hãy chọn thể loại'),
         price: Yup.string().required('Hãy nhập giá tiền'),
     });
 
@@ -161,24 +164,38 @@ const QuickCreatePost = () => {
     ];
 
     const validateImages = () => {
-        // check điều kiện khi 4 ảnh đầu có giá trị = ''
+        let valid = true;
+        let message = '';
+
+        // Kiểm tra 4 ảnh đầu tiên
         for (let i = 0; i < 4; i++) {
             if (images[i].value === '') {
-                return false;
+                valid = false;
+                message = 'Hãy tải đủ 4 ảnh đầu tiên';
+                break;
             }
         }
-        // check điều kiện khi người dùng bấm vào xác thực level 2 và ảnh hóa đơn + video bị lỗi
-        if (isChecked_2) {
-            if (invoice === '' || videoUri === '') {
-                return false;
+
+        // Kiểm tra điều kiện khi người dùng bấm vào xác thực level 2
+        if (valid && isChecked_2) {
+            if (invoice === '' && videoUri === '') {
+                valid = false;
+                message = 'Hãy cập nhật ảnh hóa đơn và video để xác thực level 2';
+            } else if (invoice === '') {
+                valid = false;
+                message = 'Hãy cập nhật ảnh hóa đơn để xác thực level 2';
+            } else if (videoUri === '') {
+                valid = false;
+                message = 'Hãy cập nhật video để xác thực level 2';
             }
         }
-        return true;
+        return { valid, message };
     };
 
     const handleCreatePost = async (values, actions) => {
         try {
-            if (validateImages() === true) {
+            const { valid, message } = validateImages();
+            if (valid) {
                 // Handle form submission here
                 let { title, brandName, productName, brandLineName, condition, category, exteriorMaterial,
                     interiorMaterial, size, width, height, length, referenceCode, manufactureYear, color, accessories, dateCode,
@@ -186,35 +203,52 @@ const QuickCreatePost = () => {
                     // dataShippingMethod, dataShippingTime, shippingAddress, fee, saleProfit,
                 } = values;
 
-                const calculatedPrice = parseInt(values.price, 10) - FEE;
+                //convert String price: VD: "12.500.000" => "12500000"
+                const convertStringPrice = values.price.replace(/\./g, '');
+                const originPrice = parseInt(convertStringPrice, 10)
+                //conver String sang số nguyên hệ cơ số 10
+                //const calculatedPrice = parseInt(convertStringPrice, 10) - FEE;
+
+                let calculatedPrice = "";
+                if (isChecked_3 && isBoosted) {
+                    calculatedPrice = parseInt(convertStringPrice, 10) - feeLegitgrails - feeBoosted;
+                } else if (isBoosted) {
+                    calculatedPrice = parseInt(convertStringPrice, 10) - feeBoosted;
+                } else if (isChecked_3) {
+                    calculatedPrice = parseInt(convertStringPrice, 10) - feeLegitgrails;
+                } else {
+                    calculatedPrice = "";
+                }
 
                 const formData = new FormData();
-
                 const request = {
-                    title: title,
+                    title: "",
                     description: description,
                     brand: { name: brandName },
                     brandLine: { lineName: brandLineName },
                     category: { categoryName: category },
                     product: {
                         name: productName,
-                        price: calculatedPrice,
+                        price: originPrice,
                         color: color,
                         size: size,
-                        width: width,
-                        height: height,
-                        length: length,
-                        referenceCode: referenceCode,
-                        manufactureYear: manufactureYear,
+                        width: '',
+                        height: '',
+                        length: '',
+                        referenceCode: '',
+                        manufactureYear: '',
                         exteriorMaterial: exteriorMaterial,
                         interiorMaterial: interiorMaterial,
-                        accessories: accessories,
-                        dateCode: dateCode,
-                        serialNumber: serialNumber,
-                        purchasedPlace: purchasedPlace,
+                        accessories: '',
+                        dateCode: '',
+                        serialNumber: '',
+                        purchasedPlace: '',
                         story: '',
                     },
                     condition: condition,
+                    boosted: isBoosted,
+                    lastPriceForSeller: calculatedPrice,
+
                 };
 
                 formData.append('request', JSON.stringify(request));
@@ -281,51 +315,20 @@ const QuickCreatePost = () => {
                     brandLineName: '',
                     condition: '',
                     category: '',
-                    exteriorMaterial: '',
-                    interiorMaterial: '',
                     size: '',
-                    width: '',
-                    height: '',
-                    length: '',
-                    referenceCode: '',
-                    manufactureYear: '',
                     color: '',
-                    accessories: '',
-                    dateCode: '',
-                    serialNumber: '',
-                    purchasedPlace: '',
-                    story: '',
                     description: '',
                     price: '',
+                    exteriorMaterial: '',
+                    interiorMaterial: '',
+                    lastPriceForSeller: '',
                 })
             } else {
-                if (isChecked_2) {
-                    if (!invoice && !videoUri) {
-                        Alert.alert(
-                            "Thiếu thông tin",
-                            "Hãy cập nhật ảnh hóa đơn và video",
-                            [{ text: "OK" }]
-                        );
-                    } else if (!invoice) {
-                        Alert.alert(
-                            "Thiếu thông tin",
-                            "Hãy cập nhật ảnh hóa đơn để xác thực level 2",
-                            [{ text: "OK" }]
-                        );
-                    } else if (!videoUri) {
-                        Alert.alert(
-                            "Thiếu thông tin",
-                            "Hãy cập nhật video để xác thực level 2",
-                            [{ text: "OK" }]
-                        );
-                    }
-                } else {
-                    Alert.alert(
-                        "Thiếu thông tin",
-                        "Hãy cập nhật 4 ảnh đầu tiên có dấu *",
-                        [{ text: "OK" }]
-                    );
-                }
+                Alert.alert(
+                    "Thiếu thông tin",
+                    message,
+                    [{ text: "OK" }]
+                );
             }
         } catch (error) {
             console.error('ERROR handle create post: ', error);
@@ -479,19 +482,33 @@ const QuickCreatePost = () => {
             <View style={styles.shadow} />
             <Formik
                 initialValues={{
-                    title: '', productName: '', brandName: '', brandLineName: '', condition: '',
-                    category: '', exteriorMaterial: '', interiorMaterial: '', size: '', width: '',
-                    height: '', length: '', referenceCode: '', manufactureYear: '', color: '',
-                    accessories: '', dateCode: '', serialNumber: '', purchasedPlace: '', description: '', price: '',
+
+                    // title: '', 
+                    productName: '', brandName: '', brandLineName: '', condition: '',
+
+                    category: '', exteriorMaterial: '', interiorMaterial: '', size: '', color: '',
+                    description: '', price: '',
                 }}
                 validationSchema={validationSchema}
                 onSubmit={handleCreatePost}
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue, setFieldTouched }) => {
 
-                    const total = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - FEE : '';
-                    const formatFee = formatPrice(FEE);
-                    const formatTotal = formatPrice(total);
+                    const formatFeeBoosted = formatPrice(feeBoosted);
+                    const formatFeeLegitgrails = formatPrice(feeLegitgrails);
+
+                    const lastPriceBoth = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted - feeLegitgrails : '';
+                    const lastPriceLegitgrails = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeLegitgrails : '';
+                    const lastPriceBoosted = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted : '';
+                    
+                    let formatlLastPriceForSeller = "";
+                    if (isChecked_3 && isBoosted) {
+                        formatlLastPriceForSeller = formatPrice(lastPriceBoth);
+                    } else if (isBoosted) {
+                        formatlLastPriceForSeller = formatPrice(lastPriceBoosted);
+                    } else if (isChecked_3) {
+                        formatlLastPriceForSeller = formatPrice(lastPriceLegitgrails);
+                    }
 
                     return (
                         <ScrollView style={styles.wrapper}>
@@ -630,7 +647,7 @@ const QuickCreatePost = () => {
                                     <View View style={styles.selectOption}>
                                         <Text style={styles.labelText}>Ở xác minh cấp 3 bạn nên bổ sung đầy đủ ảnh chi tiết cho sản phẩm.
                                             Chúng tôi sẽ gửi thông tin sản phẩm của bạn đến LEGITGRAILS để xác nhận đó là hàng chính hãng.
-                                            Phí dịch vụ sẽ là <Text style={{ color: "red" }}>500.000đ</Text>
+                                            Phí dịch vụ sẽ là <Text style={{ color: "red" }}>{formatPrice(feeLegitgrails)}đ</Text>
                                         </Text>
                                     </View>
 
@@ -651,7 +668,7 @@ const QuickCreatePost = () => {
                             {/* Product Information */}
                             <View style={styles.productContainer}>
                                 {/* Title */}
-                                <View style={styles.productField}>
+                                {/* <View style={styles.productField}>
                                     <Text style={styles.title}>Tiêu đề sản phẩm <Text style={styles.required}>*</Text></Text>
                                     <TextInput
                                         value={values.title}
@@ -669,7 +686,7 @@ const QuickCreatePost = () => {
                                     {touched.title && errors.title && (
                                         <Text style={styles.errorText}>{errors.title}</Text>
                                     )}
-                                </View>
+                                </View> */}
 
                                 {/* Tên sản phẩm */}
                                 <View style={styles.productField}>
@@ -718,7 +735,7 @@ const QuickCreatePost = () => {
 
                                 {/* Brand Line */}
                                 <View style={styles.dropdownContainer}>
-                                    <Text style={styles.label}>Dòng Thương Hiệu</Text>
+                                    <Text style={styles.label}>Dòng Thương Hiệu <Text style={styles.required}>*</Text></Text>
                                     <Dropdown
                                         placeholderStyle={{ color: "#ccc" }}
                                         placeholder="Bấm để chọn dòng thương hiệu"
@@ -733,12 +750,15 @@ const QuickCreatePost = () => {
                                             setSelectedBrandLine(item.value);
                                         }}
                                     />
+                                    {touched.brandLineName && errors.brandLineName && (
+                                        <Text style={styles.errorText}>{errors.brandLineName}</Text>
+                                    )}
                                 </View>
 
 
                                 {/* Category Name */}
                                 <View style={styles.dropdownContainer}>
-                                    <Text style={styles.label}>Thể Loại</Text>
+                                    <Text style={styles.label}>Thể Loại <Text style={styles.required}>*</Text></Text>
                                     <Dropdown
                                         placeholder="Bấm để chọn thể loại"
                                         placeholderStyle={{ color: "#ccc" }}
@@ -752,6 +772,9 @@ const QuickCreatePost = () => {
                                             setFieldValue('category', item.value);
                                         }}
                                     />
+                                    {touched.category && errors.category && (
+                                        <Text style={styles.errorText}>{errors.category}</Text>
+                                    )}
                                 </View>
 
 
@@ -1046,6 +1069,35 @@ const QuickCreatePost = () => {
                                 </View>
                             </View>
 
+                            {/* Boosted */}
+                            <View style={{ marginTop: 10 }}>
+                                <Text style={styles.labelText}>Dịch Vụ Quảng Cáo Boosted</Text>
+                            </View>
+                            <View style={styles.checkboxBoostedContainer}>
+                                <View style={styles.checkboxBoosted}>
+                                    <Checkbox
+                                        value={isBoosted}
+                                        onValueChange={setBoosted}
+                                    />
+                                    <Text style={{ textAlign: 'center' }}>Boosted</Text>
+                                </View>
+                                {isBoosted ?
+                                    (
+                                        <View style={{ width: "100%" }}>
+                                            <Text style={styles.labelText}>
+                                                Chúng tôi sử dụng dịch vụ quảng cáo cho phép sản phẩm của bạn được hiển thị lên đầu ứng dụng.
+                                                Phí dịch vụ sẽ là <Text style={{ color: "red" }}>{formatPrice(feeBoosted)}đ</Text>
+                                            </Text>
+                                        </View>
+                                    )
+                                    :
+                                    (
+                                        <View>
+                                        </View>
+                                    )
+                                }
+
+                            </View>
 
 
                             {/* Shipping information */}
@@ -1074,9 +1126,13 @@ const QuickCreatePost = () => {
                                             setFieldTouched("price", "");
                                         }}
                                         onChangeText={(text) => {
-                                            const numericText = text.replace(/\./g, "");
-                                            const formatted = formatPrice(numericText);
-                                            setFieldValue("price", formatted);
+                                            if (text === "") {
+                                                setFieldValue("price", "");
+                                            } else {
+                                                const numericText = text.replace(/\./g, "");
+                                                const formatted = formatPrice(numericText);
+                                                setFieldValue("price", formatted);
+                                            }
                                         }}
                                         autoCorrect={false}
                                     />
@@ -1085,26 +1141,54 @@ const QuickCreatePost = () => {
                                     <Text style={[styles.errorText, { marginLeft: 5, marginTop: 5 }]}>{errors.price}</Text>
                                 )}
 
-                                {/* Fee */}
-                                {/* <View style={styles.productField}>
-                    <Text style={{ fontSize: 16 }}>: <Text style={{ color: 'blue' }}>Miễn phí</Text></Text>
-                  </View> */}
                                 {
-                                    isChecked_3 && (
+                                    isChecked_3 && isBoosted && (
                                         <View View style={styles.productField}>
                                             <View style={styles.inputProduct}>
-                                                <Text style={[styles.title, { marginLeft: -2 }]}>Phí kiểm tra cấp 3 (VND):
-                                                    <Text style={{ color: "red" }}> 500.000đ</Text>
+                                                <Text style={[styles.title, { marginLeft: -2 }]}>Phí kiểm tra cấp 3 (VND): <Text style={{ color: "red" }}>{formatFeeLegitgrails}đ</Text>
+                                                </Text>
+                                            </View>
+                                            <View style={styles.inputProduct}>
+                                                <Text style={[styles.title, { marginLeft: -2 }]}>Phí quảng cáo (VND): <Text style={{ color: "red" }}>{formatFeeBoosted}đ</Text>
                                                 </Text>
                                             </View>
                                             <View style={styles.inputProduct}>
                                                 <Text style={[styles.title, { marginLeft: -2 }]}>
-                                                    Số tiền thực nhận (VND): <Text style={{ color: "red" }}>3500.000đ</Text>
+                                                    Số tiền thực nhận (VND): <Text style={{ color: "red" }}>{formatlLastPriceForSeller}đ</Text>
                                                 </Text>
                                             </View>
                                         </View>
                                     )
-
+                                }
+                                {
+                                    isChecked_3 && !isBoosted && (
+                                        <View View style={styles.productField}>
+                                            <View style={styles.inputProduct}>
+                                                <Text style={[styles.title, { marginLeft: -2 }]}>Phí kiểm tra cấp 3 (VND): <Text style={{ color: "red" }}>{formatFeeLegitgrails}đ</Text>
+                                                </Text>
+                                            </View>
+                                            <View style={styles.inputProduct}>
+                                                <Text style={[styles.title, { marginLeft: -2 }]}>
+                                                    Số tiền thực nhận (VND): <Text style={{ color: "red" }}>{formatlLastPriceForSeller}đ</Text>
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    )
+                                }
+                                {
+                                    isBoosted && !isChecked_3 && (
+                                        <View View style={styles.productField}>
+                                            <View style={styles.inputProduct}>
+                                                <Text style={[styles.title, { marginLeft: -2 }]}>Phí quảng cáo (VND): <Text style={{ color: "red" }}>{formatFeeBoosted}đ</Text>
+                                                </Text>
+                                            </View>
+                                            <View style={styles.inputProduct}>
+                                                <Text style={[styles.title, { marginLeft: -2 }]}>
+                                                    Số tiền thực nhận (VND): <Text style={{ color: "red" }}>{formatlLastPriceForSeller}đ</Text>
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    )
                                 }
                             </View>
 

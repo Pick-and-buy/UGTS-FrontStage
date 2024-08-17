@@ -209,9 +209,10 @@ const styles = StyleSheet.create({
     },
     dropdown: {
         marginBottom: 10,
-        height: 50,
+        height: 60,
         borderColor: "#ddd",
         borderBottomWidth: 1,
+        paddingBottom: 10
     },
     label: {
         fontSize: 16,
@@ -226,6 +227,8 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: 'red',
         marginLeft: 10,
+        marginTop: -28,
+        marginBottom: 10
     },
 
     title: {
@@ -260,6 +263,28 @@ const styles = StyleSheet.create({
         height: 100,
         backgroundColor: COLORS.lightWhite,
         marginLeft: 10,
+    },
+
+    //Boosted
+    checkboxBoostedContainer: {
+        width: "98%",
+        marginHorizontal: 'auto',
+        // flexDirection: 'row',
+        // alignItems: 'center',
+        // justifyContent: 'center',
+        gap: 5,
+    },
+
+    checkboxBoosted: {
+        height: 50,
+        width: "50%",
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 10,
+        borderRadius: 10,
+        backgroundColor: '#fff',
+        
     },
 
     // Shipping information

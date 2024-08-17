@@ -2,14 +2,17 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Alert } from "react-native";
 import styles from "../css/sellerOrderDetails.style";
 import { useFocusEffect } from '@react-navigation/native';
-import { Feather, AntDesign, MaterialIcons, MaterialCommunityIcons, SimpleLineIcons, Ionicons, Entypo, FontAwesome } from '@expo/vector-icons';
+import { Feather, AntDesign, MaterialIcons, MaterialCommunityIcons, SimpleLineIcons, Ionicons, Entypo, FontAwesome, FontAwesome6 } from '@expo/vector-icons';
 import { COLORS } from "../../constants/theme";
 import { G, Line, Svg } from "react-native-svg";
 import { getUserByToken } from "../../api/user";
 import { format, addDays } from 'date-fns';
-import { cancelOrderSeller, getOrderByOrderId, updateOrderSeller } from '../../api/order';
+import { cancelOrderSeller, getOrderByOrderId, updateOrderSeller, uploadPackageVideoBySeller } from '../../api/order';
 import OrderTracking from './OrderTracking';
 import SellerAddRating from './SellerAddRating';
+import { Video } from 'expo-av';
+import * as ImagePicker from "expo-image-picker";
+
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
 const SellerOrderDetails = ({ navigation, route }) => {
@@ -18,6 +21,10 @@ const SellerOrderDetails = ({ navigation, route }) => {
     const [phoneUserOrder, setPhoneUserOrder] = useState(null);
     const [updatedOrderInfo, setUpdatedOrderInfo] = useState();
     const [showAddRating, setShowAddRating] = useState(false);
+
+    const [videoUri, setVideoUri] = useState("");
+    const [isMuted, setIsMuted] = useState(false);
+
     useEffect(() => {
         if (orderInfo) {
             fetchOrderInfo();
@@ -34,6 +41,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
         try {
             const data = await getOrderByOrderId(orderInfo.id);
             setUpdatedOrderInfo(data.result);
+            setVideoUri(data?.result?.orderDetails?.packingVideo)
         } catch (error) {
             console.error('Fetching order data by order id failed:', error);
         }
@@ -82,13 +90,59 @@ const SellerOrderDetails = ({ navigation, route }) => {
                 ]
             );
         } catch (error) {
-            console.error('Submit cancel buyer order: ', error);
+            console.error('Submit cancel seller order: ', error);
         }
     };
 
     const handleTransportation = async () => {
-        await updateOrderSeller(updatedOrderInfo?.id);
-        navigation.navigate('seller');
+        try {
+            if (videoUri) {
+                let orderId = updatedOrderInfo?.id;
+                const formData = new FormData();
+                const videoFileName = videoUri.split('/').pop();
+                formData.append('productVideo', {
+                    uri: videoUri,
+                    type: 'video/mp4',
+                    name: videoFileName,
+                });
+                await uploadPackageVideoBySeller(orderId, formData);
+                await updateOrderSeller(updatedOrderInfo?.id);
+                navigation.navigate('seller');
+            } else {
+                Alert.alert(
+                    "Thiếu thông tin",
+                    "Vui lòng tải thêm video đóng gói sản phẩm để tiến hành sắp xếp vận chuyển",
+                    [{ text: "OK" }]
+                );
+            }
+
+        } catch (error) {
+            console.error('Submit Accept seller order: ', error);
+        }
+
+    }
+
+    //Upload video
+    const UploadVideoScreen = async () => {
+        try {
+            await ImagePicker.requestMediaLibraryPermissionsAsync();
+            let result = await ImagePicker.launchImageLibraryAsync({
+                // cameraType: ImagePicker.CameraType.back,
+                mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+                allowsEditing: true,
+                aspect: [1, 1],
+            });
+            if (!result.canceled) {
+                setVideoUri(result.assets[0].uri);
+            }
+        } catch (error) {
+            console.error('Error Upload Image: ', error);
+        }
+    };
+
+    //Remove Video
+    const removeVideo = () => {
+        setVideoUri("");
     }
 
     return (
@@ -248,7 +302,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
                         <View style={styles.right}>
                             <TouchableOpacity style={styles.orderId} >
                                 <Text style={{ color: COLORS.gray }}>
-                                    Nhật Tín Express
+                                    Nhật Tín Logistics
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -280,6 +334,83 @@ const SellerOrderDetails = ({ navigation, route }) => {
                 </View>
 
                 <View style={styles.divider} />
+                {/* Upload video: status = PENDING*/}
+                {updatedOrderInfo?.orderDetails?.status === "PENDING" &&
+                    <>
+                        {videoUri === "" || videoUri === null ?
+                            (
+                                <View style={styles.videoPackageContainer}>
+                                    <TouchableOpacity
+                                        onPress={UploadVideoScreen}
+                                        style={styles.uploadVideoContainer}>
+                                        <Image
+                                            style={styles.imageSelect}
+                                            source={require('../../../assets/images/video-player.png')}
+                                        />
+                                        <Text style={{ fontSize: 16 }}>Video đóng gói</Text>
+                                    </TouchableOpacity>
+                                    <Text style={styles.confirmText}>
+                                        Vui lòng tải lên video đóng gói sản phẩm trước khi đơn hàng của bạn được giao tới người tiêu dùng.
+                                    </Text>
+                                </View>
+                            )
+                            :
+                            (
+                                <View style={styles.videoPackageContainer}>
+                                    <View style={styles.uploadVideo}>
+                                        <Video
+                                            source={{ uri: videoUri }}
+                                            style={styles.uploadVideoStyle}
+                                            useNativeControls
+                                            resizeMode="cover"
+                                            shouldPlay
+                                            isLooping
+                                            isMuted={isMuted} // Set initial state to mute
+                                            onPlaybackStatusUpdate={(status) => {
+                                                if (!status.isPlaying && status.isMuted !== isMuted) {
+                                                    setIsMuted(true); // Ensure the video starts muted
+                                                }
+                                            }}
+                                        />
+                                        <TouchableOpacity onPress={() => removeVideo()} style={{ position: 'absolute', bottom: 10, left: 15 }}>
+                                            <FontAwesome6 name="xmark" size={20} color="white" />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <Text style={styles.confirmText}>
+                                        Vui lòng tải lên video đóng gói sản phẩm trước khi đơn hàng của bạn được giao tới người tiêu dùng.
+                                    </Text>
+                                </View>
+                            )
+
+                        }
+                    </>
+                }
+
+                {/* Preview video: status = PROCESSING*/}
+                {updatedOrderInfo?.orderDetails?.status === "PROCESSING" &&
+                    <View style={styles.videoPackageContainer}>
+                        <View style={styles.uploadVideo}>
+                            <Video
+                                source={{ uri: videoUri }}
+                                style={styles.uploadVideoStyle}
+                                useNativeControls
+                                resizeMode="cover"
+                                shouldPlay
+                                isLooping
+                                isMuted={isMuted} // Set initial state to mute
+                                onPlaybackStatusUpdate={(status) => {
+                                    if (!status.isPlaying && status.isMuted !== isMuted) {
+                                        setIsMuted(true); // Ensure the video starts muted
+                                    }
+                                }}
+                            />
+                        </View>
+                        <Text style={styles.confirmText}>
+                            Video đóng gói sản phẩm đảm bảo sự minh bạch, rõ ràng của bạn. Tạo niềm tin tới người tiêu dùng.
+                        </Text>
+                    </View>
+                }
+
                 {updatedOrderInfo?.orderDetails?.status === "RECEIVED" && !showAddRating &&
                     <>
                         <View style={styles.confirm}>

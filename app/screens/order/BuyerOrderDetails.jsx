@@ -2,16 +2,18 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Alert } from "react-native";
 import styles from "../css/buyerOrderDetails.style";
 import { useFocusEffect } from '@react-navigation/native';
-import { Feather, AntDesign, MaterialIcons, MaterialCommunityIcons, SimpleLineIcons, Ionicons, Entypo } from '@expo/vector-icons';
+import { Feather, AntDesign, MaterialIcons, MaterialCommunityIcons, SimpleLineIcons, Ionicons, Entypo, FontAwesome6 } from '@expo/vector-icons';
 import { COLORS } from "../../constants/theme";
 import { G, Line, Svg } from "react-native-svg";
 import { getUserByToken } from "../../api/user";
 import { format, addDays } from 'date-fns';
-import { cancelOrderBuyer, getOrderByOrderId, updateOrderBuyer } from '../../api/order';
+import { cancelOrderBuyer, getOrderByOrderId, updateOrderBuyer, uploadReceivePackageVideoByBuyer } from '../../api/order';
 import OrderTracking from './OrderTracking';
 import * as Clipboard from 'expo-clipboard';
 import AddRating from './AddRating';
 import { useAuth } from '../../context/AuthContext'
+import { Video } from 'expo-av';
+import * as ImagePicker from "expo-image-picker";
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 import CustomModal from '../../components/CustomModal';
 
@@ -32,7 +34,8 @@ const BuyerOrderDetails = ({ navigation, route }) => {
     onConfirm: () => { },
   });
 
-
+  const [videoUri, setVideoUri] = useState("");
+  const [isMuted, setIsMuted] = useState(false);
   useEffect(() => {
     if (orderInfo) {
       fetchOrderInfo();
@@ -49,6 +52,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
     try {
       const data = await getOrderByOrderId(orderInfo.id);
       setUpdatedOrderInfo(data.result);
+      setVideoUri(data?.result?.orderDetails?.receivePackageVideo)
     } catch (error) {
       console.error('Fetching order data by order id failed:', error);
     }
@@ -130,6 +134,49 @@ const BuyerOrderDetails = ({ navigation, route }) => {
   };
 
   console.log('>>>> check order: ', orderInfo.id);
+
+  //Upload video
+  const UploadVideoScreen = async () => {
+    try {
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+      let result = await ImagePicker.launchImageLibraryAsync({
+        // cameraType: ImagePicker.CameraType.back,
+        mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+        allowsEditing: true,
+        aspect: [1, 1],
+      });
+      if (!result.canceled) {
+        setVideoUri(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Error Upload Image: ', error);
+    }
+  };
+
+  //Remove Video
+  const removeVideo = () => {
+    setVideoUri("");
+  }
+
+  //submit received order
+  const handleSubmitReceived = async (orderInfo) => {
+    try {
+      if (videoUri) {
+        let orderId = orderInfo.id;
+        const formData = new FormData();
+        const videoFileName = videoUri.split('/').pop();
+        formData.append('productVideo', {
+          uri: videoUri,
+          type: 'video/mp4',
+          name: videoFileName,
+        });
+        await uploadReceivePackageVideoByBuyer(orderId, formData);
+      }
+      setShowAddRating(true)
+    } catch (error) {
+      console.error('ERROR handle update video: ', error);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -318,7 +365,98 @@ const BuyerOrderDetails = ({ navigation, route }) => {
           </View>
         </View>
         <View style={styles.divider} />
+
+        {/* Upload video */}
+        {/* {videoUri === "" ?
+          (
+            <TouchableOpacity
+              onPress={UploadVideoScreen}
+              style={styles.uploadVideoContainer}>
+              <Image
+                style={styles.imageSelect}
+                source={require('../../../assets/images/video-player.png')}
+              />
+              <Text style={{ fontSize: 16 }}>Video nhận hàng</Text>
+            </TouchableOpacity>
+          )
+          :
+          (
+            <View style={styles.uploadVideo}>
+              <Video
+                source={{ uri: videoUri }}
+                style={styles.uploadVideoStyle}
+                useNativeControls
+                resizeMode="cover"
+                shouldPlay
+                isLooping
+                isMuted={isMuted} // Set initial state to mute
+                onPlaybackStatusUpdate={(status) => {
+                  if (!status.isPlaying && status.isMuted !== isMuted) {
+                    setIsMuted(true); // Ensure the video starts muted
+                  }
+                }}
+              />
+              <TouchableOpacity onPress={() => removeVideo()} style={{ position: 'absolute', bottom: 10, left: 15 }}>
+                <FontAwesome6 name="xmark" size={20} color="white" />
+              </TouchableOpacity>
+            </View>
+          )
+
+        } */}
+
         {updatedOrderInfo?.orderDetails?.status === "RECEIVED" && !showAddRating &&
+          <View style={styles.receivedContainer}>
+            {videoUri === "" || videoUri === null ?
+              (
+                <TouchableOpacity
+                  onPress={UploadVideoScreen}
+                  style={styles.uploadVideoContainer_1}>
+                  <Image
+                    style={styles.imageSelect_1}
+                    source={require('../../../assets/images/video-player.png')}
+                  />
+                  <Text style={{ fontSize: 16 }}>Video nhận hàng</Text>
+                </TouchableOpacity>
+              )
+              :
+              (
+                <View style={styles.uploadVideo_1}>
+                  <Video
+                    source={{ uri: videoUri }}
+                    style={styles.uploadVideoStyle_1}
+                    useNativeControls
+                    resizeMode="cover"
+                    shouldPlay
+                    isLooping
+                    isMuted={isMuted} // Set initial state to mute
+                    onPlaybackStatusUpdate={(status) => {
+                      if (!status.isPlaying && status.isMuted !== isMuted) {
+                        setIsMuted(true); // Ensure the video starts muted
+                      }
+                    }}
+                  />
+                  <TouchableOpacity onPress={() => removeVideo()} style={{ position: 'absolute', bottom: 10, left: 15 }}>
+                    <FontAwesome6 name="xmark" size={20} color="white" />
+                  </TouchableOpacity>
+                </View>
+              )
+            }
+
+            <View style={styles.confirm_1}>
+              <Text style={styles.confirmText_1}>
+                Vui lòng chỉ ấn "Đã nhận được hàng" khi đơn hàng đã được giao đến bạn và sản phẩm nhận được không có vấn để nào.
+              </Text>
+              <TouchableOpacity
+                style={styles.confirmButton_1}
+                onPress={() => handleSubmitReceived(orderInfo)}
+              >
+                <Text style={styles.confirmTextButton_1}>Đã nhận được hàng</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        }
+
+        {/* {updatedOrderInfo?.orderDetails?.status === "RECEIVED" && !showAddRating &&
           <>
             <View style={styles.confirm}>
               <Text style={styles.confirmText}>
@@ -332,7 +470,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
           </>
-        }
+        } */}
 
         {showAddRating && <AddRating navigation={navigation} orderInfo={updatedOrderInfo} />}
 
