@@ -46,11 +46,19 @@ const PostDetail = ({ navigation, route }) => {
     const [averageRating, setAverageRating] = useState(0);
     console.log(postDetails?.user?.id);
 
-    useEffect(() => {
-        fetchPostDetails();
-        checkAuthentication();
-        fetchComments();
-    }, []);
+    // useEffect(() => {
+    //     fetchPostDetails();
+    //     checkAuthentication();
+    //     fetchComments();
+    // }, []);
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchPostDetails();
+            checkAuthentication();
+            fetchComments();
+        }, [postId])
+    )
 
     useEffect(() => {
         if (postDetails?.user?.id) {
@@ -110,6 +118,8 @@ const PostDetail = ({ navigation, route }) => {
             const response = await getPostDetails(postId);
             const postInfo = response.data.result;
             setPostDetails(postInfo);
+            console.log('>>> check postInfor: ', postInfo);
+
         } catch (error) {
             console.error(error);
         } finally {
