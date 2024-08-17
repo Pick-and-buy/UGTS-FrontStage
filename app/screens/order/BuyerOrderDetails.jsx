@@ -29,6 +29,12 @@ const BuyerOrderDetails = ({ navigation, route }) => {
 
   const [videoPackage, setVideoPackage] = useState("");
 
+  // useEffect(() => {
+  //   if (route.params?.ratingSubmitted) {
+  //     setShowAddRating(true);
+  //   }
+  // }, [route.params?.ratingSubmitted]);
+
   useEffect(() => {
     if (orderInfo) {
       fetchOrderInfo();
@@ -346,44 +352,6 @@ const BuyerOrderDetails = ({ navigation, route }) => {
         </View>
         <View style={styles.divider} />
 
-        {/* Upload video */}
-        {/* {videoUri === "" ?
-          (
-            <TouchableOpacity
-              onPress={UploadVideoScreen}
-              style={styles.uploadVideoContainer}>
-              <Image
-                style={styles.imageSelect}
-                source={require('../../../assets/images/video-player.png')}
-              />
-              <Text style={{ fontSize: 16 }}>Video nhận hàng</Text>
-            </TouchableOpacity>
-          )
-          :
-          (
-            <View style={styles.uploadVideo}>
-              <Video
-                source={{ uri: videoUri }}
-                style={styles.uploadVideoStyle}
-                useNativeControls
-                resizeMode="cover"
-                shouldPlay
-                isLooping
-                isMuted={isMuted} // Set initial state to mute
-                onPlaybackStatusUpdate={(status) => {
-                  if (!status.isPlaying && status.isMuted !== isMuted) {
-                    setIsMuted(true); // Ensure the video starts muted
-                  }
-                }}
-              />
-              <TouchableOpacity onPress={() => removeVideo()} style={{ position: 'absolute', bottom: 10, left: 15 }}>
-                <FontAwesome6 name="xmark" size={20} color="white" />
-              </TouchableOpacity>
-            </View>
-          )
-
-        } */}
-
         {updatedOrderInfo?.orderDetails?.status === "RECEIVED" && !showAddRating &&
           <View style={styles.receivedContainer}>
             {videoUri === "" || videoUri === null ?
@@ -485,22 +453,6 @@ const BuyerOrderDetails = ({ navigation, route }) => {
             </View>
           </View>
         }
-
-        {/* {updatedOrderInfo?.orderDetails?.status === "RECEIVED" && !showAddRating &&
-          <>
-            <View style={styles.confirm}>
-              <Text style={styles.confirmText}>
-                Vui lòng chỉ ấn "Đã nhận được hàng" khi đơn hàng đã được giao đến bạn và sản phẩm nhận được không có vấn để nào.
-              </Text>
-              <TouchableOpacity
-                style={styles.confirmButton}
-                onPress={() => setShowAddRating(true)}
-              >
-                <Text style={styles.confirmTextButton}>Đã nhận được hàng</Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        } */}
 
         {showAddRating && <AddRating navigation={navigation} orderInfo={updatedOrderInfo} />}
 
