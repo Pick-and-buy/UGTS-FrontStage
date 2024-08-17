@@ -1,13 +1,18 @@
-import { StyleSheet } from "react-native";
+import {
+    StyleSheet,
+    Dimensions,
+} from "react-native";
 import { COLORS, SHADOWS } from "../../constants/theme";
-
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
     container: {
-        width: 125,
+        width: (windowWidth / 3) - 12,
         height: 200,
         borderRadius: 8,
         overflow: 'hidden',
         backgroundColor: COLORS.white,
+        margin: 4.5,
     },
     wrapper: {
         width: "100%",

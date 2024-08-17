@@ -7,7 +7,7 @@ import styles from "../css/ViaMethodForgotPassword.style.js";
 import Button from '../../components/Button.jsx';
 import BackBtn from '../../components/BackBtn.jsx';
 import { COLORS, SIZES } from '../../constants/theme.js';
-import { sendOtp } from '../../api/auth.js';
+import { sendOtp, sendOtpToSMS } from '../../api/auth.js';
 
 // Validation Schema
 const getValidationSchema = (type) => {
@@ -27,17 +27,44 @@ const getValidationSchema = (type) => {
 const ForgotPasswordInformation = ({ navigation, route }) => {
     const type = route.params;
 
-    const handleSendOTP = async (values, { setSubmitting, setErrors }) => {
+    const handleSendOTPToEmail = async (values, { setSubmitting, setErrors }) => {
         try {
-            await sendOtp(values.value);
+            const rs = await sendOtp(values.value);
+            console.log(rs);
             Alert.alert('Success', 'OTP sent to your email');
-            navigation.navigate('otp-navigation',{type, value:values.value});
+            navigation.navigate('otp-navigation', { type, value: values.value });
         } catch (err) {
-            const errorMessage = err.response?.data?.message || err.message || 'Failed to send OTP. Please try again.';
+            const errorMessage = 'Failed to send OTP to email. Please try again.';
             setErrors({ api: errorMessage });
         } finally {
             setSubmitting(false);
         }
+    };
+
+    const handleSendOTPToSMS = async (values, { setSubmitting, setErrors }) => {
+        try {
+            const phoneNumberFormatted = formatPhoneNumber(values.value);
+            console.log(phoneNumberFormatted);
+            
+            const rs = await sendOtpToSMS(phoneNumberFormatted);
+            console.log(rs);
+            Alert.alert('Success', 'OTP sent to your phone');
+            navigation.navigate('otp-navigation', { type, value: phoneNumberFormatted });
+        } catch (err) {
+            const errorMessage = 'Failed to send OTP to sms. Please try again.';
+            setErrors({ api: errorMessage });
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const formatPhoneNumber = (phoneNumber) => {
+        // Remove leading 0 and prepend +84
+        if (phoneNumber.startsWith('0')) {
+            phoneNumber = phoneNumber.substring(1); // Remove the leading 0
+        }
+
+        return `+84 ${phoneNumber}`;
     };
 
     return (
@@ -54,7 +81,13 @@ const ForgotPasswordInformation = ({ navigation, route }) => {
                 <Formik
                     initialValues={{ value: '' }}
                     validationSchema={getValidationSchema(type)}
-                    onSubmit={handleSendOTP}
+                    onSubmit={(values, formikActions) => {
+                        if (type === 'email') {
+                            handleSendOTPToEmail(values, formikActions);
+                        } else if (type === 'phone') {
+                            handleSendOTPToSMS(values, formikActions);
+                        }
+                    }}
                 >
                     {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isSubmitting }) => (
                         <View>
@@ -88,10 +121,10 @@ const ForgotPasswordInformation = ({ navigation, route }) => {
                             )}
 
                             {errors.value && touched.value && (
-                                <Text style={{ color: 'red'}}>{errors.value}</Text>
+                                <Text style={{ color: 'red' }}>{errors.value}</Text>
                             )}
                             {errors.api && (
-                                <Text style={{ color: 'red'}}>{errors.api}</Text>
+                                <Text style={{ color: 'red' }}>{errors.api}</Text>
                             )}
 
                             <View style={{ marginTop: "10%" }}>

@@ -114,7 +114,8 @@ const styles = StyleSheet.create({
         width: 135,
         height: 115,
         objectFit: "cover",
-        borderRadius: 6
+        borderRadius: 6,
+        marginTop: 4
     },
     content: {
         marginLeft: 6,
@@ -131,18 +132,23 @@ const styles = StyleSheet.create({
     },
     label: {
         flexDirection: "row",
-        gap: 10,
-        marginVertical: 4
-    },
-    verifiedLabel: {
-        flexDirection: "row",
-        justifyContent: "center",
+        flexWrap: "wrap",
         alignItems: "center",
-        backgroundColor: "#eee",
-        paddingHorizontal: 4,
+        marginBottom: 15,
+        marginTop: 4
+    },
+    verified: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: COLORS.primary,
         paddingVertical: 2,
-        borderRadius: 2,
-        gap: 4
+        paddingHorizontal: 5,
+        borderRadius: 3
+    },
+    verifiedText: {
+        color: COLORS.white,
+        marginLeft: 2,
+        fontSize: 12
     },
     returnLabel: {
         flexDirection: "row",
@@ -152,7 +158,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 4,
         paddingVertical: 2,
         borderRadius: 2,
-        gap: 4
+        marginLeft: 6
     },
     currency: {
         textDecorationLine: 'underline',

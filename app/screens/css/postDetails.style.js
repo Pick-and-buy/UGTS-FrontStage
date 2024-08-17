@@ -5,19 +5,16 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: COLORS.white,
-    },
-    wrapper: {
-        flex: 1,
+        position: 'relative'
     },
     header: {
-        width: "100%",
-        height: "10%",
+        position: 'absolute',
+        top: "5%",
+        width: "96%",
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "flex-end",
-        backgroundColor: COLORS.white,
-        paddingBottom: 12,
-        ...SHADOWS.medium
+        zIndex: 9999,
     },
     headerText: {
         // flex:1,
@@ -28,25 +25,48 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     backButton: {
-        marginLeft: "2%"
+        marginLeft: "2%",
+        marginRight: "-2%",
+        width: 40,
+        height: 40,
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        borderRadius: 99,
+        justifyContent: "center",
+        alignItems: "center",
     },
     contentContainer: {
         paddingBottom: "10%",
         width: "100%",
         marginHorizontal: "auto",
     },
+    wrapper: {
+        flex: 1,
+        marginTop: -15,
+        backgroundColor: COLORS.white,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        overflow: "hidden"
+    },
     like: {
         width: 40,
         height: 40,
         position: "absolute",
-        right: 15,
-        top: -30,
+        right: 0,
+        top: 5,
         backgroundColor: COLORS.white,
         borderRadius: 20,
         padding: 5,
         ...SHADOWS.medium,
         justifyContent: "center",
         alignItems: "center",
+    },
+    numberOfLike: {
+        color: COLORS.gray,
+        fontWeight: "bold",
+        position: "absolute",
+        right: 15,
+        top: 50,
+        fontSize: 18
     },
     informationContainer: {
         width: "96%",
@@ -55,6 +75,11 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.white,
         marginVertical: 10,
         // top: "-12%",
+    },
+    labelWrapper: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 10
     },
     label: {
         flexDirection: "row",
@@ -67,23 +92,24 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         backgroundColor: COLORS.primary,
-        paddingVertical:2,
+        paddingVertical: 2,
         paddingHorizontal: 5,
-        borderRadius:3
+        borderRadius: 3
     },
     verifiedText: {
         color: COLORS.white,
         marginLeft: 2,
-        fontSize:12
+        fontSize: 12
     },
-    labelTransport: {
-        marginTop: 20,
-        backgroundColor: "#D9D9D9",
-        borderRadius: 3,
-        width: "35%",
-        justifyContent: "center",
+    ads: {
+        flexDirection: "row",
         alignItems: "center",
-        textAlign: "center",
+        backgroundColor: "#66bcb0",
+        paddingVertical: 2,
+        paddingHorizontal: 5,
+        borderRadius: 3,
+        justifyContent: "center",
+        alignItems: "center"
     },
     currency: {
         textDecorationLine: 'underline',
@@ -91,32 +117,37 @@ const styles = StyleSheet.create({
     price: {
         fontSize: 35,
         color: COLORS.primary,
-        marginBottom: 10,
+        marginBottom: 5,
+        marginTop: 10
     },
     wallet: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 10,
+        marginTop: 5,
     },
     walletTitle: {
         marginLeft: 5,
+        color: COLORS.gray
     },
     walletTitlePrice: {
         color: COLORS.primary,
         marginLeft: 5,
     },
     divider: {
+        width: "100%",
         borderColor: COLORS.gray2,
-        opacity: 0.15,
-        borderWidth: 6,
+        opacity: 0.1,
+        borderWidth: 5,
         width: SIZES.width,
         backgroundColor: COLORS.gray,
+        marginVertical: 4
     },
     dividerLight: {
+        width: "100%",
+        marginHorizontal: "auto",
         borderColor: COLORS.gray2,
         opacity: 1,
         borderWidth: 0.3,
-        width: SIZES.width,
         marginBottom: 5,
         marginTop: 7,
     },
@@ -177,8 +208,6 @@ const styles = StyleSheet.create({
         color: 'gray',
         fontSize: 12,
     },
-
-
     description: {
         width: "96%",
         backgroundColor: COLORS.white,
@@ -193,21 +222,18 @@ const styles = StyleSheet.create({
 
     },
     descriptionText: {
-        marginBottom: 10,
+        marginBottom: 8,
     },
-    seeMore: {
-        borderColor: COLORS.gray,
-        borderWidth: 1,
-        width: "25%",
+    readMore: {
+        width: "100%",
         textAlign: "center",
         marginHorizontal: "auto",
         borderRadius: 16,
-        padding: 2
-
     },
     createdTime: {
         color: COLORS.gray,
         fontSize: 12,
+        marginTop: 10
     },
     hashtags: {
         flexDirection: 'row',
@@ -218,7 +244,8 @@ const styles = StyleSheet.create({
     tag: {
         backgroundColor: "#D9D9D9",
         borderRadius: 3,
-        padding: 2
+        paddingVertical: 2,
+        paddingHorizontal: 6
     },
     details: {
         width: '96%',
@@ -236,12 +263,13 @@ const styles = StyleSheet.create({
         color: COLORS.blue
     },
     personalContainer: {
-        height: 60,
+        height: 65,
         width: "96%",
         marginHorizontal: "auto",
         flexDirection: "row",
         justifyContent: 'space-between',
         alignItems: 'center',
+        marginVertical: 5
     },
 
     detailContainer: {
@@ -250,15 +278,14 @@ const styles = StyleSheet.create({
         gap: 10,
     },
     avatar: {
-        width: 50,
-        height: 50,
-        borderRadius: 99,
+        width: 60,
+        height: 60,
+        borderRadius: 10,
+        marginVertical: "auto"
     },
     recommended: {
-        width: "96%",
+        width: "98%",
         marginHorizontal: "auto",
-        marginVertical: 20
-
     },
 
     commentInputContainer: {
@@ -274,11 +301,6 @@ const styles = StyleSheet.create({
         flex: 1,
         fontSize: 16,
     },
-    // commentContainer: {
-    //     padding: 10,
-    //     // borderBottomColor: COLORS.lightGray,
-    //     // borderBottomWidth: 1,
-    // },
     commentText: {
         fontSize: 12,
     },
@@ -287,6 +309,17 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         justifyContent: 'center',
         marginTop: 5,
+    },
+    userDetails: {
+        flex: 1,
+        flexDirection: "column",
+        justifyContent: 'center',
+    },
+    oneLine: {
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: 'flex-start',
+        alignItems: 'center',
     },
     bottomBtn: {
         flexDirection: 'row',
@@ -315,6 +348,19 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 18,
         fontWeight: 'bold',
+    },
+    posts: {
+        width: '100%',
+        marginHorizontal: "auto",
+    },
+    row: {
+        width: "100%",
+        justifyContent: "flex-start",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        alignItems: "center",
+        marginHorizontal: "auto",
+        marginBottom: "20%",
     },
 });
 

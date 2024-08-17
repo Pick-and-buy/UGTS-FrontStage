@@ -112,8 +112,9 @@ const styles = StyleSheet.create({
     },
     containerPost: {
         flex: 1,
-        width: '100%',
-        paddingBottom: 20,
+        // width: '100%',
+        paddingBottom: 50,
+        backgroundColor: COLORS.white
     },
     scrollViewContent: {
         flexGrow: 1,

@@ -7,7 +7,6 @@ import {
     Image,
     TextInput,
     FlatList,
-    SafeAreaView,
     ActivityIndicator,
 } from "react-native";
 import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
@@ -109,45 +108,47 @@ const Buyer = ({ navigation }) => {
                 <Text numberOfLines={2} style={styles.itemTitle}>
                     {item?.post?.title}
                 </Text>
-                <Text style={styles.shop}>{item?.post?.user?.username}</Text>
-                <View style={{ flex: 1, flexDirection: "row", justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Text style={styles.price}>đ{formatPrice(item?.orderDetails?.price)}</Text>
+                <Text style={styles.shop}>Người bán: {item?.post?.user?.lastName} {item?.post?.user?.firstName}</Text>
+                <View style={{ flex: 1, flexDirection: "row", justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <Text style={styles.price}>₫{formatPrice((item?.orderDetails?.price ?? 0) + (item?.orderDetails?.shippingCost ?? 0))}</Text>
 
-                    {item?.orderDetails?.status === "PENDING" &&
-                        <View style={styles.statusButton}>
-                            <Text style={styles.statusText}>{"Chờ xử lý"}</Text>
-                        </View>
-                    }
-                    {item?.orderDetails?.status === "PROCESSING" &&
-                        <View style={[styles.statusButton, { backgroundColor: '#04AA6D' }]}>
-                            <Text style={[styles.statusText, { color: COLORS.white }]}>{"Đang xử lý"}</Text>
-                        </View>
-                    }
-                    {item?.orderDetails?.status === "DELIVERING" &&
-                        <View style={[styles.statusButton, { backgroundColor: '#04AA6D' }]}>
-                            <Text style={styles.statusText}>{"Đang giao hàng"}</Text>
-                        </View>
-                    }
-                    {item?.orderDetails?.status === "CANCELLED" &&
-                        <View style={[styles.statusButton, { backgroundColor: COLORS.gray2 }]}>
-                            <Text style={[styles.statusText, { color: COLORS.white }]}>{"Đã hủy"}</Text>
-                        </View>
-                    }
-                    {item?.orderDetails?.status === "RECEIVED" &&
-                        <View style={[styles.statusButton, { backgroundColor: '#04AA6D' }]}>
-                            <Text style={[styles.statusText, { color: COLORS.white }]}>{"Đã nhận hàng"}</Text>
-                        </View>
-                    }
-                    {item?.orderDetails?.status === "COMPLETED" &&
-                        <View style={[styles.statusButton, { backgroundColor: '#04AA6D' }]}>
-                            <Text style={[styles.statusText, { color: COLORS.white }]}>{"Hoàn thành"}</Text>
-                        </View>
-                    }
-                    {item?.orderDetails?.status === "RETURNED" &&
-                        <View style={[styles.statusButton, { backgroundColor: COLORS.gray2 }]}>
-                            <Text style={[styles.statusText, { color: COLORS.white }]}>{"Trả lại"}</Text>
-                        </View>
-                    }
+                    <View style={{ width:"100%", flexDirection: "row", justifyContent: 'flex-end'}}>
+                        {item?.orderDetails?.status === "PENDING" &&
+                            <View style={styles.statusButton}>
+                                <Text style={styles.statusText}>{"Chờ xử lý"}</Text>
+                            </View>
+                        }
+                        {item?.orderDetails?.status === "PROCESSING" &&
+                            <View style={[styles.statusButton, { backgroundColor: '#04AA6D' }]}>
+                                <Text style={[styles.statusText, { color: COLORS.white }]}>{"Đang xử lý"}</Text>
+                            </View>
+                        }
+                        {item?.orderDetails?.status === "DELIVERING" &&
+                            <View style={[styles.statusButton, { backgroundColor: '#04AA6D' }]}>
+                                <Text style={styles.statusText}>{"Đang giao hàng"}</Text>
+                            </View>
+                        }
+                        {item?.orderDetails?.status === "CANCELLED" &&
+                            <View style={[styles.statusButton, { backgroundColor: COLORS.gray2 }]}>
+                                <Text style={[styles.statusText, { color: COLORS.white }]}>{"Đã hủy"}</Text>
+                            </View>
+                        }
+                        {item?.orderDetails?.status === "RECEIVED" &&
+                            <View style={[styles.statusButton, { backgroundColor: '#04AA6D' }]}>
+                                <Text style={[styles.statusText, { color: COLORS.white }]}>{"Đã nhận hàng"}</Text>
+                            </View>
+                        }
+                        {item?.orderDetails?.status === "COMPLETED" &&
+                            <View style={[styles.statusButton, { backgroundColor: '#04AA6D' }]}>
+                                <Text style={[styles.statusText, { color: COLORS.white }]}>{"Hoàn thành"}</Text>
+                            </View>
+                        }
+                        {item?.orderDetails?.status === "RETURNED" &&
+                            <View style={[styles.statusButton, { backgroundColor: COLORS.gray2 }]}>
+                                <Text style={[styles.statusText, { color: COLORS.white }]}>{"Trả lại"}</Text>
+                            </View>
+                        }
+                    </View>
                 </View>
             </View>
         </TouchableOpacity>
@@ -203,7 +204,7 @@ const Buyer = ({ navigation }) => {
 
                         {listOrdersBuyer.length > 0 ? (
                             <FlatList
-                                data={listOrdersBuyer}
+                                data={listOrdersBuyer.reverse()}
                                 renderItem={renderItem}
                                 keyExtractor={item => item.id}
                             />

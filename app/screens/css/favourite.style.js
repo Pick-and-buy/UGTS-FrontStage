@@ -24,12 +24,11 @@ const styles = StyleSheet.create({
         marginTop: 16
     },
     row: {
-        width: "98%",
+        width: "100%",
         flexDirection: "row",
         flexWrap: "wrap",
         justifyContent: "flex-start",
-        marginHorizontal: "auto",
-        gap: 10
+        marginHorizontal: "1%",
     }, 
     emptyMessage: {
         flex:1,

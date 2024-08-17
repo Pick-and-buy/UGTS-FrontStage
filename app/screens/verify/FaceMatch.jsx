@@ -1,36 +1,54 @@
 import React, { useState, useEffect } from 'react';
-import { View, Alert, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { useUser } from '../../context/UserContext'
+import { useAuth } from '../../context/AuthContext';
 import { verifyInformation } from '../../api/user';
+import CustomModal from '../../components/CustomModal';
 
 const FaceMatch = ({ navigation, route }) => {
     const { frontImageUri, fontData, backData } = route.params;
     const [loading, setLoading] = useState(false);
-    const { user } = useUser();
+    const { user } = useAuth();
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState({
+        title: '',
+        detailText: '',
+        confirmText: '',
+        cancelText: '',
+        onConfirm: () => { },
+        onClose: () => { }
+    });
 
     useEffect(() => {
-        Alert.alert(
-            "Chú ý",
-            "Chụp cận cảnh khuôn mặt của bạn ở nơi đủ ánh sáng để xác thực được chính xác nhất.",
-            [
-                {
-                    text: "Thoát",
-                    onPress: () => navigation.goBack(),
-                },
-                {
-                    text: "Đồng ý",
-                    onPress: takePhoto,
-                }
-            ]
-        );
+        setModalContent({
+            title: "Chú ý",
+            detailText: "Chụp cận cảnh khuôn mặt của bạn ở nơi đủ ánh sáng để xác thực được chính xác nhất.",
+            confirmText: "Đồng ý",
+            cancelText: "Thoát",
+            onConfirm: () => {
+                setModalVisible(false);
+                takePhoto();
+            },
+            onClose: () => {
+                setModalVisible(false);
+                navigation.navigate("GetID");
+            },
+        });
+        setModalVisible(true);
     }, []);
 
     const takePhoto = async () => {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
         if (status !== 'granted') {
-            Alert.alert('Permission Denied', 'Camera access is needed to take photos.');
+            setModalContent({
+                title: "Permission Denied",
+                detailText: "Camera access is needed to take photos.",
+                confirmText: "OK",
+                cancelText: "Cancel",
+                onConfirm: () => setModalVisible(false),
+            });
+            setModalVisible(true);
             return;
         }
 
@@ -64,20 +82,14 @@ const FaceMatch = ({ navigation, route }) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'api-key': 'NuQBfzczBYurMfXcN4GJBN12uaO6tBE2', // Replace with your API key
+                    'api-key': 'Tat5rfLhfZ89E5DxTzXDltHHKgspgEIR', // Replace with your API key
                 },
                 body: formData,
             });
 
             const result = await response.json();
-            // console.log(result);
-
 
             if (result?.data?.isMatch === true && result?.data?.similarity >= 80.00) {
-                // console.log(">>>user: ", user);
-                // console.log(">>>fontData: ", fontData.data[0].address);
-                // console.log(">>>backData: ", backData.data);
-                // console.log(">>>faceMatchData: ", result.data);
                 await verifyInformation(user, fontData, backData, result);
                 navigation.navigate("congrats-navigation", {
                     title: "HOÀN THÀNH!",
@@ -86,20 +98,21 @@ const FaceMatch = ({ navigation, route }) => {
                     btnTxt: "Mua sắm ngay!",
                 });
             } else {
-                Alert.alert(
-                    "Nhận diện khuôn mặt thất bại",
-                    "Hãy chụp lại ảnh và thử lại.",
-                    [
-                        {
-                            text: "Thoát",
-                            onPress: () => navigation.goBack(),
-                        },
-                        {
-                            text: "Thử lại",
-                            onPress: takePhoto,
-                        }
-                    ]
-                );
+                setModalContent({
+                    title: "Nhận diện khuôn mặt thất bại",
+                    detailText: "Hãy chụp lại ảnh và thử lại.",
+                    confirmText: "Thử lại",
+                    cancelText: "Thoát",
+                    onConfirm: () => {
+                        setModalVisible(false);
+                        takePhoto();
+                    },
+                    onClose: () => {
+                        setModalVisible(false);
+                        navigation.navigate("GetID");
+                    },
+                });
+                setModalVisible(true);
             }
 
         } catch (error) {
@@ -115,6 +128,18 @@ const FaceMatch = ({ navigation, route }) => {
                 visible={loading}
                 textContent={'Loading...'}
                 textStyle={styles.spinnerTextStyle}
+            />
+            <CustomModal
+                visible={modalVisible}
+                onClose={() => {
+                    setModalVisible(false);
+                    navigation.goBack();
+                }}
+                onConfirm={modalContent.onConfirm}
+                title={modalContent.title}
+                detailText={modalContent.detailText}
+                confirmText={modalContent.confirmText}
+                cancelText={modalContent.cancelText}
             />
         </View>
     );

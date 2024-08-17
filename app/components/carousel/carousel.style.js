@@ -7,8 +7,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: SCREEN_WIDTH,
-        height: 210,
-        // position: "relative",
+        height: 380,
     },
     image: {
         width: "100%",
@@ -27,12 +26,12 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         width: "96%",
         position: "absolute",
-        top: "40%",
+        top: "50%",
     },
     sildeNumber: {
         position: "absolute",
         left: "48%",
-        top: 100,
+        top: 140,
         color: COLORS.white,
         backgroundColor: 'rgba(0, 0, 0, 0.4)',
         paddingLeft: 12,
@@ -42,7 +41,8 @@ const styles = StyleSheet.create({
 
     },
     button: {
-        padding: 5,
+        width: 40,
+        height: 40,
         backgroundColor: 'rgba(0, 0, 0, 0.4)',
         borderRadius: 99,
         justifyContent: "center",

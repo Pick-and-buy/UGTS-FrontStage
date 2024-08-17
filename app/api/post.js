@@ -10,6 +10,15 @@ export const getAllPosts = async () => {
     throw error;
   }
 }
+export const getAllBoostedPosts = async () => {
+  try {
+    const response = await axiosInstance.get('/posts/boosted-post');
+    return response;
+  } catch (error) {
+    console.error('Error Get All Boosted Posts:', error);
+    throw error;
+  }
+}
 
 export const getPostDetails = async (id) => {
   try {

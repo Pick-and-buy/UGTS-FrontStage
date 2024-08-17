@@ -1,35 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import { View, Alert, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import FormData from 'form-data';
 import Spinner from 'react-native-loading-spinner-overlay';
+import CustomModal from '../../components/CustomModal';
 import { COLORS } from '../../constants/theme';
 
 const ScanFontIDScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
-    useEffect(() => {
-        Alert.alert(
-            "Chú ý",
-            "Hãy chuẩn bị CCCD mặt trước để bắt đầu xác thực.",
-            [
-                {
-                    text: "Thoát",
-                    onPress: () => navigation.goBack(),
-                },
-                {
-                    text: "Đồng ý",
-                    onPress: startIdentification,
-                }
-            ]
-        );
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState({
+        title: '',
+        detailText: '',
+        confirmText: '',
+        cancelText: '',
+        onConfirm: () => { },
+        onClose: () => { }
+    });
 
+    useEffect(() => {
+        setModalContent({
+            title: "Chú ý",
+            detailText: "Hãy chuẩn bị CCCD mặt trước để bắt đầu xác thực.",
+            confirmText: "Đồng ý",
+            cancelText: "Thoát",
+            onConfirm: () => {
+                setModalVisible(false);
+                startIdentification();
+            },
+            onClose: () => {
+                setModalVisible(false);
+                navigation.goBack();
+            },
+        });
+        setModalVisible(true);
     }, []);
 
     const startIdentification = async () => {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
         if (status !== 'granted') {
-            Alert.alert('Permission Denied', 'Camera access is needed to take photos.');
-            navigation.goBack();
+            setModalContent({
+                title: "Permission Denied",
+                detailText: "Camera access is needed to take photos.",
+                confirmText: "OK",
+                cancelText: "Cancel",
+                onConfirm: () => setModalVisible(false),
+            });
+            setModalVisible(true);
             return;
         }
 
@@ -43,7 +60,6 @@ const ScanFontIDScreen = ({ navigation }) => {
         if (!result.canceled) {
             setLoading(true);
             uploadImage(result.assets[0].uri);
-            // console.log(result.assets[0].uri);
         } else {
             navigation.goBack();
         }
@@ -68,32 +84,30 @@ const ScanFontIDScreen = ({ navigation }) => {
             });
 
             const result = await response.json();
-            // console.log(result);
             setLoading(false);
+
             if (result.errorCode === 0 && result.errorMessage === "") {
                 navigation.navigate("ScanBackID", { frontImageUri: imageUri, fontData: result });
             } else {
-                Alert.alert(
-                    "Nhận diện ID thất bại",
-                    "Hãy kiểm tra lại ID của bạn và thử lại.",
-                    [
-                        {
-                            text: "Thoát",
-                            onPress: () => navigation.goBack(),
-                        },
-                        {
-                            text: "Thử lại",
-                            onPress: startIdentification,
-                        }
-                    ]
-                );
+                setModalContent({
+                    title: "Nhận diện ID thất bại",
+                    detailText: "Hãy kiểm tra lại ID của bạn và thử lại.",
+                    confirmText: "Thử lại",
+                    cancelText: "Thoát",
+                    onConfirm: () => {
+                        setModalVisible(false);
+                        startIdentification();
+                    },
+                    onClose: () => {
+                        setModalVisible(false);
+                        navigation.goBack();
+                    },
+                });
+                setModalVisible(true);
             }
         } catch (error) {
             setLoading(false);
             console.error('Error uploading image:', error);
-            Alert.alert('Error', 'An error occurred while uploading the image. Please try again.', [
-                { text: 'OK', onPress: () => navigation.goBack() },
-            ]);
         }
     };
 
@@ -103,6 +117,15 @@ const ScanFontIDScreen = ({ navigation }) => {
                 visible={loading}
                 textContent={'Loading...'}
                 textStyle={styles.spinnerTextStyle}
+            />
+            <CustomModal
+                visible={modalVisible}
+                onClose={modalContent.onClose}
+                onConfirm={modalContent.onConfirm}
+                title={modalContent.title}
+                detailText={modalContent.detailText}
+                confirmText={modalContent.confirmText}
+                cancelText={modalContent.cancelText}
             />
         </View>
     );

@@ -246,3 +246,47 @@ const SellerProfile = ({ navigation, route }) => {
 }
 
 export default SellerProfile;
+
+
+
+<View style={{flexDirection: 'column', justifyContent: "center", alignItems: 'flex-start'}}>
+                                <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}>
+                                    <Text numberOfLines={1} style={{ fontSize: 18 }}>{postDetails?.user?.lastName} {postDetails?.user?.firstName}</Text>
+                                    <View style={{
+                                        backgroundColor: COLORS.primary,
+                                        paddingVertical: 2,
+                                        paddingHorizontal: 4,
+                                        borderRadius: 4,
+
+                                    }}>
+                                        <Text style={{ color: COLORS.white }}>Ghé thăm</Text>
+                                    </View>
+                                </View>
+
+                                <View style={{ flexDirection: 'column', justifyContent: "flex-start", alignItems: 'center' }}>
+                                    <View style={{ flexDirection: 'row', justifyContent: "center", alignItems: 'center' }}>
+                                        <Rating
+                                            stars={averageRating}
+                                            maxStars={5}
+                                            size={16}
+                                        />
+                                        <Text style={{ fontSize: 12, marginLeft: 4 }}>({averageRating})</Text>
+                                    </View>
+                                    <View style={{ flexDirection: 'column', justifyContent: "center", alignItems: 'center' }}></View>
+                                    {postDetails?.user?.isVerified === true ? (
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 40 }}>
+                                            <MaterialIcons name="verified-user" size={12} color="#699BF7" style={{ marginTop: 0, marginLeft: 0 }} />
+                                            <Text style={{ fontSize: 12 }}>Tài khoản đã xác minh</Text>
+                                        </View>
+                                    ) : (
+                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 40 }}>
+                                            <Octicons name="unverified" size={14} color="gray" style={{ marginTop: 6, marginLeft: 10 }} />
+                                            <Text style={{ fontSize: 12, marginTop: 4, marginLeft: 2 }}>Tài khoản chưa xác minh</Text>
+                                        </View>
+                                    )
+
+                                    }
+
+
+                                </View>
+                            </View>

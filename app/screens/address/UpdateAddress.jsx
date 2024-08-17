@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, TextInput, Switch } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Switch } from 'react-native';
 import { Formik } from 'formik';
 import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -7,6 +7,7 @@ import { COLORS } from '../../constants/theme';
 import styles from '../css/updateAddress.style';
 import dvhcvn from '../../constants/uidata';
 import { deleteAddress, setDefaultAddress, updateAddress } from '../../api/user';
+import CustomModal from '../../components/CustomModal'; // Import CustomModal
 
 const UpdateAddress = ({ navigation, route }) => {
     const { user, address } = route.params;
@@ -15,6 +16,14 @@ const UpdateAddress = ({ navigation, route }) => {
     const [selectedProvince, setSelectedProvince] = useState(address?.district);
     const [selectedDistrict, setSelectedDistrict] = useState(address?.street);
     const [isEnabled, setIsEnabled] = useState(address?.default);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState({
+        title: '',
+        detailText: '',
+        confirmText: '',
+        cancelText: '',
+        onConfirm: () => { },
+    });
 
     useEffect(() => {
         if (address) {
@@ -23,11 +32,6 @@ const UpdateAddress = ({ navigation, route }) => {
             setSelectedProvince(address.district);
             setSelectedDistrict(address.street);
             setIsEnabled(address.default);
-
-            // console.log(address.province);
-            // console.log(address.district);
-            // console.log(address.street);
-
         }
     }, [address]);
 
@@ -39,21 +43,32 @@ const UpdateAddress = ({ navigation, route }) => {
             }
             navigation.goBack();
         } catch (err) {
-            const errorMessage = err.response?.data?.message || err.message || 'Cập nhật thông tin không thành công. Vui lòng thử lại.';
+            const errorMessage = 'Cập nhật thông tin không thành công. Vui lòng thử lại.';
             setErrors({ api: errorMessage });
         } finally {
             setSubmitting(false);
         }
     };
 
-    const handleDeleteAddress = async () => {
-        try {
-            await deleteAddress(address?.id);
-            navigation.goBack();
-        } catch (error) {
-            console.log("Delete address failed!");
-        }
-    }
+    const handleDeleteAddress = () => {
+        setModalContent({
+            title: 'Xóa địa chỉ',
+            detailText: 'Bạn có chắc chắn muốn xóa địa chỉ này?',
+            confirmText: 'Xóa',
+            cancelText: 'Hủy',
+            onConfirm: async () => {
+                try {
+                    await deleteAddress(address?.id);
+                    navigation.goBack();
+                } catch (error) {
+                    console.log("Delete address failed!");
+                }
+                setModalVisible(false); // Close the modal after deletion
+            },
+        });
+        setModalVisible(true);
+    };
+
 
     const handleCountryChange = (item) => {
         setSelectedCountry(item.value);
@@ -101,7 +116,7 @@ const UpdateAddress = ({ navigation, route }) => {
     const districts = getDistricts(selectedCity, selectedProvince);
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                     <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
@@ -215,7 +230,7 @@ const UpdateAddress = ({ navigation, route }) => {
                                     ios_backgroundColor="#3e3e3e"
                                     onValueChange={toggleSwitch}
                                     value={isEnabled}
-                                    style={{ transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }] }}
+                                    style={{ transform: [{ scaleX: 1 }, { scaleY: 1 }], marginRight:20 }}
                                 />
                             </View>
                         </View>
@@ -228,7 +243,17 @@ const UpdateAddress = ({ navigation, route }) => {
                     </>
                 )}
             </Formik>
-        </SafeAreaView>
+
+            <CustomModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                onConfirm={modalContent.onConfirm}
+                title={modalContent.title}
+                detailText={modalContent.detailText}
+                confirmText={modalContent.confirmText}
+                cancelText={modalContent.cancelText}
+            />
+        </View>
     );
 };
 

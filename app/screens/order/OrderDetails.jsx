@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Image, SafeAreaView, TouchableOpacity, ScrollView, Alert } from "react-native";
+import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Alert } from "react-native";
 import styles from "../css/orderDetails.style";
 import { Feather, AntDesign, MaterialIcons, MaterialCommunityIcons, SimpleLineIcons, FontAwesome6 } from '@expo/vector-icons';
 import { COLORS } from "../../constants/theme";
@@ -10,19 +10,28 @@ import { RadioButton } from 'react-native-paper';
 import { format, addDays } from 'date-fns';
 import { order } from '../../api/order';
 import { useFocusEffect } from '@react-navigation/native';
-
+import { payOrder } from '../../api/payment';
+import CustomModal from '../../components/CustomModal';
 const OrderDetails = ({ navigation, route }) => {
     const postDetails = route.params.postDetails;
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [checked, setChecked] = useState('VNPay');
+    const [checked, setChecked] = useState('COD');
     const [productPrice, setProductPrice] = useState(0);
     const [shippingPrice, setShippingPrice] = useState(0);
     const [deliveryDateFrom, setDeliveryDateFrom] = useState(null);
     const [deliveryDateTo, setDeliveryDateTo] = useState(null);
     const [selectedAddress, setSelectedAddress] = useState(null);
-    // console.log(selectedAddress);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState({
+        title: '',
+        detailText: '',
+        confirmText: '',
+        cancelText: '',
+        onConfirm: () => { },
+    });
+    // console.log(user);
     useEffect(() => {
         const initialize = async () => {
             await checkToken();
@@ -65,23 +74,54 @@ const OrderDetails = ({ navigation, route }) => {
 
     const handleOrder = async () => {
         if (!selectedAddress) {
-            Alert.alert(
-                "Chưa có địa chỉ",
-                "Vui lòng thêm địa chỉ để tiếp tục mua hàng.",
-                [{ text: "OK", onPress: () => navigation.navigate('address-lists', { postDetails, type: 'order' }) }]
-            );
+            setModalContent({
+                title: 'Chưa có địa chỉ',
+                detailText: 'Vui lòng thêm địa chỉ để tiếp tục mua hàng.',
+                confirmText: 'Xác nhận',
+                cancelText: 'Thoát',
+                onConfirm: () => {
+                    setModalVisible(false);
+                    navigation.navigate('address-lists', { postDetails, type: 'order' });
+                },
+            });
+            setModalVisible(true);
             return;
         }
 
-        console.log('Selected payment method:', checked);
+        const totalPrice = productPrice + shippingPrice;
+
         try {
-            const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id);
-            console.log('Submit order successfully!');
-            navigation.navigate('order-successfully', { orderInfo: response.result });
+            if (checked === 'COD') {
+                const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id, shippingPrice);
+                console.log('Order placed successfully!');
+                navigation.navigate('order-successfully', { orderInfo: response.result });
+            } else if (checked === 'GiaTotPay') {
+                if (user.result.wallet.balance < totalPrice) {
+                    setModalContent({
+                        title: 'Số dư tài khoản không đủ',
+                        detailText: 'Vui lòng nạp thêm tiền vào tài khoản hoặc chọn phương thức thanh toán khác.',
+                        confirmText: 'Xác nhận',
+                        cancelText: 'Thoát',
+                        onConfirm: () => setModalVisible(false),
+                    });
+                    setModalVisible(true);
+                } else {
+                    const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id, shippingPrice);
+                    console.log('Order placed successfully!');
+
+                    const responsePaymentOrder = await payOrder(user.result.wallet.walletId, response.result.id, totalPrice);
+                    console.log('Payment successful!', responsePaymentOrder);
+
+                    navigation.navigate('order-successfully', { orderInfo: response.result });
+                }
+            }
         } catch (error) {
-            console.error('Submit order', error);
+            console.error('Failed to place order:', error);
         }
     };
+
+
+
 
     const fetchUserData = async () => {
         try {
@@ -102,7 +142,7 @@ const OrderDetails = ({ navigation, route }) => {
 
     const calculatePrices = () => {
         setProductPrice(postDetails?.product?.price || 0);
-        setShippingPrice(42500);
+        setShippingPrice(50000);
     };
 
     const calculateDeliveryDate = () => {
@@ -132,7 +172,7 @@ const OrderDetails = ({ navigation, route }) => {
 
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                     <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
@@ -154,26 +194,35 @@ const OrderDetails = ({ navigation, route }) => {
                                     <View style={styles.ownerAddress}>
                                         <SimpleLineIcons name="location-pin" size={20} color="black" />
                                         <Text style={styles.ownerName}>
-                                            {user?.result?.firstName} {user?.result?.lastName} {maskPhoneNumber(user?.result?.phoneNumber, '+84')}
+                                            {user?.result?.lastName} {user?.result?.firstName}{maskPhoneNumber(user?.result?.phoneNumber, '+84')}
                                         </Text>
                                     </View>
                                     <View style={styles.locationDetails}>
                                         <Text style={styles.locationText}>
-                                            {address.addressLine}, {address.street}, {address.district}, {address.province}, {address.country}
+                                            {address.addressLine ?
+                                                (
+                                                    `${address.addressLine}, ${address.street}, ${address.district}, ${address.province}, ${address.country}`
+                                                )
+                                                :
+                                                (
+                                                    `${address.street}, ${address.district}, ${address.province}, ${address.country}`
+                                                )
+
+                                            }
                                         </Text>
                                     </View>
                                 </View>
                             )
                         ))
                     ) : (
-                        <View style={[styles.locationDetails, { flexDirection: "row" ,justifyContent:"flex-start"}]}>
-                            <AntDesign name="plus" size={18} color="gray" style={{marginRight:2}} />
+                        <View style={[styles.locationDetails, { flexDirection: "row", justifyContent: "flex-start" }]}>
+                            <AntDesign name="plus" size={18} color="gray" style={{ marginRight: 2 }} />
                             <Text style={styles.locationText}>Thêm địa chỉ để tiếp tục mua hàng</Text>
                         </View>
                     )}
                     <FontAwesome6
                         name="angle-right" size={20}
-                        style={{ position: 'absolute', right: 0, top: 10 }}
+                        style={{ position: 'absolute', right: 15, top: "50%" }}
                         color="gray"
                     />
                 </TouchableOpacity>
@@ -206,7 +255,7 @@ const OrderDetails = ({ navigation, route }) => {
                                 </View>
                             </View>
                             <Text style={styles.price}>
-                                <Text style={styles.currency}>đ</Text>
+                                <Text style={styles.currency}>₫</Text>
                                 {formattedProductPrice}
                             </Text>
                         </View>
@@ -215,18 +264,18 @@ const OrderDetails = ({ navigation, route }) => {
                     <View style={styles.relatedInformation}>
                         <View style={styles.transport}>
                             <Text style={{ fontSize: 16, color: COLORS.gray }}>Vận chuyển tiêu chuẩn</Text>
-                            <Text style={{ fontSize: 16, color: COLORS.gray }}>{formattedShippingPrice}đ</Text>
+                            <Text style={{ fontSize: 16, color: COLORS.gray }}>{formattedShippingPrice}₫</Text>
                         </View>
                         <View style={styles.transportFrom}>
                             <MaterialCommunityIcons name="truck-delivery-outline" size={18} color={COLORS.gray} />
-                            <Text style={{ fontSize: 12, color: COLORS.gray }}>Từ Buôn Ma Thuột</Text>
+                            <Text style={{ fontSize: 14, color: COLORS.gray, marginTop: -2 }}>Đơn vị: Nhất Tín Logistics</Text>
                         </View>
                         <View style={styles.transportTime}>
                             <AntDesign name="clockcircleo" size={16} color={COLORS.gray} />
-                            <Text style={{ fontSize: 12, color: COLORS.gray }}>Ngày giao hàng dự kiến: {deliveryDateFrom ? format(deliveryDateFrom, 'MMM d') : ''} - {deliveryDateTo ? format(deliveryDateTo, 'MMM d') : ''}</Text>
+                            <Text style={{ fontSize: 14, color: COLORS.gray, marginTop: -2 }}>Ngày giao hàng dự kiến: {deliveryDateFrom ? format(deliveryDateFrom, 'MMM d') : ''} - {deliveryDateTo ? format(deliveryDateTo, 'MMM d') : ''}</Text>
                         </View>
                         <View style={styles.summary}>
-                            <Text style={{ fontSize: 16 }}>1 mặt hàng, tổng cộng: {formattedTotalPrice}đ</Text>
+                            <Text style={{ fontSize: 16 }}>1 mặt hàng, tổng cộng: {formattedTotalPrice}₫</Text>
                         </View>
                     </View>
 
@@ -241,13 +290,13 @@ const OrderDetails = ({ navigation, route }) => {
                             </View>
 
                             <View style={styles.totalRight}>
-                                <Text style={styles.totalText}>{formattedProductPrice}đ</Text>
-                                <Text style={styles.totalText}>{formattedShippingPrice}đ</Text>
+                                <Text style={styles.totalText}>{formattedProductPrice}₫</Text>
+                                <Text style={styles.totalText}>{formattedShippingPrice}₫</Text>
                             </View>
                         </View>
                         <View style={styles.totalPrice}>
                             <Text style={styles.totalHeader}>Tổng</Text>
-                            <Text style={styles.totalHeader}>{formattedTotalPrice}đ</Text>
+                            <Text style={styles.totalHeader}>{formattedTotalPrice}₫</Text>
                         </View>
                     </View>
 
@@ -255,26 +304,36 @@ const OrderDetails = ({ navigation, route }) => {
 
                     <View style={styles.paymentMethods}>
                         <Text style={styles.paymentMethodsHeader}>Phương thức thanh toán</Text>
-                        <View style={{ padding: 20 }}>
+                        <View style={{ paddingHorizontal: 20, paddingVertical: 10 }}>
                             <RadioButton.Group
                                 onValueChange={newValue => setChecked(newValue)}
                                 value={checked}
                             >
-                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <Text>VNPay</Text>
-                                    <RadioButton value="VNPay" />
-                                </View>
-                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <Text>Credit card</Text>
-                                    <RadioButton value="Credit card" />
-                                </View>
+                                <TouchableOpacity style={styles.method} onPress={() => setChecked('COD')}>
+                                    <Text style={styles.methodText}>Thanh toán khi nhận hàng</Text>
+                                    <RadioButton value="COD" />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.method} onPress={() => setChecked('GiaTotPay')}>
+                                    <View style={styles.column}>
+                                        <Text style={styles.methodText}>GiaTotPay</Text>
+                                        <Text style={styles.currentAmount}>Số dư hiện tại:
+                                            <Text style={{ color: 'red' }}> {formatPrice(user?.result?.wallet?.balance)}₫</Text>
+                                        </Text>
+                                    </View>
+                                    <RadioButton value="GiaTotPay" />
+                                </TouchableOpacity>
                             </RadioButton.Group>
                         </View>
                     </View>
 
-                    <View style={styles.divider} />
                     <View style={styles.note}>
-                        <Text>Bằng cách đặt đơn hàng, bạn đồng ý với Điều Khoản Sử Dụng và Bán Hàng của Giá Tốt và xác nhận rằng bạn đã đọc Chính sách Quyền riêng tư của Giá Tốt. Thanh toán sẽ được PIPO xử lý riêng theo Chính sách quyền riêng tư của PIPO.</Text>
+                        <Text>Bằng cách đặt đơn hàng, bạn đồng ý với
+                            <Text style={styles.highlight}> Điều Khoản Sử Dụng và Bán Hàng </Text>
+
+                            của Giá Tốt và xác nhận rằng bạn đã đọc
+                            <Text style={styles.highlight}> Chính sách Quyền riêng tư </Text>
+
+                            của Giá Tốt. Thanh toán sẽ được PIPO xử lý riêng theo Chính sách quyền riêng tư của PIPO.</Text>
                     </View>
                 </View>
             </ScrollView>
@@ -283,7 +342,16 @@ const OrderDetails = ({ navigation, route }) => {
                     <Text style={styles.buttonText}>Đặt hàng</Text>
                 </TouchableOpacity>
             </View>
-        </SafeAreaView>
+            <CustomModal
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                onConfirm={modalContent.onConfirm}
+                title={modalContent.title}
+                detailText={modalContent.detailText}
+                confirmText={modalContent.confirmText}
+                cancelText={modalContent.cancelText}
+            />
+        </View>
     );
 };
 

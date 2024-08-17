@@ -94,7 +94,7 @@ const RegisterInformation = ({ navigation, route }) => {
                                 <MaterialCommunityIcons name="account-outline" size={30} color={COLORS.primary} />
                                 <TextInput
                                     style={{ marginLeft: 10, flex: 1 }}
-                                    placeholder='Tên đăng nhập'
+                                    placeholder='Username'
                                     placeholderTextColor='gray'
                                     value={values.username}
                                     onChangeText={handleChange('username')}

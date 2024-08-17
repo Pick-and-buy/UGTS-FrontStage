@@ -22,7 +22,6 @@ import ResetPassword from './app/screens/forgot password/ResetPassword';
 import PostDetail from './app/screens/post/PostDetail';
 import Onboarding from './app/components/Onboarding';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Profile from './app/screens/Profile';
 import ChangePassword from './app/screens/change password/ChangePassword';
 import UpdateProfile from './app/screens/profile/UpdateProfile';
 import News from './app/screens/news/News';
@@ -62,6 +61,7 @@ import CreatePostGuide from './app/screens/post/CreatePostGuide';
 import CreatePost from './app/screens/post/CreatePost';
 import QuickCreatePost from './app/screens/post/QuickCreatePost';
 import AddFunds from './app/screens/payment/AddFunds';
+import OTPSMSVerification from './app/screens/register/OTPSMSVerification';
 
 
 const Stack = createNativeStackNavigator();
@@ -190,11 +190,6 @@ export default function App() {
                 <Stack.Screen
                   name='home-navigation'
                   component={Home}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='profile-navigation'
-                  component={Profile}
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
@@ -389,6 +384,11 @@ export default function App() {
                 <Stack.Screen
                   name='add-funds'
                   component={AddFunds}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='otp-sms-verification'
+                  component={OTPSMSVerification}
                   options={{ headerShown: false }}
                 />
               </Stack.Navigator>

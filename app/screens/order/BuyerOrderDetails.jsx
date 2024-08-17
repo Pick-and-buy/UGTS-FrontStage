@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { StyleSheet, View, Text, Image, SafeAreaView, TouchableOpacity, ScrollView, Alert } from "react-native";
+import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Alert } from "react-native";
 import styles from "../css/buyerOrderDetails.style";
 import { useFocusEffect } from '@react-navigation/native';
 import { Feather, AntDesign, MaterialIcons, MaterialCommunityIcons, SimpleLineIcons, Ionicons, Entypo, FontAwesome6 } from '@expo/vector-icons';
@@ -11,22 +11,31 @@ import { cancelOrderBuyer, getOrderByOrderId, updateOrderBuyer, uploadReceivePac
 import OrderTracking from './OrderTracking';
 import * as Clipboard from 'expo-clipboard';
 import AddRating from './AddRating';
+import { useAuth } from '../../context/AuthContext'
 import { Video } from 'expo-av';
 import * as ImagePicker from "expo-image-picker";
-
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
+import CustomModal from '../../components/CustomModal';
 
 const BuyerOrderDetails = ({ navigation, route }) => {
+
   const orderInfo = route.params.orderInfo;
-  // const [user, setUser] = useState(null);
+  const { user } = useAuth();
   const [updatedOrderInfo, setUpdatedOrderInfo] = useState();
   const [phoneUserOrder, setPhoneUserOrder] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [showAddRating, setShowAddRating] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState({
+    title: '',
+    detailText: '',
+    confirmText: '',
+    cancelText: '',
+    onConfirm: () => { },
+  });
 
   const [videoUri, setVideoUri] = useState("");
   const [isMuted, setIsMuted] = useState(false);
-
   useEffect(() => {
     if (orderInfo) {
       fetchOrderInfo();
@@ -70,8 +79,8 @@ const BuyerOrderDetails = ({ navigation, route }) => {
   };
 
   const formattedProductPrice = formatPrice(updatedOrderInfo?.post?.product?.price);
-  const shippingPrice = formatPrice(42500);
-  const totalPrice = formatPrice(updatedOrderInfo?.post?.product?.price + 42500);
+  const shippingPrice = formatPrice(updatedOrderInfo?.orderDetails?.shippingCost);
+  const totalPrice = formatPrice(updatedOrderInfo?.post?.product?.price + updatedOrderInfo?.orderDetails?.shippingCost);
 
 
   const copiedOrderId = () => {
@@ -92,33 +101,36 @@ const BuyerOrderDetails = ({ navigation, route }) => {
   const handleUpdateOrder = async (newAddress) => {
     try {
       await updateOrderBuyer(orderInfo, newAddress || selectedAddress);
-      alert('Update Order Successfully')
+      setModalVisible(true);
+      setModalContent({
+        title: 'Thành công',
+        detailText: 'Thay đổi địa chỉ thành công!',
+        confirmText: 'Xác Nhận',
+        cancelText: '',
+        onConfirm: () => setModalVisible(false)
+      });
     } catch (error) {
       console.error('Submit update buyer order', error);
     }
   };
 
-  const handleCancelOrder = async () => {
-    try {
-      Alert.alert(
-        "Hủy đơn hàng",
-        "Bạn có chắc chắn muốn hủy đơn hàng không?",
-        [
-          {
-            text: "Hủy",
-          },
-          {
-            text: "Xác Nhận",
-            onPress: async () => {
-              await cancelOrderBuyer(orderInfo, selectedAddress);
-              navigation.navigate('cancel-successfully', { orderInfo: orderInfo });
-            },
-          }
-        ]
-      );
-    } catch (error) {
-      console.error('Submit cancel buyer order: ', error);
-    }
+  const handleCancelOrder = () => {
+    setModalContent({
+      title: 'Hủy đơn hàng',
+      detailText: 'Bạn có chắc chắn muốn hủy đơn hàng không?',
+      confirmText: 'Xác Nhận',
+      cancelText: 'Hủy',
+      onConfirm: async () => {
+        try {
+          await cancelOrderBuyer(orderInfo, selectedAddress);
+          navigation.navigate('cancel-successfully', { orderInfo: orderInfo });
+          setModalVisible(false); // Close the modal after the order is canceled
+        } catch (error) {
+          console.error('Submit cancel buyer order: ', error);
+        }
+      },
+    });
+    setModalVisible(true); // Show the modal
   };
 
   console.log('>>>> check order: ', orderInfo.id);
@@ -167,7 +179,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
@@ -195,16 +207,14 @@ const BuyerOrderDetails = ({ navigation, route }) => {
           </View>
           <View style={styles.locationDetails}>
             <Text style={styles.locationText}>
-              {selectedAddress ?
-                (
-                  `${selectedAddress?.addressLine},${selectedAddress?.street}, ${selectedAddress?.district}, ${selectedAddress?.province}, ${selectedAddress?.country}`
-                )
-                :
-                (
-                  `${updatedOrderInfo?.orderDetails?.address?.addressLine}, ${updatedOrderInfo?.orderDetails?.address?.street}, ${updatedOrderInfo?.orderDetails?.address?.district}, ${updatedOrderInfo?.orderDetails?.address?.province}, ${updatedOrderInfo?.orderDetails?.address?.country}`
-                )
+              {selectedAddress?.addressLine
+                ? `${selectedAddress?.addressLine}, ${selectedAddress?.street}, ${selectedAddress?.district}, ${selectedAddress?.province}, ${selectedAddress?.country}`
+                : updatedOrderInfo?.orderDetails?.address?.addressLine
+                  ? `${updatedOrderInfo?.orderDetails?.address?.addressLine}, ${updatedOrderInfo?.orderDetails?.address?.street}, ${updatedOrderInfo?.orderDetails?.address?.district}, ${updatedOrderInfo?.orderDetails?.address?.province}, ${updatedOrderInfo?.orderDetails?.address?.country}`
+                  : `${updatedOrderInfo?.orderDetails?.address?.street}, ${updatedOrderInfo?.orderDetails?.address?.district}, ${updatedOrderInfo?.orderDetails?.address?.province}, ${updatedOrderInfo?.orderDetails?.address?.country}`
               }
             </Text>
+
           </View>
         </View>
         <View style={styles.slanted}>
@@ -223,7 +233,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
               source={{ uri: updatedOrderInfo?.post?.user?.avatar ? updatedOrderInfo?.post?.user?.avatar : profile }}
             />
             <Text style={styles.sellerText}>
-              {updatedOrderInfo?.post?.user?.username} (Người bán)
+              {updatedOrderInfo?.post?.user?.lastName} {updatedOrderInfo?.post?.user?.firstName} (Người bán)
             </Text>
           </View>
           <View style={styles.product}>
@@ -239,10 +249,23 @@ const BuyerOrderDetails = ({ navigation, route }) => {
                 Color: {updatedOrderInfo?.post?.product?.color}, Size: {updatedOrderInfo?.post?.product?.size}
               </Text>
               <View style={styles.label}>
-                <View style={styles.verifiedLabel}>
-                  <MaterialIcons name="verified" size={14} color="#FFBB00" />
-                  <Text style={{ fontSize: 12 }}>Đã xác minh</Text>
-                </View>
+
+                {updatedOrderInfo?.post?.product?.verifiedLevel === 'LEVEL_1' && (
+                  <View style={styles.verified}>
+                    <Text style={styles.verifiedText}>Xác minh cấp 1</Text>
+                  </View>
+                )}
+                {updatedOrderInfo?.post?.product?.verifiedLevel === 'LEVEL_2' && (
+                  <View style={[styles.verified, { backgroundColor: '#ff8000' }]}>
+                    <Text style={styles.verifiedText}>Xác minh cấp 2</Text>
+                  </View>
+                )}
+                {updatedOrderInfo?.post?.product?.verifiedLevel === 'LEVEL_3' && (
+                  <View style={[styles.verified, { backgroundColor: '#33cc33' }]}>
+                    <Text style={styles.verifiedText}>Xác minh cấp 3</Text>
+                  </View>
+                )}
+
                 <View style={styles.returnLabel}>
                   <AntDesign name="retweet" size={14} color="#FFBB00" />
                   <Text style={{ fontSize: 12 }}>Trả hàng miễn phí</Text>
@@ -259,7 +282,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
             <View style={styles.transport}>
               <Text style={{ fontSize: 16, color: COLORS.gray }}>Vận chuyển tiêu chuẩn</Text>
               <Text style={{ fontSize: 16, color: COLORS.gray }}>
-                {shippingPrice}đ
+                {shippingPrice}₫
               </Text>
             </View>
             <View style={styles.transportFrom}>
@@ -286,17 +309,17 @@ const BuyerOrderDetails = ({ navigation, route }) => {
 
               <View style={styles.totalRight}>
                 <Text style={styles.totalText}>
-                  {formattedProductPrice}đ
+                  {formattedProductPrice}₫
                 </Text>
                 <Text style={styles.totalText}>
-                  {shippingPrice}đ
+                  {shippingPrice}₫
                 </Text>
               </View>
             </View>
             <View style={styles.totalPrice}>
               <Text style={styles.totalHeader}>Tổng</Text>
               <Text style={styles.totalHeader}>
-                {totalPrice}đ
+                {totalPrice}₫
               </Text>
             </View>
           </View>
@@ -330,13 +353,13 @@ const BuyerOrderDetails = ({ navigation, route }) => {
           </View>
           <View style={styles.redirect}>
             <TouchableOpacity style={styles.redirectBtn} onPress={() => { }}>
-              <Ionicons name="chatbubble-ellipses-outline" size={24} color="black" />
+              <Ionicons name="chatbubble-ellipses-outline" size={22} color="black" />
               <Text style={styles.redirectBtnText}>Liên hệ người bán</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.redirectBtn}
-              onPress={() => navigation.navigate("seller-profile-navigation", { userOfPost: updatedOrderInfo?.post?.user, userIdLogged: updatedOrderInfo?.post?.id })}
+              onPress={() => navigation.navigate("user-profile-details", { user: updatedOrderInfo?.post?.user, userIdLogged: user?.id })}
             >
-              <Entypo name="shop" size={24} color="black" />
+              <Entypo name="shop" size={22} color="black" />
               <Text style={styles.redirectBtnText}>Ghé thăm người bán</Text>
             </TouchableOpacity>
           </View>
@@ -478,8 +501,16 @@ const BuyerOrderDetails = ({ navigation, route }) => {
         </View>
       )}
 
-
-    </SafeAreaView>
+      <CustomModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onConfirm={modalContent.onConfirm}
+        title={modalContent.title}
+        detailText={modalContent.detailText}
+        confirmText={modalContent.confirmText}
+        cancelText={modalContent.cancelText}
+      />
+    </View>
   )
 }
 
