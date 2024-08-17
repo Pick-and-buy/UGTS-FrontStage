@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Image, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, Image, FlatList } from 'react-native';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import styles from '../css/notification.style';
 import { useAuth } from '../../context/AuthContext';
@@ -66,7 +66,7 @@ const Notification = ({ navigation }) => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                     <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
@@ -95,7 +95,7 @@ const Notification = ({ navigation }) => {
                     <Text style={styles.emptyText}>Đăng nhập để nhận thông báo của bạn</Text>
                 </View>
             )}
-        </SafeAreaView>
+        </View>
     );
 };
 

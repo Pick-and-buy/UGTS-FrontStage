@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, TextInput, Switch } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Switch } from 'react-native';
 import { Formik } from 'formik';
 import { Ionicons, Feather,MaterialCommunityIcons } from '@expo/vector-icons';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -89,7 +89,7 @@ const CreateAddress = ({ navigation, route }) => {
     const districts = getDistricts(selectedCity, selectedProvince);
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                     <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
@@ -214,7 +214,7 @@ const CreateAddress = ({ navigation, route }) => {
                     </>
                 )}
             </Formik>
-        </SafeAreaView>
+        </View>
     );
 };
 

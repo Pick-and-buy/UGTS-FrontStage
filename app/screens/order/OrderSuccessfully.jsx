@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native'
+import { View, Text, SafeAreaView, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native'
 import styles from '../css/orderSuccessfully.style'
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/theme';
 import { format, addDays } from 'date-fns';
+import { getAllPosts } from '../../api/post';
+import Post from '../post/Post';
 
 const OrderSuccessfully = ({ navigation, route }) => {
     const orderInfo = route.params.orderInfo;
-
+    const [loading, setLoading] = useState(true);
+    const [posts, setPosts] = useState([]);
     const [phoneUserOrder, setPhoneUserOrder] = useState(null);
-
+    // console.log(posts[0]);
+    
     const fetchPhoneUserOder = async () => {
         const phoneNumber = orderInfo?.orderDetails?.phoneNumber;
         const country = orderInfo?.orderDetails?.address?.country;
@@ -24,7 +28,21 @@ const OrderSuccessfully = ({ navigation, route }) => {
 
     useEffect(() => {
         fetchPhoneUserOder();
-    })
+        fetchPosts();
+    },[])
+
+
+    const fetchPosts = async () => {
+        setLoading(true);
+        try {
+            const response = await getAllPosts();
+            setPosts(response.data.result);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleOrderDetail = async () => {
         // console.log('>>> check order infor: ', orderInfo);
@@ -32,7 +50,7 @@ const OrderSuccessfully = ({ navigation, route }) => {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.wrapper}>
                 <View style={styles.notification}>
                     <Ionicons name="checkmark-circle-sharp" size={100} color="#4BE289" />
@@ -59,9 +77,22 @@ const OrderSuccessfully = ({ navigation, route }) => {
                 <View style={styles.divider} />
                 <View style={styles.recommendation}>
                     <Text style={styles.recommendationText}>Có thể bạn cũng thích</Text>
+                    <ScrollView style={styles.posts}>
+                        {loading ? (
+                            <ActivityIndicator size="large" color={COLORS.primary} />
+                        ) : (
+                            <View style={styles.row}>
+                                {posts?.length > 0 ? (
+                                    posts.map((post) => <Post key={post.id} post={post} />)
+                                ) : (
+                                    <Text>No posts available</Text>
+                                )}
+                            </View>
+                        )}
+                    </ScrollView>
                 </View>
             </View>
-        </SafeAreaView>
+        </View>
     )
 }
 

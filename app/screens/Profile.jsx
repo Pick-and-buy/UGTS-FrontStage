@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, SafeAreaView, RefreshControl } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, RefreshControl } from "react-native";
 import { COLORS, SIZES } from "../constants/theme";
 import { Ionicons, FontAwesome6, Octicons } from '@expo/vector-icons';
 import { AntDesign } from "@expo/vector-icons";

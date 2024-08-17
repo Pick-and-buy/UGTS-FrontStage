@@ -7,7 +7,6 @@ import {
     Image,
     TextInput,
     FlatList,
-    SafeAreaView,
 } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState, useEffect } from "react";
@@ -20,7 +19,7 @@ import TodoTaskTab from "../../navigation/TodoTaskTab";
 const TodoTask = ({ navigation }) => {
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                     <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
@@ -28,7 +27,7 @@ const TodoTask = ({ navigation }) => {
                 <Text style={styles.title}>Danh sách việc cần làm</Text>
             </View>
             <TodoTaskTab />
-        </SafeAreaView>
+        </View>
     );
 }
 

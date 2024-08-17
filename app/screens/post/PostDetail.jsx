@@ -6,7 +6,6 @@ import {
     TouchableOpacity,
     Image,
     Pressable,
-    SafeAreaView,
     TextInput,
     Alert,
     Button,

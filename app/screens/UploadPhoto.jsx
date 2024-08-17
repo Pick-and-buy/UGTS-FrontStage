@@ -1,6 +1,5 @@
 import { Image, Text, TouchableOpacity, View, Alert } from 'react-native';
 import React, { useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import styles from "../screens/css/uploadPhoto.style.js";
 import Button from '../components/Button.jsx';

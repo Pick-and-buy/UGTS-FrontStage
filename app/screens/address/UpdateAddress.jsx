@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, TextInput, Switch } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Switch } from 'react-native';
 import { Formik } from 'formik';
 import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -116,7 +116,7 @@ const UpdateAddress = ({ navigation, route }) => {
     const districts = getDistricts(selectedCity, selectedProvince);
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                     <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
@@ -230,7 +230,7 @@ const UpdateAddress = ({ navigation, route }) => {
                                     ios_backgroundColor="#3e3e3e"
                                     onValueChange={toggleSwitch}
                                     value={isEnabled}
-                                    style={{ transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }] }}
+                                    style={{ transform: [{ scaleX: 1 }, { scaleY: 1 }], marginRight:20 }}
                                 />
                             </View>
                         </View>
@@ -253,7 +253,7 @@ const UpdateAddress = ({ navigation, route }) => {
                 confirmText={modalContent.confirmText}
                 cancelText={modalContent.cancelText}
             />
-        </SafeAreaView>
+        </View>
     );
 };
 

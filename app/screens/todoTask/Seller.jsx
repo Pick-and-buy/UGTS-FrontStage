@@ -7,7 +7,6 @@ import {
   Image,
   TextInput,
   FlatList,
-  SafeAreaView,
   ActivityIndicator,
   Alert,
 } from "react-native";

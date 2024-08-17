@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Image, SafeAreaView, TouchableOpacity, ScrollView, Alert } from "react-native";
+import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Alert } from "react-native";
 import styles from "../css/orderDetails.style";
 import { Feather, AntDesign, MaterialIcons, MaterialCommunityIcons, SimpleLineIcons, FontAwesome6 } from '@expo/vector-icons';
 import { COLORS } from "../../constants/theme";
@@ -172,7 +172,7 @@ const OrderDetails = ({ navigation, route }) => {
 
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                     <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
@@ -351,7 +351,7 @@ const OrderDetails = ({ navigation, route }) => {
                 confirmText={modalContent.confirmText}
                 cancelText={modalContent.cancelText}
             />
-        </SafeAreaView>
+        </View>
     );
 };
 

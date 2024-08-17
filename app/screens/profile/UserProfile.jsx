@@ -6,7 +6,6 @@ import {
   View,
   TouchableOpacity,
   Image,
-  SafeAreaView,
   ActivityIndicator,
   RefreshControl,
   Alert

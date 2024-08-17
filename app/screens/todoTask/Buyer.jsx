@@ -7,7 +7,6 @@ import {
     Image,
     TextInput,
     FlatList,
-    SafeAreaView,
     ActivityIndicator,
 } from "react-native";
 import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';

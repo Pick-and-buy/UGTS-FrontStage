@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "flex-end",
-        zIndex:9999,
+        zIndex: 9999,
     },
     headerText: {
         // flex:1,
@@ -60,13 +60,13 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
-    numberOfLike:{
+    numberOfLike: {
         color: COLORS.gray,
         fontWeight: "bold",
         position: "absolute",
         right: 15,
-        top:50,
-        fontSize:18
+        top: 50,
+        fontSize: 18
     },
     informationContainer: {
         width: "96%",
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     labelWrapper: {
         flexDirection: "row",
         alignItems: "center",
-        gap:10
+        gap: 10
     },
     label: {
         flexDirection: "row",
@@ -108,8 +108,8 @@ const styles = StyleSheet.create({
         paddingVertical: 2,
         paddingHorizontal: 5,
         borderRadius: 3,
-        justifyContent:"center",
-        alignItems:"center"
+        justifyContent: "center",
+        alignItems: "center"
     },
     currency: {
         textDecorationLine: 'underline',
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
         marginVertical: "auto"
     },
     recommended: {
-        width: "96%",
+        width: "98%",
         marginHorizontal: "auto",
     },
 
@@ -348,6 +348,19 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 18,
         fontWeight: 'bold',
+    },
+    posts: {
+        width: '100%',
+        marginHorizontal: "auto",
+    },
+    row: {
+        width: "100%",
+        justifyContent: "flex-start",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        alignItems: "center",
+        marginHorizontal: "auto",
+        marginBottom: "20%",
     },
 });
 
