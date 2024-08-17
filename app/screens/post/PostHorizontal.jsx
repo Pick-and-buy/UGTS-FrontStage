@@ -23,6 +23,11 @@ const PostHorizontal = ({ post, type }) => {
             onPress={() => navigation.navigate('post-details', { postId: post.id, type })}
         >
             <Image source={{ uri: post?.product?.images[0]?.imageUrl }} style={styles.image} />
+            {!post.isAvailable &&
+                <View style={styles.label} >
+                    <Text style={styles.labelText}>Đã bán</Text>
+                </View>
+            }
             <View style={styles.textContainer}>
                 <Text numberOfLines={1} style={styles.title}>{post?.title}</Text>
                 <Text numberOfLines={1} style={styles.subtitle}>{post?.description}</Text>
@@ -52,7 +57,8 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         backgroundColor: 'white',
         ...SHADOWS.medium,
-        marginHorizontal: "auto"
+        marginHorizontal: "auto",
+        overflow: "hidden",
     },
     image: {
         width: 70,
@@ -98,5 +104,21 @@ const styles = StyleSheet.create({
     buttonTextInactive: {
         color: '#888',
         fontWeight: 'bold',
+    },
+    label: {
+        position: 'absolute',
+        top: 15,
+        left: -60,
+        width: "45%",
+        height: 20,
+        backgroundColor: COLORS.primary,
+        transform: [{ rotate: '-45deg' }],
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    labelText: {
+        color: COLORS.white,
+        fontWeight: "bold",
+        fontSize: 14
     },
 });
