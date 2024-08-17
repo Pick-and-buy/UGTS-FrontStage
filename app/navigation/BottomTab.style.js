@@ -4,7 +4,7 @@ import { COLORS, SIZES } from "../constants/theme";
 const styles = StyleSheet.create({
     tabBarStyle: {
         width: "100%",
-        height: "8%",
+        height: "10%",
         backgroundColor: COLORS.white,
         borderTopWidth: 0,
         paddingHorizontal:8,
