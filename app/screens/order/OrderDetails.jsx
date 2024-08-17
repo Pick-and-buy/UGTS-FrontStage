@@ -194,7 +194,7 @@ const OrderDetails = ({ navigation, route }) => {
                                     <View style={styles.ownerAddress}>
                                         <SimpleLineIcons name="location-pin" size={20} color="black" />
                                         <Text style={styles.ownerName}>
-                                            {user?.result?.username} {maskPhoneNumber(user?.result?.phoneNumber, '+84')}
+                                            {user?.result?.lastName} {user?.result?.firstName}{maskPhoneNumber(user?.result?.phoneNumber, '+84')}
                                         </Text>
                                     </View>
                                     <View style={styles.locationDetails}>

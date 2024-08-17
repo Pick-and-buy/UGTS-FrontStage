@@ -110,7 +110,7 @@ const Profile = ({ navigation }) => {
                 >
                   <View style={styles.info}>
                     <Text style={[styles.text, {}]}>
-                      {user?.username}
+                      {user?.lastName} {user?.firstName}
                     </Text>
                     <View style={styles.ratingWrapper}>
                       <Rating
@@ -139,8 +139,8 @@ const Profile = ({ navigation }) => {
                 </TouchableOpacity>
               ) : (
 
-                <View style={{ flexDirection: "column",marginLeft:10 }}>
-                  <View style={{ marginLeft: 10, marginVertical:"auto", flexDirection: "column",marginBottom:5 }}>
+                <View style={{ flexDirection: "column", marginLeft: 10 }}>
+                  <View style={{ marginLeft: 10, marginVertical: "auto", flexDirection: "column", marginBottom: 5 }}>
                     <Text style={styles.text}>
                       Bạn chưa đăng nhập
                     </Text>

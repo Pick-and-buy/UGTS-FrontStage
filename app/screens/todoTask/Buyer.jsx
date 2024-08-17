@@ -108,7 +108,7 @@ const Buyer = ({ navigation }) => {
                 <Text numberOfLines={2} style={styles.itemTitle}>
                     {item?.post?.title}
                 </Text>
-                <Text style={styles.shop}>{item?.post?.user?.username}</Text>
+                <Text style={styles.shop}>Người bán: {item?.post?.user?.lastName} {item?.post?.user?.firstName}</Text>
                 <View style={{ flex: 1, flexDirection: "row", justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
                     <Text style={styles.price}>₫{formatPrice((item?.orderDetails?.price ?? 0) + (item?.orderDetails?.shippingCost ?? 0))}</Text>
 

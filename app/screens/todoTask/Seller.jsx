@@ -154,7 +154,7 @@ const Seller = ({ navigation }) => {
         <Text numberOfLines={1} style={styles.itemTitle}>
           {item?.post?.title}
         </Text>
-        <Text style={styles.shop}>Người mua: {item?.buyer?.username}</Text>
+        <Text style={styles.shop}>Người mua: {item?.buyer?.lastName} {item?.buyer?.firstName}</Text>
         <Text style={styles.price}>₫{formatPrice((item?.orderDetails?.price ?? 0) + (item?.orderDetails?.shippingCost ?? 0))}</Text>
 
         {item?.orderDetails?.status === "PENDING" &&

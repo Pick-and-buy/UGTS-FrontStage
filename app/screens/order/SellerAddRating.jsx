@@ -55,7 +55,7 @@ const SellerAddRating = ({ navigation, orderInfo }) => {
             </View>
             <View style={styles.seller}>
                 <Text style={styles.sellerTitle}>
-                    {orderInfo?.buyer?.username}
+                    {orderInfo?.buyer?.lastName} {orderInfo?.buyer?.firstName}
                 </Text>
             </View>
             <View style={styles.ratingBox}>
