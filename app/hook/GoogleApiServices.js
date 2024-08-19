@@ -28,11 +28,11 @@ const calculateDistanceAndTime = async (startLat, startLng, destinationLat, dest
                 finalPrice
             };
         } else {
-            console.error("Error calculating distance and duration:", data.status);
+            console.log("Error calculating distance and duration:", data.status);
             return null;
         }
     } catch (error) {
-        console.error("Failed to calculate distance and duration:", error);
+        console.log("Failed to calculate distance and duration:", error);
         return null;
     }
 }
@@ -63,7 +63,7 @@ const fetchDirections = async (
         setCoordinates(coordinates);
       });
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 

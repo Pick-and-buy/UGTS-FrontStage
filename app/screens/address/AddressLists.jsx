@@ -16,7 +16,7 @@ const AddressLists = ({ navigation, route }) => {
             const userData = await getUserByToken();
             setUser(userData);
         } catch (error) {
-            console.error('Fetching user data failed in address lists:', error);
+            console.log('Fetching user data failed in address lists:', error);
         }
     };
 

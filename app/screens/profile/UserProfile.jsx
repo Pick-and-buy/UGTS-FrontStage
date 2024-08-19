@@ -47,7 +47,7 @@ const UserProfile = ({ navigation, route }) => {
       const response = await getListsFollowers(user.id);
       setFollowersCount(response.result.length);
     } catch (error) {
-      console.error('Error fetching followers count:', error);
+      console.log('Error fetching followers count:', error);
     }
   };
 
@@ -56,7 +56,7 @@ const UserProfile = ({ navigation, route }) => {
       const response = await getListsFollowing(user.id);
       setFollowingCount(response.result.length);
     } catch (error) {
-      console.error('Error fetching following count:', error);
+      console.log('Error fetching following count:', error);
     }
   };
 
@@ -65,7 +65,7 @@ const UserProfile = ({ navigation, route }) => {
       const response = await getRatingByUserId(user.id);
       setRatingCount(response.result.length);
     } catch (error) {
-      console.error('Error fetching rating:', error);
+      console.log('Error fetching rating:', error);
     }
   };
 
@@ -75,7 +75,7 @@ const UserProfile = ({ navigation, route }) => {
       const response = await getPostsByUserId(user.id);
       setPosts(response?.data?.result);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -86,7 +86,7 @@ const UserProfile = ({ navigation, route }) => {
       const status = await checkIfFollowing(userIdLogged, user.id);
       setIsFollowing(status);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 
@@ -122,7 +122,7 @@ const UserProfile = ({ navigation, route }) => {
       }
       setIsFollowing(!isFollowing);
     } catch (error) {
-      console.error('Error in handleFollowToggle:', error);
+      console.log('Error in handleFollowToggle:', error);
     } finally {
       setLoading(false);
     }

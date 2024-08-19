@@ -423,7 +423,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
                             (
                                 <View style={styles.confirm}>
                                     <Text style={[styles.confirmText, {width: '90%', marginTop: 15}]}>
-                                        Sản phẩm của bạn đã được vận chuyển thành công. Vui lòng chờ đánh giá từ người bán sau đó thực hiện đánh giá người mua để hoàn thành quy trình vận chuyển hàng.
+                                        Sản phẩm của bạn đã được vận chuyển thành công. Vui lòng chờ đánh giá từ người mua sau đó thực hiện đánh giá để hoàn thành quy trình vận chuyển hàng.
                                     </Text>
                                 </View>
                             )

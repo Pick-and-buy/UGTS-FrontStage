@@ -45,7 +45,7 @@ const SellerProfile = ({ navigation, route }) => {
             setFollowersCount(response.result.length);
             console.log(response.result.length);
         } catch (error) {
-            console.error('Error fetching followers count:', error);
+            console.log('Error fetching followers count:', error);
         }
     };
 
@@ -54,7 +54,7 @@ const SellerProfile = ({ navigation, route }) => {
             const response = await getListsFollowing(userOfPost.id);
             setFollowingCount(response.result.length);
         } catch (error) {
-            console.error('Error fetching following count:', error);
+            console.log('Error fetching following count:', error);
         }
     };
 
@@ -64,7 +64,7 @@ const SellerProfile = ({ navigation, route }) => {
             const response = await getPostsByUserId(userOfPost.id);
             setPostsOfSeller(response?.data?.result);
         } catch (error) {
-            console.error(error);
+            console.log(error);
         } finally {
             setLoading(false);
         }
@@ -75,7 +75,7 @@ const SellerProfile = ({ navigation, route }) => {
             const status = await checkIfFollowing(userIdLogged, userOfPost.id);
             setIsFollowing(status);
         } catch (error) {
-            console.error(error);
+            console.log(error);
         }
     };
 
@@ -113,7 +113,7 @@ const SellerProfile = ({ navigation, route }) => {
             }
             setIsFollowing(!isFollowing);
         } catch (error) {
-            console.error('Error in handleFollowToggle:', error);
+            console.log('Error in handleFollowToggle:', error);
         } finally {
             setLoading(false);
         }

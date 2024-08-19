@@ -37,7 +37,7 @@ const Appreciation = ({ navigation, route }) => {
       setFollowStatus(statusMap);
       console.log('Follow status map:', statusMap); // Debugging log
     } catch (error) {
-      console.error('Error fetching follower:', error);
+      console.log('Error fetching follower:', error);
     }
   };
 
@@ -46,7 +46,7 @@ const Appreciation = ({ navigation, route }) => {
       const status = await checkIfFollowing(user.id, userItem.id);
       return status;
     } catch (error) {
-      console.error(error);
+      console.log(error);
       return false;
     }
   };
@@ -73,7 +73,7 @@ const Appreciation = ({ navigation, route }) => {
         [userItemId]: !currentStatus
       }); // Debugging log
     } catch (error) {
-      console.error('Error in handleFollowToggle:', error);
+      console.log('Error in handleFollowToggle:', error);
     } finally {
       setLoading(false);
     }

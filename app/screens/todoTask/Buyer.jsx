@@ -70,7 +70,7 @@ const Buyer = ({ navigation }) => {
             const filteredOrders = res.result.filter(order => order.buyer.id === user.id);
             setListOrdersBuyer(filteredOrders);
         } catch (error) {
-            console.error("Error fetching Orders by order status:", error);
+            console.log("Error fetching Orders by order status:", error);
         } finally {
             setIsLoading(false);
         }

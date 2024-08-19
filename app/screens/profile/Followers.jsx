@@ -34,7 +34,7 @@ const Followers = ({ navigation, route }) => {
       });
       setFollowStatus(statusMap);
     } catch (error) {
-      console.error('Error fetching follower:', error);
+      console.log('Error fetching follower:', error);
     }
   };
 
@@ -43,7 +43,7 @@ const Followers = ({ navigation, route }) => {
       const status = await checkIfFollowing(user.id, userItem.id);
       return status;
     } catch (error) {
-      console.error(error);
+      console.log(error);
       return false;
     }
   };
@@ -66,7 +66,7 @@ const Followers = ({ navigation, route }) => {
         [userItem.id]: !currentStatus
       }));
     } catch (error) {
-      console.error('Error in handleFollowToggle:', error);
+      console.log('Error in handleFollowToggle:', error);
     } finally {
       setLoading(false);
     }

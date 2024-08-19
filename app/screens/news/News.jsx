@@ -19,7 +19,7 @@ const News = ({ navigation, route }) => {
             setNewsDetails(response.data.result);
             // console.log(response.data);
         } catch (error) {
-            console.error("Error fetching news details:", error);
+            console.log("Error fetching news details:", error);
         }
     };
 

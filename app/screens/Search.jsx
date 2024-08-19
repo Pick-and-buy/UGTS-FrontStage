@@ -41,7 +41,7 @@ const Search = () => {
       setResults(response.data.result);
       await saveSearchHistory(query);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -63,7 +63,7 @@ const Search = () => {
         setSearchHistory(historyArray);
       }
     } catch (error) {
-      console.error('Failed to save search history:', error);
+      console.log('Failed to save search history:', error);
     }
   };
 
@@ -74,7 +74,7 @@ const Search = () => {
         setSearchHistory(JSON.parse(history));
       }
     } catch (error) {
-      console.error('Failed to load search history:', error);
+      console.log('Failed to load search history:', error);
     }
   };
 
@@ -83,7 +83,7 @@ const Search = () => {
       await AsyncStorage.removeItem('searchHistory');
       setSearchHistory([]);
     } catch (error) {
-      console.error('Failed to clear search history:', error);
+      console.log('Failed to clear search history:', error);
     }
   };
 
@@ -95,7 +95,7 @@ const Search = () => {
       await AsyncStorage.setItem('searchHistory', JSON.stringify(updatedHistory));
       setSearchHistory(updatedHistory);
     } catch (error) {
-      console.error('Failed to remove search history item:', error);
+      console.log('Failed to remove search history item:', error);
     }
   };
 

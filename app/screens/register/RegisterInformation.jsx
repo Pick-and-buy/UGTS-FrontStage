@@ -32,7 +32,7 @@ const RegisterInformation = ({ navigation, route }) => {
                 routes: [{ name: 'login-navigation' }],
             });
         } catch (error) {
-            console.error('Registration failed:', error.response ? error.response.data : error.message);
+            console.log('Registration failed:', error.response ? error.response.data : error.message);
             Alert.alert('Registration Error', error.response ? error.response.data.message : 'Something went wrong, please try again.');
         }
     };

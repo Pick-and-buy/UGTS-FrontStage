@@ -38,7 +38,7 @@ const OrderSuccessfully = ({ navigation, route }) => {
             const response = await getAllPosts();
             setPosts(response.data.result);
         } catch (error) {
-            console.error(error);
+            console.log(error);
         } finally {
             setLoading(false);
         }
