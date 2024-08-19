@@ -43,7 +43,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
             setUpdatedOrderInfo(data.result);
             setVideoUri(data?.result?.orderDetails?.packingVideo)
         } catch (error) {
-            console.error('Fetching order data by order id failed:', error);
+            console.log('Fetching order data by order id failed:', error);
         }
     }
 
@@ -90,7 +90,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
                 ]
             );
         } catch (error) {
-            console.error('Submit cancel seller order: ', error);
+            console.log('Submit cancel seller order: ', error);
         }
     };
 
@@ -117,7 +117,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
             }
 
         } catch (error) {
-            console.error('Submit Accept seller order: ', error);
+            console.log('Submit Accept seller order: ', error);
         }
 
     }
@@ -136,7 +136,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
                 setVideoUri(result.assets[0].uri);
             }
         } catch (error) {
-            console.error('Error Upload Image: ', error);
+            console.log('Error Upload Image: ', error);
         }
     };
 

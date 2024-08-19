@@ -63,6 +63,7 @@ const QuickCreatePost = () => {
     const [selectedBrandLine, setSelectedBrandLine] = useState(null);
 
     const [loader, setLoader] = useState(false);
+    const [isDataLoaded, setIsDataLoaded] = useState(false); // Add state to track data loading
 
     const [isChecked_2, setChecked_2] = useState(false);
     const [isChecked_3, setChecked_3] = useState(false);
@@ -196,6 +197,7 @@ const QuickCreatePost = () => {
         try {
             const { valid, message } = validateImages();
             if (valid) {
+                setIsDataLoaded(true);
                 // Handle form submission here
                 let { title, brandName, productName, brandLineName, condition, category, exteriorMaterial,
                     interiorMaterial, size, width, height, length, referenceCode, manufactureYear, color, accessories, dateCode,
@@ -217,7 +219,7 @@ const QuickCreatePost = () => {
                 } else if (isChecked_3) {
                     calculatedPrice = parseInt(convertStringPrice, 10) - feeLegitgrails;
                 } else {
-                    calculatedPrice = "";
+                    calculatedPrice = calculatedPrice = parseInt(convertStringPrice, 10);
                 }
 
                 const formData = new FormData();
@@ -286,6 +288,8 @@ const QuickCreatePost = () => {
                 } else {
                     await createPost_Level_1(formData);
                 }
+
+                setIsDataLoaded(false);
                 navigation.navigate('Home')
                 setImages([
                     { index: '1', label: 'Overall picture', name: 'Overallpicture', logoUrl: require('../../../assets/images/bag/overall_picture.png'), value: '' },
@@ -331,7 +335,7 @@ const QuickCreatePost = () => {
                 );
             }
         } catch (error) {
-            console.error('ERROR handle create post: ', error);
+            console.log('ERROR handle create post: ', error);
         }
     }
 
@@ -350,7 +354,7 @@ const QuickCreatePost = () => {
                 setImages(newImages);
             }
         } catch (error) {
-            console.error('Error Upload Image: ', error);
+            console.log('Error Upload Image: ', error);
         }
     }
 
@@ -369,7 +373,7 @@ const QuickCreatePost = () => {
                 setImages(newImages);
             }
         } catch (error) {
-            console.error('Error Upload Image: ', error);
+            console.log('Error Upload Image: ', error);
         }
     };
 
@@ -393,7 +397,7 @@ const QuickCreatePost = () => {
                 setInvoice(newImages);
             }
         } catch (error) {
-            console.error('Error Upload Image: ', error);
+            console.log('Error Upload Image: ', error);
         }
     }
 
@@ -416,7 +420,7 @@ const QuickCreatePost = () => {
                 setVideoUri(result.assets[0].uri);
             }
         } catch (error) {
-            console.error('Error Upload Image: ', error);
+            console.log('Error Upload Image: ', error);
         }
     };
 
@@ -431,6 +435,14 @@ const QuickCreatePost = () => {
             maximumFractionDigits: 0
         }).format(price);
     };
+
+    if (isDataLoaded) {
+        return (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text>Loading...</Text>
+          </View>
+        );
+      }
 
     const renderImages = ({ item, index }) => {
         return (

@@ -352,7 +352,7 @@ const CreatePost = () => {
         );
       }
     } catch (error) {
-      console.error('ERROR handle create post: ', error);
+      console.log('ERROR handle create post: ', error);
     }
   }
 
@@ -371,7 +371,7 @@ const CreatePost = () => {
         setImages(newImages);
       }
     } catch (error) {
-      console.error('Error Upload Image: ', error);
+      console.log('Error Upload Image: ', error);
     }
   }
 
@@ -390,7 +390,7 @@ const CreatePost = () => {
         setImages(newImages);
       }
     } catch (error) {
-      console.error('Error Upload Image: ', error);
+      console.log('Error Upload Image: ', error);
     }
   };
 
@@ -414,7 +414,7 @@ const CreatePost = () => {
         setInvoice(newImages);
       }
     } catch (error) {
-      console.error('Error Upload Image: ', error);
+      console.log('Error Upload Image: ', error);
     }
   }
 
@@ -437,7 +437,7 @@ const CreatePost = () => {
         setVideoUri(result.assets[0].uri);
       }
     } catch (error) {
-      console.error('Error Upload Image: ', error);
+      console.log('Error Upload Image: ', error);
     }
   };
 

@@ -16,7 +16,7 @@ const Notification = ({ navigation }) => {
             const data = await getOrderByOrderId(orderId);
             return data.result;
         } catch (error) {
-            console.error('Fetching order data by order id failed:', error);
+            console.log('Fetching order data by order id failed:', error);
             return null;
         }
     };

@@ -24,7 +24,7 @@ const PostsOfFollowedUser = ({ navigation, route }) => {
       const posts = response.data.result;
       setPosts(posts);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     } finally {
       setLoading(false);
     }

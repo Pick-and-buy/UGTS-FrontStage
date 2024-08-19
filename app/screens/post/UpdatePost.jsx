@@ -397,7 +397,7 @@ const UpdatePost = ({ route }) => {
                 );
             }
         } catch (error) {
-            console.error('ERROR handle create post: ', error);
+            console.log('ERROR handle create post: ', error);
         }
     }
 
@@ -415,7 +415,7 @@ const UpdatePost = ({ route }) => {
                 setImages(newImages);
             }
         } catch (error) {
-            console.error('Error Upload Image: ', error);
+            console.log('Error Upload Image: ', error);
         }
     }
 
@@ -435,7 +435,7 @@ const UpdatePost = ({ route }) => {
                 setImages(newImages);
             }
         } catch (error) {
-            console.error('Error Upload Image: ', error);
+            console.log('Error Upload Image: ', error);
         }
     };
 
@@ -459,7 +459,7 @@ const UpdatePost = ({ route }) => {
                 setInvoice(newImages);
             }
         } catch (error) {
-            console.error('Error Upload Image: ', error);
+            console.log('Error Upload Image: ', error);
         }
     }
 
@@ -482,7 +482,7 @@ const UpdatePost = ({ route }) => {
                 setVideoUri(result.assets[0].uri);
             }
         } catch (error) {
-            console.error('Error Upload Image: ', error);
+            console.log('Error Upload Image: ', error);
         }
     };
 

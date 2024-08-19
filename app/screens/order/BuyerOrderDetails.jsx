@@ -58,7 +58,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
       setVideoUri(data?.result?.orderDetails?.receivePackageVideo)
       setVideoPackage(data?.result?.orderDetails?.packingVideo)
     } catch (error) {
-      console.error('Fetching order data by order id failed:', error);
+      console.log('Fetching order data by order id failed:', error);
     }
   }
 
@@ -114,7 +114,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
         onConfirm: () => setModalVisible(false)
       });
     } catch (error) {
-      console.error('Submit update buyer order', error);
+      console.log('Submit update buyer order', error);
     }
   };
 
@@ -130,7 +130,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
           navigation.navigate('cancel-successfully', { orderInfo: orderInfo });
           setModalVisible(false); // Close the modal after the order is canceled
         } catch (error) {
-          console.error('Submit cancel buyer order: ', error);
+          console.log('Submit cancel buyer order: ', error);
         }
       },
     });
@@ -153,7 +153,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
         setVideoUri(result.assets[0].uri);
       }
     } catch (error) {
-      console.error('Error Upload Image: ', error);
+      console.log('Error Upload Image: ', error);
     }
   };
 
@@ -178,7 +178,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
       }
       setShowAddRating(true)
     } catch (error) {
-      console.error('ERROR handle update video: ', error);
+      console.log('ERROR handle update video: ', error);
     }
   }
 

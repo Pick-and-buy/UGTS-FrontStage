@@ -19,7 +19,7 @@ export const order = async (paymentMethod, addressId, deliveryDate, receivedDate
         });
         return response.data;
     } catch (error) {
-        console.error('Error order:', error);
+        console.log('Error order:', error);
         throw error;
     }
 };
@@ -46,7 +46,7 @@ export const updateOrderBuyer = async (orderInfo, selectedAddress) => {
         });
         return response.data;
     } catch (error) {
-        console.error('Error update order:', error);
+        console.log('Error update order:', error);
         throw error;
     }
 };
@@ -73,7 +73,7 @@ export const cancelOrderBuyer = async (orderInfo, selectedAddress) => {
         });
         return response.data;
     } catch (error) {
-        console.error('Error cancel order:', error);
+        console.log('Error cancel order:', error);
         throw error;
     }
 };
@@ -83,7 +83,7 @@ export const callFetchListOrders = async () => {
         const response = await axiosInstance.get('/orders');
         return response.data;
     } catch (error) {
-        console.error('Error fetching List Orders:', error);
+        console.log('Error fetching List Orders:', error);
         throw error;
     }
 }
@@ -93,7 +93,7 @@ export const getOrderByOrderId = async (orderId) => {
         const response = await axiosInstance.get(`/orders/details?orderId=${orderId}`);
         return response.data;
     } catch (error) {
-        console.error('Error fetching Order By OrderId: ', error);
+        console.log('Error fetching Order By OrderId: ', error);
         throw error;
     }
 }
@@ -103,7 +103,7 @@ export const getOrdersByOrderStatus = async (orderStatus) => {
         const response = await axiosInstance.get(`/orders/status?orderStatus=${orderStatus}`);
         return response.data;
     } catch (error) {
-        console.error('Error fetching Orders By Order Status: ', error);
+        console.log('Error fetching Orders By Order Status: ', error);
         throw error;
     }
 }
@@ -116,7 +116,7 @@ export const cancelOrderSeller = async (orderId) => {
         });
         return response.data;
     } catch (error) {
-        console.error('Error cancel order:', error);
+        console.log('Error cancel order:', error);
         throw error;
     }
 };
@@ -129,7 +129,7 @@ export const updateOrderSeller = async (orderId) => {
         });
         return response.data;
     } catch (error) {
-        console.error('Error update order:', error);
+        console.log('Error update order:', error);
         throw error;
     }
 };
@@ -147,7 +147,7 @@ export const uploadReceivePackageVideoByBuyer = async (orderId, formData) => {
         });
         return response;
     } catch (error) {
-        console.error('Error Update Receive Package Video:', error);
+        console.log('Error Update Receive Package Video:', error);
         throw error;
     }
 };
@@ -165,7 +165,7 @@ export const uploadPackageVideoBySeller = async (orderId, formData) => {
         });
         return response;
     } catch (error) {
-        console.error('Error Update Receive Package Video:', error);
+        console.log('Error Update Receive Package Video:', error);
         throw error;
     }
 };
@@ -175,6 +175,6 @@ const getAuthToken = async () => {
         const token = await AsyncStorage.getItem('token');
         return token;
     } catch (error) {
-        console.error("Error retrieving token: ", error);
+        console.log("Error retrieving token: ", error);
     }
 };

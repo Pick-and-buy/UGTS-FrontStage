@@ -19,7 +19,7 @@ const Brands = () => {
             const res = await callFetchListBrands();
             setListBrands(res.data.result.brands);
         } catch (error) {
-            console.error("Error fetching brands:", error);
+            console.log("Error fetching brands:", error);
             // Handle error as per your application's requirements
         } finally {
             setIsLoading(false);

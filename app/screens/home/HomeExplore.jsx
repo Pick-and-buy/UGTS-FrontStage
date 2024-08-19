@@ -38,7 +38,7 @@ const HomeExplore = ({ navigation }) => {
             setPosts(posts);
             setFilteredPosts(posts);
         } catch (error) {
-            console.error(error);
+            console.log(error);
         } finally {
             setLoading(false);
         }

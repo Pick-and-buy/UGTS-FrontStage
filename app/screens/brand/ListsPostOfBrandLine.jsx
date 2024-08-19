@@ -28,7 +28,7 @@ const ListsPostOfBrandLine = ({ navigation }) => {
             const res = await getPostsByBrandLineName(brandLine);
             setListPosts(res.data.result);
         } catch (error) {
-            console.error("Error fetching brands line:", error);
+            console.log("Error fetching brands line:", error);
         } finally {
             setIsLoading(false);
         }

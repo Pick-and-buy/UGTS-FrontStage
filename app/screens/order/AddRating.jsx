@@ -17,7 +17,7 @@ const AddRating = ({ navigation, orderInfo }) => {
       alert("Cảm ơn bạn đã để lại đánh giá")
       navigation.navigate("bottom-navigation")
     } catch (error) {
-      console.error('Fetching rating failed:', error.response ? error.response.data : error.message);
+      console.log('Fetching rating failed:', error.response ? error.response.data : error.message);
     }
   };
 

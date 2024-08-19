@@ -99,7 +99,7 @@ const OrderDetails = ({ navigation, route }) => {
                 if (user.result.wallet.balance < totalPrice) {
                     setModalContent({
                         title: 'Số dư tài khoản không đủ',
-                        detailText: 'Vui lòng nạp thêm tiền vào tài khoản hoặc chọn phương thức thanh toán khác.',
+                        detailText: 'Vui lòng nạp thêm tiền vào tài khoản để thực hiện mua hàng.',
                         confirmText: 'Xác nhận',
                         cancelText: 'Thoát',
                         onConfirm: () => setModalVisible(false),
@@ -116,12 +116,9 @@ const OrderDetails = ({ navigation, route }) => {
                 }
             }
         } catch (error) {
-            console.error('Failed to place order:', error);
+            console.log('Failed to place order:', error);
         }
     };
-
-
-
 
     const fetchUserData = async () => {
         try {
@@ -131,7 +128,7 @@ const OrderDetails = ({ navigation, route }) => {
             const defaultAddress = userData.result.address.find(address => address.default);
             setSelectedAddress(defaultAddress);
         } catch (error) {
-            console.error('Fetching user data failed:', error);
+            console.log('Fetching user data failed:', error);
         }
     };
 

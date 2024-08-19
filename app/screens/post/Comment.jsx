@@ -55,7 +55,7 @@ const Comment = ({ visible, onClose, postId, isAuthenticated, user, navigation }
             setNewComment(""); // Clear the input field
             fetchComments(); // Fetch updated comments list
         } catch (error) {
-            console.error("Error posting comment", error);
+            console.log("Error posting comment", error);
         }
     };
 
@@ -68,7 +68,7 @@ const Comment = ({ visible, onClose, postId, isAuthenticated, user, navigation }
             }));
             setComments(formattedComments.reverse()); // Reverse the fetched comments
         } catch (error) {
-            console.error("Error fetching comments:", error);
+            console.log("Error fetching comments:", error);
         }
     };
 

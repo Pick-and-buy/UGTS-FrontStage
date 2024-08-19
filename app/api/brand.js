@@ -5,7 +5,7 @@ export const callFetchListBrands = async () => {
     const response = await axiosInstance.get('/brands');
     return response;
   } catch (error) {
-    console.error('Error fetching List Brands:', error);
+    console.log('Error fetching List Brands:', error);
       throw error;
   }
 }

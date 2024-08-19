@@ -98,7 +98,7 @@ const PostDetail = ({ navigation, route }) => {
             const token = await AsyncStorage.getItem('token');
             setIsAuthenticated(!!token);
         } catch (error) {
-            console.error("Error checking authentication status:", error);
+            console.log("Error checking authentication status:", error);
         }
     };
 
@@ -108,7 +108,7 @@ const PostDetail = ({ navigation, route }) => {
             setUserId(userInfo.result.id);
             setUser(userInfo.result)
         } catch (error) {
-            console.error("Error fetching user data:", error);
+            console.log("Error fetching user data:", error);
         }
     };
 
@@ -119,7 +119,7 @@ const PostDetail = ({ navigation, route }) => {
             const isPostLiked = likedPosts.some((post) => post.id === postId);
             setIsLiked(isPostLiked);
         } catch (error) {
-            console.error("Error checking if post is liked:", error);
+            console.log("Error checking if post is liked:", error);
         }
     };
 
@@ -131,7 +131,7 @@ const PostDetail = ({ navigation, route }) => {
             console.log('>>> check postInfor: ', postInfo);
 
         } catch (error) {
-            console.error(error);
+            console.log(error);
         } finally {
             setIsLoading(false);
         }
@@ -146,7 +146,7 @@ const PostDetail = ({ navigation, route }) => {
             }));
             setComments(formattedComments.reverse()); // Reverse the fetched comments
         } catch (error) {
-            console.error("Error fetching comments:", error);
+            console.log("Error fetching comments:", error);
         }
     };
 
@@ -179,7 +179,7 @@ const PostDetail = ({ navigation, route }) => {
             }
             setIsLiked(!isLiked);
         } catch (error) {
-            console.error("Error updating like status", error);
+            console.log("Error updating like status", error);
         }
     };
 
@@ -226,7 +226,7 @@ const PostDetail = ({ navigation, route }) => {
             setRatings(response.result);
             calculateAverageRating(response.result);
         } catch (error) {
-            console.error('Error fetching ratings in post details', error);
+            console.log('Error fetching ratings in post details', error);
         }
     };
 

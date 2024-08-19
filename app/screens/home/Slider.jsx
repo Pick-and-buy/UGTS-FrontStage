@@ -25,7 +25,7 @@ const Slider = ({ navigation }) => {
             setNews(response.data.result);
             fetchSlider(response.data.result);
         } catch (error) {
-            console.error("Error fetching news:", error);
+            console.log("Error fetching news:", error);
         }
     };
 
