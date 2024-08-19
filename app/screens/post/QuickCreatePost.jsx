@@ -197,7 +197,7 @@ const QuickCreatePost = () => {
         try {
             const { valid, message } = validateImages();
             if (valid) {
-                setIsDataLoaded(true);
+                setIsDataLoaded(true);   //Thực hiện màn hình hiển thị chữ Loading... trong lúc chờ call API thành công
                 // Handle form submission here
                 let { title, brandName, productName, brandLineName, condition, category, exteriorMaterial,
                     interiorMaterial, size, width, height, length, referenceCode, manufactureYear, color, accessories, dateCode,

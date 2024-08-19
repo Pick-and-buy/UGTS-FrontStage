@@ -40,6 +40,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
   const [videoPackage, setVideoPackage] = useState("");
 
   const [isBuyerRate, setIsBuyerRate] = useState(false);
+  const [isDataLoaded, setIsDataLoaded] = useState(false); // Add state to track data loading
 
   useEffect(() => {
     if (orderInfo) {
@@ -171,6 +172,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
   const handleSubmitReceived = async (orderInfo) => {
     try {
       if (videoUri) {
+        setIsDataLoaded(true);   //Thực hiện màn hình hiển thị chữ Loading... trong lúc chờ call API thành công
         let orderId = orderInfo.id;
         const formData = new FormData();
         const videoFileName = videoUri.split('/').pop();
@@ -180,11 +182,22 @@ const BuyerOrderDetails = ({ navigation, route }) => {
           name: videoFileName,
         });
         await uploadReceivePackageVideoByBuyer(orderId, formData);
+
+        setIsDataLoaded(false);
+
       }
       setShowAddRating(true)
     } catch (error) {
       console.log('ERROR handle update video: ', error);
     }
+  }
+
+  if (isDataLoaded) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Loading...</Text>
+      </View>
+    );
   }
 
   return (
@@ -380,7 +393,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
             {videoUri === "" || videoUri === null ?
               (
                 <>
-                {/* Nếu người dùng chưa rate thì cho phép upload video nhận hàng còn khi đã rate thì xóa bỏ chức năng upload video */}
+                  {/* Nếu người dùng chưa rate thì cho phép upload video nhận hàng còn khi đã rate thì xóa bỏ chức năng upload video */}
                   {!isBuyerRate ?
                     (
                       <View style={styles.videoContainer}>
