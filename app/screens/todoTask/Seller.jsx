@@ -46,7 +46,7 @@ const Seller = ({ navigation }) => {
       const filteredOrders = res.result.filter(order => order.post.user.id === user.id);
       setListOrdersSeller(filteredOrders);
     } catch (error) {
-      console.error("Error fetching Orders:", error);
+      console.log("Error fetching Orders:", error);
     }
     setIsLoading(false);
   };
@@ -73,9 +73,9 @@ const Seller = ({ navigation }) => {
         case "Đã nhận hàng":
           orderStatus = "RECEIVED";
           break;
-        case "Trả lại":
-          orderStatus = "RETURNED";
-          break;
+        // case "Trả lại":
+        //   orderStatus = "RETURNED";
+        //   break;
         case "Hoàn thành":
           orderStatus = "COMPLETED";
           break;
@@ -87,7 +87,7 @@ const Seller = ({ navigation }) => {
       const filteredOrders = res.result.filter(order => order.post.user.id === user.id);
       setListOrdersSeller(filteredOrders);
     } catch (error) {
-      console.error("Error fetching Orders by order status:", error);
+      console.log("Error fetching Orders by order status:", error);
     } finally {
       setIsLoading(false);
     }
@@ -108,7 +108,7 @@ const Seller = ({ navigation }) => {
     { id: '5', value: 'Đã nhận hàng' },
     { id: '6', value: 'Hoàn thành' },
     { id: '7', value: 'Đã hủy' },
-    { id: '8', value: 'Trả lại' },
+    // { id: '8', value: 'Trả lại' },
   ];
 
   const handleOrderStatusPress = (orderStatusName) => {
@@ -139,7 +139,7 @@ const Seller = ({ navigation }) => {
         ]
       );
     } catch (error) {
-      console.error('Submit cancel buyer order: ', error);
+      console.log('Submit cancel buyer order: ', error);
     }
   };
 
@@ -205,13 +205,13 @@ const Seller = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         }
-        {item?.orderDetails?.status === "RETURNED" &&
+        {/* {item?.orderDetails?.status === "RETURNED" &&
           <View style={styles.buttonWrapper}>
             <TouchableOpacity style={[styles.primaryBtn, { backgroundColor: COLORS.gray2 }]} onPress={() => handleSellerOrderDetail(item)}>
               <Text style={[styles.cancelBtnText, { color: COLORS.white }]}>{"Trả hàng"}</Text>
             </TouchableOpacity>
           </View>
-        }
+        } */}
       </View>
     </TouchableOpacity>
   );
