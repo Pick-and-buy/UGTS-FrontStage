@@ -353,7 +353,8 @@ const BuyerOrderDetails = ({ navigation, route }) => {
             <View>
               {/* List phương thức thanh toán in here*/}
               <Text>
-                {updatedOrderInfo?.orderDetails?.paymentMethod}
+                {/* {updatedOrderInfo?.orderDetails?.paymentMethod} */}
+                LuxBagPay
               </Text>
             </View>
           </View>
@@ -387,6 +388,74 @@ const BuyerOrderDetails = ({ navigation, route }) => {
           </View>
         </View>
         <View style={styles.divider} />
+
+        {updatedOrderInfo?.orderDetails?.status === "PROCESSING" &&
+          <View style={styles.videoContainer}>
+            <View
+              //onPress={UploadVideoScreen}
+              style={styles.uploadVideoContainer_1}
+            >
+              <Image
+                style={styles.imageSelect_1}
+                source={require('../../../assets/images/video-player.png')}
+              />
+              <Text style={{ fontSize: 16 }}>Video nhận hàng</Text>
+            </View>
+            <View style={styles.uploadVideo_1}>
+              <Video
+                source={{ uri: videoPackage }}
+                style={styles.uploadVideoStyle_1}
+                useNativeControls
+                resizeMode="cover"
+                shouldPlay
+                isLooping
+                isMuted={isMuted} // Set initial state to mute
+                onPlaybackStatusUpdate={(status) => {
+                  if (!status.isPlaying && status.isMuted !== isMuted) {
+                    setIsMuted(true); // Ensure the video starts muted
+                  }
+                }}
+              />
+              <View style={{ marginHorizontal: 'auto', marginTop: 5 }}>
+                <Text style={[styles.confirmTextRECEIVED, { fontSize: 16 }]}>Video đóng gói</Text>
+              </View>
+            </View>
+          </View>
+        }
+
+        {updatedOrderInfo?.orderDetails?.status === "DELIVERING" &&
+          <View style={[styles.videoContainer, {marginBottom: 50}]}>
+            <View
+              //onPress={UploadVideoScreen}
+              style={styles.uploadVideoContainer_1}
+            >
+              <Image
+                style={styles.imageSelect_1}
+                source={require('../../../assets/images/video-player.png')}
+              />
+              <Text style={{ fontSize: 16 }}>Video nhận hàng</Text>
+            </View>
+            <View style={styles.uploadVideo_1}>
+              <Video
+                source={{ uri: videoPackage }}
+                style={styles.uploadVideoStyle_1}
+                useNativeControls
+                resizeMode="cover"
+                shouldPlay
+                isLooping
+                isMuted={isMuted} // Set initial state to mute
+                onPlaybackStatusUpdate={(status) => {
+                  if (!status.isPlaying && status.isMuted !== isMuted) {
+                    setIsMuted(true); // Ensure the video starts muted
+                  }
+                }}
+              />
+              <View style={{ marginHorizontal: 'auto', marginTop: 5 }}>
+                <Text style={[styles.confirmTextRECEIVED, { fontSize: 16 }]}>Video đóng gói</Text>
+              </View>
+            </View>
+          </View>
+        }
 
         {updatedOrderInfo?.orderDetails?.status === "RECEIVED" && !showAddRating &&
           <View style={styles.receivedContainer}>

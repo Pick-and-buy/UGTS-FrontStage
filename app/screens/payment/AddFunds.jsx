@@ -182,7 +182,7 @@ const AddFunds = ({ navigation }) => {
                                     Nhấn “Nạp tiền ngay”, bạn đã đồng ý tuân theo {" "}
                                     <Text style={styles.highlightText}>Điều khoản sử dụng</Text> và {" "}
                                     <Text style={styles.highlightText}>Chính sách bảo mật </Text>
-                                    của GiatotPay
+                                    của LuxBagPay
                                 </Text>
 
                                 <View style={styles.buttonContainer}>

@@ -308,7 +308,7 @@ const PostDetail = ({ navigation, route }) => {
                         <View style={styles.wallet}>
                             <AntDesign name="creditcard" size={20} color="gray" />
                             <Text style={styles.walletTitle}>
-                                Sử dụng ví GiaTotPay để mua hàng với giá ưu đãi
+                                Sử dụng ví LuxBagPay để mua hàng với giá ưu đãi
                             </Text>
                         </View>
                     </View>
