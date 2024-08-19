@@ -50,7 +50,7 @@ const AddFunds = ({ navigation }) => {
             setPaymentUrl(response.data.result);
             setShowWebView(true); // Show the WebView
         } catch (error) {
-            console.error('Fetching VNpay', error);
+            console.log('Fetching VNpay', error);
         }
     };
 
@@ -71,7 +71,7 @@ const AddFunds = ({ navigation }) => {
                     await fetchUserData();
                 }
             } catch (error) {
-                console.error('Fetching VNpay status', error);
+                console.log('Fetching VNpay status', error);
             } finally {
                 setIsProcessing(false);  // Reset the flag if needed
             }
@@ -182,7 +182,7 @@ const AddFunds = ({ navigation }) => {
                                     Nhấn “Nạp tiền ngay”, bạn đã đồng ý tuân theo {" "}
                                     <Text style={styles.highlightText}>Điều khoản sử dụng</Text> và {" "}
                                     <Text style={styles.highlightText}>Chính sách bảo mật </Text>
-                                    của GiatotPay
+                                    của LuxBagPay
                                 </Text>
 
                                 <View style={styles.buttonContainer}>

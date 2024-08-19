@@ -41,7 +41,7 @@ const Profile = ({ navigation }) => {
       setRatings(response.result);
       calculateAverageRating(response.result);
     } catch (error) {
-      console.error('Error fetching ratings in profile', error);
+      console.log('Error fetching ratings in profile', error);
     }
   };
 

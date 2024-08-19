@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
             }
             return response;
         // } catch (error) {
-        //     console.error('Login failed:', error);
+        //     console.log('Login failed:', error);
         // }
     };
 
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
             const userData = await getUserByToken();
             setUser(userData.result);
         } catch (error) {
-            console.error('Fetching user data failed:', error);
+            console.log('Fetching user data failed:', error);
         }
     };
 
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }) => {
             setUser(response.result);
             return response;
         } catch (error) {
-            console.error('Updating avatar failed:', error);
+            console.log('Updating avatar failed:', error);
         }
     };
 

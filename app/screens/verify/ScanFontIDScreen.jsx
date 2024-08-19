@@ -107,7 +107,7 @@ const ScanFontIDScreen = ({ navigation }) => {
             }
         } catch (error) {
             setLoading(false);
-            console.error('Error uploading image:', error);
+            console.log('Error uploading image:', error);
         }
     };
 

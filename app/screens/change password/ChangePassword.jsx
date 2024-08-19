@@ -48,7 +48,7 @@ const ChangePassword = ({ route, navigation }) => {
                 Alert.alert('Error', response.data.message || 'Failed to change password. Please try again.');
             }
         } catch (error) {
-            console.error('Password change error:', error);
+            console.log('Password change error:', error);
             Alert.alert('Error', 'Failed to change password. Please try again.');
         } finally {
             setSubmitting(false);

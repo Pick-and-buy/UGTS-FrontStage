@@ -313,7 +313,7 @@ const OrderDetails = ({ navigation, route }) => {
                                 </TouchableOpacity> */}
                                 <TouchableOpacity style={styles.method} onPress={() => setChecked('GiaTotPay')}>
                                     <View style={styles.column}>
-                                        <Text style={styles.methodText}>GiaTotPay</Text>
+                                        <Text style={styles.methodText}>LuxBagPay</Text>
                                         <Text style={styles.currentAmount}>Số dư hiện tại:
                                             <Text style={{ color: 'red' }}> {formatPrice(user?.result?.wallet?.balance)}₫</Text>
                                         </Text>

@@ -78,7 +78,7 @@ const Register = ({ navigation }) => {
                                 navigation.navigate('otp-sms-verification', { formData: values });
                                 resetForm();
                             } catch (error) {
-                                console.error(error);
+                                console.log(error);
                                 Alert.alert("Registration Error", "Something went wrong, please try again.");
                             } finally {
                                 setLoader(false);

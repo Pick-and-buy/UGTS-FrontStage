@@ -32,7 +32,7 @@ const Favourite = () => {
       setUser(userData.result);
       await fetchLikedPosts(userData.result.id); // Fetch liked posts after setting user data
     } catch (error) {
-      console.error('Fetching user data failed:', error);
+      console.log('Fetching user data failed:', error);
     }
   };
 
@@ -48,7 +48,7 @@ const Favourite = () => {
       const posts = response.data.result;
       setLikedPosts(posts);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     } finally {
       setLoading(false);
     }

@@ -319,7 +319,8 @@ const SellerOrderDetails = ({ navigation, route }) => {
                         <View style={styles.right}>
                             <TouchableOpacity style={styles.orderId} >
                                 <Text style={{ color: COLORS.gray }}>
-                                    {updatedOrderInfo?.orderDetails?.paymentMethod}
+                                    {/* {updatedOrderInfo?.orderDetails?.paymentMethod} */}
+                                    LuxBagPay
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -418,12 +419,12 @@ const SellerOrderDetails = ({ navigation, route }) => {
 
                 {updatedOrderInfo?.orderDetails?.status === "RECEIVED" && !showAddRating &&
                     <>
-                    {/* Nếu người mua chưa đánh giá sản phẩm thì người bán sẽ không có quyền đánh giá người mua */}
+                        {/* Nếu người mua chưa đánh giá sản phẩm thì người bán sẽ không có quyền đánh giá người mua */}
                         {!isBuyerRate ?
                             (
                                 <View style={styles.confirm}>
-                                    <Text style={[styles.confirmText, {width: '90%', marginTop: 15}]}>
-                                        Sản phẩm của bạn đã được vận chuyển thành công. Vui lòng chờ đánh giá từ người bán sau đó thực hiện đánh giá người mua để hoàn thành quy trình vận chuyển hàng.
+                                    <Text style={[styles.confirmText, { width: '90%', marginTop: 15 }]}>
+                                        Sản phẩm của bạn đã được vận chuyển thành công. Vui lòng chờ đánh giá từ người mua sau đó thực hiện đánh giá để hoàn thành quy trình vận chuyển hàng.
                                     </Text>
                                 </View>
                             )

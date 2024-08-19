@@ -62,7 +62,7 @@ const HomeFollow = ({ navigation }) => {
             const data = transformData(response.result);
             setFollowings(data);
         } catch (error) {
-            console.error('Error fetching followings:', error);
+            console.log('Error fetching followings:', error);
         } finally {
             setLoading(false);
         }

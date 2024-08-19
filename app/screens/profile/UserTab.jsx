@@ -26,7 +26,7 @@ const UserTab = ({ user, initialTab }) => {
       const response = await getRatingByUserId(user.id);
       setRatingCount(response.result.length);
     } catch (error) {
-      console.error('Error fetching followers count in user tab', error);
+      console.log('Error fetching followers count in user tab', error);
     }
   };
 
@@ -35,7 +35,7 @@ const UserTab = ({ user, initialTab }) => {
       const response = await getListsFollowers(user.id);
       setFollowersCount(response.result.length);
     } catch (error) {
-      console.error('Error fetching followers count in user tab', error);
+      console.log('Error fetching followers count in user tab', error);
     }
   };
 
@@ -44,7 +44,7 @@ const UserTab = ({ user, initialTab }) => {
       const response = await getListsFollowing(user.id);
       setFollowingCount(response.result.length);
     } catch (error) {
-      console.error('Error fetching following count in user tab', error);
+      console.log('Error fetching following count in user tab', error);
     }
   };
 

@@ -19,7 +19,7 @@ export const NotificationProvider = ({ children }) => {
                 setNotifications(data.result);
             }
         } catch (error) {
-            console.error('Fetching notifications failed:', error);
+            console.log('Fetching notifications failed:', error);
         }
     };
 
@@ -28,7 +28,7 @@ export const NotificationProvider = ({ children }) => {
             await updateNotificationsReadStatus(notificationId);
             fetchNotifications();
         } catch (error) {
-            console.error('Updating notification read status failed:', error);
+            console.log('Updating notification read status failed:', error);
         }
     };
 
@@ -37,7 +37,7 @@ export const NotificationProvider = ({ children }) => {
             await updateAllNotificationsReadStatus(userId);
             fetchNotifications();
         } catch (error) {
-            console.error('Updating notification read all status failed:', error);
+            console.log('Updating notification read all status failed:', error);
         }
     };
 

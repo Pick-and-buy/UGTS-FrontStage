@@ -116,7 +116,7 @@ const FaceMatch = ({ navigation, route }) => {
             }
 
         } catch (error) {
-            console.error('Error uploading images:', error);
+            console.log('Error uploading images:', error);
         } finally {
             setLoading(false);
         }
