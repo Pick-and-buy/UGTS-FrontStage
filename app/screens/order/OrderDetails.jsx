@@ -17,7 +17,7 @@ const OrderDetails = ({ navigation, route }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [checked, setChecked] = useState('COD');
+    const [checked, setChecked] = useState('GiaTotPay');
     const [productPrice, setProductPrice] = useState(0);
     const [shippingPrice, setShippingPrice] = useState(0);
     const [deliveryDateFrom, setDeliveryDateFrom] = useState(null);
@@ -91,11 +91,12 @@ const OrderDetails = ({ navigation, route }) => {
         const totalPrice = productPrice + shippingPrice;
 
         try {
-            if (checked === 'COD') {
-                const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id, shippingPrice);
-                console.log('Order placed successfully!');
-                navigation.navigate('order-successfully', { orderInfo: response.result });
-            } else if (checked === 'GiaTotPay') {
+            // if (checked === 'COD') {
+            //     const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id, shippingPrice);
+            //     console.log('Order placed successfully!');
+            //     navigation.navigate('order-successfully', { orderInfo: response.result });
+            // } else 
+            if (checked === 'GiaTotPay') {
                 if (user.result.wallet.balance < totalPrice) {
                     setModalContent({
                         title: 'Số dư tài khoản không đủ',
@@ -306,10 +307,10 @@ const OrderDetails = ({ navigation, route }) => {
                                 onValueChange={newValue => setChecked(newValue)}
                                 value={checked}
                             >
-                                <TouchableOpacity style={styles.method} onPress={() => setChecked('COD')}>
+                                {/* <TouchableOpacity style={styles.method} onPress={() => setChecked('COD')}>
                                     <Text style={styles.methodText}>Thanh toán khi nhận hàng</Text>
                                     <RadioButton value="COD" />
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                                 <TouchableOpacity style={styles.method} onPress={() => setChecked('GiaTotPay')}>
                                     <View style={styles.column}>
                                         <Text style={styles.methodText}>GiaTotPay</Text>
