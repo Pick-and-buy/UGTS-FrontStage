@@ -62,6 +62,7 @@ const CreatePost = () => {
   const [selectedBrandLine, setSelectedBrandLine] = useState(null);
 
   const [loader, setLoader] = useState(false);
+  const [isDataLoaded, setIsDataLoaded] = useState(false); // Add state to track data loading
 
   const [isChecked_2, setChecked_2] = useState(false);
   const [isChecked_3, setChecked_3] = useState(false);
@@ -203,6 +204,7 @@ const CreatePost = () => {
       const { valid, message } = validateImages();
 
       if (valid) {
+        setIsDataLoaded(true); 
         // Handle form submission here
         let { title, brandName, productName, brandLineName, condition, category, exteriorMaterial,
           interiorMaterial, size, width, height, length, referenceCode, manufactureYear, color, accessories, dateCode,
@@ -294,6 +296,9 @@ const CreatePost = () => {
         } else {
           await createPost_Level_1(formData);
         }
+
+        setIsDataLoaded(false);
+
         navigation.navigate('Home')
         setImages([
           { index: '1', label: 'Overall picture', name: 'Overallpicture', logoUrl: require('../../../assets/images/bag/overall_picture.png'), value: '' },
@@ -449,6 +454,14 @@ const CreatePost = () => {
       maximumFractionDigits: 0
     }).format(price);
   };
+
+  if (isDataLoaded) {
+    return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text>Loading...</Text>
+        </View>
+    );
+}
 
   const renderImages = ({ item, index }) => {
     return (
