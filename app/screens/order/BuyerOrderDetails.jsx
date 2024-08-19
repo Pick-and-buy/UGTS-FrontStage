@@ -36,6 +36,12 @@ const BuyerOrderDetails = ({ navigation, route }) => {
 
   const [videoUri, setVideoUri] = useState("");
   const [isMuted, setIsMuted] = useState(false);
+
+  const [videoPackage, setVideoPackage] = useState("");
+
+  const [isBuyerRate, setIsBuyerRate] = useState(false);
+  const [isDataLoaded, setIsDataLoaded] = useState(false); // Add state to track data loading
+
   useEffect(() => {
     if (orderInfo) {
       fetchOrderInfo();
@@ -53,8 +59,12 @@ const BuyerOrderDetails = ({ navigation, route }) => {
       const data = await getOrderByOrderId(orderInfo.id);
       setUpdatedOrderInfo(data.result);
       setVideoUri(data?.result?.orderDetails?.receivePackageVideo)
+      setVideoPackage(data?.result?.orderDetails?.packingVideo)
+      if (orderInfo?.isBuyerRate === true) {
+        setIsBuyerRate(true);
+      }
     } catch (error) {
-      console.error('Fetching order data by order id failed:', error);
+      console.log('Fetching order data by order id failed:', error);
     }
   }
 
@@ -110,7 +120,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
         onConfirm: () => setModalVisible(false)
       });
     } catch (error) {
-      console.error('Submit update buyer order', error);
+      console.log('Submit update buyer order', error);
     }
   };
 
@@ -126,7 +136,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
           navigation.navigate('cancel-successfully', { orderInfo: orderInfo });
           setModalVisible(false); // Close the modal after the order is canceled
         } catch (error) {
-          console.error('Submit cancel buyer order: ', error);
+          console.log('Submit cancel buyer order: ', error);
         }
       },
     });
@@ -149,7 +159,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
         setVideoUri(result.assets[0].uri);
       }
     } catch (error) {
-      console.error('Error Upload Image: ', error);
+      console.log('Error Upload Image: ', error);
     }
   };
 
@@ -162,6 +172,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
   const handleSubmitReceived = async (orderInfo) => {
     try {
       if (videoUri) {
+        setIsDataLoaded(true);   //Thực hiện màn hình hiển thị chữ Loading... trong lúc chờ call API thành công
         let orderId = orderInfo.id;
         const formData = new FormData();
         const videoFileName = videoUri.split('/').pop();
@@ -171,11 +182,22 @@ const BuyerOrderDetails = ({ navigation, route }) => {
           name: videoFileName,
         });
         await uploadReceivePackageVideoByBuyer(orderId, formData);
+
+        setIsDataLoaded(false);
+
       }
       setShowAddRating(true)
     } catch (error) {
-      console.error('ERROR handle update video: ', error);
+      console.log('ERROR handle update video: ', error);
     }
+  }
+
+  if (isDataLoaded) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Loading...</Text>
+      </View>
+    );
   }
 
   return (
@@ -366,111 +388,167 @@ const BuyerOrderDetails = ({ navigation, route }) => {
         </View>
         <View style={styles.divider} />
 
-        {/* Upload video */}
-        {/* {videoUri === "" ?
-          (
-            <TouchableOpacity
-              onPress={UploadVideoScreen}
-              style={styles.uploadVideoContainer}>
-              <Image
-                style={styles.imageSelect}
-                source={require('../../../assets/images/video-player.png')}
-              />
-              <Text style={{ fontSize: 16 }}>Video nhận hàng</Text>
-            </TouchableOpacity>
-          )
-          :
-          (
-            <View style={styles.uploadVideo}>
-              <Video
-                source={{ uri: videoUri }}
-                style={styles.uploadVideoStyle}
-                useNativeControls
-                resizeMode="cover"
-                shouldPlay
-                isLooping
-                isMuted={isMuted} // Set initial state to mute
-                onPlaybackStatusUpdate={(status) => {
-                  if (!status.isPlaying && status.isMuted !== isMuted) {
-                    setIsMuted(true); // Ensure the video starts muted
-                  }
-                }}
-              />
-              <TouchableOpacity onPress={() => removeVideo()} style={{ position: 'absolute', bottom: 10, left: 15 }}>
-                <FontAwesome6 name="xmark" size={20} color="white" />
-              </TouchableOpacity>
-            </View>
-          )
-
-        } */}
-
         {updatedOrderInfo?.orderDetails?.status === "RECEIVED" && !showAddRating &&
           <View style={styles.receivedContainer}>
             {videoUri === "" || videoUri === null ?
               (
-                <TouchableOpacity
-                  onPress={UploadVideoScreen}
-                  style={styles.uploadVideoContainer_1}>
-                  <Image
-                    style={styles.imageSelect_1}
-                    source={require('../../../assets/images/video-player.png')}
-                  />
-                  <Text style={{ fontSize: 16 }}>Video nhận hàng</Text>
-                </TouchableOpacity>
+                <>
+                  {/* Nếu người dùng chưa rate thì cho phép upload video nhận hàng còn khi đã rate thì xóa bỏ chức năng upload video */}
+                  {!isBuyerRate ?
+                    (
+                      <View style={styles.videoContainer}>
+                        <TouchableOpacity
+                          onPress={UploadVideoScreen}
+                          style={styles.uploadVideoContainer_1}
+                        >
+                          <Image
+                            style={styles.imageSelect_1}
+                            source={require('../../../assets/images/video-player.png')}
+                          />
+                          <Text style={{ fontSize: 16 }}>Video nhận hàng</Text>
+                        </TouchableOpacity>
+                        <View style={styles.uploadVideo_1}>
+                          <Video
+                            source={{ uri: videoPackage }}
+                            style={styles.uploadVideoStyle_1}
+                            useNativeControls
+                            resizeMode="cover"
+                            shouldPlay
+                            isLooping
+                            isMuted={isMuted} // Set initial state to mute
+                            onPlaybackStatusUpdate={(status) => {
+                              if (!status.isPlaying && status.isMuted !== isMuted) {
+                                setIsMuted(true); // Ensure the video starts muted
+                              }
+                            }}
+                          />
+                          <View style={{ marginHorizontal: 'auto', marginTop: 5 }}>
+                            <Text style={[styles.confirmTextRECEIVED, { fontSize: 16 }]}>Video đóng gói</Text>
+                          </View>
+                        </View>
+                      </View>
+                    )
+                    :
+                    (
+                      <View style={styles.videoContainer}>
+                        <View
+                          //onPress={UploadVideoScreen}
+                          style={styles.uploadVideoContainer_1}
+                        >
+                          <Image
+                            style={styles.imageSelect_1}
+                            source={require('../../../assets/images/video-player.png')}
+                          />
+                          <Text style={{ fontSize: 16 }}>Video nhận hàng</Text>
+                        </View>
+                        <View style={styles.uploadVideo_1}>
+                          <Video
+                            source={{ uri: videoPackage }}
+                            style={styles.uploadVideoStyle_1}
+                            useNativeControls
+                            resizeMode="cover"
+                            shouldPlay
+                            isLooping
+                            isMuted={isMuted} // Set initial state to mute
+                            onPlaybackStatusUpdate={(status) => {
+                              if (!status.isPlaying && status.isMuted !== isMuted) {
+                                setIsMuted(true); // Ensure the video starts muted
+                              }
+                            }}
+                          />
+                          <View style={{ marginHorizontal: 'auto', marginTop: 5 }}>
+                            <Text style={[styles.confirmTextRECEIVED, { fontSize: 16 }]}>Video đóng gói</Text>
+                          </View>
+                        </View>
+                      </View>
+                    )
+                  }
+                </>
               )
               :
               (
-                <View style={styles.uploadVideo_1}>
-                  <Video
-                    source={{ uri: videoUri }}
-                    style={styles.uploadVideoStyle_1}
-                    useNativeControls
-                    resizeMode="cover"
-                    shouldPlay
-                    isLooping
-                    isMuted={isMuted} // Set initial state to mute
-                    onPlaybackStatusUpdate={(status) => {
-                      if (!status.isPlaying && status.isMuted !== isMuted) {
-                        setIsMuted(true); // Ensure the video starts muted
-                      }
-                    }}
-                  />
-                  <TouchableOpacity onPress={() => removeVideo()} style={{ position: 'absolute', bottom: 10, left: 15 }}>
-                    <FontAwesome6 name="xmark" size={20} color="white" />
-                  </TouchableOpacity>
+                <View style={styles.videoContainer}>
+                  {/* Video nhận hàng của người mua */}
+                  <View style={styles.uploadVideo_1}>
+                    <Video
+                      source={{ uri: videoUri }}
+                      style={styles.uploadVideoStyle_1}
+                      useNativeControls
+                      resizeMode="cover"
+                      shouldPlay
+                      isLooping
+                      isMuted={isMuted} // Set initial state to mute
+                      onPlaybackStatusUpdate={(status) => {
+                        if (!status.isPlaying && status.isMuted !== isMuted) {
+                          setIsMuted(true); // Ensure the video starts muted
+                        }
+                      }}
+                    />
+                    {!isBuyerRate ?
+                      (
+                        <TouchableOpacity onPress={() => removeVideo()} style={{ position: 'absolute', bottom: 10, left: 15 }}>
+                          <FontAwesome6 name="xmark" size={20} color="white" />
+                        </TouchableOpacity>
+                      )
+                      :
+                      (
+                        <View></View>
+                      )
+                    }
+
+                    <View style={{ marginHorizontal: 'auto', marginTop: 5 }}>
+                      <Text style={[styles.confirmTextRECEIVED, { fontSize: 16 }]}>Video nhận hàng</Text>
+                    </View>
+                  </View>
+
+                  {/* Video đóng hàng của người bán */}
+                  <View style={styles.uploadVideo_1}>
+                    <Video
+                      source={{ uri: videoPackage }}
+                      style={styles.uploadVideoStyle_1}
+                      useNativeControls
+                      resizeMode="cover"
+                      shouldPlay
+                      isLooping
+                      isMuted={isMuted} // Set initial state to mute
+                      onPlaybackStatusUpdate={(status) => {
+                        if (!status.isPlaying && status.isMuted !== isMuted) {
+                          setIsMuted(true); // Ensure the video starts muted
+                        }
+                      }}
+                    />
+                    <View style={{ marginHorizontal: 'auto', marginTop: 5 }}>
+                      <Text style={[styles.confirmTextRECEIVED, { fontSize: 16 }]}>Video đóng gói</Text>
+                    </View>
+                  </View>
                 </View>
               )
             }
 
-            <View style={styles.confirm_1}>
-              <Text style={styles.confirmText_1}>
-                Vui lòng chỉ ấn "Đã nhận được hàng" khi đơn hàng đã được giao đến bạn và sản phẩm nhận được không có vấn để nào.
-              </Text>
-              <TouchableOpacity
-                style={styles.confirmButton_1}
-                onPress={() => handleSubmitReceived(orderInfo)}
-              >
-                <Text style={styles.confirmTextButton_1}>Đã nhận được hàng</Text>
-              </TouchableOpacity>
-            </View>
+            {/* Nếu người dùng đã thực hiện chức năng rate rồi thì bỏ nút Đã nhận được hàng */}
+            {!isBuyerRate ?
+              (
+                <View style={styles.confirm_RECEIVED}>
+                  <Text style={styles.confirmTextRECEIVED}>
+                    Vui lòng chỉ ấn "Đã nhận được hàng" khi đơn hàng đã được giao đến bạn và sản phẩm nhận được không có vấn để nào.
+                    Bạn có thể tải video nhận hàng sau đó đánh giá.
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.confirmButtonRECEIVED}
+                    onPress={() => handleSubmitReceived(orderInfo)}
+                  >
+                    <Text style={styles.confirmTextButton_1}>Đã nhận được hàng</Text>
+                  </TouchableOpacity>
+                </View>
+              )
+              :
+              (
+                <View style={{ marginBottom: 80 }}></View>
+              )
+            }
+
           </View>
         }
-
-        {/* {updatedOrderInfo?.orderDetails?.status === "RECEIVED" && !showAddRating &&
-          <>
-            <View style={styles.confirm}>
-              <Text style={styles.confirmText}>
-                Vui lòng chỉ ấn "Đã nhận được hàng" khi đơn hàng đã được giao đến bạn và sản phẩm nhận được không có vấn để nào.
-              </Text>
-              <TouchableOpacity
-                style={styles.confirmButton}
-                onPress={() => setShowAddRating(true)}
-              >
-                <Text style={styles.confirmTextButton}>Đã nhận được hàng</Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        } */}
 
         {showAddRating && <AddRating navigation={navigation} orderInfo={updatedOrderInfo} />}
 

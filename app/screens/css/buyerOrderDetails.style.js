@@ -404,27 +404,38 @@ const styles = StyleSheet.create({
     //update button "đã nhận được hàng"
     receivedContainer: {
         width: "100%",
-        flexDirection: 'row',
+        // flexDirection: 'row',
         marginHorizontal: "auto",
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 8,
     },
 
-    confirm_1: {
-        width: "48%",
+    //video đóng gói và video nhận hàng
+    videoContainer : {
+        width: "100%",
+        flexDirection: 'row',
+        marginHorizontal: "auto",
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 8,
+        // gap: 10,
+    },  
+
+    confirm_RECEIVED: {
+        width: "100%",
         flexDirection: 'column',
         marginHorizontal: "auto",
         justifyContent: 'center',
         alignItems: 'center',
-        gap: 30,
+        gap: 10,
         marginTop: 8,
         marginBottom: 30,
     },
-    confirmButton_1: {
-        width: "98%",
+    confirmButtonRECEIVED: {
+        width: "96%",
         flex: 1,
-        height: 40,
+        height: 50,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: COLORS.primary,
@@ -434,8 +445,9 @@ const styles = StyleSheet.create({
     },
     confirmTextButton_1: {
         color: COLORS.white,
+        fontSize: 16
     },
-    confirmText_1: {
+    confirmTextRECEIVED: {
         width: "90%",
         color: COLORS.gray,
         fontSize: 12,
@@ -443,7 +455,7 @@ const styles = StyleSheet.create({
 
     //update upload video
     uploadVideoContainer_1: {
-        width: "45%",
+        width: "47%",
         height: Dimensions.get('window').width / 3,
         borderRadius: 10,
         flexDirection: 'row',
@@ -456,13 +468,20 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 30,
     },
+    contentUploadVideoContainer_1: {
+        flexDirection: 'row',
+        marginHorizontal: "auto",
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 10,
+    },
     imageSelect_1: {
         width: 30,
         height: 30,
     },
 
     uploadVideo_1: {
-        width: '45%',
+        width: '47%',
         height: Dimensions.get('window').width / 3,
         marginHorizontal: "auto",
         marginBottom: 30,

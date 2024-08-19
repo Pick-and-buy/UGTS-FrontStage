@@ -327,6 +327,7 @@ const styles = StyleSheet.create({
         color: COLORS.white,
         fontSize: 18,
         fontWeight: 'bold',
+        
     }, confirm: {
         width: "96%",
         flexDirection: 'row',

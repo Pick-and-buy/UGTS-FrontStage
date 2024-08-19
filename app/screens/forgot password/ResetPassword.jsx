@@ -44,7 +44,7 @@ const ResetPassword = ({ navigation, route }) => {
                 btnTxt: "ĐĂNG NHẬP NGAY",
             });
         } catch (error) {
-            console.error("Password reset error:", error);
+            console.log("Password reset error:", error);
             Alert.alert("Error", "Failed to reset password. Please try again.");
         }
     };
@@ -59,7 +59,7 @@ const ResetPassword = ({ navigation, route }) => {
                 btnTxt: "ĐĂNG NHẬP NGAY",
             });
         } catch (error) {
-            console.error("Password reset error:", error);
+            console.log("Password reset error:", error);
             Alert.alert("Error", "Failed to reset password. Please try again.");
         }
     };

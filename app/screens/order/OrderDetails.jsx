@@ -17,7 +17,7 @@ const OrderDetails = ({ navigation, route }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [checked, setChecked] = useState('COD');
+    const [checked, setChecked] = useState('GiaTotPay');
     const [productPrice, setProductPrice] = useState(0);
     const [shippingPrice, setShippingPrice] = useState(0);
     const [deliveryDateFrom, setDeliveryDateFrom] = useState(null);
@@ -91,15 +91,16 @@ const OrderDetails = ({ navigation, route }) => {
         const totalPrice = productPrice + shippingPrice;
 
         try {
-            if (checked === 'COD') {
-                const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id, shippingPrice);
-                console.log('Order placed successfully!');
-                navigation.navigate('order-successfully', { orderInfo: response.result });
-            } else if (checked === 'GiaTotPay') {
+            // if (checked === 'COD') {
+            //     const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id, shippingPrice);
+            //     console.log('Order placed successfully!');
+            //     navigation.navigate('order-successfully', { orderInfo: response.result });
+            // } else 
+            if (checked === 'GiaTotPay') {
                 if (user.result.wallet.balance < totalPrice) {
                     setModalContent({
                         title: 'Số dư tài khoản không đủ',
-                        detailText: 'Vui lòng nạp thêm tiền vào tài khoản hoặc chọn phương thức thanh toán khác.',
+                        detailText: 'Vui lòng nạp thêm tiền vào tài khoản để thực hiện mua hàng.',
                         confirmText: 'Xác nhận',
                         cancelText: 'Thoát',
                         onConfirm: () => setModalVisible(false),
@@ -116,12 +117,9 @@ const OrderDetails = ({ navigation, route }) => {
                 }
             }
         } catch (error) {
-            console.error('Failed to place order:', error);
+            console.log('Failed to place order:', error);
         }
     };
-
-
-
 
     const fetchUserData = async () => {
         try {
@@ -131,7 +129,7 @@ const OrderDetails = ({ navigation, route }) => {
             const defaultAddress = userData.result.address.find(address => address.default);
             setSelectedAddress(defaultAddress);
         } catch (error) {
-            console.error('Fetching user data failed:', error);
+            console.log('Fetching user data failed:', error);
         }
     };
 
@@ -309,10 +307,10 @@ const OrderDetails = ({ navigation, route }) => {
                                 onValueChange={newValue => setChecked(newValue)}
                                 value={checked}
                             >
-                                <TouchableOpacity style={styles.method} onPress={() => setChecked('COD')}>
+                                {/* <TouchableOpacity style={styles.method} onPress={() => setChecked('COD')}>
                                     <Text style={styles.methodText}>Thanh toán khi nhận hàng</Text>
                                     <RadioButton value="COD" />
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                                 <TouchableOpacity style={styles.method} onPress={() => setChecked('GiaTotPay')}>
                                     <View style={styles.column}>
                                         <Text style={styles.methodText}>GiaTotPay</Text>

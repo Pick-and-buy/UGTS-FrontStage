@@ -31,7 +31,7 @@ const BrandDetail = ({ navigation }) => {
             const res = await getBrandLinesByBrandName(brand.name);
             setBrandLines([{ lineName: 'All' }, ...res.data.result]);
         } catch (error) {
-            console.error("Error fetching brand lines:", error);
+            console.log("Error fetching brand lines:", error);
         }
     };
 
@@ -41,7 +41,7 @@ const BrandDetail = ({ navigation }) => {
             const res = await getPostsByBrandName(brand.name);
             setListPosts(res.data.result);
         } catch (error) {
-            console.error("Error fetching posts by brand name:", error);
+            console.log("Error fetching posts by brand name:", error);
         } finally {
             setIsLoading(false);
         }
@@ -53,7 +53,7 @@ const BrandDetail = ({ navigation }) => {
             const res = await getPostsByBrandLineName(brandLineName);
             setListPosts(res.data.result);
         } catch (error) {
-            console.error("Error fetching posts by brand line name:", error);
+            console.log("Error fetching posts by brand line name:", error);
         } finally {
             setIsLoading(false);
         }

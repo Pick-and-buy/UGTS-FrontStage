@@ -29,7 +29,7 @@ const HomeFollow = ({ navigation }) => {
             const userData = await getUserByToken();
             setUser(userData);
         } catch (error) {
-            console.error('Fetching user data failed:', error);
+            console.log('Fetching user data failed:', error);
         }
     };
 

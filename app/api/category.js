@@ -5,7 +5,7 @@ export const getAllCategories = async () => {
     const response = await axiosInstance.get('/brand-lines/categories');
     return response;
   } catch (error) {
-    console.error('Error Get All Category:', error);
+    console.log('Error Get All Category:', error);
     throw error;
   }
 }
@@ -15,7 +15,7 @@ export const getAllCategoriesByBrandLineName = async (query) => {
     const response = await axiosInstance.get(`brand-lines/categories/line-name?${query}`);
     return response;
   } catch (error) {
-    console.error('Error Get All Category:', error);
+    console.log('Error Get All Category:', error);
     throw error;
   }
 }

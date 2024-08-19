@@ -25,6 +25,8 @@ const SellerOrderDetails = ({ navigation, route }) => {
     const [videoUri, setVideoUri] = useState("");
     const [isMuted, setIsMuted] = useState(false);
 
+    const [isBuyerRate, setIsBuyerRate] = useState(false);
+
     useEffect(() => {
         if (orderInfo) {
             fetchOrderInfo();
@@ -41,9 +43,12 @@ const SellerOrderDetails = ({ navigation, route }) => {
         try {
             const data = await getOrderByOrderId(orderInfo.id);
             setUpdatedOrderInfo(data.result);
-            setVideoUri(data?.result?.orderDetails?.packingVideo)
+            setVideoUri(data?.result?.orderDetails?.packingVideo);
+            if (orderInfo?.isBuyerRate === true) {
+                setIsBuyerRate(true);
+            }
         } catch (error) {
-            console.error('Fetching order data by order id failed:', error);
+            console.log('Fetching order data by order id failed:', error);
         }
     }
 
@@ -90,7 +95,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
                 ]
             );
         } catch (error) {
-            console.error('Submit cancel seller order: ', error);
+            console.log('Submit cancel seller order: ', error);
         }
     };
 
@@ -117,7 +122,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
             }
 
         } catch (error) {
-            console.error('Submit Accept seller order: ', error);
+            console.log('Submit Accept seller order: ', error);
         }
 
     }
@@ -136,7 +141,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
                 setVideoUri(result.assets[0].uri);
             }
         } catch (error) {
-            console.error('Error Upload Image: ', error);
+            console.log('Error Upload Image: ', error);
         }
     };
 
@@ -413,17 +418,31 @@ const SellerOrderDetails = ({ navigation, route }) => {
 
                 {updatedOrderInfo?.orderDetails?.status === "RECEIVED" && !showAddRating &&
                     <>
-                        <View style={styles.confirm}>
-                            <Text style={styles.confirmText}>
-                                Vui lòng chỉ ấn "Đánh giá người mua" khi đơn hàng đã được giao đến người mua và sản phẩm nhận được không có vấn để nào.
-                            </Text>
-                            <TouchableOpacity
-                                style={styles.confirmButton}
-                                onPress={() => setShowAddRating(true)}
-                            >
-                                <Text style={styles.confirmTextButton}>Đánh giá người mua</Text>
-                            </TouchableOpacity>
-                        </View>
+                    {/* Nếu người mua chưa đánh giá sản phẩm thì người bán sẽ không có quyền đánh giá người mua */}
+                        {!isBuyerRate ?
+                            (
+                                <View style={styles.confirm}>
+                                    <Text style={[styles.confirmText, {width: '90%', marginTop: 15}]}>
+                                        Sản phẩm của bạn đã được vận chuyển thành công. Vui lòng chờ đánh giá từ người bán sau đó thực hiện đánh giá người mua để hoàn thành quy trình vận chuyển hàng.
+                                    </Text>
+                                </View>
+                            )
+                            :
+                            (
+                                <View style={styles.confirm}>
+                                    <Text style={styles.confirmText}>
+                                        Vui lòng chỉ ấn "Đánh giá người mua" khi đơn hàng đã được giao đến người mua và sản phẩm nhận được không có vấn để nào.
+                                    </Text>
+                                    <TouchableOpacity
+                                        style={styles.confirmButton}
+                                        onPress={() => setShowAddRating(true)}
+                                    >
+                                        <Text style={styles.confirmTextButton}>Đánh giá người mua</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )
+                        }
+
                     </>
                 }
                 {showAddRating && <SellerAddRating navigation={navigation} orderInfo={updatedOrderInfo} />}

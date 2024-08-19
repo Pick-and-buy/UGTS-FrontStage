@@ -6,7 +6,7 @@ export const createPayment = async (amount) => {
         const response = await axiosInstance.post(`/vnpay/create-payment?amount=${amount}&orderInfo=pay for order`);
         return response;
     } catch (error) {
-        console.error('Error create payment:', error);
+        console.log('Error create payment:', error);
         throw error;
     }
 }
@@ -38,7 +38,7 @@ export const getPaymentStatus = async (url) => {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error creating payment:', error);
+        console.log('Error creating payment:', error);
         throw error;
     }
 };
@@ -48,7 +48,7 @@ export const charge = async (walletId, amount) => {
         const response = await axiosInstance.post(`/wallets/charge?walletId=${walletId}&amount=${amount}`);
         return response;
     } catch (error) {
-        console.error('Error charge payment:', error);
+        console.log('Error charge payment:', error);
         throw error;
     }
 }
@@ -58,7 +58,7 @@ export const payOrder = async (walletId, orderId, amount) => {
         const response = await axiosInstance.put(`/wallets/pay-order?walletId=${walletId}&orderId=${orderId}&payAmount=${amount}`);
         return response.data;
     } catch (error) {
-        console.error('Error order payment:', error);
+        console.log('Error order payment:', error);
         throw error;
     }
 }

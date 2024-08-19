@@ -37,7 +37,7 @@ const Buyer = ({ navigation }) => {
             const filteredOrders = res.result.filter(order => order.buyer.id === user.id);
             setListOrdersBuyer(filteredOrders);
         } catch (error) {
-            console.error("Error fetching Orders:", error);
+            console.log("Error fetching Orders:", error);
         } finally {
             setIsLoading(false);
         }
@@ -59,9 +59,11 @@ const Buyer = ({ navigation }) => {
                 orderStatus = "CANCELLED";
             } else if (orderStatusName === "Đã nhận hàng") {
                 orderStatus = "RECEIVED";
-            } else if (orderStatusName === "Trả lại") {
-                orderStatus = "RETURNED";
-            } else if (orderStatusName === "Hoàn thành") {
+            } 
+            // else if (orderStatusName === "Trả lại") {
+            //     orderStatus = "RETURNED";
+            // } 
+            else if (orderStatusName === "Hoàn thành") {
                 orderStatus = "COMPLETED";
             }
             const res = await getOrdersByOrderStatus(orderStatus);
@@ -89,7 +91,7 @@ const Buyer = ({ navigation }) => {
         { id: '5', value: 'Đã nhận hàng' },
         { id: '6', value: 'Hoàn thành' },
         { id: '7', value: 'Đã hủy' },
-        { id: '8', value: 'Trả lại' },
+        // { id: '8', value: 'Trả lại' },
     ];
 
     const handleOrderStatusPress = (orderStatusName) => {
@@ -143,11 +145,11 @@ const Buyer = ({ navigation }) => {
                                 <Text style={[styles.statusText, { color: COLORS.white }]}>{"Hoàn thành"}</Text>
                             </View>
                         }
-                        {item?.orderDetails?.status === "RETURNED" &&
+                        {/* {item?.orderDetails?.status === "RETURNED" &&
                             <View style={[styles.statusButton, { backgroundColor: COLORS.gray2 }]}>
                                 <Text style={[styles.statusText, { color: COLORS.white }]}>{"Trả lại"}</Text>
                             </View>
-                        }
+                        } */}
                     </View>
                 </View>
             </View>

@@ -6,7 +6,7 @@ export const getAllPosts = async () => {
     const response = await axiosInstance.get('/posts');
     return response;
   } catch (error) {
-    console.error('Error Get All Posts:', error);
+    console.log('Error Get All Posts:', error);
     throw error;
   }
 }
@@ -15,7 +15,7 @@ export const getAllBoostedPosts = async () => {
     const response = await axiosInstance.get('/posts/boosted-post');
     return response;
   } catch (error) {
-    console.error('Error Get All Boosted Posts:', error);
+    console.log('Error Get All Boosted Posts:', error);
     throw error;
   }
 }
@@ -25,7 +25,7 @@ export const getPostDetails = async (id) => {
     const response = axiosInstance.get(`/posts/${id}`)
     return response;
   } catch (error) {
-    console.error('Error Get Post Details:', error);
+    console.log('Error Get Post Details:', error);
     throw error;
   }
 }
@@ -51,7 +51,7 @@ export const postComment = async (userId, postId, commentContent) => {
     })
     return response;
   } catch (error) {
-    console.error('Error Get Post Details:', error);
+    console.log('Error Get Post Details:', error);
     throw error;
   }
 }
@@ -65,7 +65,7 @@ export const createPost_Level_1 = async (formData) => {
     const token = await getAuthToken();
 
 
-    const response = await fetch('http://192.168.1.6:8080/api/v1/posts/level-1', {
+    const response = await fetch('http://192.168.1.9:8080/api/v1/posts/level-1', {
 
 
       method: 'POST',
@@ -77,7 +77,7 @@ export const createPost_Level_1 = async (formData) => {
     });
     return response;
   } catch (error) {
-    console.error('Error Create Post:', error);
+    console.log('Error Create Post:', error);
   }
 }
 
@@ -85,8 +85,7 @@ export const createPost_Level_2 = async (formData) => {
   try {
     const token = await getAuthToken();
 
-
-    const response = await fetch('http://192.168.1.6:8080/api/v1/posts/level-2', {
+    const response = await fetch('http://192.168.1.9:8080/api/v1/posts/level-2', {
 
       method: 'POST',
       headers: {
@@ -97,7 +96,7 @@ export const createPost_Level_2 = async (formData) => {
     });
     return response;
   } catch (error) {
-    console.error('Error Create Post:', error);
+    console.log('Error Create Post:', error);
   }
 }
 
@@ -105,7 +104,7 @@ export const updatePost = async (id, formData) => {
   try {
     const token = await getAuthToken();
 
-    const response = await fetch(`http://192.168.1.6:8080/api/v1/posts/${id}`, {
+    const response = await fetch(`http://192.168.1.9:8080/api/v1/posts/${id}`, {
 
       method: 'PUT',
       headers: {
@@ -116,7 +115,7 @@ export const updatePost = async (id, formData) => {
     });
     return response;
   } catch (error) {
-    console.error('Error Create Post:', error);
+    console.log('Error Create Post:', error);
   }
 }
 
@@ -125,7 +124,7 @@ const getAuthToken = async () => {
     const token = await AsyncStorage.getItem('token');
     return token;
   } catch (error) {
-    console.error("Error retrieving token: ", error);
+    console.log("Error retrieving token: ", error);
   }
 };
 

@@ -17,7 +17,7 @@ const SellerAddRating = ({ navigation, orderInfo }) => {
             alert("Cảm ơn bạn đã để lại đánh giá")
             navigation.navigate("bottom-navigation")
         } catch (error) {
-            console.error('Fetching seller rating failed:', error.response ? error.response.data : error.message);
+            console.log('Fetching seller rating failed:', error.response ? error.response.data : error.message);
         }
     };
 

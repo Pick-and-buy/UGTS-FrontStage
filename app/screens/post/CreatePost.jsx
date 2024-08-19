@@ -62,6 +62,7 @@ const CreatePost = () => {
   const [selectedBrandLine, setSelectedBrandLine] = useState(null);
 
   const [loader, setLoader] = useState(false);
+  const [isDataLoaded, setIsDataLoaded] = useState(false); // Add state to track data loading
 
   const [isChecked_2, setChecked_2] = useState(false);
   const [isChecked_3, setChecked_3] = useState(false);
@@ -71,11 +72,11 @@ const CreatePost = () => {
   const feeBoosted = 100000;
 
   useEffect(() => {
-    if(isChecked_2 === false) {
-        setInvoice("");
-        setVideoUri("");
+    if (isChecked_2 === false) {
+      setInvoice("");
+      setVideoUri("");
     }
-}, [isChecked_2])
+  }, [isChecked_2])
 
   useEffect(() => {
     fetchAllBrands();
@@ -203,6 +204,7 @@ const CreatePost = () => {
       const { valid, message } = validateImages();
 
       if (valid) {
+        setIsDataLoaded(true); //Thực hiện màn hình hiển thị chữ Loading... trong lúc chờ call API thành công
         // Handle form submission here
         let { title, brandName, productName, brandLineName, condition, category, exteriorMaterial,
           interiorMaterial, size, width, height, length, referenceCode, manufactureYear, color, accessories, dateCode,
@@ -224,7 +226,7 @@ const CreatePost = () => {
         } else if (isChecked_3) {
           calculatedPrice = parseInt(convertStringPrice, 10) - feeLegitgrails;
         } else {
-          calculatedPrice = "";
+          calculatedPrice = parseInt(convertStringPrice, 10);
         }
 
         const formData = new FormData();
@@ -253,12 +255,10 @@ const CreatePost = () => {
             story: '',
           },
           condition: condition,
-
           boosted: isBoosted,
           lastPriceForSeller: calculatedPrice,
 
         };
-
         formData.append('request', JSON.stringify(request));
         images.forEach((image, index) => {
           if (image.value) {
@@ -294,6 +294,9 @@ const CreatePost = () => {
         } else {
           await createPost_Level_1(formData);
         }
+
+        setIsDataLoaded(false);
+
         navigation.navigate('Home')
         setImages([
           { index: '1', label: 'Overall picture', name: 'Overallpicture', logoUrl: require('../../../assets/images/bag/overall_picture.png'), value: '' },
@@ -349,7 +352,7 @@ const CreatePost = () => {
         );
       }
     } catch (error) {
-      console.error('ERROR handle create post: ', error);
+      console.log('ERROR handle create post: ', error);
     }
   }
 
@@ -368,7 +371,7 @@ const CreatePost = () => {
         setImages(newImages);
       }
     } catch (error) {
-      console.error('Error Upload Image: ', error);
+      console.log('Error Upload Image: ', error);
     }
   }
 
@@ -387,7 +390,7 @@ const CreatePost = () => {
         setImages(newImages);
       }
     } catch (error) {
-      console.error('Error Upload Image: ', error);
+      console.log('Error Upload Image: ', error);
     }
   };
 
@@ -411,7 +414,7 @@ const CreatePost = () => {
         setInvoice(newImages);
       }
     } catch (error) {
-      console.error('Error Upload Image: ', error);
+      console.log('Error Upload Image: ', error);
     }
   }
 
@@ -434,7 +437,7 @@ const CreatePost = () => {
         setVideoUri(result.assets[0].uri);
       }
     } catch (error) {
-      console.error('Error Upload Image: ', error);
+      console.log('Error Upload Image: ', error);
     }
   };
 
@@ -449,6 +452,14 @@ const CreatePost = () => {
       maximumFractionDigits: 0
     }).format(price);
   };
+
+  if (isDataLoaded) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
 
   const renderImages = ({ item, index }) => {
     return (
