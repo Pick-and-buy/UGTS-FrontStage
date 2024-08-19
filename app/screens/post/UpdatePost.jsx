@@ -312,7 +312,7 @@ const UpdatePost = ({ route }) => {
                 } else if (isChecked_3) {
                     calculatedPrice = parseInt(convertStringPrice, 10) - feeLegitgrails;
                 } else {
-                    calculatedPrice = "0";
+                    calculatedPrice = parseInt(convertStringPrice, 10);
                 }
 
                 let { brandName, productName, brandLineName, condition, category, exteriorMaterial,

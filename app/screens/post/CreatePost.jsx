@@ -72,11 +72,11 @@ const CreatePost = () => {
   const feeBoosted = 100000;
 
   useEffect(() => {
-    if(isChecked_2 === false) {
-        setInvoice("");
-        setVideoUri("");
+    if (isChecked_2 === false) {
+      setInvoice("");
+      setVideoUri("");
     }
-}, [isChecked_2])
+  }, [isChecked_2])
 
   useEffect(() => {
     fetchAllBrands();
@@ -204,7 +204,7 @@ const CreatePost = () => {
       const { valid, message } = validateImages();
 
       if (valid) {
-        setIsDataLoaded(true); 
+        setIsDataLoaded(true);
         // Handle form submission here
         let { title, brandName, productName, brandLineName, condition, category, exteriorMaterial,
           interiorMaterial, size, width, height, length, referenceCode, manufactureYear, color, accessories, dateCode,
@@ -226,7 +226,7 @@ const CreatePost = () => {
         } else if (isChecked_3) {
           calculatedPrice = parseInt(convertStringPrice, 10) - feeLegitgrails;
         } else {
-          calculatedPrice = "";
+          calculatedPrice = parseInt(convertStringPrice, 10);
         }
 
         const formData = new FormData();
@@ -255,12 +255,10 @@ const CreatePost = () => {
             story: '',
           },
           condition: condition,
-
           boosted: isBoosted,
           lastPriceForSeller: calculatedPrice,
 
         };
-
         formData.append('request', JSON.stringify(request));
         images.forEach((image, index) => {
           if (image.value) {
@@ -457,11 +455,11 @@ const CreatePost = () => {
 
   if (isDataLoaded) {
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Loading...</Text>
-        </View>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Loading...</Text>
+      </View>
     );
-}
+  }
 
   const renderImages = ({ item, index }) => {
     return (
