@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "flex-start",
         alignItems: "center",
-        marginTop: "10%",
+        marginTop: "15%",
         marginHorizontal: "auto"
     },
     heading: {
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
         // marginRight: "40%",
     },
     posts: {
-        width: '98%',
+        width: '100%',
         marginTop: 20,
         marginHorizontal: "auto",
     },
@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         flexWrap: "wrap",
         alignItems: "center",
-        gap: 6,
         marginHorizontal: "auto",
 
     },
