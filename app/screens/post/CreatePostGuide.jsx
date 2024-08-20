@@ -1,10 +1,113 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native'
-import React from 'react'
+import { View, Text, Image, TouchableOpacity, Alert } from 'react-native'
+import React, { useEffect, useState, useCallback } from 'react';
 import { FontAwesome6, Entypo, Feather } from '@expo/vector-icons';
 import { COLORS } from '../../constants/theme'
 import styles from '../css/createPostGuide.style'
 import Slider from '../home/Slider'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getUserByToken } from '../../api/user';
+
 const CreatePostGuide = ({ navigation }) => {
+
+    const [loading, setLoading] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isVerified, setIsVerified] = useState(false);
+
+    useEffect(() => {
+        const initialize = async () => {
+            await checkToken();
+            if (isAuthenticated) {
+                await fetchUserData();
+            } else {
+                setLoading(false);
+            }
+        };
+        initialize();
+    }, [isAuthenticated]);
+
+    const fetchUserData = async () => {
+        try {
+            const userData = await getUserByToken();
+            setIsVerified(userData?.result?.isVerified)
+        } catch (error) {
+            console.log('Fetching user data failed:', error);
+        }
+    };
+
+    const checkToken = async () => {
+        const token = await AsyncStorage.getItem('token');
+        setIsAuthenticated(!!token);
+    };
+
+    const validateImages = () => {
+        let valid = true;
+        let message = '';
+        let text = '';
+        let navigateText = '';
+
+        // Kiểm tra điều kiện khi người dùng chưa đăng nhập
+        if (!isAuthenticated) {
+            valid = false;
+            message = 'Bạn cần đăng nhập để thực hiện tạo mới bài post';
+            text = 'Đăng nhập';
+            navigateText = 'login-navigation';
+
+        } else if (!isVerified) {
+            valid = false;
+            message = 'Bạn cần xác thực bằng căn cước công dân để thực hiện tạo mới bài post';
+            text = 'Xác Thực';
+            navigateText = 'GetID';
+        }
+        return { valid, message, text, navigateText };
+    };
+
+    handleRedirectQuickCreatePost = () => {
+        const { valid, message, text, navigateText } = validateImages();
+        if (valid) {
+            navigation.navigate("quick-create-post")
+        } else {
+            Alert.alert(
+                text,
+                message,
+                [
+                    {
+                        text: "Thoát",
+                    },
+                    {
+                        text: text,
+                        onPress: () => {
+                            navigation.navigate(navigateText);
+                        },
+                    }
+                ]
+            );
+        }
+    }
+
+    handleRedirectCreatePost = () => {
+        const { valid, message, text, navigateText } = validateImages();
+        if (valid) {
+            navigation.navigate("create-post")
+        } else {
+            Alert.alert(
+                text,
+                message,
+                [
+                    {
+                        text: "Thoát",
+                    },
+                    {
+                        text: text,
+                        onPress: () => {
+                            navigation.navigate(navigateText);
+                        },
+                    }
+                ]
+            );
+        }
+    }
+
+
     return (
         <View style={styles.container}>
             {/* Header */}
@@ -28,11 +131,11 @@ const CreatePostGuide = ({ navigation }) => {
             <View style={styles.optionsWrapper}>
                 <Text style={styles.title}>Tùy chọn</Text>
                 <View style={styles.options}>
-                    <TouchableOpacity style={styles.option} onPress={() => navigation.navigate("quick-create-post")}>
+                    <TouchableOpacity style={styles.option} onPress={handleRedirectQuickCreatePost}>
                         <FontAwesome6 name="bolt-lightning" size={28} color="black" />
                         <Text style={styles.text}>Đăng bài nhanh</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.option} onPress={() => navigation.navigate("create-post")}>
+                    <TouchableOpacity style={styles.option} onPress={handleRedirectCreatePost}>
                         <Entypo name="news" size={28} color="black" />
                         <Text style={styles.text}>Đăng bài chi tiết</Text>
                     </TouchableOpacity>
