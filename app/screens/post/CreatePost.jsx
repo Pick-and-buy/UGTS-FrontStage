@@ -289,15 +289,16 @@ const CreatePost = () => {
           });
         }
 
+        let res;
         if (invoice && videoUri) {
-          await createPost_Level_2(formData)
+          res = await createPost_Level_2(formData)
         } else {
-          await createPost_Level_1(formData);
+          res = await createPost_Level_1(formData);
         }
 
         setIsDataLoaded(false);
+        navigation.navigate('post-details', { postId: res?.result?.id })
 
-        navigation.navigate('Home')
         setImages([
           { index: '1', label: 'Overall picture', name: 'Overallpicture', logoUrl: require('../../../assets/images/bag/overall_picture.png'), value: '' },
           { index: '2', label: 'Brand logo', name: 'Brandlogo', logoUrl: require('../../../assets/images/bag/brand_logo.png'), value: '' },
