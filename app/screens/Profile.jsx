@@ -12,6 +12,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from "../context/AuthContext";
 import { getRatingByUserId } from "../api/user";
 import { useFocusEffect } from "@react-navigation/native";
+import CustomModal from '../components/CustomModal';
 
 const Profile = ({ navigation }) => {
   const { logout, user, isAuthenticated, fetchUserData } = useAuth();
@@ -20,6 +21,21 @@ const Profile = ({ navigation }) => {
 
   const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
   const bkImg = "https://d326fntlu7tb1e.cloudfront.net/uploads/ab6356de-429c-45a1-b403-d16f7c20a0bc-bkImg-min.png";
+
+  const [isVerified, setisVerified] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState({
+    title: '',
+    detailText: '',
+    confirmText: '',
+    cancelText: '',
+    onConfirm: () => { },
+    onClose: () => { }
+  });
+
+  if (user?.isVerified) {
+    setisVerified(user?.isVerified);
+  }
 
   useEffect(() => {
     if (user) {
@@ -68,6 +84,24 @@ const Profile = ({ navigation }) => {
       .replace(/\D/g, '') // Remove non-numeric characters
       .replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Add thousand separators
   };
+
+  const handleAddFund = () => {
+    if (isVerified) {
+      navigation.navigate("add-funds")
+    } else {
+      setModalContent({
+        title: "Xác Thực",
+        detailText: 'Bạn cần xác thực bằng căn cước công dân để thực hiện nạp tiền vào ví',
+        confirmText: 'Xác Thực',
+        cancelText: "Thoát",
+        onConfirm: () => {
+          setModalVisible(false);
+          navigation.navigate('GetID');
+        },
+      });
+      setModalVisible(true);
+    }
+  }
 
   return (
     <ScrollView
@@ -248,12 +282,15 @@ const Profile = ({ navigation }) => {
                     borderLeftWidth: 1,
                     borderColor: 'gray',
                   }}></View>
+
                   <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
-                    onPress={() => navigation.navigate("add-funds")}
+                    onPress={handleAddFund}
                   >
                     <AntDesign name="pluscircleo" size={26} color="black" />
                     <Text style={{ fontSize: 16, marginTop: 10 }}>Nạp tiền</Text>
                   </TouchableOpacity>
+
+
                 </View>
               </View>
               <View
@@ -361,6 +398,17 @@ const Profile = ({ navigation }) => {
 
         </View>
       </View>
+      <CustomModal
+        visible={modalVisible}
+        onClose={() => {
+          setModalVisible(false);
+        }}
+        onConfirm={modalContent.onConfirm}
+        title={modalContent.title}
+        detailText={modalContent.detailText}
+        confirmText={modalContent.confirmText}
+        cancelText={modalContent.cancelText}
+      />
     </ScrollView>
 
   );

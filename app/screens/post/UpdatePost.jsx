@@ -107,6 +107,7 @@ const UpdatePost = ({ route }) => {
     const FEE = 0;
     const feeLegitgrails = 500000;
     const feeBoosted = 100000;
+    const [lastPrice, setLastPrice] = useState("");
 
     const formatPrice = (price) => {
         return new Intl.NumberFormat('vi-VN', {
@@ -124,6 +125,7 @@ const UpdatePost = ({ route }) => {
         const response = await getPostDetails(postId);
         const postInfo = response.data.result;
         setPostDetails(postInfo)
+        setLastPrice(response?.data?.result?.lastPriceForSeller)
 
         // Set giá trị ban đầu cho selectedBrand và selectedBrandLine từ dữ liệu bài đăng
         if (postInfo && postInfo.product) {
@@ -1343,11 +1345,6 @@ const UpdatePost = ({ route }) => {
                                                 <Text style={[styles.title, { marginLeft: -2 }]}>Phí quảng cáo (VND): <Text style={{ color: "red" }}>{formatFeeBoosted}đ</Text>
                                                 </Text>
                                             </View>
-                                            <View style={styles.inputProduct}>
-                                                <Text style={[styles.title, { marginLeft: -2 }]}>
-                                                    Số tiền thực nhận (VND): <Text style={{ color: "red" }}>{formatlLastPriceForSeller}đ</Text>
-                                                </Text>
-                                            </View>
                                         </View>
                                     )
                                 }
@@ -1356,11 +1353,6 @@ const UpdatePost = ({ route }) => {
                                         <View View style={styles.productField}>
                                             <View style={styles.inputProduct}>
                                                 <Text style={[styles.title, { marginLeft: -2 }]}>Phí kiểm tra cấp 3 (VND): <Text style={{ color: "red" }}>{formatFeeLegitgrails}đ</Text>
-                                                </Text>
-                                            </View>
-                                            <View style={styles.inputProduct}>
-                                                <Text style={[styles.title, { marginLeft: -2 }]}>
-                                                    Số tiền thực nhận (VND): <Text style={{ color: "red" }}>{formatlLastPriceForSeller}đ</Text>
                                                 </Text>
                                             </View>
                                         </View>
@@ -1373,14 +1365,16 @@ const UpdatePost = ({ route }) => {
                                                 <Text style={[styles.title, { marginLeft: -2 }]}>Phí quảng cáo (VND): <Text style={{ color: "red" }}>{formatFeeBoosted}đ</Text>
                                                 </Text>
                                             </View>
-                                            <View style={styles.inputProduct}>
-                                                <Text style={[styles.title, { marginLeft: -2 }]}>
-                                                    Số tiền thực nhận (VND): <Text style={{ color: "red" }}>{formatlLastPriceForSeller}đ</Text>
-                                                </Text>
-                                            </View>
                                         </View>
                                     )
                                 }
+                                <View View style={styles.productField}>
+                                    <View style={styles.inputProduct}>
+                                        <Text style={[styles.title, { marginLeft: -2 }]}>
+                                            Số tiền thực nhận (VND): <Text style={{ color: "red" }}>{formatlLastPriceForSeller}đ</Text>
+                                        </Text>
+                                    </View>
+                                </View>
                             </View>
 
                             <View style={styles.buttonWrapper}>
