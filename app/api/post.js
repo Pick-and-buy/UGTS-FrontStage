@@ -75,7 +75,7 @@ export const createPost_Level_1 = async (formData) => {
       },
       body: formData,
     });
-    return response;
+    return response.json();
   } catch (error) {
     console.log('Error Create Post:', error);
   }
@@ -94,7 +94,7 @@ export const createPost_Level_2 = async (formData) => {
       },
       body: formData,
     });
-    return response;
+    return response.json();
   } catch (error) {
     console.log('Error Create Post:', error);
   }

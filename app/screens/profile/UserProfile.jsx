@@ -16,11 +16,14 @@ import Post from "../post/Post";
 import { checkIfFollowing, followUser, getListsFollowers, getListsFollowing, getRatingByUserId, unfollowUser } from "../../api/user";
 import styles from "../css/UserProfile.style"; // Unified style
 import { getPostsByUserId } from "../../api/post";
+import { useAuth } from '../../context/AuthContext';
 
 const UserProfile = ({ navigation, route }) => {
   const { user, userIdLogged } = route.params || {};
   const isMyProfile = user?.id === userIdLogged || userIdLogged === undefined;
   const isSellerProfile = !isMyProfile;
+
+  const { isAuthenticated } = useAuth();
 
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -157,20 +160,42 @@ const UserProfile = ({ navigation, route }) => {
       </View>
       {/* Personal Information */}
       <View style={styles.personalContainer}>
-        <TouchableOpacity
-          style={styles.avatarTouchable}
-          onPress={() => navigation.navigate('upload-photo-navigation', user)}
-        >
-          <Image
-            style={styles.avatar}
-            source={{ uri: user?.avatar ? user?.avatar : profileImage }}
-          />
-          {!isSellerProfile && (
-            <View style={styles.editIcon}>
-              <AntDesign name="pluscircle" size={24} color="#06bcee" />
+        {isAuthenticated && !isSellerProfile ?
+          (
+            <TouchableOpacity
+              style={styles.avatarTouchable}
+              onPress={() => navigation.navigate('upload-photo-navigation', user)}
+            >
+              <Image
+                style={styles.avatar}
+                source={{ uri: user?.avatar ? user?.avatar : profileImage }}
+              />
+              {!isSellerProfile && (
+                <View style={styles.editIcon}
+                >
+                  <AntDesign name="pluscircle" size={24} color="#06bcee" />
+                </View>
+              )}
+            </TouchableOpacity>
+          )
+          :
+          (
+            <View
+              style={styles.avatarTouchable}
+            >
+              <Image
+                style={styles.avatar}
+                source={{ uri: user?.avatar ? user?.avatar : profileImage }}
+              />
+              {!isSellerProfile && (
+                <View style={styles.editIcon}
+                >
+                  <AntDesign name="pluscircle" size={24} color="#06bcee" />
+                </View>
+              )}
             </View>
-          )}
-        </TouchableOpacity>
+          )
+        }
         <Text style={styles.username}>
           @{user?.username}
         </Text>

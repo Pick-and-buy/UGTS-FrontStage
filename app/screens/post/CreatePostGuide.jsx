@@ -6,38 +6,26 @@ import styles from '../css/createPostGuide.style'
 import Slider from '../home/Slider'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getUserByToken } from '../../api/user';
+import { useAuth } from '../../context/AuthContext';
+import CustomModal from '../../components/CustomModal';
 
 const CreatePostGuide = ({ navigation }) => {
 
-    const [loading, setLoading] = useState(true);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [isVerified, setIsVerified] = useState(false);
+    const { isAuthenticated, user } = useAuth();
+    const [isVerified, setisVerified] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState({
+        title: '',
+        detailText: '',
+        confirmText: '',
+        cancelText: '',
+        onConfirm: () => { },
+        onClose: () => { }
+    });
 
-    useEffect(() => {
-        const initialize = async () => {
-            await checkToken();
-            if (isAuthenticated) {
-                await fetchUserData();
-            } else {
-                setLoading(false);
-            }
-        };
-        initialize();
-    }, [isAuthenticated]);
-
-    const fetchUserData = async () => {
-        try {
-            const userData = await getUserByToken();
-            setIsVerified(userData?.result?.isVerified)
-        } catch (error) {
-            console.log('Fetching user data failed:', error);
-        }
-    };
-
-    const checkToken = async () => {
-        const token = await AsyncStorage.getItem('token');
-        setIsAuthenticated(!!token);
-    };
+    if (user?.isVerified) {
+        setisVerified(user?.isVerified);
+    }
 
     const validateImages = () => {
         let valid = true;
@@ -66,21 +54,17 @@ const CreatePostGuide = ({ navigation }) => {
         if (valid) {
             navigation.navigate("quick-create-post")
         } else {
-            Alert.alert(
-                text,
-                message,
-                [
-                    {
-                        text: "Thoát",
-                    },
-                    {
-                        text: text,
-                        onPress: () => {
-                            navigation.navigate(navigateText);
-                        },
-                    }
-                ]
-            );
+            setModalContent({
+                title: text,
+                detailText: message,
+                confirmText: text,
+                cancelText: "Thoát",
+                onConfirm: () => {
+                    setModalVisible(false);
+                    navigation.navigate(navigateText);
+                },
+            });
+            setModalVisible(true);
         }
     }
 
@@ -89,21 +73,17 @@ const CreatePostGuide = ({ navigation }) => {
         if (valid) {
             navigation.navigate("create-post")
         } else {
-            Alert.alert(
-                text,
-                message,
-                [
-                    {
-                        text: "Thoát",
-                    },
-                    {
-                        text: text,
-                        onPress: () => {
-                            navigation.navigate(navigateText);
-                        },
-                    }
-                ]
-            );
+            setModalContent({
+                title: text,
+                detailText: message,
+                confirmText: text,
+                cancelText: "Thoát",
+                onConfirm: () => {
+                    setModalVisible(false);
+                    navigation.navigate(navigateText);
+                },
+            });
+            setModalVisible(true);
         }
     }
 
@@ -168,6 +148,17 @@ const CreatePostGuide = ({ navigation }) => {
                     </View>
                 </View>
             </View>
+            <CustomModal
+                visible={modalVisible}
+                onClose={() => {
+                    setModalVisible(false);
+                }}
+                onConfirm={modalContent.onConfirm}
+                title={modalContent.title}
+                detailText={modalContent.detailText}
+                confirmText={modalContent.confirmText}
+                cancelText={modalContent.cancelText}
+            />
         </View>
     )
 }
