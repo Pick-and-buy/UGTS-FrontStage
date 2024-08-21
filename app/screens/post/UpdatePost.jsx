@@ -25,6 +25,7 @@ import Checkbox from 'expo-checkbox';
 import { callFetchListBrands } from "../../api/brand";
 import { getAllCategoriesByBrandLineName } from "../../api/category";
 import { getAllBrandLinesByBrandName } from "../../api/brandLine";
+import CustomModalPost from '../../components/CustomModalPost';
 
 const UpdatePost = ({ route }) => {
     // console.log(">>> check postId: ", route.params);
@@ -87,6 +88,16 @@ const UpdatePost = ({ route }) => {
 
     const [loader, setLoader] = useState(false);
 
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState({
+        title: '',
+        detailText: '',
+        confirmText: '',
+        cancelText: '',
+        onConfirm: () => { },
+        onClose: () => { }
+    });
+
     const [isChecked_2, setChecked_2] = useState(false);
     const [isChecked_3, setChecked_3] = useState(false);
     const [isBoosted, setBoosted] = useState(false);
@@ -108,8 +119,6 @@ const UpdatePost = ({ route }) => {
     const formattedPrice = formatPrice(postDetails?.product?.price);
     //Format Fee
     const formattedFee = formatPrice(FEE);
-
-
 
     const fetchPostDetails = async () => {
         const response = await getPostDetails(postId);
@@ -254,11 +263,11 @@ const UpdatePost = ({ route }) => {
     });
 
     const dataProductCondition = [
-        { label: 'BRAND_NEW', value: 'BRAND_NEW' },
-        { label: 'EXCELLENT', value: 'EXCELLENT' },
-        { label: 'VERY_GOOD', value: 'VERY_GOOD' },
-        { label: 'GOOD', value: 'GOOD' },
-        { label: 'FAIR', value: 'FAIR' },
+        { label: 'Hàng Mới', value: 'BRAND_NEW' },
+        { label: 'Like New', value: 'EXCELLENT' },
+        { label: 'Còn Tốt', value: 'VERY_GOOD' },
+        { label: 'Dùng được', value: 'GOOD' },
+        { label: 'Hàng cũ', value: 'FAIR' },
     ];
 
     const dataSize = [
@@ -349,8 +358,9 @@ const UpdatePost = ({ route }) => {
                         dateCode: dateCode,
                         serialNumber: serialNumber,
                         purchasedPlace: purchasedPlace,
+                        condition: condition,
                     },
-                    condition: condition,
+                    // condition: condition,
                     boosted: isBoosted,
                     lastPriceForSeller: calculatedPrice,
                 };
@@ -390,11 +400,15 @@ const UpdatePost = ({ route }) => {
                 await updatePost(queryId, formData);
                 navigation.navigate('post-details', { postId: postDetails?.id })
             } else {
-                Alert.alert(
-                    "Thiếu thông tin",
-                    message,
-                    [{ text: "OK" }]
-                );
+                setModalContent({
+                    title: "Thiếu thông tin",
+                    detailText: message,
+                    confirmText: "Ok",
+                    onConfirm: () => {
+                        setModalVisible(false);
+                    },
+                });
+                setModalVisible(true);
             }
         } catch (error) {
             console.log('ERROR handle create post: ', error);
@@ -1217,12 +1231,18 @@ const UpdatePost = ({ route }) => {
                                 {/* Verify Level */}
                                 <View style={styles.viewContainer}>
                                     <View style={styles.left}>
-                                        <Text style={styles.leftText}>Verified Level </Text>
+                                        <Text style={styles.leftText}>Mức Xác Minh: </Text>
                                     </View>
                                     <View style={styles.right}>
-                                        <Text style={[styles.rightText, { color: COLORS.primary }]}>
-                                            {postDetails?.product?.verifiedLevel}
-                                        </Text>
+                                        {postDetails?.product?.verifiedLevel === "LEVEL_1" ?
+                                            (
+                                                <Text style={[styles.rightText, { color: COLORS.primary }]}>Xác Minh Cấp 1</Text>
+                                            )
+                                            :
+                                            (
+                                                <Text style={[styles.rightText, { color: COLORS.primary }]}>Xác Minh Cấp 2</Text>
+                                            )
+                                        }
                                     </View>
                                 </View>
                                 <View style={styles.shadow}></View>
@@ -1375,8 +1395,16 @@ const UpdatePost = ({ route }) => {
                     )
                 }}
             </Formik>
-
-
+            <CustomModalPost
+                visible={modalVisible}
+                onClose={() => {
+                    setModalVisible(false);
+                }}
+                onConfirm={modalContent.onConfirm}
+                title={modalContent.title}
+                detailText={modalContent.detailText}
+                confirmText={modalContent.confirmText}
+            />
         </View>
     );
 }

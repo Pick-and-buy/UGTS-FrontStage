@@ -26,6 +26,7 @@ import { getAllBrandLinesByBrandName } from "../../api/brandLine";
 import * as ImagePicker from "expo-image-picker";
 import { Video } from 'expo-av';
 import Checkbox from 'expo-checkbox';
+import CustomModalPost from '../../components/CustomModalPost';
 
 const CreatePost = () => {
   const navigation = useNavigation();
@@ -63,6 +64,16 @@ const CreatePost = () => {
 
   const [loader, setLoader] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false); // Add state to track data loading
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState({
+    title: '',
+    detailText: '',
+    confirmText: '',
+    cancelText: '',
+    onConfirm: () => { },
+    onClose: () => { }
+  });
 
   const [isChecked_2, setChecked_2] = useState(false);
   const [isChecked_3, setChecked_3] = useState(false);
@@ -156,11 +167,11 @@ const CreatePost = () => {
   });
 
   const dataProductCondition = [
-    { label: 'BRAND_NEW', value: 'BRAND_NEW' },
-    { label: 'EXCELLENT', value: 'EXCELLENT' },
-    { label: 'VERY_GOOD', value: 'VERY_GOOD' },
-    { label: 'GOOD', value: 'GOOD' },
-    { label: 'FAIR', value: 'FAIR' },
+    { label: 'Hàng Mới', value: 'BRAND_NEW' },
+    { label: 'Like New', value: 'EXCELLENT' },
+    { label: 'Còn Tốt', value: 'VERY_GOOD' },
+    { label: 'Dùng được', value: 'GOOD' },
+    { label: 'Hàng cũ', value: 'FAIR' },
   ];
 
   const dataSize = [
@@ -346,11 +357,15 @@ const CreatePost = () => {
           lastPriceForSeller: '',
         })
       } else {
-        Alert.alert(
-          "Thiếu thông tin",
-          message,
-          [{ text: "OK" }]
-        );
+        setModalContent({
+          title: "Thiếu thông tin",
+          detailText: message,
+          confirmText: "Ok",
+          onConfirm: () => {
+            setModalVisible(false);
+          },
+        });
+        setModalVisible(true);
       }
     } catch (error) {
       console.log('ERROR handle create post: ', error);
@@ -1239,6 +1254,16 @@ const CreatePost = () => {
           )
         }}
       </Formik>
+      <CustomModalPost
+        visible={modalVisible}
+        onClose={() => {
+          setModalVisible(false);
+        }}
+        onConfirm={modalContent.onConfirm}
+        title={modalContent.title}
+        detailText={modalContent.detailText}
+        confirmText={modalContent.confirmText}
+      />
     </View>
   );
 }
