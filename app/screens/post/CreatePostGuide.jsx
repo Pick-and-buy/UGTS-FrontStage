@@ -40,12 +40,13 @@ const CreatePostGuide = ({ navigation }) => {
             text = 'Đăng nhập';
             navigateText = 'login-navigation';
 
-        } else if (!isVerified) {
-            valid = false;
-            message = 'Bạn cần xác thực bằng căn cước công dân để thực hiện tạo mới bài post';
-            text = 'Xác Thực';
-            navigateText = 'GetID';
-        }
+        } else 
+        // if (!isVerified) {
+        //     valid = false;
+        //     message = 'Bạn cần xác thực bằng căn cước công dân để thực hiện tạo mới bài post';
+        //     text = 'Xác Thực';
+        //     navigateText = 'GetID';
+        // }
         return { valid, message, text, navigateText };
     };
 

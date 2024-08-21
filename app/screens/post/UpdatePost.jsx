@@ -254,11 +254,11 @@ const UpdatePost = ({ route }) => {
     });
 
     const dataProductCondition = [
-        { label: 'BRAND_NEW', value: 'BRAND_NEW' },
-        { label: 'EXCELLENT', value: 'EXCELLENT' },
-        { label: 'VERY_GOOD', value: 'VERY_GOOD' },
-        { label: 'GOOD', value: 'GOOD' },
-        { label: 'FAIR', value: 'FAIR' },
+        { label: 'Hàng Mới', value: 'BRAND_NEW' },
+        { label: 'Like New', value: 'EXCELLENT' },
+        { label: 'Còn Tốt', value: 'VERY_GOOD' },
+        { label: 'Dùng được', value: 'GOOD' },
+        { label: 'Hàng cũ', value: 'FAIR' },
     ];
 
     const dataSize = [
@@ -349,8 +349,9 @@ const UpdatePost = ({ route }) => {
                         dateCode: dateCode,
                         serialNumber: serialNumber,
                         purchasedPlace: purchasedPlace,
+                        condition: condition,
                     },
-                    condition: condition,
+                    // condition: condition,
                     boosted: isBoosted,
                     lastPriceForSeller: calculatedPrice,
                 };
@@ -1217,12 +1218,18 @@ const UpdatePost = ({ route }) => {
                                 {/* Verify Level */}
                                 <View style={styles.viewContainer}>
                                     <View style={styles.left}>
-                                        <Text style={styles.leftText}>Verified Level </Text>
+                                        <Text style={styles.leftText}>Xác Minh: </Text>
                                     </View>
                                     <View style={styles.right}>
-                                        <Text style={[styles.rightText, { color: COLORS.primary }]}>
-                                            {postDetails?.product?.verifiedLevel}
-                                        </Text>
+                                        {postDetails?.product?.verifiedLevel === "LEVEL_1" ?
+                                            (
+                                                <Text style={[styles.rightText, { color: COLORS.primary }]}>Cấp 1</Text>
+                                            )
+                                            :
+                                            (
+                                                <Text style={[styles.rightText, { color: COLORS.primary }]}>Cấp 2</Text>
+                                            )
+                                        }
                                     </View>
                                 </View>
                                 <View style={styles.shadow}></View>

@@ -156,11 +156,11 @@ const CreatePost = () => {
   });
 
   const dataProductCondition = [
-    { label: 'BRAND_NEW', value: 'BRAND_NEW' },
-    { label: 'EXCELLENT', value: 'EXCELLENT' },
-    { label: 'VERY_GOOD', value: 'VERY_GOOD' },
-    { label: 'GOOD', value: 'GOOD' },
-    { label: 'FAIR', value: 'FAIR' },
+    { label: 'Hàng Mới', value: 'BRAND_NEW' },
+    { label: 'Like New', value: 'EXCELLENT' },
+    { label: 'Còn Tốt', value: 'VERY_GOOD' },
+    { label: 'Dùng được', value: 'GOOD' },
+    { label: 'Hàng cũ', value: 'FAIR' },
   ];
 
   const dataSize = [

@@ -150,11 +150,11 @@ const QuickCreatePost = () => {
     });
 
     const dataProductCondition = [
-        { label: 'BRAND_NEW', value: 'BRAND_NEW' },
-        { label: 'EXCELLENT', value: 'EXCELLENT' },
-        { label: 'VERY_GOOD', value: 'VERY_GOOD' },
-        { label: 'GOOD', value: 'GOOD' },
-        { label: 'FAIR', value: 'FAIR' },
+        { label: 'Hàng Mới', value: 'BRAND_NEW' },
+        { label: 'Like New', value: 'EXCELLENT' },
+        { label: 'Còn Tốt', value: 'VERY_GOOD' },
+        { label: 'Dùng được', value: 'GOOD' },
+        { label: 'Hàng cũ', value: 'FAIR' },
     ];
 
     const dataSize = [
@@ -289,7 +289,7 @@ const QuickCreatePost = () => {
                 } else {
                     res = await createPost_Level_1(formData);
                 }
-                
+
                 setIsDataLoaded(false);
                 navigation.navigate('post-details', { postId: res?.result?.id })
                 setImages([
@@ -439,11 +439,11 @@ const QuickCreatePost = () => {
 
     if (isDataLoaded) {
         return (
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Loading...</Text>
-          </View>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text>Loading...</Text>
+            </View>
         );
-      }
+    }
 
     const renderImages = ({ item, index }) => {
         return (
@@ -513,7 +513,7 @@ const QuickCreatePost = () => {
                     const lastPriceBoth = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted - feeLegitgrails : '';
                     const lastPriceLegitgrails = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeLegitgrails : '';
                     const lastPriceBoosted = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted : '';
-                    
+
                     let formatlLastPriceForSeller = "";
                     if (isChecked_3 && isBoosted) {
                         formatlLastPriceForSeller = formatPrice(lastPriceBoth);
