@@ -321,7 +321,10 @@ const Profile = ({ navigation }) => {
                 />
                 <ProfileTile title={"Địa chỉ email"} icon={"email"} font={4} isDivider={true} />
                 <ProfileTile title={"Người dùng bị chặn"} icon={"block"} font={4} isDivider={true} />
-                <ProfileTile title={"Xác minh tài khoản"} icon={"verified-user"} font={4} isDivider={true} onPress={() => navigation.navigate("GetID")} />
+                {!user?.isVerified &&
+                  <ProfileTile title={"Xác minh tài khoản"} icon={"verified-user"} font={4} isDivider={true} onPress={() => navigation.navigate("GetID")} />
+                }
+
                 <ProfileTile title={"Xác thực vân tay / Khuôn mặt"} icon={"finger-print"} font={1} />
               </View>
 
