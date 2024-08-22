@@ -55,11 +55,12 @@ const styles = StyleSheet.create({
     color: "#999",
   },
   row: {
-    width: "96%",
+    width: "98%",
     justifyContent: "flex-start",
-    gap: 5,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
     marginHorizontal: "auto",
-    marginBottom: 5,
   },
   popularContainer: {
     width: "100%",
