@@ -22,7 +22,6 @@ const Profile = ({ navigation }) => {
   const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
   const bkImg = "https://d326fntlu7tb1e.cloudfront.net/uploads/ab6356de-429c-45a1-b403-d16f7c20a0bc-bkImg-min.png";
 
-  const [isVerified, setisVerified] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState({
     title: '',
@@ -32,10 +31,6 @@ const Profile = ({ navigation }) => {
     onConfirm: () => { },
     onClose: () => { }
   });
-
-  if (user?.isVerified) {
-    setisVerified(user?.isVerified);
-  }
 
   useEffect(() => {
     if (user) {
@@ -86,7 +81,7 @@ const Profile = ({ navigation }) => {
   };
 
   const handleAddFund = () => {
-    if (isVerified) {
+    if (user?.isVerified) {
       navigation.navigate("add-funds")
     } else {
       setModalContent({
