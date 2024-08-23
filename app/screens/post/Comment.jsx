@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, Modal, Image, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, Modal, Image, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { COLORS } from '../../constants/theme';
 import { getComments, postComment } from '../../api/post';
@@ -99,7 +99,10 @@ const Comment = ({ setModalVisibleComment, visible, onClose, postId, isAuthentic
             transparent={true}
             animationType="slide"
         >
-            <View style={styles.modalOverlay}>
+            <KeyboardAvoidingView
+                style={styles.modalOverlay}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            >
                 <View style={styles.modalContainer}>
                     <View style={styles.header}>
                         <Text style={styles.title}>{comments.length} bình luận</Text>
@@ -132,7 +135,7 @@ const Comment = ({ setModalVisibleComment, visible, onClose, postId, isAuthentic
                         </TouchableOpacity>
                     </View>
                 </View>
-            </View>
+            </KeyboardAvoidingView>
             <CustomModal
                 visible={modalVisible}
                 onClose={() => {

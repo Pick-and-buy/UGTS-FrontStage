@@ -384,7 +384,6 @@ const PostDetail = ({ navigation, route }) => {
 
                             }
 
-
                             <Comment
                                 visible={modalVisible}
                                 setModalVisibleComment={setModalVisible}
