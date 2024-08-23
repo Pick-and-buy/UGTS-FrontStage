@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const createPayment = async (amount) => {
     try {
-        const response = await axiosInstance.post(`/vnpay/create-payment?amount=${amount}&orderInfo=pay for order`);
+        const response = await axiosInstance.post(`/vnpay/create-payment?amount=${amount}&orderInfo=Nap tien vao vi`);
         return response;
     } catch (error) {
         console.log('Error create payment:', error);
@@ -59,6 +59,34 @@ export const payOrder = async (walletId, orderId, amount) => {
         return response.data;
     } catch (error) {
         console.log('Error order payment:', error);
+        throw error;
+    }
+}
+
+export const getTransactionHistory = async () => {
+    try {
+        // Retrieve the token from AsyncStorage
+        const token = await AsyncStorage.getItem('token');
+
+        // Perform the fetch request
+        const response = await fetch('http://192.168.1.8:8080/api/v1/wallets/transaction-histories', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        // Check if the request was successful
+        if (!response.ok) {
+            throw new Error('Error get transaction history');
+        }
+
+        // Parse and return the response
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.log('Error creating payment:', error);
         throw error;
     }
 }

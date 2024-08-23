@@ -30,10 +30,10 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     backButton: {
-        marginLeft: "2%"
+        marginLeft: "3%"
     },
     homeButton: {
-        marginRight: "2%",
+        marginRight: "3%",
         marginBottom: 4
     },
     content: {
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        backgroundColor: "#ccc",
+        backgroundColor: "#F0F0F0",
         borderRadius: 20,
         marginTop: 15,
         paddingHorizontal: 8,
@@ -115,14 +115,22 @@ const styles = StyleSheet.create({
     itemTitle: {
         fontSize: 18,
         fontWeight: "600",
+        width:"50%"
     },
     itemDetailsText: {
         fontSize: 14,
-        color: COLORS.gray
+        color: COLORS.gray,
+        width:"50%"
     },
     moneyIn: {
         fontSize: 18,
-        color: "#22c1c3"
+        color: "#22c1c3",
+        width:"50%"
+    },
+    moneyOut: {
+        fontSize: 18,
+        color: "#FF0000",
+        width:"50%"
     }
 
 })

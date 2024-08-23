@@ -1,14 +1,31 @@
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import styles from '../css/transactionHistory.style';
 
 import { useAuth } from '../../context/AuthContext';
+import { getTransactionHistory } from '../../api/payment';
 
 const TransactionHistory = ({ navigation }) => {
     const { user } = useAuth();
+    const [transactions, setTransactions] = useState([]);
+    console.log(transactions);
 
+    useEffect(() => {
+        if (user) {
+            fetchTransactionHistory();
+        }
+    }, [user]);
+
+    const fetchTransactionHistory = async () => {
+        try {
+            const response = await getTransactionHistory();
+            setTransactions(response.result);
+        } catch (error) {
+            console.log('Error fetching transaction history', error);
+        }
+    };
 
     const formatMoney = (amount) => {
         return amount
@@ -31,7 +48,7 @@ const TransactionHistory = ({ navigation }) => {
                     <Text style={styles.headerText}>
                         {user?.lastName} {user?.firstName}
                     </Text>
-                    <TouchableOpacity style={styles.homeButton}>
+                    <TouchableOpacity style={styles.homeButton} onPress={() => navigation.navigate('Home')}>
                         <Ionicons
                             name='home'
                             color='white'
@@ -59,46 +76,23 @@ const TransactionHistory = ({ navigation }) => {
                 </View>
 
                 <ScrollView style={styles.lists}>
-                    <View style={styles.item}>
-                        <View style={styles.half}>
-                            <Text style={styles.itemTitle}>Nap tien VNpay</Text>
-                            <Text style={styles.moneyIn}>+{formatMoney(String(13000))} VND</Text>
+                    {transactions && transactions.map((transaction, index) => (
+                        <View key={index} style={styles.item}>
+                            <View style={styles.half}>
+                                <Text numberOfLines={1} style={styles.itemTitle}>{transaction?.reason}</Text>
+                                <Text
+                                    style={transaction.amount > 0 ? styles.moneyIn : styles.moneyOut}
+                                >
+                                    {/* {transaction.amount > 0 ? `+${formatMoney(String(transaction?.amount))} VND` : `-${formatMoney(String(transaction.amount))} VND`} */}
+                                    {transaction?.amount}
+                                </Text>
+                            </View>
+                            <View style={styles.half}>
+                                <Text numberOfLines={1} style={styles.itemDetailsText}>{transaction?.createDate}</Text>
+                                <Text numberOfLines={1} style={styles.itemDetailsText}>Mã GD: {transaction?.id}</Text>
+                            </View>
                         </View>
-                        <View style={styles.half}>
-                            <Text style={styles.itemDetailsText}>21/08/2024 21:34:19</Text>
-                            <Text style={styles.itemDetailsText}>Mã GD: 012345678910</Text>
-                        </View>
-                    </View>
-                    <View style={styles.item}>
-                        <View style={styles.half}>
-                            <Text style={styles.itemTitle}>Nap tien VNpay</Text>
-                            <Text style={styles.moneyIn}>+{formatMoney(String(13000))} VND</Text>
-                        </View>
-                        <View style={styles.half}>
-                            <Text style={styles.itemDetailsText}>21/08/2024 21:34:19</Text>
-                            <Text style={styles.itemDetailsText}>Mã GD: 012345678910</Text>
-                        </View>
-                    </View>
-                    <View style={styles.item}>
-                        <View style={styles.half}>
-                            <Text style={styles.itemTitle}>Nap tien VNpay</Text>
-                            <Text style={styles.moneyIn}>+{formatMoney(String(13000))} VND</Text>
-                        </View>
-                        <View style={styles.half}>
-                            <Text style={styles.itemDetailsText}>21/08/2024 21:34:19</Text>
-                            <Text style={styles.itemDetailsText}>Mã GD: 012345678910</Text>
-                        </View>
-                    </View>
-                    <View style={styles.item}>
-                        <View style={styles.half}>
-                            <Text style={styles.itemTitle}>Nap tien VNpay</Text>
-                            <Text style={styles.moneyIn}>+{formatMoney(String(13000))} VND</Text>
-                        </View>
-                        <View style={styles.half}>
-                            <Text style={styles.itemDetailsText}>21/08/2024 21:34:19</Text>
-                            <Text style={styles.itemDetailsText}>Mã GD: 012345678910</Text>
-                        </View>
-                    </View>
+                    ))}
                 </ScrollView>
             </View>
         </View>
