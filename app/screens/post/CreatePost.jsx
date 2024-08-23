@@ -513,7 +513,7 @@ const CreatePost = () => {
           </View>
         )
     );
-  };
+  };  
 
   return (
     <View style={styles.container}>

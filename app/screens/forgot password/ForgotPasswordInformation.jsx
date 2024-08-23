@@ -45,10 +45,10 @@ const ForgotPasswordInformation = ({ navigation, route }) => {
         try {
             const phoneNumberFormatted = formatPhoneNumber(values.value);
             console.log(phoneNumberFormatted);
-            
+
             const rs = await sendOtpToSMS(phoneNumberFormatted);
             console.log(rs);
-            Alert.alert('Success', 'OTP sent to your phone');
+            // Alert.alert('Success', 'OTP sent to your phone');
             navigation.navigate('otp-navigation', { type, value: phoneNumberFormatted });
         } catch (err) {
             const errorMessage = 'Failed to send OTP to sms. Please try again.';
