@@ -27,6 +27,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Video } from 'expo-av';
 import Checkbox from 'expo-checkbox';
 import CustomModalPost from '../../components/CustomModalPost';
+import CreatePostGuideVerify from "./CreatePostGuideVerify";
 
 const CreatePost = () => {
   const navigation = useNavigation();
@@ -513,7 +514,7 @@ const CreatePost = () => {
           </View>
         )
     );
-  };  
+  };
 
   return (
     <View style={styles.container}>
@@ -575,14 +576,8 @@ const CreatePost = () => {
 
               {/* Check box */}
               <View style={styles.checkboxContainer}>
-                <View style={{ width: "100%", flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
-                  <Text style={[styles.labelText, { marginLeft: 0 }]}>Các mức xác minh</Text>
-                  <TouchableOpacity
-                    onPress={() => console.warn("Quy Tắc")}
-                  >
-                    <FontAwesome6 name="circle-question" size={14} color="gray" />
-                  </TouchableOpacity>
-                </View>
+                {/* Pop-up guide */}
+                <CreatePostGuideVerify />
                 <View style={styles.checkboxView}>
                   <Checkbox
                     value={isChecked_2}
@@ -704,12 +699,6 @@ const CreatePost = () => {
               }
               <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
                 <Text style={styles.labelText}>Thông tin sản phẩm</Text>
-                <TouchableOpacity
-                  onPress={() => console.warn("Quy Tắc")}
-                >
-                  <FontAwesome6 name="circle-question" size={14} color="gray" />
-                </TouchableOpacity>
-
               </View>
               {/* Product Information */}
               <View style={styles.productContainer}>
@@ -1148,11 +1137,6 @@ const CreatePost = () => {
               {/* Shipping information */}
               <View style={styles.shippingInformation}>
                 <Text style={styles.labelText}>Thông Tin Thanh Toán</Text>
-                <TouchableOpacity
-                  onPress={() => console.warn("Quy Tắc")}
-                >
-                  <FontAwesome6 name="circle-question" size={14} color="gray" />
-                </TouchableOpacity>
               </View>
 
               <View style={styles.summary}>
