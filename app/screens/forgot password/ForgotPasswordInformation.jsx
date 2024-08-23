@@ -31,7 +31,7 @@ const ForgotPasswordInformation = ({ navigation, route }) => {
         try {
             const rs = await sendOtp(values.value);
             console.log(rs);
-            Alert.alert('Success', 'OTP sent to your email');
+            // Alert.alert('Success', 'OTP sent to your email');
             navigation.navigate('otp-navigation', { type, value: values.value });
         } catch (err) {
             const errorMessage = 'Failed to send OTP to email. Please try again.';
