@@ -97,7 +97,23 @@ const Profile = ({ navigation }) => {
       setModalVisible(true);
     }
   }
-
+  const handleViewTransitionHistory = () => {
+    if (user?.isVerified) {
+      navigation.navigate("transaction-history")
+    } else {
+      setModalContent({
+        title: "Xác Thực",
+        detailText: 'Bạn cần xác thực bằng căn cước công dân để xem lịch sử các giao dịch',
+        confirmText: 'Xác Thực',
+        cancelText: "Thoát",
+        onConfirm: () => {
+          setModalVisible(false);
+          navigation.navigate('GetID');
+        },
+      });
+      setModalVisible(true);
+    }
+  }
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -268,7 +284,8 @@ const Profile = ({ navigation }) => {
                   marginVertical: 20,
                   marginHorizontal: "auto"
                 }}>
-                  <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
+                  <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
+                    onPress={handleViewTransitionHistory}>
                     <Ionicons name="document-text" size={26} color="gray" />
                     <Text style={{ fontSize: 16, marginTop: 10 }}>Lịch sử</Text>
                   </TouchableOpacity>
