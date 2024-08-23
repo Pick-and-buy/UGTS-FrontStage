@@ -344,6 +344,7 @@ const PostDetail = ({ navigation, route }) => {
                         }}>Bình luận
                             <Text> ({comments.length})</Text>
                         </Text>
+
                         {comments && comments.slice(0, showAllComments ? comments.length : 3).map((comment, index) => (
                             <View key={index} style={styles.commentContainer}>
                                 <Image source={{ uri: comment?.userImageUrl ? comment?.userImageUrl : profile }} style={styles.avatarComment} />
@@ -354,34 +355,84 @@ const PostDetail = ({ navigation, route }) => {
                                 </View>
                             </View>
                         ))}
+
                         <View style={{
                             flex: 1,
                             justifyContent: 'center',
                             alignItems: 'center',
                         }}>
-                            {postDetails?.isAvailable ? (
-                                <TouchableOpacity
-                                    style={styles.commentBtnActive}
-                                    onPress={() => setModalVisible(true)}
-                                >
-                                    <Text
-                                        style={{
-                                            fontSize: 18,
-                                            color: COLORS.primary,
-                                        }}>Bình luận</Text>
-                                </TouchableOpacity>
-                            ) : (
-                                <View
-                                    style={styles.commentContainerUnActive}
-                                >
-                                    <Text
-                                        style={{
-                                            fontSize: 18,
-                                            color: COLORS.gray,
-                                        }}>Bình luận</Text>
-                                </View>
-                            )
+                            {isAuthenticated ?
+                                (
+                                    <>
+                                        {postDetails?.isAvailable ? (
+                                            <TouchableOpacity
+                                                style={styles.commentBtnActive}
+                                                onPress={() => setModalVisible(true)}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        fontSize: 18,
+                                                        color: COLORS.primary,
+                                                    }}>Bình luận</Text>
+                                            </TouchableOpacity>
+                                        ) : (
+                                            <View
+                                                style={styles.commentContainerUnActive}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        fontSize: 18,
+                                                        color: COLORS.gray,
+                                                    }}>Bình luận</Text>
+                                            </View>
+                                        )
+                                        }
+                                    </>
+                                )
+                                :
+                                (
+                                    <>
+                                        {comments.length > 3 ?
+                                            (
+                                                <>
+                                                    {!showAllComments ?
+                                                        (
 
+                                                            <TouchableOpacity
+                                                                onPress={() => { setShowAllComments(true) }}
+                                                                style={[styles.commentContainerUnActive, { borderColor: COLORS.blue }]}
+                                                            >
+                                                                <Text
+                                                                    style={{
+                                                                        fontSize: 18,
+                                                                        color: COLORS.blue,
+                                                                    }}>Xem Thêm</Text>
+                                                            </TouchableOpacity>
+
+                                                        )
+                                                        :
+                                                        (
+                                                            <TouchableOpacity
+                                                                onPress={() => { setShowAllComments(false) }}
+                                                                style={[styles.commentContainerUnActive, { borderColor: COLORS.blue }]}
+                                                            >
+                                                                <Text
+                                                                    style={{
+                                                                        fontSize: 18,
+                                                                        color: COLORS.blue,
+                                                                    }}>Thu Gọn</Text>
+                                                            </TouchableOpacity>
+                                                        )
+                                                    }
+                                                </>
+                                            )
+                                            :
+                                            (
+                                                <View></View>
+                                            )
+                                        }
+                                    </>
+                                )
                             }
 
                             <Comment
@@ -398,7 +449,6 @@ const PostDetail = ({ navigation, route }) => {
                                 navigation={navigation}
                             />
                         </View>
-
 
                     </View>
                     <View style={styles.divider} />
