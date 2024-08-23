@@ -384,8 +384,10 @@ const PostDetail = ({ navigation, route }) => {
 
                             }
 
+
                             <Comment
                                 visible={modalVisible}
+                                setModalVisibleComment={setModalVisible}
                                 onClose={() => {
                                     setModalVisible(false)
                                     fetchComments()

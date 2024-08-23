@@ -4,13 +4,24 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { COLORS } from '../../constants/theme';
 import { getComments, postComment } from '../../api/post';
 import moment from 'moment';
+import CustomModal from '../../components/CustomModal';
+
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
-const Comment = ({ visible, onClose, postId, isAuthenticated, user, navigation }) => {
+const Comment = ({ setModalVisibleComment, visible, onClose, postId, isAuthenticated, user, navigation }) => {
     const userId = user?.id;
     const [newComment, setNewComment] = useState('');
     const [comments, setComments] = useState([]);
     const [isInputEmpty, setIsInputEmpty] = useState(true);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState({
+        title: '',
+        detailText: '',
+        confirmText: '',
+        cancelText: '',
+        onConfirm: () => { },
+        onClose: () => { }
+    });
 
     const flatListRef = useRef();
 
@@ -33,20 +44,19 @@ const Comment = ({ visible, onClose, postId, isAuthenticated, user, navigation }
             alert("Comment is empty");
             return;
         } else if (!isAuthenticated) {
-            Alert.alert(
-                "Đăng nhập",
-                "Bạn cần đăng nhập để bình luận bài viết.",
-                [
-                    {
-                        text: "Cancel",
-                        style: "cancel"
-                    },
-                    {
-                        text: "Đăng nhập",
-                        onPress: () => navigation.navigate('login-navigation')
-                    }
-                ]
-            );
+            setModalContent({
+                title: "Đăng nhập",
+                detailText: "Bạn cần đăng nhập để bình luận bài viết.",
+                confirmText: "Đăng nhập",
+                cancelText: "Thoát",
+                onConfirm: () => {
+                    setModalVisible(false);
+                    setModalVisibleComment(false);
+                    navigation.navigate('login-navigation');
+                    setNewComment("");
+                },
+            });
+            setModalVisible(true);
             return;
         }
 
@@ -106,7 +116,7 @@ const Comment = ({ visible, onClose, postId, isAuthenticated, user, navigation }
                         showsVerticalScrollIndicator={false}
                     />
                     <View style={styles.inputContainer}>
-                        <Image source={{ uri: user?.avatar ? user?.avatar : profile}} style={styles.avatarSmall} />
+                        <Image source={{ uri: user?.avatar ? user?.avatar : profile }} style={styles.avatarSmall} />
                         <TextInput
                             style={styles.textInput}
                             placeholder="Thêm bình luận..."
@@ -123,6 +133,17 @@ const Comment = ({ visible, onClose, postId, isAuthenticated, user, navigation }
                     </View>
                 </View>
             </View>
+            <CustomModal
+                visible={modalVisible}
+                onClose={() => {
+                    setModalVisible(false);
+                }}
+                onConfirm={modalContent.onConfirm}
+                title={modalContent.title}
+                detailText={modalContent.detailText}
+                confirmText={modalContent.confirmText}
+                cancelText={modalContent.cancelText}
+            />
         </Modal>
     );
 };
