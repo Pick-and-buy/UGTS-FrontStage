@@ -26,6 +26,8 @@ import Comment from "./Comment";
 import moment from "moment";
 import CustomModal from "../../components/CustomModal";
 import Post from "./Post";
+import { Video } from "expo-av";
+
 
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
@@ -57,6 +59,8 @@ const PostDetail = ({ navigation, route }) => {
     });
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const [isMuted, setIsMuted] = useState(false);  // Chỉnh âm thanh khi lần đầu tiên vào sẽ mute
 
     console.log(postId);
 
@@ -345,6 +349,7 @@ const PostDetail = ({ navigation, route }) => {
                             <Text> ({comments.length})</Text>
                         </Text>
 
+
                         {comments && comments.slice(0, showAllComments ? comments.length : 3).map((comment, index) => (
                             <View key={index} style={styles.commentContainer}>
                                 <Image source={{ uri: comment?.userImageUrl ? comment?.userImageUrl : profile }} style={styles.avatarComment} />
@@ -355,6 +360,7 @@ const PostDetail = ({ navigation, route }) => {
                                 </View>
                             </View>
                         ))}
+
 
                         <View style={{
                             flex: 1,
@@ -635,6 +641,35 @@ const PostDetail = ({ navigation, route }) => {
                     </View>
                     <View style={styles.divider} />
 
+                    {postDetails?.product?.verifiedLevel === "LEVEL_2" &&
+                        <View style={styles.evidence}>
+                            <Text style={styles.descriptionTitle}>Hình ảnh hóa đơn</Text>
+                            <View style={styles.evidenceImage}>
+                                <Image
+                                    style={styles.imageSelect}
+                                    source={{ uri: postDetails?.product?.originalReceiptProof }}
+                                />
+                            </View>
+                            <Text style={styles.descriptionTitle}>Video chi tiết</Text>
+                            <View style={styles.evidenceVideo}>
+                                <Video
+                                    source={{ uri: postDetails?.product?.productVideo }}
+                                    style={styles.videoSelect}
+                                    useNativeControls
+                                    resizeMode="cover"
+                                    shouldPlay
+                                    isLooping
+                                    isMuted={isMuted} // Set initial state to mute
+                                    onPlaybackStatusUpdate={(status) => {
+                                        if (!status.isPlaying && status.isMuted !== isMuted) {
+                                            setIsMuted(true); // Ensure the video starts muted
+                                        }
+                                    }}
+                                />
+                            </View>
+                        </View>
+                    }
+                    <View style={styles.divider} />
 
                     {/* Profile seller */}
                     <TouchableOpacity
@@ -695,7 +730,7 @@ const PostDetail = ({ navigation, route }) => {
                             ) : (
                                 <View style={styles.row}>
                                     {posts?.length > 0 ? (
-                                        posts.map((post) => <Post key={post.id} post={post} />)
+                                        posts.slice(0,9).map((post) => <Post key={post.id} post={post} />)
                                     ) : (
                                         <Text>No posts available</Text>
                                     )}
