@@ -103,7 +103,7 @@ export const sendImageToAPI = async (imageUri, userId, authToken) => {
   });
 
   try {
-    const response = await fetch(`http://10.0.2.2:8080/api/v1/users/${userId}/avatar`, {
+    const response = await fetch(`http://192.168.1.8:8080/api/v1/users/${userId}/avatar`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${authToken}`,

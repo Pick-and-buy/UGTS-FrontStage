@@ -62,6 +62,7 @@ import CreatePost from './app/screens/post/CreatePost';
 import QuickCreatePost from './app/screens/post/QuickCreatePost';
 import AddFunds from './app/screens/payment/AddFunds';
 import OTPSMSVerification from './app/screens/register/OTPSMSVerification';
+import TransactionHistory from './app/screens/payment/TransactionHistory';
 
 
 const Stack = createNativeStackNavigator();
@@ -389,6 +390,11 @@ export default function App() {
                 <Stack.Screen
                   name='otp-sms-verification'
                   component={OTPSMSVerification}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='transaction-history'
+                  component={TransactionHistory}
                   options={{ headerShown: false }}
                 />
               </Stack.Navigator>
