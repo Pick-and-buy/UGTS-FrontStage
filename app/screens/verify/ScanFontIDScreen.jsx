@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert  } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import FormData from 'form-data';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -25,7 +25,7 @@ const ScanFontIDScreen = ({ navigation }) => {
             confirmText: "Đồng ý",
             cancelText: "Thoát",
             onConfirm: () => {
-                setModalVisible(false);
+                // setModalVisible(false);
                 startIdentification();
             },
             onClose: () => {
@@ -36,33 +36,55 @@ const ScanFontIDScreen = ({ navigation }) => {
         setModalVisible(true);
     }, []);
 
+    // useEffect(() => {
+    //     Alert.alert(
+    //         "Chú ý",
+    //         "Hãy chuẩn bị CCCD mặt trước để bắt đầu xác thực.",
+    //         [
+    //             {
+    //                 text: "Thoát",
+    //                 onPress: () => navigation.goBack(),
+    //                 style: "cancel"
+    //             },
+    //             { text: "Đồng ý", onPress: startIdentification }
+    //         ],
+    //         { cancelable: false }
+    //     );
+    // }, []);
+
     const startIdentification = async () => {
-        const { status } = await ImagePicker.requestCameraPermissionsAsync();
-        if (status !== 'granted') {
-            setModalContent({
-                title: "Permission Denied",
-                detailText: "Camera access is needed to take photos.",
-                confirmText: "OK",
-                cancelText: "Cancel",
-                onConfirm: () => setModalVisible(false),
+        try {
+            const { status } = await ImagePicker.requestCameraPermissionsAsync();
+            if (status !== 'granted') {
+                setModalContent({
+                    title: "Permission Denied",
+                    detailText: "Camera access is needed to take photos.",
+                    confirmText: "OK",
+                    cancelText: "Cancel",
+                    onConfirm: () => setModalVisible(false),
+                });
+                setModalVisible(true);
+                return;
+            }
+            const result = await ImagePicker.launchCameraAsync({
+                cameraType: ImagePicker.CameraType.back,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
             });
-            setModalVisible(true);
-            return;
+
+            if (!result.canceled) {
+                setModalVisible(false);
+                setLoading(true);
+                uploadImage(result.assets[0].uri);
+            } else {
+                navigation.goBack();
+            }
+
+        } catch (error) {
+            console.log('Error Upload Image: ', error);
         }
 
-        const result = await ImagePicker.launchCameraAsync({
-            cameraType: ImagePicker.CameraType.back,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-
-        if (!result.canceled) {
-            setLoading(true);
-            uploadImage(result.assets[0].uri);
-        } else {
-            navigation.goBack();
-        }
     };
 
     const uploadImage = async (imageUri) => {
@@ -95,7 +117,7 @@ const ScanFontIDScreen = ({ navigation }) => {
                     confirmText: "Thử lại",
                     cancelText: "Thoát",
                     onConfirm: () => {
-                        setModalVisible(false);
+                        // setModalVisible(false);
                         startIdentification();
                     },
                     onClose: () => {
