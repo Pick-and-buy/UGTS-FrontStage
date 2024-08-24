@@ -105,6 +105,8 @@ const UpdatePost = ({ route }) => {
     const [isBoosted, setBoosted] = useState(false);
 
     const [checkVerifiedLevel, setCheckVerifiedLevel] = useState("");
+    const [isPriceChanged, setIsPriceChanged] = useState(false);
+    const [calculateLastPriceDb, setCalculateLastPriceDb] = useState("");
 
     const FEE = 0;
     const feeLegitgrails = 500000;
@@ -317,16 +319,6 @@ const UpdatePost = ({ route }) => {
 
                 const convertStringPrice = values.price.replace(/\./g, '');
                 const originPrice = parseInt(convertStringPrice, 10)
-                let calculatedPrice = "";
-                if (isChecked_3 && isBoosted) {
-                    calculatedPrice = parseInt(convertStringPrice, 10) - feeLegitgrails - feeBoosted;
-                } else if (isBoosted) {
-                    calculatedPrice = parseInt(convertStringPrice, 10) - feeBoosted;
-                } else if (isChecked_3) {
-                    calculatedPrice = parseInt(convertStringPrice, 10) - feeLegitgrails;
-                } else {
-                    calculatedPrice = parseInt(convertStringPrice, 10);
-                }
 
                 let { brandName, productName, brandLineName, condition, category, exteriorMaterial,
                     interiorMaterial, size, width, height, length, referenceCode, manufactureYear, color, accessories, dateCode,
@@ -366,7 +358,7 @@ const UpdatePost = ({ route }) => {
                     },
                     // condition: condition,
                     boosted: isBoosted,
-                    lastPriceForSeller: calculatedPrice,
+                    lastPriceForSeller: calculateLastPriceDb,
                 };
 
                 formData.append('request', JSON.stringify(request));
@@ -665,18 +657,49 @@ const UpdatePost = ({ route }) => {
                             const formatFeeBoosted = formatPrice(feeBoosted);
                             const formatFeeLegitgrails = formatPrice(feeLegitgrails);
 
-                            const lastPriceBoth = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted - feeLegitgrails : '';
-                            const lastPriceLegitgrails = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeLegitgrails : '';
-                            const lastPriceBoosted = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted : '';
-                            // const formatlLastPriceForSeller = formatPrice(lastPriceLegitgrails);
+                            let lastPriceBoth = '';
+                            let lastPriceLegitgrails = ''
+                            let lastPriceBoosted = '';
+
                             let formatlLastPriceForSeller = "";
-                            if (isChecked_3 && isBoosted) {
-                                formatlLastPriceForSeller = formatPrice(lastPriceBoth);
-                            } else if (isBoosted) {
-                                formatlLastPriceForSeller = formatPrice(lastPriceBoosted);
-                            } else if (isChecked_3) {
-                                formatlLastPriceForSeller = formatPrice(lastPriceLegitgrails);
+                            if (isPriceChanged) {   //Nếu price người dùng nhập có sự thay đổi
+                                lastPriceBoth = parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted - feeLegitgrails;
+                                lastPriceLegitgrails = parseInt(values.price.replace(/\./g, ""), 10) - feeLegitgrails;
+                                lastPriceBoosted = parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted;
+
+                                if (isChecked_3 && isBoosted) {
+                                    formatlLastPriceForSeller = formatPrice(lastPriceBoth);
+                                } else if (isBoosted) {
+                                    formatlLastPriceForSeller = formatPrice(lastPriceBoosted);
+                                } else if (isChecked_3) {
+                                    formatlLastPriceForSeller = formatPrice(lastPriceLegitgrails);
+                                } else {
+                                    formatlLastPriceForSeller = values.price;
+                                }
+                            } else {    //Nếu price vẫn giữ nguyên từ lúc tạo post
+                                lastPriceBoth = lastPrice - feeBoosted - feeLegitgrails;
+                                lastPriceLegitgrails = lastPrice - feeLegitgrails;
+                                lastPriceBoosted = lastPrice - feeBoosted;
+
+                                if (postDetails?.boosted) { //Nếu bài post đang trong quá trình chạy quảng cáo
+                                    formatlLastPriceForSeller = formatPrice(lastPrice);
+                                } 
+                                else { //Nếu bài post chưa chạy trong quá trình chạy quảng cáo
+                                    if (isChecked_3 && isBoosted) {
+                                        formatlLastPriceForSeller = formatPrice(lastPriceBoth);
+                                    } else if (isBoosted) {
+                                        formatlLastPriceForSeller = formatPrice(lastPriceBoosted);
+                                    } else if (isChecked_3) {
+                                        formatlLastPriceForSeller = formatPrice(lastPriceLegitgrails);
+                                    } else {
+                                        formatlLastPriceForSeller = formatPrice(lastPrice);
+                                    }
+                                }
                             }
+
+                            const convertStringFormatlLastPriceForSeller = formatlLastPriceForSeller.replace(/\./g, '');
+                            setCalculateLastPriceDb(parseInt(convertStringFormatlLastPriceForSeller, 10));
+
 
                             return (
                                 <ScrollView style={styles.wrapper}>
@@ -1262,7 +1285,7 @@ const UpdatePost = ({ route }) => {
                                     </View>
                                     <View style={styles.checkboxBoostedContainer}>
                                         <View style={styles.checkboxBoosted}>
-                                            {postDetails?.boosted === true ?
+                                            {/* {postDetails?.boosted === true ?
                                                 (
                                                     <Checkbox
                                                         value={true}
@@ -1276,11 +1299,11 @@ const UpdatePost = ({ route }) => {
                                                     />
                                                 )
 
-                                            }
-                                            {/* <Checkbox
-                                        value={isBoosted}
-                                        onValueChange={setBoosted}
-                                    /> */}
+                                            } */}
+                                            <Checkbox
+                                                value={isBoosted}
+                                                onValueChange={setBoosted}
+                                            />
                                             <Text style={{ textAlign: 'center' }}>Boosted</Text>
                                         </View>
                                         {isBoosted ?
@@ -1326,6 +1349,7 @@ const UpdatePost = ({ route }) => {
                                                     setFieldTouched("price", "");
                                                 }}
                                                 onChangeText={(text) => {
+                                                    setIsPriceChanged(true); // Đánh dấu rằng giá trị price đã bị thay đổi
                                                     if (text === "") {
                                                         setFieldValue("price", "");
                                                     } else {
