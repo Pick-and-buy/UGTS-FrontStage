@@ -69,6 +69,7 @@
     "react-native-stock-star-rating": "^1.0.6",
     "react-native-svg": "^15.2.0",
     "react-native-tab-view": "^3.5.2",
+    "react-native-tip": "^0.0.25",
     "react-native-vector-icons": "^10.1.0",
     "react-native-webview": "13.8.6",
     "toggle-switch-react-native": "^3.3.0",
