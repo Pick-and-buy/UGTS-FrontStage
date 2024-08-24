@@ -26,6 +26,8 @@ import Comment from "./Comment";
 import moment from "moment";
 import CustomModal from "../../components/CustomModal";
 import Post from "./Post";
+import { Video } from "expo-av";
+
 
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
@@ -634,6 +636,28 @@ const PostDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                     <View style={styles.divider} />
+
+
+                    <View style={styles.evidence}>
+                        <Text>Hình ảnh hóa đơn</Text>
+                        <View style={styles.evidenceImage}>
+                            <Image
+                                style={styles.imageSelect}
+                                source={{ uri: 'https://cdnphoto.dantri.com.vn/xIpwINaat_z8yNSAMJGWf4MnVZk=/zoom/1200_630/2021/03/27/thuytrang-2735-1616858059193.jpeg' }}
+                            />
+                        </View>
+                        <Text>Video chi tiết</Text>
+                        <View style={styles.evidenceVideo}>
+                            <Video
+                                source={{ uri: 'https://www.youtube.com/watch?v=g4xs_5rZdos' }}
+                                style={styles.videoSelect}
+                                useNativeControls
+                                resizeMode="cover"
+                                shouldPlay
+                                isLooping
+                            />
+                        </View>
+                    </View>
 
 
                     {/* Profile seller */}
