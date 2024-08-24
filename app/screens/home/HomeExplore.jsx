@@ -114,8 +114,8 @@ const HomeExplore = ({ navigation }) => {
                             paddingHorizontal: 10, justifyContent: "center",
                             alignItems: "center",
                             gap: 10,
-                            height:50,
-                            marginLeft:-10
+                            height: 50,
+                            marginLeft: -10
                         }}
                     />
                 </View>

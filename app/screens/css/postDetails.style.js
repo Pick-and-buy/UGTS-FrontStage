@@ -360,7 +360,6 @@ const styles = StyleSheet.create({
         flexWrap: "wrap",
         alignItems: "center",
         marginHorizontal: "auto",
-        marginBottom: "20%",
     },
 });
 

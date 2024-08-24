@@ -10,13 +10,14 @@ import {
     Alert,
     Button,
     RefreshControl,
+    ActivityIndicator,
 } from "react-native";
 import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo, FontAwesome, Octicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useCallback, useState, useEffect } from "react";
 import { useFocusEffect } from '@react-navigation/native';
 import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
 import Carousel from "../../components/carousel/Carousel";
-import { getPostDetails, getComments, postComment, getLikedPostByUser } from "../../api/post";
+import { getPostDetails, getComments, postComment, getLikedPostByUser, getAllPosts } from "../../api/post";
 import styles from "../css/postDetails.style";
 import { Rating } from 'react-native-stock-star-rating';
 import { getRatingByUserId, getUserByToken, likePost, unlikePost } from "../../api/user";
@@ -24,6 +25,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Comment from "./Comment";
 import moment from "moment";
 import CustomModal from "../../components/CustomModal";
+import Post from "./Post";
 
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
@@ -53,6 +55,8 @@ const PostDetail = ({ navigation, route }) => {
         onConfirm: () => { },
         onClose: () => { }
     });
+    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     console.log(postId);
 
@@ -69,6 +73,22 @@ const PostDetail = ({ navigation, route }) => {
             fetchComments();
         }, [postId])
     )
+
+    useEffect(() => {
+        fetchPosts();
+    }, []);
+
+    const fetchPosts = async () => {
+        setLoading(true);
+        try {
+            const response = await getAllPosts();
+            setPosts(response.data.result);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
         if (postDetails?.user?.id) {
@@ -324,6 +344,7 @@ const PostDetail = ({ navigation, route }) => {
                         }}>Bình luận
                             <Text> ({comments.length})</Text>
                         </Text>
+
                         {comments && comments.slice(0, showAllComments ? comments.length : 3).map((comment, index) => (
                             <View key={index} style={styles.commentContainer}>
                                 <Image source={{ uri: comment?.userImageUrl ? comment?.userImageUrl : profile }} style={styles.avatarComment} />
@@ -334,38 +355,89 @@ const PostDetail = ({ navigation, route }) => {
                                 </View>
                             </View>
                         ))}
+
                         <View style={{
                             flex: 1,
                             justifyContent: 'center',
                             alignItems: 'center',
                         }}>
-                            {postDetails?.isAvailable ? (
-                                <TouchableOpacity
-                                    style={styles.commentBtnActive}
-                                    onPress={() => setModalVisible(true)}
-                                >
-                                    <Text
-                                        style={{
-                                            fontSize: 18,
-                                            color: COLORS.primary,
-                                        }}>Bình luận</Text>
-                                </TouchableOpacity>
-                            ) : (
-                                <View
-                                    style={styles.commentContainerUnActive}
-                                >
-                                    <Text
-                                        style={{
-                                            fontSize: 18,
-                                            color: COLORS.gray,
-                                        }}>Bình luận</Text>
-                                </View>
-                            )
+                            {isAuthenticated ?
+                                (
+                                    <>
+                                        {postDetails?.isAvailable ? (
+                                            <TouchableOpacity
+                                                style={styles.commentBtnActive}
+                                                onPress={() => setModalVisible(true)}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        fontSize: 18,
+                                                        color: COLORS.primary,
+                                                    }}>Bình luận</Text>
+                                            </TouchableOpacity>
+                                        ) : (
+                                            <View
+                                                style={styles.commentContainerUnActive}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        fontSize: 18,
+                                                        color: COLORS.gray,
+                                                    }}>Bình luận</Text>
+                                            </View>
+                                        )
+                                        }
+                                    </>
+                                )
+                                :
+                                (
+                                    <>
+                                        {comments.length > 3 ?
+                                            (
+                                                <>
+                                                    {!showAllComments ?
+                                                        (
 
+                                                            <TouchableOpacity
+                                                                onPress={() => { setShowAllComments(true) }}
+                                                                style={[styles.commentContainerUnActive, { borderColor: COLORS.blue }]}
+                                                            >
+                                                                <Text
+                                                                    style={{
+                                                                        fontSize: 18,
+                                                                        color: COLORS.blue,
+                                                                    }}>Xem Thêm</Text>
+                                                            </TouchableOpacity>
+
+                                                        )
+                                                        :
+                                                        (
+                                                            <TouchableOpacity
+                                                                onPress={() => { setShowAllComments(false) }}
+                                                                style={[styles.commentContainerUnActive, { borderColor: COLORS.blue }]}
+                                                            >
+                                                                <Text
+                                                                    style={{
+                                                                        fontSize: 18,
+                                                                        color: COLORS.blue,
+                                                                    }}>Thu Gọn</Text>
+                                                            </TouchableOpacity>
+                                                        )
+                                                    }
+                                                </>
+                                            )
+                                            :
+                                            (
+                                                <View></View>
+                                            )
+                                        }
+                                    </>
+                                )
                             }
 
                             <Comment
                                 visible={modalVisible}
+                                setModalVisibleComment={setModalVisible}
                                 onClose={() => {
                                     setModalVisible(false)
                                     fetchComments()
@@ -377,7 +449,6 @@ const PostDetail = ({ navigation, route }) => {
                                 navigation={navigation}
                             />
                         </View>
-
 
                     </View>
                     <View style={styles.divider} />
@@ -618,11 +689,19 @@ const PostDetail = ({ navigation, route }) => {
                             <MaterialIcons name="explore" size={18} color="gray" />
                             <Text style={{ color: "gray", fontSize: 16 }}> Khám phá</Text>
                         </View>
-                        <View>
-                            <Text>
-                                Products in here
-                            </Text>
-                        </View>
+                        <ScrollView style={{ width: '100%', marginHorizontal: 'auto', marginTop: 10 }}>
+                            {loading ? (
+                                <ActivityIndicator size="large" color={COLORS.primary} />
+                            ) : (
+                                <View style={styles.row}>
+                                    {posts?.length > 0 ? (
+                                        posts.map((post) => <Post key={post.id} post={post} />)
+                                    ) : (
+                                        <Text>No posts available</Text>
+                                    )}
+                                </View>
+                            )}
+                        </ScrollView>
                     </View>
                 </View>
             </ScrollView>
