@@ -424,7 +424,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
         }
 
         {updatedOrderInfo?.orderDetails?.status === "DELIVERING" &&
-          <View style={[styles.videoContainer, {marginBottom: 50}]}>
+          <View style={[styles.videoContainer, { marginBottom: 50 }]}>
             <View
               //onPress={UploadVideoScreen}
               style={styles.uploadVideoContainer_1}
@@ -626,9 +626,14 @@ const BuyerOrderDetails = ({ navigation, route }) => {
       {updatedOrderInfo?.orderDetails?.status !== "DELIVERING" && updatedOrderInfo?.orderDetails?.status !== "RECEIVED" && (
         <View style={styles.bottomBtn}>
           {updatedOrderInfo?.orderDetails?.status === "CANCELLED" ? (
-            <TouchableOpacity style={styles.buyBtn}>
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate('post-details', { postId: updatedOrderInfo?.post?.id })}
+              style={styles.buyBtn}
+            >
               <Text style={styles.buyBtnText}>Mua Lại Sản Phẩm</Text>
             </TouchableOpacity>
+
           ) : updatedOrderInfo?.orderDetails?.status === "PENDING" || updatedOrderInfo?.orderDetails?.status === "PROCESSING" ? (
             <>
               <TouchableOpacity
