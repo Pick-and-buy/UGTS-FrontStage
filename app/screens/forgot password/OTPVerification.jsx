@@ -8,18 +8,52 @@ import Button from '../../components/Button.jsx';
 import BackBtn from '../../components/BackBtn.jsx';
 import styles from "../css/OTPVerification.style.js";
 import { verifyOtpFromEmail, verifyOtpFromSMS } from '../../api/auth.js';
+import CustomModalPost from '../../components/CustomModalPost';
 
 const OTPVerification = ({ navigation, route }) => {
     const { type, value } = route.params;
     const [otp, setOtp] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState({
+        title: '',
+        detailText: '',
+        confirmText: '',
+        cancelText: '',
+        onConfirm: () => { },
+        onClose: () => { }
+    });
+
+    const sendOTPError = () => {
+        setModalContent({
+            title: "Error",
+            detailText: "Failed to verify OTP. Please try again.",
+            confirmText: "Ok",
+            onConfirm: () => {
+                setModalVisible(false);
+            },
+        });
+        setModalVisible(true);
+    }
+
+    const sendOTPSuccess = () => {
+        setModalContent({
+            title: "Success",
+            detailText: "OTP verified successfully",
+            confirmText: "Ok",
+            onConfirm: () => {
+                setModalVisible(false);
+            },
+        });
+        setModalVisible(true);
+    }
 
     const handleVerifyOtpEmail = async () => {
         try {
             await verifyOtpFromEmail(value, otp);
-            Alert.alert('Success', 'OTP verified successfully');
+            sendOTPSuccess();
             navigation.navigate("reset-password-navigation", { value });
         } catch (error) {
-            Alert.alert('Error', 'Failed to verify OTP. Please try again.');
+            sendOTPError();
             console.log('OTP Verification Error:', error.response ? error.response.data : error.message);
         }
     };
@@ -27,10 +61,10 @@ const OTPVerification = ({ navigation, route }) => {
     const handleVerifyOtpSMS = async () => {
         try {
             await verifyOtpFromSMS(value, otp);
-            Alert.alert('Success', 'OTP verified successfully');
+            sendOTPSuccess();
             navigation.navigate("reset-password-navigation", { type, value });
         } catch (error) {
-            Alert.alert('Error', 'Failed to verify OTP. Please try again.');
+            sendOTPError();
             console.log('OTP Verification Error:', error.response ? error.response.data : error.message);
         }
     };
@@ -86,6 +120,16 @@ const OTPVerification = ({ navigation, route }) => {
                     </View>
                 </View>
             </View>
+            <CustomModalPost
+                visible={modalVisible}
+                onClose={() => {
+                    setModalVisible(false);
+                }}
+                onConfirm={modalContent.onConfirm}
+                title={modalContent.title}
+                detailText={modalContent.detailText}
+                confirmText={modalContent.confirmText}
+            />
         </SafeAreaView>
     );
 };

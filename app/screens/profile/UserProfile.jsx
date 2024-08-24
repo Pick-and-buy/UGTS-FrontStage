@@ -17,6 +17,7 @@ import { checkIfFollowing, followUser, getListsFollowers, getListsFollowing, get
 import styles from "../css/UserProfile.style"; // Unified style
 import { getPostsByUserId } from "../../api/post";
 import { useAuth } from '../../context/AuthContext';
+import CustomModal from '../../components/CustomModal';
 
 const UserProfile = ({ navigation, route }) => {
   const { user, userIdLogged } = route.params || {};
@@ -32,6 +33,15 @@ const UserProfile = ({ navigation, route }) => {
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState({
+    title: '',
+    detailText: '',
+    confirmText: '',
+    cancelText: '',
+    onConfirm: () => { },
+    onClose: () => { }
+  });
   const profileImage = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
   useEffect(() => {
@@ -95,20 +105,31 @@ const UserProfile = ({ navigation, route }) => {
 
   const handleFollowToggle = async () => {
     if (!userIdLogged) {
-      Alert.alert(
-        "Đăng nhập",
-        "Bạn cần đăng nhập để theo dõi người bán.",
-        [
-          {
-            text: "Cancel",
-            style: "cancel"
-          },
-          {
-            text: "Đăng nhập",
-            onPress: () => navigation.navigate('login-navigation')
-          }
-        ]
-      );
+      // Alert.alert(
+      //   "Đăng nhập",
+      //   "Bạn cần đăng nhập để theo dõi người bán.",
+      //   [
+      //     {
+      //       text: "Cancel",
+      //       style: "cancel"
+      //     },
+      //     {
+      //       text: "Đăng nhập",
+      //       onPress: () => navigation.navigate('login-navigation')
+      //     }
+      //   ]
+      // );
+      setModalContent({
+        title: "Đăng nhập",
+        detailText: "Bạn cần đăng nhập để theo dõi người bán.",
+        confirmText: "Đăng nhập",
+        cancelText: "Thoát",
+        onConfirm: () => {
+            setModalVisible(false);
+            navigation.navigate('login-navigation');
+        },
+    });
+    setModalVisible(true);
       return;
     }
 
@@ -295,6 +316,17 @@ const UserProfile = ({ navigation, route }) => {
           )}
         </ScrollView>
       </View>
+      <CustomModal
+        visible={modalVisible}
+        onClose={() => {
+          setModalVisible(false);
+        }}
+        onConfirm={modalContent.onConfirm}
+        title={modalContent.title}
+        detailText={modalContent.detailText}
+        confirmText={modalContent.confirmText}
+        cancelText={modalContent.cancelText}
+      />
     </View>
   );
 }
