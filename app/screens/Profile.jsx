@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, RefreshControl } from "react-native";
 import { COLORS, SIZES } from "../constants/theme";
-import { Ionicons, FontAwesome6, Octicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome6, Octicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
 import NetworkImage from "../components/NetworkImage";
@@ -97,7 +97,23 @@ const Profile = ({ navigation }) => {
       setModalVisible(true);
     }
   }
-
+  const handleViewTransitionHistory = () => {
+    if (user?.isVerified) {
+      navigation.navigate("transaction-history")
+    } else {
+      setModalContent({
+        title: "Xác Thực",
+        detailText: 'Bạn cần xác thực bằng căn cước công dân để xem lịch sử các giao dịch',
+        confirmText: 'Xác Thực',
+        cancelText: "Thoát",
+        onConfirm: () => {
+          setModalVisible(false);
+          navigation.navigate('GetID');
+        },
+      });
+      setModalVisible(true);
+    }
+  }
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -232,25 +248,22 @@ const Profile = ({ navigation }) => {
             <>
               {/* After login */}
               <View style={styles.options}>
-                <TouchableOpacity style={styles.option}>
-                  <FontAwesome name="camera" size={24} color="gray" />
-                  <Text>Đã đăng</Text>
-                </TouchableOpacity>
+                {!user?.isVerified &&
+                  <TouchableOpacity style={styles.tip} onPress={() => navigation.navigate("GetID")}>
+                    <View style={styles.triangle} />
+                    <View style={styles.content}>
+                      <Text style={{ fontWeight: "bold", color: "white" }}>Xác minh tài khoản</Text>
+                      <Text style={{ color: "white", fontSize: 12 }}>Theo quy định, bạn cần cung cấp thông tin cá nhân để có thể mua bán sản phẩm</Text>
+                    </View>
+                    <View style={styles.needed}>
+                      <MaterialCommunityIcons name="shield-account" size={26} color="white" />
+                      <TouchableOpacity style={styles.quickBtn}>
+                        <Text style={{ fontSize: 10 }}>Xác minh ngay</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </TouchableOpacity>
+                }
 
-                <TouchableOpacity style={styles.option}>
-                  <FontAwesome name="shopping-bag" size={24} color="gray" />
-                  <Text>Đã mua</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.option}>
-                  <FontAwesome name="heart" size={24} color="gray" />
-                  <Text>Yêu thích</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.option}>
-                  <FontAwesome name="hashtag" size={24} color="gray" />
-                  <Text>Theo dõi</Text>
-                </TouchableOpacity>
               </View>
               <View style={{
                 flexDirection: "column",
@@ -268,7 +281,8 @@ const Profile = ({ navigation }) => {
                   marginVertical: 20,
                   marginHorizontal: "auto"
                 }}>
-                  <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
+                  <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
+                    onPress={handleViewTransitionHistory}>
                     <Ionicons name="document-text" size={26} color="gray" />
                     <Text style={{ fontSize: 16, marginTop: 10 }}>Lịch sử</Text>
                   </TouchableOpacity>

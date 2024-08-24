@@ -36,22 +36,6 @@ const ScanFontIDScreen = ({ navigation }) => {
         setModalVisible(true);
     }, []);
 
-    // useEffect(() => {
-    //     Alert.alert(
-    //         "Chú ý",
-    //         "Hãy chuẩn bị CCCD mặt trước để bắt đầu xác thực.",
-    //         [
-    //             {
-    //                 text: "Thoát",
-    //                 onPress: () => navigation.goBack(),
-    //                 style: "cancel"
-    //             },
-    //             { text: "Đồng ý", onPress: startIdentification }
-    //         ],
-    //         { cancelable: false }
-    //     );
-    // }, []);
-
     const startIdentification = async () => {
         try {
             const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -100,13 +84,15 @@ const ScanFontIDScreen = ({ navigation }) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'api-key': 'NuQBfzczBYurMfXcN4GJBN12uaO6tBE2',
+                    'api-key': 'A7EDh7OmYiu8VXiQaBFJbWNUtxSZF7TR',
                 },
                 body: formData,
             });
 
             const result = await response.json();
             setLoading(false);
+
+            console.log('>>> check log Verify ID Scan Front', result);
 
             if (result.errorCode === 0 && result.errorMessage === "") {
                 navigation.navigate("ScanBackID", { frontImageUri: imageUri, fontData: result });

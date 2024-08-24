@@ -27,7 +27,7 @@ const FaceMatch = ({ navigation, route }) => {
             confirmText: "Đồng ý",
             cancelText: "Thoát",
             onConfirm: () => {
-                setModalVisible(false);
+                // setModalVisible(false);
                 takePhoto();
             },
             onClose: () => {
@@ -60,6 +60,7 @@ const FaceMatch = ({ navigation, route }) => {
         });
 
         if (!result.canceled) {
+            setModalVisible(false)
             const newImageUri = result.assets[0].uri;
             const updatedImages = [frontImageUri, newImageUri];
             setLoading(true);
@@ -82,7 +83,7 @@ const FaceMatch = ({ navigation, route }) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'api-key': 'Tat5rfLhfZ89E5DxTzXDltHHKgspgEIR', // Replace with your API key
+                    'api-key': 'A7EDh7OmYiu8VXiQaBFJbWNUtxSZF7TR', // Replace with your API key
                 },
                 body: formData,
             });
@@ -104,7 +105,7 @@ const FaceMatch = ({ navigation, route }) => {
                     confirmText: "Thử lại",
                     cancelText: "Thoát",
                     onConfirm: () => {
-                        setModalVisible(false);
+                        // setModalVisible(false);
                         takePhoto();
                     },
                     onClose: () => {

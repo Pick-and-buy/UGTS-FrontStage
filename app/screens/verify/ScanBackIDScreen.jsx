@@ -26,7 +26,7 @@ const ScanBackIDScreen = ({ navigation, route }) => {
             confirmText: "Đồng ý",
             cancelText: "Thoát",
             onConfirm: () => {
-                setModalVisible(false);
+                // setModalVisible(false);
                 startIdentification();
             },
             onClose: () => {
@@ -59,6 +59,7 @@ const ScanBackIDScreen = ({ navigation, route }) => {
         });
 
         if (!result.canceled) {
+            setModalVisible(false)
             setImage(result.assets[0].uri);
             setLoading(true);
             uploadImage(result.assets[0].uri);
@@ -78,13 +79,15 @@ const ScanBackIDScreen = ({ navigation, route }) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'api-key': 'NuQBfzczBYurMfXcN4GJBN12uaO6tBE2',
+                    'api-key': 'A7EDh7OmYiu8VXiQaBFJbWNUtxSZF7TR',
                 },
                 body: formData,
             });
 
             const result = await response.json();
             setLoading(false);
+
+            console.log('>>> check log Verify ID Scan BackID', result);
 
             if (result.errorCode === 0 && result.errorMessage === "") {
                 navigation.navigate("FaceMatch", { frontImageUri, fontData, backData: result });
@@ -95,7 +98,7 @@ const ScanBackIDScreen = ({ navigation, route }) => {
                     confirmText: "Thử lại",
                     cancelText: "Thoát",
                     onConfirm: () => {
-                        setModalVisible(false);
+                        // setModalVisible(false);
                         startIdentification();
                     },
                     onClose: () => {

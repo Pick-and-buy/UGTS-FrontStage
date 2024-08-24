@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     errorText: {
         fontSize: 14,
         color: 'red',
-        marginLeft: 10,
+        marginLeft: 0,
         marginTop: -28,
         marginBottom: 10
     },
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
 
     //Boosted
     checkboxBoostedContainer: {
-        width: "98%",
+        width: "95%",
         marginHorizontal: 'auto',
         // flexDirection: 'row',
         // alignItems: 'center',

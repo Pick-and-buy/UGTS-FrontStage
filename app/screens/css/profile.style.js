@@ -58,30 +58,68 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginVertical: "auto",
         marginLeft: 30,
-        marginRight:20,
+        marginRight: 20,
         paddingVertical: 6,
-        paddingHorizontal:20,
-        marginBottom:10
+        paddingHorizontal: 20,
+        marginBottom: 10
     },
     textbtn: {
         color: COLORS.primary,
     },
     options: {
         width: '100%',
-        height: '8%',
+        // height: '6%',
         flexDirection: "row",
         justifyContent: 'space-around',
         alignItems: 'center',
-        borderBottomColor: "#e4e4e4",
-        borderBottomWidth: 18,
         borderTopColor: "#e4e4e4",
-        borderTopWidth: 2,
+        borderTopWidth: 4,
     },
     option: {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100%',
 
+    },
+    tip: {
+        backgroundColor: "#0ccd72",
+        width: "96%",
+        height: 65,
+        borderRadius: 4,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginHorizontal: "auto"
+    },
+    triangle: {
+        borderLeftWidth: 16,
+        borderRightWidth: 16,
+        borderBottomWidth: 16,
+        borderLeftColor: 'transparent',
+        borderRightColor: 'transparent',
+        borderBottomColor: "#0ccd72",
+        position: "absolute",
+        top: -16,
+        left: "25%"
+    },
+    content: {
+        width: "63%",
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: "2%"
+    },
+    needed: {
+        width: "35%",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    quickBtn: {
+        backgroundColor: COLORS.white,
+        paddingHorizontal: 8,
+        paddingVertical: 1,
+        borderRadius: 4,
+        borderWidth: 1,
+        borderColor: COLORS.black,
+        marginTop: 2
     }
 });
 
