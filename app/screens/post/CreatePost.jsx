@@ -747,7 +747,7 @@ const CreatePost = () => {
                         autoCorrect={false}
                       />
                       {touched.productName && errors.productName && (
-                        <Text style={styles.errorText}>{errors.productName}</Text>
+                        <Text style={[styles.errorText,{marginLeft:10}]}>{errors.productName}</Text>
                       )}
                     </View>
 
