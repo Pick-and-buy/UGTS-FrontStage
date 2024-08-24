@@ -361,6 +361,32 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginHorizontal: "auto",
     },
+    evidence: {
+        width: "96%",
+        marginHorizontal: "auto",
+    },
+    evidenceImage: {
+        width: "100%",
+        height: 250,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    imageSelect: {
+        width: "96%",
+        height: "96%",
+        objectFit: "contain"
+    },
+    evidenceVideo: {
+        width: "100%",
+        height: 250,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    videoSelect: {
+        width: "96%",
+        height: "96%",
+    }
+
 });
 
 export default styles;
