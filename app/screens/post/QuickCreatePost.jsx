@@ -723,7 +723,7 @@ const QuickCreatePost = () => {
                                             autoCorrect={false}
                                         />
                                         {touched.productName && errors.productName && (
-                                            <Text style={styles.errorText}>{errors.productName}</Text>
+                                            <Text style={[styles.errorText,{marginLeft:10}]}>{errors.productName}</Text>
                                         )}
                                     </View>
 
@@ -820,7 +820,7 @@ const QuickCreatePost = () => {
 
                                 {/* Boosted */}
                                 <View style={{ marginTop: 10 }}>
-                                    <Text style={styles.labelText}>Dịch Vụ Quảng Cáo Boosted</Text>
+                                    <Text style={[styles.labelText,{marginLeft:10}]}>Dịch Vụ Quảng Cáo Boosted</Text>
                                 </View>
                                 <View style={styles.checkboxBoostedContainer}>
                                     <View style={styles.checkboxBoosted}>
