@@ -103,7 +103,10 @@ const OrderDetails = ({ navigation, route }) => {
                         detailText: 'Vui lòng nạp thêm tiền vào tài khoản để thực hiện mua hàng.',
                         confirmText: 'Xác nhận',
                         cancelText: 'Thoát',
-                        onConfirm: () => setModalVisible(false),
+                        onConfirm: () => {
+                            setModalVisible(false)
+                            navigation.navigate("add-funds", {postDetails: postDetails, type: "orderDetails"})
+                        },
                     });
                     setModalVisible(true);
                 } else {

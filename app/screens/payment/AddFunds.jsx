@@ -29,7 +29,8 @@ const removeDots = (amount) => {
     return amount.replace(/\./g, ''); // Remove dots
 };
 
-const AddFunds = ({ navigation }) => {
+const AddFunds = ({ navigation, route }) => {
+    const { postDetails, type } = route?.params || {};
     const { user, fetchUserData, isAuthenticated } = useAuth();
     const [amount, setAmount] = useState();
     const [activeButton, setActiveButton] = useState(null);
@@ -114,7 +115,16 @@ const AddFunds = ({ navigation }) => {
                     ) : (
                         <View>
                             <View style={styles.header}>
-                                <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Profile')}>
+                                <TouchableOpacity
+                                    style={styles.backButton}
+                                    onPress={() => {
+                                        if (type === "orderDetails") {
+                                            navigation.navigate("order-details", { postDetails: postDetails });
+                                        } else {
+                                            navigation.navigate('Profile');
+                                        }
+                                    }}
+                                >
                                     <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
                                 </TouchableOpacity>
                                 <Text style={styles.headerText}>Nạp tiền</Text>
