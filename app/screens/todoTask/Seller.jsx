@@ -18,12 +18,22 @@ import { callFetchListOrders, cancelOrderSeller, getOrdersByOrderStatus } from "
 import { getUserByToken } from "../../api/user";
 import { COLORS } from "../../constants/theme";
 import { useAuth } from '../../context/AuthContext';
+import CustomModal from "../../components/CustomModal";
 
 const Seller = ({ navigation }) => {
   const { user } = useAuth();
   const [listOrdersSeller, setListOrdersSeller] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedOrderStatus, setSelectedOrderStatus] = useState('All');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState({
+    title: '',
+    detailText: '',
+    confirmText: '',
+    cancelText: '',
+    onConfirm: () => { },
+    onClose: () => { }
+  });
 
   useFocusEffect(
     useCallback(() => {
@@ -122,22 +132,18 @@ const Seller = ({ navigation }) => {
 
   const handleCancelOrder = async (orderId) => {
     try {
-      Alert.alert(
-        "Hủy đơn hàng",
-        "Bạn có chắc chắn muốn hủy đơn hàng không?",
-        [
-          {
-            text: "Hủy",
-          },
-          {
-            text: "Xác Nhận",
-            onPress: async () => {
-              await cancelOrderSeller(orderId);
-              fetchOrdersBySeller();
-            },
-          }
-        ]
-      );
+      setModalContent({
+        title: "Hủy đơn hàng",
+        detailText: "Bạn có chắc chắn muốn hủy đơn hàng không?",
+        confirmText: "Xác Nhận",
+        cancelText: "Thoát",
+        onConfirm: async () => {
+          setModalVisible(false);
+          await cancelOrderSeller(orderId);
+          fetchOrdersBySeller();
+        },
+      });
+      setModalVisible(true);
     } catch (error) {
       console.log('Submit cancel buyer order: ', error);
     }
@@ -283,6 +289,17 @@ const Seller = ({ navigation }) => {
           </View>
         )
       }
+      <CustomModal
+        visible={modalVisible}
+        onClose={() => {
+          setModalVisible(false);
+        }}
+        onConfirm={modalContent.onConfirm}
+        title={modalContent.title}
+        detailText={modalContent.detailText}
+        confirmText={modalContent.confirmText}
+        cancelText={modalContent.cancelText}
+      />
     </View>
   )
 }
