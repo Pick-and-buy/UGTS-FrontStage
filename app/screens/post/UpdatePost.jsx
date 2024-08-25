@@ -28,6 +28,7 @@ import { callFetchListBrands } from "../../api/brand";
 import { getAllCategoriesByBrandLineName } from "../../api/category";
 import { getAllBrandLinesByBrandName } from "../../api/brandLine";
 import CustomModalPost from '../../components/CustomModalPost';
+import CreatePostGuideVerify from "./CreatePostGuideVerify";
 
 const UpdatePost = ({ route }) => {
     // console.log(">>> check postId: ", route.params);
@@ -126,6 +127,7 @@ const UpdatePost = ({ route }) => {
     const formattedFee = formatPrice(FEE);
 
     const fetchPostDetails = async () => {
+        setIsDataLoaded(true);           //Thực hiện màn hình hiển thị chữ Loading... 
         const response = await getPostDetails(postId);
         const postInfo = response.data.result;
         setPostDetails(postInfo)
@@ -147,7 +149,7 @@ const UpdatePost = ({ route }) => {
         if (postInfo?.boosted === true) {
             setBoosted(true);
         }
-        setIsDataLoaded(true);  // Set data loaded to true
+        setIsDataLoaded(false);  // Set data loaded to false
     };
 
     useEffect(() => {
@@ -315,6 +317,7 @@ const UpdatePost = ({ route }) => {
         try {
             const { valid, message } = validateImages();
             if (valid) {
+                setIsDataLoaded(true); //Thực hiện màn hình hiển thị chữ Loading... trong lúc chờ call API thành công
                 let queryId = `${postDetails?.id}`;
 
                 const convertStringPrice = values.price.replace(/\./g, '');
@@ -394,6 +397,7 @@ const UpdatePost = ({ route }) => {
                 }
 
                 await updatePost(queryId, formData);
+                setIsDataLoaded(false);
                 navigation.navigate('post-details', { postId: postDetails?.id })
             } else {
                 setModalContent({
@@ -501,7 +505,7 @@ const UpdatePost = ({ route }) => {
         setVideoUri("");
     }
 
-    if (!isDataLoaded) {
+    if (isDataLoaded) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <Text>Loading...</Text>
@@ -683,7 +687,7 @@ const UpdatePost = ({ route }) => {
 
                                 if (postDetails?.boosted) { //Nếu bài post đang trong quá trình chạy quảng cáo
                                     formatlLastPriceForSeller = formatPrice(lastPrice);
-                                } 
+                                }
                                 else { //Nếu bài post chưa chạy trong quá trình chạy quảng cáo
                                     if (isChecked_3 && isBoosted) {
                                         formatlLastPriceForSeller = formatPrice(lastPriceBoth);
@@ -734,14 +738,16 @@ const UpdatePost = ({ route }) => {
 
                                     {/* Check box */}
                                     <View style={styles.checkboxContainer}>
-                                        <View style={{ width: "100%", flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
+                                        {/* Pop-up guide */}
+                                        <CreatePostGuideVerify />
+                                        {/* <View style={{ width: "100%", flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
                                             <Text style={[styles.labelText, { marginLeft: 0 }]}>Các mức xác minh</Text>
                                             <TouchableOpacity
                                                 onPress={() => console.warn("Quy Tắc")}
                                             >
                                                 <FontAwesome6 name="circle-question" size={14} color="gray" />
                                             </TouchableOpacity>
-                                        </View>
+                                        </View> */}
                                         <View style={styles.checkboxView}>
                                             {postDetails?.product?.verifiedLevel === "LEVEL_2" ?
                                                 (
