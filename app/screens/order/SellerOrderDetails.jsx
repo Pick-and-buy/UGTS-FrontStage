@@ -27,6 +27,8 @@ const SellerOrderDetails = ({ navigation, route }) => {
 
     const [isBuyerRate, setIsBuyerRate] = useState(false);
 
+    const [isDataLoaded, setIsDataLoaded] = useState(false); // Add state to track data loading
+
     useEffect(() => {
         if (orderInfo) {
             fetchOrderInfo();
@@ -102,6 +104,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
     const handleTransportation = async () => {
         try {
             if (videoUri) {
+                setIsDataLoaded(true);   //Thực hiện màn hình hiển thị chữ Loading... trong lúc chờ call API thành công
                 let orderId = updatedOrderInfo?.id;
                 const formData = new FormData();
                 const videoFileName = videoUri.split('/').pop();
@@ -112,6 +115,8 @@ const SellerOrderDetails = ({ navigation, route }) => {
                 });
                 await uploadPackageVideoBySeller(orderId, formData);
                 await updateOrderSeller(updatedOrderInfo?.id);
+                
+                setIsDataLoaded(false);
                 navigation.navigate('seller');
             } else {
                 Alert.alert(
@@ -148,6 +153,14 @@ const SellerOrderDetails = ({ navigation, route }) => {
     //Remove Video
     const removeVideo = () => {
         setVideoUri("");
+    }
+
+    if (isDataLoaded) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text>Loading...</Text>
+            </View>
+        );
     }
 
     return (
