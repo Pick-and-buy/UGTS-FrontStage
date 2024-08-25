@@ -59,7 +59,7 @@ const PostDetail = ({ navigation, route }) => {
     });
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const [showFullStory, setShowFullStory] = useState(false);
     const [isMuted, setIsMuted] = useState(false);  // Chỉnh âm thanh khi lần đầu tiên vào sẽ mute
 
     console.log(postId);
@@ -631,15 +631,28 @@ const PostDetail = ({ navigation, route }) => {
                     <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
 
                     {/* Story */}
-                    <View style={[styles.details, { marginBottom: 6 }]}>
-                        <View style={styles.left}>
-                            <Text>Story</Text>
+                    {postDetails?.product?.story &&
+                        <View style={styles.description}>
+                            <Text style={styles.descriptionTitle}>Câu chuyện về thương hiệu</Text>
+                            <View>
+                                <Text style={styles.descriptionText}>
+                                    {showFullStory ? postDetails?.product?.story : `${postDetails?.product?.story?.slice(0, 265)}...`}
+                                </Text>
+                                {postDetails?.product?.story?.length > 100 && (
+                                    <Text style={styles.readMore} onPress={() => setShowFullStory(!showFullStory)}>
+                                        {showFullStory ? (
+                                            <Text style={styles.seeMore}>Ẩn bớt</Text>
+                                        ) : (
+                                            <Text style={styles.seeMore}>Xem thêm chi tiết</Text>
+                                        )}
+                                    </Text>
+                                )}
+                            </View>
                         </View>
-                        <View style={styles.right}>
-                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.story)}</Text>
-                        </View>
-                    </View>
-                    <View style={styles.divider} />
+
+                    }
+
+                    {/* <View style={styles.divider} /> */}
 
                     {postDetails?.product?.verifiedLevel === "LEVEL_2" &&
                         <View style={styles.evidence}>
@@ -730,7 +743,7 @@ const PostDetail = ({ navigation, route }) => {
                             ) : (
                                 <View style={styles.row}>
                                     {posts?.length > 0 ? (
-                                        posts.slice(0,9).map((post) => <Post key={post.id} post={post} />)
+                                        posts.slice(0, 9).map((post) => <Post key={post.id} post={post} />)
                                     ) : (
                                         <Text>No posts available</Text>
                                     )}
