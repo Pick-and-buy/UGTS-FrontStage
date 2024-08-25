@@ -64,12 +64,6 @@ const PostDetail = ({ navigation, route }) => {
 
     console.log(postId);
 
-    // useEffect(() => {
-    //     fetchPostDetails();
-    //     checkAuthentication();
-    //     fetchComments();
-    // }, []);
-
     useFocusEffect(
         useCallback(() => {
             fetchPostDetails();
@@ -223,7 +217,24 @@ const PostDetail = ({ navigation, route }) => {
 
     const handlePress = () => {
         if (isAuthenticated) {
-            navigation.navigate("order-details", { postDetails: postDetails });
+            if (user?.isVerified) {
+                navigation.navigate("order-details", { postDetails: postDetails });
+            } else {
+                setModalContent({
+                    title: "Xác thực",
+                    detailText: "Bạn cần xác thực bằng căn cước công dân để mua sản phẩm nào",
+                    confirmText: "Xác thực",
+                    cancelText: "Thoát",
+                    onConfirm: () => {
+                        setCustomModalVisible(false);
+                        navigation.navigate('GetID');
+                    },
+                    onClose: () => {
+                        setCustomModalVisible(false);
+                    },
+                });
+                setCustomModalVisible(true);
+            }
         } else {
             setModalContent({
                 title: "Đăng nhập",
@@ -730,7 +741,7 @@ const PostDetail = ({ navigation, route }) => {
                             ) : (
                                 <View style={styles.row}>
                                     {posts?.length > 0 ? (
-                                        posts.slice(0,9).map((post) => <Post key={post.id} post={post} />)
+                                        posts.slice(0, 9).map((post) => <Post key={post.id} post={post} />)
                                     ) : (
                                         <Text>No posts available</Text>
                                     )}

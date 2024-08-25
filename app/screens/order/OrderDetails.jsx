@@ -12,8 +12,11 @@ import { order } from '../../api/order';
 import { useFocusEffect } from '@react-navigation/native';
 import { payOrder } from '../../api/payment';
 import CustomModal from '../../components/CustomModal';
+import { useAuth } from '../../context/AuthContext';
+
 const OrderDetails = ({ navigation, route }) => {
     const postDetails = route.params.postDetails;
+    const { user: userAuth } = useAuth();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -318,7 +321,7 @@ const OrderDetails = ({ navigation, route }) => {
                                     <View style={styles.column}>
                                         <Text style={styles.methodText}>LuxBagPay</Text>
                                         <Text style={styles.currentAmount}>Số dư hiện tại:
-                                            <Text style={{ color: 'red' }}> {formatPrice(user?.result?.wallet?.balance)}₫</Text>
+                                            <Text style={{ color: 'red' }}> {formatPrice(userAuth?.wallet?.balance)}₫</Text>
                                         </Text>
                                     </View>
                                     <RadioButton value="GiaTotPay" />
