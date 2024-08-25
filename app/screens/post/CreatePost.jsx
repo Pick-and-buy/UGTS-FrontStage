@@ -179,7 +179,7 @@ const CreatePost = () => {
 
   const dataSize = [
     { label: 'Small', value: 'Small' },
-    { label: 'Media', value: 'Media' },
+    { label: 'Medium', value: 'Medium' },
     { label: 'Large', value: 'Large' },
     { label: 'Extra Large', value: 'Extra Large' },
   ];
