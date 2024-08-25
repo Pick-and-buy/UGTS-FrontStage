@@ -3,19 +3,38 @@ import { StyleSheet, View, Text, Image, TextInput, TouchableOpacity, Alert } fro
 import { RatingInput } from "react-native-stock-star-rating";
 import { COLORS } from "../../constants/theme";
 import { ratingUser } from "../../api/user";
+import CustomModalPost from "../../components/CustomModalPost";
 
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
 const SellerAddRating = ({ navigation, orderInfo }) => {
     const [rating, setRating] = useState(1);
     const [review, setReview] = useState("");
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState({
+        title: '',
+        detailText: '',
+        confirmText: '',
+        cancelText: '',
+        onConfirm: () => { },
+        onClose: () => { }
+    });
+
     // console.log(orderInfo.id);
     const fetchRating = async (ratingLabel) => {
         try {
-            const response = await ratingUser(ratingLabel, review, orderInfo?.post?.user?.id, orderInfo?.buyer?.id, orderInfo?.id);
-            // console.log(response);
-            alert("Cảm ơn bạn đã để lại đánh giá")
-            navigation.navigate("bottom-navigation")
+            await ratingUser(ratingLabel, review, orderInfo?.post?.user?.id, orderInfo?.buyer?.id, orderInfo?.id);
+            setModalContent({
+                title: "Thông báo",
+                detailText: "Cảm ơn bạn đã để lại đánh giá",
+                confirmText: "Ok",
+                onConfirm: () => {
+                    setModalVisible(false);
+                    navigation.navigate("bottom-navigation")
+                },
+            });
+            setModalVisible(true);
         } catch (error) {
             console.log('Fetching seller rating failed:', error.response ? error.response.data : error.message);
         }
@@ -82,6 +101,16 @@ const SellerAddRating = ({ navigation, orderInfo }) => {
             >
                 <Text style={styles.small}>Gửi đánh giá</Text>
             </TouchableOpacity>
+            <CustomModalPost
+                visible={modalVisible}
+                onClose={() => {
+                    setModalVisible(false);
+                }}
+                onConfirm={modalContent.onConfirm}
+                title={modalContent.title}
+                detailText={modalContent.detailText}
+                confirmText={modalContent.confirmText}
+            />
         </View>
     );
 };

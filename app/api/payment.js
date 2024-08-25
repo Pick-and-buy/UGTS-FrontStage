@@ -69,7 +69,7 @@ export const getTransactionHistory = async () => {
         const token = await AsyncStorage.getItem('token');
 
         // Perform the fetch request
-        const response = await fetch('http://192.168.1.8:8080/api/v1/wallets/transaction-histories', {
+        const response = await fetch('http://192.168.1.9:8080/api/v1/wallets/transaction-histories', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
