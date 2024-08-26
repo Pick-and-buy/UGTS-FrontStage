@@ -212,7 +212,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
       </View>
 
       <KeyboardAvoidingView
-        style={{flex: 1, marginBottom: "20%"}}
+        style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
 
@@ -630,38 +630,38 @@ const BuyerOrderDetails = ({ navigation, route }) => {
           {showAddRating && <AddRating navigation={navigation} orderInfo={updatedOrderInfo} />}
 
         </ScrollView>
-
-        {updatedOrderInfo?.orderDetails?.status !== "DELIVERING" && updatedOrderInfo?.orderDetails?.status !== "RECEIVED" && (
-          <View style={styles.bottomBtn}>
-            {updatedOrderInfo?.orderDetails?.status === "CANCELLED" ? (
-
-              <TouchableOpacity
-                onPress={() => navigation.navigate('post-details', { postId: updatedOrderInfo?.post?.id })}
-                style={styles.buyBtn}
-              >
-                <Text style={styles.buyBtnText}>Mua Lại Sản Phẩm</Text>
-              </TouchableOpacity>
-
-            ) : updatedOrderInfo?.orderDetails?.status === "PENDING" || updatedOrderInfo?.orderDetails?.status === "PROCESSING" ? (
-              <>
-                <TouchableOpacity
-                  style={styles.changeAddressBtn}
-                  onPress={() => navigation.navigate('address-lists', {
-                    orderInfo,
-                    type: 'buyer-change-address'
-                  })}
-                >
-                  <Text style={styles.changeAddressBtnText}>Thay đổi địa chỉ</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={handleCancelOrder}>
-                  <Text style={styles.buttonText}>Hủy đơn hàng</Text>
-                </TouchableOpacity>
-              </>
-            ) : null}
-          </View>
-        )}
-
       </KeyboardAvoidingView>
+      {updatedOrderInfo?.orderDetails?.status !== "DELIVERING" && updatedOrderInfo?.orderDetails?.status !== "RECEIVED" && (
+        <View style={styles.bottomBtn}>
+          {updatedOrderInfo?.orderDetails?.status === "CANCELLED" ? (
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate('post-details', { postId: updatedOrderInfo?.post?.id })}
+              style={styles.buyBtn}
+            >
+              <Text style={styles.buyBtnText}>Mua Lại Sản Phẩm</Text>
+            </TouchableOpacity>
+
+          ) : updatedOrderInfo?.orderDetails?.status === "PENDING" || updatedOrderInfo?.orderDetails?.status === "PROCESSING" ? (
+            <>
+              <TouchableOpacity
+                style={styles.changeAddressBtn}
+                onPress={() => navigation.navigate('address-lists', {
+                  orderInfo,
+                  type: 'buyer-change-address'
+                })}
+              >
+                <Text style={styles.changeAddressBtnText}>Thay đổi địa chỉ</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={handleCancelOrder}>
+                <Text style={styles.buttonText}>Hủy đơn hàng</Text>
+              </TouchableOpacity>
+            </>
+          ) : null}
+        </View>
+      )}
+
+
 
       <CustomModal
         visible={modalVisible}

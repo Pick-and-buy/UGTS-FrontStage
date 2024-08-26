@@ -10,7 +10,7 @@ import { getTransactionHistory } from '../../api/payment';
 const TransactionHistory = ({ navigation }) => {
     const { user } = useAuth();
     const [transactions, setTransactions] = useState([]);
-    console.log(transactions);
+    const [activeFilter, setActiveFilter] = useState('ALL');
 
     useEffect(() => {
         if (user) {
@@ -32,6 +32,20 @@ const TransactionHistory = ({ navigation }) => {
             .replace(/\D/g, '') // Remove non-numeric characters
             .replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Add thousand separators
     };
+
+    const isMoneyIn = (transactionType) => {
+        return (
+            transactionType === 'DEPOSIT_TO_WALLET' ||
+            transactionType === 'REFUND' ||
+            transactionType === 'RECEIVE_ORDER_MONEY'
+        );
+    };
+
+    const filteredTransactions = transactions.filter(transaction => {
+        if (activeFilter === 'ALL') return true;
+        if (activeFilter === 'MONEY_IN') return isMoneyIn(transaction.transactionType);
+        if (activeFilter === 'MONEY_OUT') return !isMoneyIn(transaction.transactionType);
+    }).reverse(); // Reverse the transactions to show the latest first
 
     return (
         <View style={styles.container}>
@@ -64,27 +78,43 @@ const TransactionHistory = ({ navigation }) => {
 
             <View style={styles.content}>
                 <View style={styles.filter}>
-                    <TouchableOpacity style={styles.filterButtonActive}>
-                        <Text style={styles.filterButtonTextActive}>Tất cả</Text>
+                    <TouchableOpacity 
+                        style={activeFilter === 'ALL' ? styles.filterButtonActive : styles.filterButton}
+                        onPress={() => setActiveFilter('ALL')}
+                    >
+                        <Text style={activeFilter === 'ALL' ? styles.filterButtonTextActive : styles.filterButtonText}>
+                            Tất cả
+                        </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.filterButton}>
-                        <Text style={styles.filterButtonText}>Tiền ra</Text>
+                    <TouchableOpacity 
+                        style={activeFilter === 'MONEY_OUT' ? styles.filterButtonActive : styles.filterButton}
+                        onPress={() => setActiveFilter('MONEY_OUT')}
+                    >
+                        <Text style={activeFilter === 'MONEY_OUT' ? styles.filterButtonTextActive : styles.filterButtonText}>
+                            Tiền ra
+                        </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.filterButton}>
-                        <Text style={styles.filterButtonText}>Tiền vào</Text>
+                    <TouchableOpacity 
+                        style={activeFilter === 'MONEY_IN' ? styles.filterButtonActive : styles.filterButton}
+                        onPress={() => setActiveFilter('MONEY_IN')}
+                    >
+                        <Text style={activeFilter === 'MONEY_IN' ? styles.filterButtonTextActive : styles.filterButtonText}>
+                            Tiền vào
+                        </Text>
                     </TouchableOpacity>
                 </View>
 
                 <ScrollView style={styles.lists}>
-                    {transactions && transactions.map((transaction, index) => (
+                    {filteredTransactions.map((transaction, index) => (
                         <View key={index} style={styles.item}>
                             <View style={styles.half}>
                                 <Text numberOfLines={1} style={styles.itemTitle}>{transaction?.reason}</Text>
                                 <Text
-                                    style={transaction.amount > 0 ? styles.moneyIn : styles.moneyOut}
+                                    style={isMoneyIn(transaction?.transactionType) ? styles.moneyIn : styles.moneyOut}
                                 >
-                                    {/* {transaction.amount > 0 ? `+${formatMoney(String(transaction?.amount))} VND` : `-${formatMoney(String(transaction.amount))} VND`} */}
-                                    {transaction?.amount}
+                                    {isMoneyIn(transaction?.transactionType)
+                                        ? `+${formatMoney(String(transaction?.amount))} VND`
+                                        : `-${formatMoney(String(transaction.amount))} VND`}
                                 </Text>
                             </View>
                             <View style={styles.half}>

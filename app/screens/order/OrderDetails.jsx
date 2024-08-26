@@ -94,11 +94,6 @@ const OrderDetails = ({ navigation, route }) => {
         const totalPrice = productPrice + shippingPrice;
 
         try {
-            // if (checked === 'COD') {
-            //     const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id, shippingPrice);
-            //     console.log('Order placed successfully!');
-            //     navigation.navigate('order-successfully', { orderInfo: response.result });
-            // } else 
             if (checked === 'GiaTotPay') {
                 if (userAuth.wallet.balance < totalPrice) {
                     setModalContent({
@@ -219,14 +214,14 @@ const OrderDetails = ({ navigation, route }) => {
                             )
                         ))
                     ) : (
-                        <View style={[styles.locationDetails, { flexDirection: "row", justifyContent: "flex-start" }]}>
+                        <View style={[styles.locationDetails, { flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }]}>
                             <AntDesign name="plus" size={18} color="gray" style={{ marginRight: 2 }} />
                             <Text style={styles.locationText}>Thêm địa chỉ để tiếp tục mua hàng</Text>
                         </View>
                     )}
                     <FontAwesome6
                         name="angle-right" size={20}
-                        style={{ position: 'absolute', right: 15, top: "50%" }}
+                        style={{ position: 'absolute', right: 15, bottom: "60%" }}
                         color="gray"
                     />
                 </TouchableOpacity>
