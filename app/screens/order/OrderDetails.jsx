@@ -100,7 +100,7 @@ const OrderDetails = ({ navigation, route }) => {
             //     navigation.navigate('order-successfully', { orderInfo: response.result });
             // } else 
             if (checked === 'GiaTotPay') {
-                if (user.result.wallet.balance < totalPrice) {
+                if (userAuth.wallet.balance < totalPrice) {
                     setModalContent({
                         title: 'Số dư tài khoản không đủ',
                         detailText: 'Vui lòng nạp thêm tiền vào tài khoản để thực hiện mua hàng.',
@@ -108,7 +108,7 @@ const OrderDetails = ({ navigation, route }) => {
                         cancelText: 'Thoát',
                         onConfirm: () => {
                             setModalVisible(false)
-                            navigation.navigate("add-funds", {postDetails: postDetails, type: "orderDetails"})
+                            navigation.navigate("add-funds", { postDetails: postDetails, type: "orderDetails" })
                         },
                     });
                     setModalVisible(true);
