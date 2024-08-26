@@ -12,7 +12,7 @@ import OrderTracking from './OrderTracking';
 import SellerAddRating from './SellerAddRating';
 import { Video } from 'expo-av';
 import * as ImagePicker from "expo-image-picker";
-import CustomModalPost from '../../components/CustomModalPost';
+import CustomModal from '../../components/CustomModal';
 
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
@@ -90,22 +90,21 @@ const SellerOrderDetails = ({ navigation, route }) => {
 
     const handleCancelOrder = async () => {
         try {
-            Alert.alert(
-                "Hủy đơn hàng",
-                "Bạn có chắc chắn muốn hủy đơn hàng không?",
-                [
-                    {
-                        text: "Hủy",
-                    },
-                    {
-                        text: "Xác Nhận",
-                        onPress: async () => {
-                            await cancelOrderSeller(updatedOrderInfo?.id);
-                            navigation.navigate('seller');
-                        },
-                    }
-                ]
-            );
+            setModalVisible(true);
+            setModalContent({
+                title: "Hủy đơn hàng",
+                detailText: "Bạn có chắc chắn muốn từ chối đơn hàng này không?",
+                confirmText: "Xác nhận",
+                cancelText: "Thoát",
+                onConfirm: async () => {
+                    setModalVisible(false);
+                    await cancelOrderSeller(updatedOrderInfo?.id);
+                    navigation.navigate('todo-task');
+                },
+                onClose: () => {
+                    setModalVisible(false);
+                }
+            });
         } catch (error) {
             console.log('Submit cancel seller order: ', error);
         }
@@ -127,12 +126,12 @@ const SellerOrderDetails = ({ navigation, route }) => {
                 await updateOrderSeller(updatedOrderInfo?.id);
 
                 setIsDataLoaded(false);
-                navigation.navigate('seller');
+                navigation.navigate('todo-task');
             } else {
                 setModalContent({
                     title: "Thông báo",
                     detailText: "Vui lòng tải thêm video đóng gói sản phẩm để tiến hành sắp xếp vận chuyển",
-                    confirmText: "Ok",
+                    confirmText: "Xác nhận",
                     onConfirm: () => {
                         setModalVisible(false);
                     },
@@ -186,7 +185,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
                 <Text style={styles.headerText}>Thông tin đơn hàng</Text>
             </View>
             <KeyboardAvoidingView
-                style={{ flex: 1, marginBottom: "5%" }}
+                style={{ flex: 1 }}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
 
@@ -503,7 +502,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
                 }
             </KeyboardAvoidingView>
 
-            <CustomModalPost
+            <CustomModal
                 visible={modalVisible}
                 onClose={() => {
                     setModalVisible(false);

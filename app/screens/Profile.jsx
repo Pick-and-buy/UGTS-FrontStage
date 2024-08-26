@@ -257,9 +257,9 @@ const Profile = ({ navigation }) => {
                     </View>
                     <View style={styles.needed}>
                       <MaterialCommunityIcons name="shield-account" size={26} color="white" />
-                      <TouchableOpacity style={styles.quickBtn}>
+                      <View style={styles.quickBtn}>
                         <Text style={{ fontSize: 10 }}>Xác minh ngay</Text>
-                      </TouchableOpacity>
+                      </View>
                     </View>
                   </TouchableOpacity>
                 }

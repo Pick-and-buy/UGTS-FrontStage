@@ -94,13 +94,8 @@ const OrderDetails = ({ navigation, route }) => {
         const totalPrice = productPrice + shippingPrice;
 
         try {
-            // if (checked === 'COD') {
-            //     const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id, shippingPrice);
-            //     console.log('Order placed successfully!');
-            //     navigation.navigate('order-successfully', { orderInfo: response.result });
-            // } else 
             if (checked === 'GiaTotPay') {
-                if (user.result.wallet.balance < totalPrice) {
+                if (userAuth.wallet.balance < totalPrice) {
                     setModalContent({
                         title: 'Số dư tài khoản không đủ',
                         detailText: 'Vui lòng nạp thêm tiền vào tài khoản để thực hiện mua hàng.',
@@ -108,7 +103,7 @@ const OrderDetails = ({ navigation, route }) => {
                         cancelText: 'Thoát',
                         onConfirm: () => {
                             setModalVisible(false)
-                            navigation.navigate("add-funds", {postDetails: postDetails, type: "orderDetails"})
+                            navigation.navigate("add-funds", { postDetails: postDetails, type: "orderDetails" })
                         },
                     });
                     setModalVisible(true);
@@ -219,14 +214,14 @@ const OrderDetails = ({ navigation, route }) => {
                             )
                         ))
                     ) : (
-                        <View style={[styles.locationDetails, { flexDirection: "row", justifyContent: "flex-start" }]}>
+                        <View style={[styles.locationDetails, { flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }]}>
                             <AntDesign name="plus" size={18} color="gray" style={{ marginRight: 2 }} />
                             <Text style={styles.locationText}>Thêm địa chỉ để tiếp tục mua hàng</Text>
                         </View>
                     )}
                     <FontAwesome6
                         name="angle-right" size={20}
-                        style={{ position: 'absolute', right: 15, top: "50%" }}
+                        style={{ position: 'absolute', right: 15, bottom: "60%" }}
                         color="gray"
                     />
                 </TouchableOpacity>

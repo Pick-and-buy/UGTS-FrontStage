@@ -17,15 +17,12 @@ export const getPaymentStatus = async (url) => {
         const token = await AsyncStorage.getItem('token');
         console.log(token);
 
-        // Define the URL with the amount parameter
-        // const url = `http://10.0.2.2:8080/api/v1/vnpay/payment-info?${url}`;
-
         // Perform the fetch request
         const response = await fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
+                'Authorization': `Bearer ${token}`, 
             },
         });
 
@@ -68,25 +65,17 @@ export const getTransactionHistory = async () => {
         // Retrieve the token from AsyncStorage
         const token = await AsyncStorage.getItem('token');
 
-        // Perform the fetch request
-        const response = await fetch('http://192.168.1.9:8080/api/v1/wallets/transaction-histories', {
-            method: 'GET',
+        // Perform the GET request using axiosInstance
+        const response = await axiosInstance.get('wallets/transaction-histories', {
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
             },
         });
 
-        // Check if the request was successful
-        if (!response.ok) {
-            throw new Error('Error get transaction history');
-        }
-
-        // Parse and return the response
-        const data = await response.json();
-        return data;
+        // Return the response data
+        return response.data;
     } catch (error) {
-        console.log('Error creating payment:', error);
+        console.log('Error getting transaction history:', error);
         throw error;
     }
-}
+};
