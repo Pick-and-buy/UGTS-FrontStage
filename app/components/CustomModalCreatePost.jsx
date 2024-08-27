@@ -17,13 +17,13 @@ const CustomModalCreatePost = ({ visible, onClose, onConfirm, title, detailText,
                         Gồm có 3 mức xác minh: cấp 1, cấp 2 và cấp 3.
                     </Text>
                     <Text style={styles.modalDetailText}>
-                        <Text style={{ color: COLORS.primary }}>Xác minh cấp 1:</Text> yêu cầu người dùng tải ảnh sản phẩm và điền đầy đủ thông tin ở những mục có dấu <Text style={{ color: COLORS.primary }}>*</Text>
+                        <Text style={{ color: COLORS.primary }}>Xác minh cấp 1:</Text> Người bán cung cấp đầy đủ ảnh và thông tin sản phẩm.
                     </Text>
                     <Text style={styles.modalDetailText}>
-                        <Text style={{ color: COLORS.primary }}>Xác minh cấp 2:</Text> yêu cầu người dùng phải tải ảnh hóa đơn và video của sản phẩm.
+                        <Text style={{ color: "#ff8000" }}>Xác minh cấp 2:</Text> Người bán dùng cung cấp ảnh hóa đơn và video của sản phẩm.
                     </Text>
                     <Text style={styles.modalDetailText}>
-                        <Text style={{ color: COLORS.primary }}>Xác minh cấp 3:</Text> sử dụng công cụ kiểm thử sản phẩm có tên LEGITGRAILS.
+                        <Text style={{ color: "#33cc33" }}>Xác minh cấp 3:</Text> Sản phẩm của người bán sẽ được kiểm tra và xác nhận là hàng thật từ dịch vụ LEGITGRAILS.
                     </Text>
                     <View style={styles.modalButtons}>
                         <TouchableOpacity
@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     modalDetailText: {
+        width: "100%",
         textAlign: 'left',
         fontSize: 16,
         marginBottom: 10,
