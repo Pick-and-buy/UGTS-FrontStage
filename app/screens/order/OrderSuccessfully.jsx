@@ -36,7 +36,11 @@ const OrderSuccessfully = ({ navigation, route }) => {
         setLoading(true);
         try {
             const response = await getAllPosts();
-            setPosts(response.data.result);
+            let posts = response.data.result;
+            //filter posts have isArchived === false
+            posts = posts.filter(post => post.isArchived === false);
+
+            setPosts(posts);
         } catch (error) {
             console.log(error);
         } finally {
