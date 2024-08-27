@@ -62,6 +62,8 @@ const PostDetail = ({ navigation, route }) => {
     const [loading, setLoading] = useState(true);
     const [showFullStory, setShowFullStory] = useState(false);
     const [isMuted, setIsMuted] = useState(false);  // Chỉnh âm thanh khi lần đầu tiên vào sẽ mute
+    // console.log(postDetails);
+
 
     const [modalRulesVisible, setModalRulesVisible] = useState(false);
     const [modalRulesContent, setModalRulesContent] = useState({
@@ -298,7 +300,21 @@ const PostDetail = ({ navigation, route }) => {
     };
 
     const getFieldValue = (value) => {
-        return (value === "None" || value === "none" || value === null) ? "N/A" : value;
+        return (value === "None" || value === "none" || value === null || value === "") ? "N/A" : value;
+    };
+
+    const dataProductCondition = [
+        { label: 'Hàng Mới', value: 'BRAND_NEW' },
+        { label: 'Like New', value: 'EXCELLENT' },
+        { label: 'Còn Tốt', value: 'VERY_GOOD' },
+        { label: 'Dùng được', value: 'GOOD' },
+        { label: 'Hàng cũ', value: 'FAIR' },
+    ];
+
+    // Function to get the label from the condition value
+    const getConditionLabel = (value) => {
+        const condition = dataProductCondition.find(item => item.value === value);
+        return condition ? condition.label : '';
     };
 
     // Format the price using the helper function
@@ -410,78 +426,31 @@ const PostDetail = ({ navigation, route }) => {
                             justifyContent: 'center',
                             alignItems: 'center',
                         }}>
-                            {isAuthenticated ?
-                                (
-                                    <>
-                                        {postDetails?.isAvailable ? (
-                                            <TouchableOpacity
-                                                style={styles.commentBtnActive}
-                                                onPress={() => setModalVisible(true)}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        fontSize: 18,
-                                                        color: COLORS.primary,
-                                                    }}>Bình luận</Text>
-                                            </TouchableOpacity>
-                                        ) : (
-                                            <View
-                                                style={styles.commentContainerUnActive}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        fontSize: 18,
-                                                        color: COLORS.gray,
-                                                    }}>Bình luận</Text>
-                                            </View>
-                                        )
-                                        }
-                                    </>
-                                )
-                                :
-                                (
-                                    <>
-                                        {comments.length > 3 ?
-                                            (
-                                                <>
-                                                    {!showAllComments ?
-                                                        (
+                            {postDetails?.isAvailable ? (
+                                <TouchableOpacity
+                                    style={styles.commentBtnActive}
+                                    onPress={() => setModalVisible(true)}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 20,
+                                            color: COLORS.primary,
+                                        }}>
+                                        {user ? 'Bình luận' : 'Xem thêm bình luận'}
 
-                                                            <TouchableOpacity
-                                                                onPress={() => { setShowAllComments(true) }}
-                                                                style={[styles.commentContainerUnActive, { borderColor: COLORS.blue }]}
-                                                            >
-                                                                <Text
-                                                                    style={{
-                                                                        fontSize: 18,
-                                                                        color: COLORS.blue,
-                                                                    }}>Xem Thêm</Text>
-                                                            </TouchableOpacity>
-
-                                                        )
-                                                        :
-                                                        (
-                                                            <TouchableOpacity
-                                                                onPress={() => { setShowAllComments(false) }}
-                                                                style={[styles.commentContainerUnActive, { borderColor: COLORS.blue }]}
-                                                            >
-                                                                <Text
-                                                                    style={{
-                                                                        fontSize: 18,
-                                                                        color: COLORS.blue,
-                                                                    }}>Thu Gọn</Text>
-                                                            </TouchableOpacity>
-                                                        )
-                                                    }
-                                                </>
-                                            )
-                                            :
-                                            (
-                                                <View></View>
-                                            )
-                                        }
-                                    </>
-                                )
+                                    </Text>
+                                </TouchableOpacity>
+                            ) : (
+                                <View
+                                    style={styles.commentContainerUnActive}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 18,
+                                            color: COLORS.gray,
+                                        }}>Bình luận</Text>
+                                </View>
+                            )
                             }
 
                             <Comment
@@ -539,6 +508,26 @@ const PostDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                     <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
+                    {/* Brandline */}
+                    <View style={[styles.details, { marginTop: 4 }]}>
+                        <View style={styles.left}>
+                            <Text>Dòng thương hiệu</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.brandLine?.lineName)}</Text>
+                        </View>
+                    </View>
+                    <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
+                    {/* Category */}
+                    <View style={[styles.details, { marginTop: 4 }]}>
+                        <View style={styles.left}>
+                            <Text>Thể loại</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.category?.categoryName)}</Text>
+                        </View>
+                    </View>
+                    <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
 
                     {/* Tình trạng */}
                     <View style={styles.details}>
@@ -546,7 +535,9 @@ const PostDetail = ({ navigation, route }) => {
                             <Text>Tình trạng</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.condition)}</Text>
+                            <Text style={styles.rightText}>
+                                {getConditionLabel(postDetails?.product?.condition)}
+                            </Text>
                         </View>
                     </View>
                     <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
