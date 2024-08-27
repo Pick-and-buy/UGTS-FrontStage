@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     container: {
         width: windowWidth,
         height: windowHeight,
-        backgroundColor: COLORS.background
+        backgroundColor: COLORS.background,
     },
     wrapper: {
         width: "100%",
@@ -98,8 +98,9 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     lists: {
-        width: "100%",
-        marginTop: 20
+        flex: 1,
+        marginTop: 20,
+        marginBottom:220
     },
     item: {
         width: "94%",
@@ -115,22 +116,22 @@ const styles = StyleSheet.create({
     itemTitle: {
         fontSize: 18,
         fontWeight: "600",
-        width:"50%"
+        width: "50%"
     },
     itemDetailsText: {
         fontSize: 14,
         color: COLORS.gray,
-        width:"50%"
+        width: "50%"
     },
     moneyIn: {
         fontSize: 18,
         color: "#22c1c3",
-        width:"50%"
+        width: "50%"
     },
     moneyOut: {
         fontSize: 18,
         color: "#FF0000",
-        width:"50%"
+        width: "50%"
     }
 
 })

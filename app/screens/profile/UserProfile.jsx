@@ -109,20 +109,6 @@ const UserProfile = ({ navigation, route }) => {
 
   const handleFollowToggle = async () => {
     if (!userIdLogged) {
-      // Alert.alert(
-      //   "Đăng nhập",
-      //   "Bạn cần đăng nhập để theo dõi người bán.",
-      //   [
-      //     {
-      //       text: "Cancel",
-      //       style: "cancel"
-      //     },
-      //     {
-      //       text: "Đăng nhập",
-      //       onPress: () => navigation.navigate('login-navigation')
-      //     }
-      //   ]
-      // );
       setModalContent({
         title: "Đăng nhập",
         detailText: "Bạn cần đăng nhập để theo dõi người bán.",
@@ -178,7 +164,6 @@ const UserProfile = ({ navigation, route }) => {
         </TouchableOpacity>
         <Text style={{ fontSize: 20, fontWeight: "bold", color: COLORS.black }}>{user?.lastName} {user?.firstName}</Text>
         <Feather
-          onPress={() => console.warn('More Function')}
           name="more-horizontal"
           size={35}
           color="gray" />

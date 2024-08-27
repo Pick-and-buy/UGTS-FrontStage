@@ -58,6 +58,9 @@ const ChangePassword = ({ route, navigation }) => {
     return (
         <View style={styles.wrapper}>
             <View style={styles.view_1}>
+                <View>
+                    <BackBtn onPress={() => navigation.goBack()} />
+                </View>
                 <View style={{ marginBottom: '10%' }}>
                     <Text style={styles.textHeader}>Thiết lập mật khẩu mới</Text>
                     <Text style={styles.textHeader_1}>
