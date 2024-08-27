@@ -588,7 +588,12 @@ const CreatePost = () => {
                     <View style={styles.checkboxView}>
                       <Checkbox
                         value={isChecked_2}
-                        onValueChange={setChecked_2}
+                        onValueChange={(newValue) => {
+                          setChecked_2(newValue);
+                          if (!newValue) {
+                            setBoosted(false);
+                          }
+                        }}
                       />
                       <Text style={styles.textVerified}>Xác minh cấp 2</Text>
                     </View>
@@ -747,7 +752,7 @@ const CreatePost = () => {
                         autoCorrect={false}
                       />
                       {touched.productName && errors.productName && (
-                        <Text style={[styles.errorText,{marginLeft:10}]}>{errors.productName}</Text>
+                        <Text style={[styles.errorText, { marginLeft: 10 }]}>{errors.productName}</Text>
                       )}
                     </View>
 
@@ -1117,10 +1122,34 @@ const CreatePost = () => {
                   </View>
                   <View style={styles.checkboxBoostedContainer}>
                     <View style={styles.checkboxBoosted}>
-                      <Checkbox
-                        value={isBoosted}
-                        onValueChange={setBoosted}
-                      />
+                      {isChecked_2 ?
+                        (
+                          <Checkbox
+                            value={isBoosted}
+                            onValueChange={setBoosted}
+                          />
+                        )
+                        :
+                        (
+                          <Checkbox
+                            value={false}
+                            onValueChange={() => {
+                              setBoosted(false);
+                              setModalContent({
+                                title: "Thông báo",
+                                detailText: "Để sử dụng dịch vụ Boosted, bạn cần chọn xác minh cấp 2.",
+                                confirmText: "Ok",
+                                onConfirm: () => {
+                                  setModalVisible(false);
+                                },
+                              });
+                              setModalVisible(true);
+                            }}
+                          />
+                        )
+                      }
+
+
                       <Text style={{ textAlign: 'center' }}>Boosted</Text>
                     </View>
                     {isBoosted ?
