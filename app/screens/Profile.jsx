@@ -302,19 +302,19 @@ const Profile = ({ navigation }) => {
 
                 </View>
               </View>
-              <View
+              {/* <View
                 style={{
                   backgroundColor: COLORS.lightWhite,
                   margin: 10,
                   borderRadius: 12,
                 }}
               >
-                <ProfileTile title={"Lịch sử mặt hàng đã xem"} icon={"history"} font={3} isDivider={true} onPress={() => navigation.navigate("start-rating")} />
+                <ProfileTile title={"Lịch sử mặt hàng đã xem"} icon={"history"} font={3} isDivider={true}/>
                 <ProfileTile title={"Mặt hàng đã thích"} icon={"heart"} font={3} isDivider={true} />
                 <ProfileTile title={"Mặt hàng đã mua"} icon={"shopping-bag"} font={3} isDivider={true} />
                 <ProfileTile title={"Các bài đã đăng"} icon={"camera"} font={3} isDivider={true} />
                 <ProfileTile title={"Danh sách theo dõi"} icon={"hashtag"} font={3} />
-              </View>
+              </View> */}
 
               <View
                 style={{
