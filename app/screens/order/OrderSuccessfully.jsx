@@ -54,7 +54,7 @@ const OrderSuccessfully = ({ navigation, route }) => {
     }
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.wrapper}>
                 <View style={styles.notification}>
                     <Ionicons name="checkmark-circle-sharp" size={100} color="#4BE289" />
@@ -96,7 +96,7 @@ const OrderSuccessfully = ({ navigation, route }) => {
                     </ScrollView>
                 </View>
             </View>
-        </View>
+        </ScrollView>
     )
 }
 

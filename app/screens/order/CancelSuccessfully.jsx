@@ -57,7 +57,7 @@ const CancelSuccessfully = ({ navigation, route }) => {
     }
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.wrapper}>
                 {/* <TouchableOpacity style={styles.header} onPress={handleOrderDetails}>
                     <MaterialCommunityIcons name="keyboard-backspace" size={32} color="black" />
@@ -90,7 +90,7 @@ const CancelSuccessfully = ({ navigation, route }) => {
                     </ScrollView>
                 </View>
             </View>
-        </View>
+        </ScrollView>
     )
 }
 
