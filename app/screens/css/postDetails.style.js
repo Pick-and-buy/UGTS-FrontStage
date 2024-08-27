@@ -88,6 +88,12 @@ const styles = StyleSheet.create({
     keyword: {
         color: COLORS.blue,
     },
+    info: {
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        gap: 5
+    },
     verified: {
         flexDirection: "row",
         alignItems: "center",

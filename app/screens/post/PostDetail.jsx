@@ -12,7 +12,7 @@ import {
     RefreshControl,
     ActivityIndicator,
 } from "react-native";
-import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo, FontAwesome, Octicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo, FontAwesome6, Octicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useCallback, useState, useEffect } from "react";
 import { useFocusEffect } from '@react-navigation/native';
 import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
@@ -27,6 +27,7 @@ import moment from "moment";
 import CustomModal from "../../components/CustomModal";
 import Post from "./Post";
 import { Video } from "expo-av";
+import CustomModalCreatePost from "../../components/CustomModalCreatePost";
 
 
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
@@ -61,6 +62,28 @@ const PostDetail = ({ navigation, route }) => {
     const [loading, setLoading] = useState(true);
     const [showFullStory, setShowFullStory] = useState(false);
     const [isMuted, setIsMuted] = useState(false);  // Chỉnh âm thanh khi lần đầu tiên vào sẽ mute
+
+    const [modalRulesVisible, setModalRulesVisible] = useState(false);
+    const [modalRulesContent, setModalRulesContent] = useState({
+        title: '',
+        detailText: '',
+        confirmText: '',
+        cancelText: '',
+        onConfirm: () => { },
+        onClose: () => { }
+    });
+
+    const rulesGuide = () => {
+        setModalRulesContent({
+            title: "",
+            detailText: "",
+            confirmText: "",
+            onConfirm: () => {
+                setModalRulesVisible(false);
+            },
+        });
+        setModalRulesVisible(true);
+    }
 
     console.log(postId);
 
@@ -313,19 +336,28 @@ const PostDetail = ({ navigation, route }) => {
                         <View style={styles.labelWrapper}>
                             <View style={styles.label}>
                                 {postDetails?.product?.verifiedLevel === 'LEVEL_1' && (
-                                    <View style={styles.verified}>
-                                        <Text style={styles.verifiedText}>Xác minh cấp 1</Text>
-                                    </View>
+                                    <TouchableOpacity style={styles.info} onPress={rulesGuide}>
+                                        <View style={styles.verified}>
+                                            <Text style={styles.verifiedText}>Xác minh cấp 1</Text>
+                                        </View>
+                                        <FontAwesome6 name="circle-question" size={16} color="black" />
+                                    </TouchableOpacity>
                                 )}
                                 {postDetails?.product?.verifiedLevel === 'LEVEL_2' && (
-                                    <View style={[styles.verified, { backgroundColor: '#ff8000' }]}>
-                                        <Text style={styles.verifiedText}>Xác minh cấp 2</Text>
-                                    </View>
+                                    <TouchableOpacity style={styles.info} onPress={rulesGuide}>
+                                        <View style={[styles.verified, { backgroundColor: '#ff8000' }]}>
+                                            <Text style={styles.verifiedText}>Xác minh cấp 2</Text>
+                                        </View>
+                                        <FontAwesome6 name="circle-question" size={16} color="black" />
+                                    </TouchableOpacity>
                                 )}
                                 {postDetails?.product?.verifiedLevel === 'LEVEL_3' && (
-                                    <View style={[styles.verified, { backgroundColor: '#33cc33' }]}>
-                                        <Text style={styles.verifiedText}>Xác minh cấp 3</Text>
-                                    </View>
+                                    <TouchableOpacity style={styles.info} onPress={rulesGuide}>
+                                        <View style={[styles.verified, { backgroundColor: '#33cc33' }]}>
+                                            <Text style={styles.verifiedText}>Xác minh cấp 3</Text>
+                                        </View>
+                                        <FontAwesome6 name="circle-question" size={16} color="black" />
+                                    </TouchableOpacity>
                                 )}
                             </View>
                             {postDetails?.boosted &&
@@ -794,6 +826,17 @@ const PostDetail = ({ navigation, route }) => {
                 detailText={modalContent.detailText}
                 confirmText={modalContent.confirmText}
                 cancelText={modalContent.cancelText}
+            />
+
+            <CustomModalCreatePost
+                visible={modalRulesVisible}
+                onClose={() => {
+                    setModalRulesVisible(false);
+                }}
+                onConfirm={modalRulesContent.onConfirm}
+                title={modalRulesContent.title}
+                detailText={modalRulesContent.detailText}
+                confirmText={modalRulesContent.confirmText}
             />
         </View>
     );
