@@ -170,8 +170,8 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
     },
     commentBtnActive: {
-        width: '50%',
-        height: 30,
+        width: '100%',
+        height: 40,
         borderRadius: 5,
         overflow: 'hidden',
         backgroundColor: COLORS.white,
