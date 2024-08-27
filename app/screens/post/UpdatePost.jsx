@@ -109,6 +109,8 @@ const UpdatePost = ({ route }) => {
     const [isPriceChanged, setIsPriceChanged] = useState(false);
     const [calculateLastPriceDb, setCalculateLastPriceDb] = useState("");
 
+    const [formatlLastPriceForSeller, setFormatlLastPriceForSeller] = useState("");
+
     const FEE = 0;
     const feeLegitgrails = 500000;
     const feeBoosted = 100000;
@@ -661,49 +663,98 @@ const UpdatePost = ({ route }) => {
                             const formatFeeBoosted = formatPrice(feeBoosted);
                             const formatFeeLegitgrails = formatPrice(feeLegitgrails);
 
-                            let lastPriceBoth = '';
-                            let lastPriceLegitgrails = ''
-                            let lastPriceBoosted = '';
+                            // let lastPriceBoth = '';
+                            // let lastPriceLegitgrails = ''
+                            // let lastPriceBoosted = '';
 
-                            let formatlLastPriceForSeller = "";
-                            if (isPriceChanged) {   //Nếu price người dùng nhập có sự thay đổi
-                                lastPriceBoth = parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted - feeLegitgrails;
-                                lastPriceLegitgrails = parseInt(values.price.replace(/\./g, ""), 10) - feeLegitgrails;
-                                lastPriceBoosted = parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted;
+                            // let formatlLastPriceForSeller = "";
+                            // if (isPriceChanged) {   //Nếu price người dùng nhập có sự thay đổi
+                            //     lastPriceBoth = parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted - feeLegitgrails;
+                            //     lastPriceLegitgrails = parseInt(values.price.replace(/\./g, ""), 10) - feeLegitgrails;
+                            //     lastPriceBoosted = parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted;
 
-                                if (isChecked_3 && isBoosted) {
-                                    formatlLastPriceForSeller = formatPrice(lastPriceBoth);
-                                } else if (isBoosted) {
-                                    formatlLastPriceForSeller = formatPrice(lastPriceBoosted);
-                                } else if (isChecked_3) {
-                                    formatlLastPriceForSeller = formatPrice(lastPriceLegitgrails);
-                                } else {
-                                    formatlLastPriceForSeller = values.price;
-                                }
-                            } else {    //Nếu price vẫn giữ nguyên từ lúc tạo post
-                                lastPriceBoth = lastPrice - feeBoosted - feeLegitgrails;
-                                lastPriceLegitgrails = lastPrice - feeLegitgrails;
-                                lastPriceBoosted = lastPrice - feeBoosted;
+                            //     if (isChecked_3 && isBoosted) {
+                            //         formatlLastPriceForSeller = formatPrice(lastPriceBoth);
+                            //     } else if (isBoosted) {
+                            //         formatlLastPriceForSeller = formatPrice(lastPriceBoosted);
+                            //     } else if (isChecked_3) {
+                            //         formatlLastPriceForSeller = formatPrice(lastPriceLegitgrails);
+                            //     } else {
+                            //         formatlLastPriceForSeller = values.price;
+                            //     }
+                            // } else {    //Nếu price vẫn giữ nguyên từ lúc tạo post
+                            //     lastPriceBoth = lastPrice - feeBoosted - feeLegitgrails;
+                            //     lastPriceLegitgrails = lastPrice - feeLegitgrails;
+                            //     lastPriceBoosted = lastPrice - feeBoosted;
 
-                                if (postDetails?.boosted) { //Nếu bài post đang trong quá trình chạy quảng cáo
-                                    formatlLastPriceForSeller = formatPrice(lastPrice);
-                                }
-                                else { //Nếu bài post chưa chạy trong quá trình chạy quảng cáo
-                                    if (isChecked_3 && isBoosted) {
-                                        formatlLastPriceForSeller = formatPrice(lastPriceBoth);
-                                    } else if (isBoosted) {
-                                        formatlLastPriceForSeller = formatPrice(lastPriceBoosted);
-                                    } else if (isChecked_3) {
-                                        formatlLastPriceForSeller = formatPrice(lastPriceLegitgrails);
+                            //     if (postDetails?.boosted) { //Nếu bài post đang trong quá trình chạy quảng cáo
+                            //         formatlLastPriceForSeller = formatPrice(lastPrice);
+                            //     }
+                            //     else { //Nếu bài post chưa chạy trong quá trình chạy quảng cáo
+                            //         if (isChecked_3 && isBoosted) {
+                            //             formatlLastPriceForSeller = formatPrice(lastPriceBoth);
+                            //         } else if (isBoosted) {
+                            //             formatlLastPriceForSeller = formatPrice(lastPriceBoosted);
+                            //         } else if (isChecked_3) {
+                            //             formatlLastPriceForSeller = formatPrice(lastPriceLegitgrails);
+                            //         } else {
+                            //             formatlLastPriceForSeller = formatPrice(lastPrice);
+                            //         }
+                            //     }
+                            // }
+
+                            // const convertStringFormatlLastPriceForSeller = formatlLastPriceForSeller.replace(/\./g, '');
+                            // setCalculateLastPriceDb(parseInt(convertStringFormatlLastPriceForSeller, 10));
+
+                            useEffect(() => {
+                                const calculatePrice = () => {
+                                    let lastPriceBoth = '';
+                                    let lastPriceLegitgrails = '';
+                                    let lastPriceBoosted = '';
+                                    let formattedPrice = '';
+                        
+                                    if (isPriceChanged) {
+                                        const numericPrice = parseInt(values.price.replace(/\./g, ""), 10);
+                                        lastPriceBoth = numericPrice - feeBoosted - feeLegitgrails;
+                                        lastPriceLegitgrails = numericPrice - feeLegitgrails;
+                                        lastPriceBoosted = numericPrice - feeBoosted;
+                        
+                                        if (isChecked_3 && isBoosted) {
+                                            formattedPrice = formatPrice(lastPriceBoth);
+                                        } else if (isBoosted) {
+                                            formattedPrice = formatPrice(lastPriceBoosted);
+                                        } else if (isChecked_3) {
+                                            formattedPrice = formatPrice(lastPriceLegitgrails);
+                                        } else {
+                                            formattedPrice = values.price;
+                                        }
                                     } else {
-                                        formatlLastPriceForSeller = formatPrice(lastPrice);
+                                        lastPriceBoth = lastPrice - feeBoosted - feeLegitgrails;
+                                        lastPriceLegitgrails = lastPrice - feeLegitgrails;
+                                        lastPriceBoosted = lastPrice - feeBoosted;
+                        
+                                        if (postDetails?.boosted) {
+                                            formattedPrice = formatPrice(lastPrice);
+                                        } else {
+                                            if (isChecked_3 && isBoosted) {
+                                                formattedPrice = formatPrice(lastPriceBoth);
+                                            } else if (isBoosted) {
+                                                formattedPrice = formatPrice(lastPriceBoosted);
+                                            } else if (isChecked_3) {
+                                                formattedPrice = formatPrice(lastPriceLegitgrails);
+                                            } else {
+                                                formattedPrice = formatPrice(lastPrice);
+                                            }
+                                        }
                                     }
-                                }
-                            }
-
-                            const convertStringFormatlLastPriceForSeller = formatlLastPriceForSeller.replace(/\./g, '');
-                            setCalculateLastPriceDb(parseInt(convertStringFormatlLastPriceForSeller, 10));
-
+                        
+                                    const convertStringFormatlLastPriceForSeller = formattedPrice.replace(/\./g, '');
+                                    setCalculateLastPriceDb(parseInt(convertStringFormatlLastPriceForSeller, 10));
+                                    setFormatlLastPriceForSeller(formattedPrice);
+                                };
+                        
+                                calculatePrice();
+                            }, [values.price, isChecked_3, isBoosted, isPriceChanged]);
 
                             return (
                                 <ScrollView style={styles.wrapper}>
@@ -1291,7 +1342,7 @@ const UpdatePost = ({ route }) => {
                                     </View>
                                     <View style={styles.checkboxBoostedContainer}>
                                         <View style={styles.checkboxBoosted}>
-                                            {/* {postDetails?.boosted === true ?
+                                            {postDetails?.boosted === true ?
                                                 (
                                                     <Checkbox
                                                         value={true}
@@ -1305,11 +1356,11 @@ const UpdatePost = ({ route }) => {
                                                     />
                                                 )
 
-                                            } */}
-                                            <Checkbox
+                                            }
+                                            {/* <Checkbox
                                                 value={isBoosted}
                                                 onValueChange={setBoosted}
-                                            />
+                                            /> */}
                                             <Text style={{ textAlign: 'center' }}>Boosted</Text>
                                         </View>
                                         {isBoosted ?
