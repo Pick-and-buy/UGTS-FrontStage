@@ -1350,10 +1350,34 @@ const UpdatePost = ({ route }) => {
                                                 )
                                                 :
                                                 (
-                                                    <Checkbox
+                                                    <>
+                                                    {postDetails?.product?.verifiedLevel === "LEVEL_2" ?
+                                                    (
+                                                        <Checkbox
                                                         value={isBoosted}
                                                         onValueChange={setBoosted}
                                                     />
+                                                    )
+                                                    :
+                                                    (
+                                                        <Checkbox
+                                                        value={false}
+                                                        onValueChange={() => {
+                                                            setModalContent({
+                                                                title: "Thông báo",
+                                                                detailText: "Để sử dụng dịch vụ Boosted, bạn cần nâng cấp bài đăng lên xác minh cấp 2.",
+                                                                confirmText: "Ok",
+                                                                onConfirm: () => {
+                                                                    setModalVisible(false);
+                                                                },
+                                                            });
+                                                            setModalVisible(true);
+                                                        }}
+                                                    />
+                                                    )
+                                                }
+                                                   
+                                                    </>
                                                 )
 
                                             }
