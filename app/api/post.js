@@ -65,6 +65,7 @@ export const createPost_Level_1 = async (formData) => {
     const token = await getAuthToken();
 
     const response = await axiosInstance.post('posts/level-1', formData, {
+
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'multipart/form-data'
@@ -83,7 +84,9 @@ export const createPost_Level_2 = async (formData) => {
   try {
     const token = await getAuthToken();
 
+
     const response = await axiosInstance.post('posts/level-2', formData, {
+
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'multipart/form-data'
@@ -101,7 +104,9 @@ export const updatePost = async (id, formData) => {
   try {
     const token = await getAuthToken();
 
+
     const response = await axiosInstance.put(`posts/${id}`, formData, {
+
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'multipart/form-data'
