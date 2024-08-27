@@ -125,6 +125,8 @@ const BuyerOrderDetails = ({ navigation, route }) => {
   };
 
   const handleCancelOrder = () => {
+    console.log(selectedAddress);
+    
     setModalContent({
       title: 'Hủy đơn hàng',
       detailText: 'Bạn có chắc chắn muốn hủy đơn hàng không?',
@@ -132,7 +134,7 @@ const BuyerOrderDetails = ({ navigation, route }) => {
       cancelText: 'Hủy',
       onConfirm: async () => {
         try {
-          await cancelOrderBuyer(orderInfo, selectedAddress);
+          await cancelOrderBuyer(updatedOrderInfo);
           navigation.navigate('cancel-successfully', { orderInfo: orderInfo });
           setModalVisible(false); // Close the modal after the order is canceled
         } catch (error) {

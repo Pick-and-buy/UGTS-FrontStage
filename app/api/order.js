@@ -51,9 +51,8 @@ export const updateOrderBuyer = async (orderInfo, selectedAddress) => {
     }
 };
 
-export const cancelOrderBuyer = async (orderInfo, selectedAddress) => {
+export const cancelOrderBuyer = async (orderInfo) => {
     try {
-
         const response = await axiosInstance.put(`/orders/details?orderId=${orderInfo.id}`, {
             orderStatus: "CANCELLED",
             firstName: orderInfo?.orderDetails?.firstName,
@@ -61,11 +60,11 @@ export const cancelOrderBuyer = async (orderInfo, selectedAddress) => {
             email: orderInfo?.orderDetails?.email,
             phoneNumber: orderInfo?.orderDetails?.phoneNumber,
             address: {
-                street: selectedAddress?.street,
-                district: selectedAddress?.district,
-                province: selectedAddress?.province,
-                country: selectedAddress?.country,
-                addressLine: selectedAddress?.addressLine
+                street: orderInfo?.orderDetails?.address?.street,
+                district: orderInfo?.orderDetails?.address?.district,
+                province: orderInfo?.orderDetails?.address?.province,
+                country: orderInfo?.orderDetails?.address?.country,
+                addressLine: orderInfo?.orderDetails?.address?.addressLine
             },
             post: {
                 id: orderInfo?.post?.id

@@ -21,7 +21,7 @@ const Notification = ({ navigation }) => {
         }
     };
 
-    const handleNotificationRead = async (notificationId, notificationType, postId, orderId, userFromId, isRead) => {
+    const handleNotificationRead = async (notificationId, notificationType, postId, orderId, userFromId, isRead,userToId) => {
         if (!isRead) {
             await markNotificationAsRead(notificationId);
         }
@@ -32,9 +32,11 @@ const Notification = ({ navigation }) => {
             const orderInfo = await fetchOrderInfo(orderId);
             if (orderInfo) {
                 if (userFromId === user.id) {
-                    navigation.navigate('seller-order-details', { orderInfo: orderInfo });
-                } else {
                     navigation.navigate('buyer-order-details', { orderInfo: orderInfo });
+                } 
+                 
+                if(userToId === user.id) {
+                    navigation.navigate('seller-order-details', { orderInfo: orderInfo });
                 }
             }
         }
@@ -51,7 +53,7 @@ const Notification = ({ navigation }) => {
         return (
             <TouchableOpacity
                 style={styles.notificationItem}
-                onPress={() => handleNotificationRead(item.notificationId, item.notificationType, item.postId, item.orderId, item.userFromId, item.read)}
+                onPress={() => handleNotificationRead(item.notificationId, item.notificationType, item.postId, item.orderId, item.userFromId, item.read, item.userToId)}
             >
                 <Image
                     source={{ uri: item.userFromAvatar ? item.userFromAvatar : profile }}
