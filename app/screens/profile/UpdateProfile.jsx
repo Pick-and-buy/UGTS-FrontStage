@@ -8,7 +8,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import styles from "../css/updateProfile.style.js";
 import Button from '../../components/Button.jsx';
-
+import BackBtn from '../../components/BackBtn.jsx';
 const validationSchema = Yup.object().shape({
     firstName: Yup.string().required('Vui lòng nhập tên'),
     lastName: Yup.string().required('Vui lòng nhập họ'),
@@ -48,6 +48,9 @@ const UpdateProfile = ({ navigation, route }) => {
 
     return (
         <View style={styles.wrapper}>
+            <View style={{ top: 80, left: 15 }}>
+                <BackBtn onPress={() => navigation.goBack()} />
+            </View>
             <View style={styles.view_1}>
                 <Formik
                     initialValues={{ firstName: '', lastName: '', email: '', username: '', dateOfBirth: null }}
@@ -152,7 +155,7 @@ const UpdateProfile = ({ navigation, route }) => {
                                 <MaterialCommunityIcons name="email-outline" size={30} color={COLORS.primary} />
                                 <TextInput
                                     style={{ marginLeft: 10, flex: 1 }}
-                                    placeholder={data?.result?.email}
+                                    placeholder="Email"
                                     placeholderTextColor='gray'
                                     value={values.email}
                                     onChangeText={handleChange('email')}
