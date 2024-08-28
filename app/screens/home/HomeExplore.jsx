@@ -35,6 +35,9 @@ const HomeExplore = ({ navigation }) => {
             // Sort posts to have boosted posts at the top
             posts = posts.sort((a, b) => b.boosted - a.boosted);
 
+             // Filter posts have isArchived === false
+            posts = posts.filter(post => post.isArchived === false);
+
             setPosts(posts);
             setFilteredPosts(posts);
         } catch (error) {
