@@ -277,7 +277,7 @@ const SellerOrderDetails = ({ navigation, route }) => {
                                     </View>
                                 </View>
                                 <Text style={styles.price}>
-                                    <Text style={styles.currency}>₫</Text>
+                                    <Text style={styles.currency}>đ</Text>
                                     {formattedProductPrice}
                                 </Text>
                             </View>
