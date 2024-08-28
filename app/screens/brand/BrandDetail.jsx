@@ -12,7 +12,7 @@ import { COLORS, SHADOWS, SIZES } from "../../constants/theme";
 import { getPostsByBrandName, getPostsByBrandLineName, getBrandLinesByBrandName } from "../../api/post";
 import PostHorizontal from "../post/PostHorizontal";
 import BackBtn from "../../components/BackBtn";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 const BrandDetail = ({ navigation }) => {
     const brand = useRoute().params.brands;
     const [listPosts, setListPosts] = useState([]);
@@ -80,7 +80,9 @@ const BrandDetail = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <BackBtn onPress={() => navigation.goBack()} />
+                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                    <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
+                </TouchableOpacity>
                 <Text style={styles.headerText}>{brand.name.toUpperCase()}</Text>
             </View>
             <View>
@@ -128,7 +130,7 @@ const BrandDetail = ({ navigation }) => {
                     alignItems: "center",
                     marginLeft: "3%",
                     marginBottom: 10,
-                    marginTop:10
+                    marginTop: 10
                 }}>
                     <Text style={{ fontSize: 16, color: COLORS.black, fontWeight: "bold" }}>Sản phẩm</Text>
                 </View>
@@ -164,26 +166,25 @@ export default BrandDetail;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 60,
+        paddingTop: 40,
         backgroundColor: COLORS.white,
     },
     header: {
         width: '96%',
-        marginTop: 30,
         marginBottom: 30,
-        marginHorizontal: "auto",
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
+        flexDirection: "row",
+        marginHorizontal:"auto"
     },
     headerText: {
         textAlign: 'center',
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: "bold",
-        position: 'absolute',
-        top: -25,
+        marginLeft: "33%"
     },
     content: {
-        flex:1
+        flex: 1
     },
     brandLineList: {
         paddingVertical: 10,
@@ -213,7 +214,7 @@ const styles = StyleSheet.create({
         color: COLORS.white,
     },
     noPostsContainer: {
-        flex:1,
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },

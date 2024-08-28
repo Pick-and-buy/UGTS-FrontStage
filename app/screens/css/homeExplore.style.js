@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
     container: {
         width: windowWidth,
         height: windowHeight,
+        marginBottom: "15%",
     },
     posts: {
         width: '98%',

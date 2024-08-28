@@ -10,11 +10,9 @@ import {
     FlatList,
     RefreshControl,
 } from "react-native";
-import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import React, { useState, useEffect, useCallback } from "react";
-import { useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS, SIZES } from "../../constants/theme";
-import BackBtn from "../../components/BackBtn"
 
 const ListBrands = ({ navigation, route }) => {
     const listBrands = route.params.listBrands;
@@ -31,10 +29,12 @@ const ListBrands = ({ navigation, route }) => {
     }, []);
 
     return (
-        <View style={{ flex: 1, paddingTop: 60, backgroundColor: COLORS.white }}>
+        <View style={{ flex: 1, paddingTop: 40, backgroundColor: COLORS.white }}>
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <BackBtn onPress={() => navigation.goBack()} />
+                    <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                        <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
+                    </TouchableOpacity>
                     <Text style={styles.headerText}>THƯƠNG HIỆU</Text>
                 </View>
                 <View style={{ marginBottom: 30 }}>
@@ -43,7 +43,7 @@ const ListBrands = ({ navigation, route }) => {
                         horizontal={false}
                         showsHorizontalScrollIndicator={false}
                         numColumns={3}
-                        renderItem={({ item, index }) => index <= 5 && (
+                        renderItem={({ item, index }) => (
                             <View style={styles.imageContainer}>
                                 <TouchableOpacity
                                     onPress={() =>
@@ -83,21 +83,20 @@ const styles = StyleSheet.create({
     container: {
         width: '96%',
         marginHorizontal: "auto",
-        backgroundColor:COLORS.white
+        backgroundColor: COLORS.white
     },
     header: {
         width: '100%',
-        marginTop: 30,
         marginBottom: 30,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
+        flexDirection: "row",
     },
     headerText: {
         textAlign: 'center',
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: "bold",
-        position: 'absolute',
-        top: -28
+        marginLeft: "26%"
     },
     imageContainer: {
         width: Dimensions.get('window').width / 3 - 4,

@@ -12,8 +12,11 @@ import { order } from '../../api/order';
 import { useFocusEffect } from '@react-navigation/native';
 import { payOrder } from '../../api/payment';
 import CustomModal from '../../components/CustomModal';
+import { useAuth } from '../../context/AuthContext';
+
 const OrderDetails = ({ navigation, route }) => {
     const postDetails = route.params.postDetails;
+    const { user: userAuth } = useAuth();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -91,19 +94,17 @@ const OrderDetails = ({ navigation, route }) => {
         const totalPrice = productPrice + shippingPrice;
 
         try {
-            // if (checked === 'COD') {
-            //     const response = await order(checked, selectedAddress?.id, deliveryDateFrom, deliveryDateTo, postDetails?.id, shippingPrice);
-            //     console.log('Order placed successfully!');
-            //     navigation.navigate('order-successfully', { orderInfo: response.result });
-            // } else 
             if (checked === 'GiaTotPay') {
-                if (user.result.wallet.balance < totalPrice) {
+                if (userAuth.wallet.balance < totalPrice) {
                     setModalContent({
                         title: 'Số dư tài khoản không đủ',
                         detailText: 'Vui lòng nạp thêm tiền vào tài khoản để thực hiện mua hàng.',
                         confirmText: 'Xác nhận',
                         cancelText: 'Thoát',
-                        onConfirm: () => setModalVisible(false),
+                        onConfirm: () => {
+                            setModalVisible(false)
+                            navigation.navigate("add-funds", { postDetails: postDetails, type: "orderDetails" })
+                        },
                     });
                     setModalVisible(true);
                 } else {
@@ -213,14 +214,14 @@ const OrderDetails = ({ navigation, route }) => {
                             )
                         ))
                     ) : (
-                        <View style={[styles.locationDetails, { flexDirection: "row", justifyContent: "flex-start" }]}>
+                        <View style={[styles.locationDetails, { flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }]}>
                             <AntDesign name="plus" size={18} color="gray" style={{ marginRight: 2 }} />
                             <Text style={styles.locationText}>Thêm địa chỉ để tiếp tục mua hàng</Text>
                         </View>
                     )}
                     <FontAwesome6
                         name="angle-right" size={20}
-                        style={{ position: 'absolute', right: 15, top: "50%" }}
+                        style={{ position: 'absolute', right: 15, bottom: "60%" }}
                         color="gray"
                     />
                 </TouchableOpacity>
@@ -315,7 +316,7 @@ const OrderDetails = ({ navigation, route }) => {
                                     <View style={styles.column}>
                                         <Text style={styles.methodText}>LuxBagPay</Text>
                                         <Text style={styles.currentAmount}>Số dư hiện tại:
-                                            <Text style={{ color: 'red' }}> {formatPrice(user?.result?.wallet?.balance)}₫</Text>
+                                            <Text style={{ color: 'red' }}> {formatPrice(userAuth?.wallet?.balance)}₫</Text>
                                         </Text>
                                     </View>
                                     <RadioButton value="GiaTotPay" />

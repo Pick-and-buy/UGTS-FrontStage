@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Alert, Keyboard, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import React, { useCallback, useState } from 'react';
 import { MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import { Formik } from 'formik';
@@ -10,6 +10,7 @@ import { charge, createPayment, getPaymentStatus } from '../../api/payment';
 import { WebView } from 'react-native-webview';
 import { useAuth } from "../../context/AuthContext";
 import { useFocusEffect } from '@react-navigation/native';
+import CustomModalPost from '../../components/CustomModalPost';
 
 // Validation Schema
 const TopUpSchema = Yup.object().shape({
@@ -28,13 +29,23 @@ const removeDots = (amount) => {
     return amount.replace(/\./g, ''); // Remove dots
 };
 
-const AddFunds = ({ navigation }) => {
+const AddFunds = ({ navigation, route }) => {
+    const { postDetails, type } = route?.params || {};
     const { user, fetchUserData, isAuthenticated } = useAuth();
     const [amount, setAmount] = useState();
     const [activeButton, setActiveButton] = useState(null);
     const [paymentUrl, setPaymentUrl] = useState(null);
     const [showWebView, setShowWebView] = useState(false); // New state for controlling WebView visibility
     const [isProcessing, setIsProcessing] = useState(false); // Flag to prevent multiple processing
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState({
+        title: '',
+        detailText: '',
+        confirmText: '',
+        cancelText: '',
+        onConfirm: () => { },
+        onClose: () => { }
+    });
 
     useFocusEffect(
         useCallback(() => {
@@ -62,7 +73,15 @@ const AddFunds = ({ navigation }) => {
                 setShowWebView(false); // Hide the WebView regardless of the outcome
 
                 if (status.message === 'Transaction Failed') {
-                    Alert.alert(status.message);
+                    setModalContent({
+                        title: "Thông báo",
+                        detailText: "Giao dịch thất bại",
+                        confirmText: "Ok",
+                        onConfirm: () => {
+                            setModalVisible(false);
+                        },
+                    });
+                    setModalVisible(true);
                     await fetchUserData();
                 }
                 if (status.message === 'Transaction Success') {
@@ -79,123 +98,150 @@ const AddFunds = ({ navigation }) => {
     };
 
     return (
-        <View style={styles.container}>
-            {showWebView && paymentUrl ? ( // Conditionally render WebView
-                <View style={styles.webViewContainer}>
-                    <WebView
-                        source={{ uri: paymentUrl }}
-                        style={styles.webView}
-                        onNavigationStateChange={(event) => handleStatusPayment(event)}
-                    />
-                </View>
-            ) : (
-                <View>
-                    <View style={styles.header}>
-                        <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Profile')}>
-                            <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
-                        </TouchableOpacity>
-                        <Text style={styles.headerText}>Nạp tiền</Text>
-                    </View>
-
-                    <Formik
-                        initialValues={{ amount: '' }}
-                        validationSchema={TopUpSchema}
-                        onSubmit={values => {
-                            console.log('Raw amount:', removeDots(values.amount));
-                            const amount = removeDots(values.amount);
-                            handleSubmit(amount);
-                            setAmount(amount);
-                        }}
-                    >
-                        {({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue }) => (
-                            <View style={styles.wrapper}>
-                                <View style={styles.money}>
-                                    <View style={styles.inputContainer}>
-                                        <Text style={styles.label}>Nhập số tiền (₫)</Text>
-                                        <View style={styles.amount}>
-                                            <Text style={styles.unit}>₫</Text>
-                                            <TextInput
-                                                style={styles.input}
-                                                onChangeText={(text) => {
-                                                    const rawAmount = text.replace(/\D/g, '');
-                                                    setFieldValue('amount', formatMoney(rawAmount));
-                                                    setActiveButton(null);
-                                                }}
-                                                onBlur={() => {
-                                                    const rawAmount = removeDots(values.amount);
-                                                    setFieldValue('amount', formatMoney(rawAmount));
-                                                }}
-                                                value={values.amount}
-                                                placeholder="0"
-                                                keyboardType="numeric"
-                                            />
-                                        </View>
-                                        {errors.amount && <Text style={styles.error}>{errors.amount}</Text>}
-                                    </View>
-
-                                    <Text style={styles.balance}>Số dư ví hiện tại: ₫ {formatMoney(String(user?.wallet?.balance))}</Text>
-
-                                    <View style={styles.quickAmounts}>
-                                        {['100000', '200000', '500000', '1000000', '2000000', '5000000'].map((amount, index) => (
-                                            <TouchableOpacity
-                                                key={index}
-                                                style={[
-                                                    styles.quickAmountButton,
-                                                    activeButton === index && styles.activeButton
-                                                ]}
-                                                onPress={() => {
-                                                    setFieldValue('amount', formatMoney(amount));
-                                                    setActiveButton(index);
-                                                }}
-                                            >
-                                                <Text
-                                                    style={[
-                                                        styles.quickAmountButtonText,
-                                                        activeButton === index && styles.activeButtonText
-                                                    ]}
-                                                >
-                                                    {formatMoney(amount)}
-                                                </Text>
-                                            </TouchableOpacity>
-                                        ))}
-                                    </View>
-                                    <View style={styles.divider} />
-                                    <TouchableOpacity style={styles.paymentMethod}>
-                                        <Icon name="wallet" type="entypo" color={COLORS.primary} />
-                                        <Text style={styles.paymentText}>Phương thức thanh toán</Text>
-                                        <Text style={styles.paymentMethodInfo}>Phương thức thanh toán ví VNPay</Text>
-                                    </TouchableOpacity>
-                                </View>
-
-                                <View style={styles.totalContainer}>
-                                    <View style={styles.total}>
-                                        <Text style={[styles.totalLabel, { fontSize: 16, color: "#aaa" }]}>Nạp tiền</Text>
-                                        <Text style={[styles.totalAmount, { fontSize: 16, color: "#aaa" }]}>₫{values.amount || '0'}</Text>
-                                    </View>
-                                    <View style={styles.total}>
-                                        <Text style={styles.totalLabel}>Tổng thanh toán</Text>
-                                        <Text style={[styles.totalAmount, { color: COLORS.primary }]}>₫{values.amount || '0'}</Text>
-                                    </View>
-                                </View>
-
-                                <Text style={styles.footerNote}>
-                                    Nhấn “Nạp tiền ngay”, bạn đã đồng ý tuân theo {" "}
-                                    <Text style={styles.highlightText}>Điều khoản sử dụng</Text> và {" "}
-                                    <Text style={styles.highlightText}>Chính sách bảo mật </Text>
-                                    của LuxBagPay
-                                </Text>
-
-                                <View style={styles.buttonContainer}>
-                                    <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
-                                        <Text style={styles.submitText}>Nạp tiền ngay</Text>
-                                    </TouchableOpacity>
-                                </View>
+        <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+            <ScrollView>
+                <View style={styles.container}>
+                    {showWebView && paymentUrl ? ( // Conditionally render WebView
+                        <View style={styles.webViewContainer}>
+                            <WebView
+                                source={{ uri: paymentUrl }}
+                                style={styles.webView}
+                                onNavigationStateChange={(event) => handleStatusPayment(event)}
+                            />
+                        </View>
+                    ) : (
+                        <View>
+                            <View style={styles.header}>
+                                <TouchableOpacity
+                                    style={styles.backButton}
+                                    onPress={() => {
+                                        if (type === "orderDetails") {
+                                            navigation.navigate("order-details", { postDetails: postDetails });
+                                        } else {
+                                            navigation.navigate('Profile');
+                                        }
+                                    }}
+                                >
+                                    <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
+                                </TouchableOpacity>
+                                <Text style={styles.headerText}>Nạp tiền</Text>
                             </View>
-                        )}
-                    </Formik>
+
+                            <Formik
+                                initialValues={{ amount: '' }}
+                                validationSchema={TopUpSchema}
+                                onSubmit={values => {
+                                    console.log('Raw amount:', removeDots(values.amount));
+                                    const amount = removeDots(values.amount);
+                                    handleSubmit(amount);
+                                    setAmount(amount);
+                                }}
+                            >
+                                {({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue }) => (
+                                    <View style={styles.wrapper}>
+                                        <View style={styles.money}>
+                                            <View style={styles.inputContainer}>
+                                                <Text style={styles.label}>Nhập số tiền (₫)</Text>
+                                                <View style={styles.amount}>
+                                                    <Text style={styles.unit}>₫</Text>
+                                                    <TextInput
+                                                        style={styles.input}
+                                                        onChangeText={(text) => {
+                                                            const rawAmount = text.replace(/\D/g, '');
+                                                            setFieldValue('amount', formatMoney(rawAmount));
+                                                            setActiveButton(null);
+                                                        }}
+                                                        onBlur={() => {
+                                                            const rawAmount = removeDots(values.amount);
+                                                            setFieldValue('amount', formatMoney(rawAmount));
+                                                        }}
+                                                        value={values.amount}
+                                                        placeholder="0"
+                                                        keyboardType="numeric"
+                                                    />
+                                                </View>
+                                                {errors.amount && <Text style={styles.error}>{errors.amount}</Text>}
+                                            </View>
+
+                                            <Text style={styles.balance}>Số dư ví hiện tại: ₫ {formatMoney(String(user?.wallet?.balance))}</Text>
+
+                                            <View style={styles.quickAmounts}>
+                                                {['100000', '200000', '500000', '1000000', '2000000', '5000000'].map((amount, index) => (
+                                                    <TouchableOpacity
+                                                        key={index}
+                                                        style={[
+                                                            styles.quickAmountButton,
+                                                            activeButton === index && styles.activeButton
+                                                        ]}
+                                                        onPress={() => {
+                                                            setFieldValue('amount', formatMoney(amount));
+                                                            setActiveButton(index);
+                                                        }}
+                                                    >
+                                                        <Text
+                                                            style={[
+                                                                styles.quickAmountButtonText,
+                                                                activeButton === index && styles.activeButtonText
+                                                            ]}
+                                                        >
+                                                            {formatMoney(amount)}
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                ))}
+                                            </View>
+                                            <View style={styles.divider} />
+                                            <TouchableOpacity style={styles.paymentMethod}>
+                                                <Icon name="wallet" type="entypo" color={COLORS.primary} />
+                                                <Text style={styles.paymentText}>Phương thức thanh toán</Text>
+                                                <Text style={styles.paymentMethodInfo}>Phương thức thanh toán ví VNPay</Text>
+                                            </TouchableOpacity>
+                                        </View>
+
+                                        <View style={styles.totalContainer}>
+                                            <View style={styles.total}>
+                                                <Text style={[styles.totalLabel, { fontSize: 16, color: "#aaa" }]}>Nạp tiền</Text>
+                                                <Text style={[styles.totalAmount, { fontSize: 16, color: "#aaa" }]}>₫{values.amount || '0'}</Text>
+                                            </View>
+                                            <View style={styles.total}>
+                                                <Text style={styles.totalLabel}>Tổng thanh toán</Text>
+                                                <Text style={[styles.totalAmount, { color: COLORS.primary }]}>₫{values.amount || '0'}</Text>
+                                            </View>
+                                        </View>
+
+                                        <Text style={styles.footerNote}>
+                                            Nhấn “Nạp tiền ngay”, bạn đã đồng ý tuân theo {" "}
+                                            <Text style={styles.highlightText}>Điều khoản sử dụng</Text> và {" "}
+                                            <Text style={styles.highlightText}>Chính sách bảo mật </Text>
+                                            của LuxBagPay
+                                        </Text>
+
+                                        <View style={styles.buttonContainer}>
+                                            <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
+                                                <Text style={styles.submitText}>Nạp tiền ngay</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                )}
+                            </Formik>
+                        </View>
+                    )}
                 </View>
-            )}
-        </View>
+            </ScrollView>
+            <CustomModalPost
+                visible={modalVisible}
+                onClose={() => {
+                    setModalVisible(false);
+                }}
+                onConfirm={modalContent.onConfirm}
+                title={modalContent.title}
+                detailText={modalContent.detailText}
+                confirmText={modalContent.confirmText}
+            />
+        </KeyboardAvoidingView>
+
     );
 };
 

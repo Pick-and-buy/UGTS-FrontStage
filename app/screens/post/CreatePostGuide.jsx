@@ -12,7 +12,6 @@ import CustomModal from '../../components/CustomModal';
 const CreatePostGuide = ({ navigation }) => {
 
     const { isAuthenticated, user } = useAuth();
-    const [isVerified, setisVerified] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [modalContent, setModalContent] = useState({
         title: '',
@@ -22,10 +21,6 @@ const CreatePostGuide = ({ navigation }) => {
         onConfirm: () => { },
         onClose: () => { }
     });
-
-    if (user?.isVerified) {
-        setisVerified(user?.isVerified);
-    }
 
     const validateImages = () => {
         let valid = true;
@@ -40,7 +35,8 @@ const CreatePostGuide = ({ navigation }) => {
             text = 'Đăng nhập';
             navigateText = 'login-navigation';
 
-        } else if (!isVerified) {
+        } else 
+        if (!user?.isVerified) {
             valid = false;
             message = 'Bạn cần xác thực bằng căn cước công dân để thực hiện tạo mới bài post';
             text = 'Xác Thực';

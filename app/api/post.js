@@ -64,60 +64,61 @@ export const createPost_Level_1 = async (formData) => {
   try {
     const token = await getAuthToken();
 
+    const response = await axiosInstance.post('posts/level-1', formData, {
 
-    const response = await fetch('http://192.168.1.6:8080/api/v1/posts/level-1', {
-
-
-      method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'multipart/form-data'
       },
-      body: formData,
     });
-    return response.json();
+
+    return response.data;
   } catch (error) {
     console.log('Error Create Post:', error);
+    throw error;  // Re-throw the error if needed for further handling
   }
-}
+};
+
 
 export const createPost_Level_2 = async (formData) => {
   try {
     const token = await getAuthToken();
 
-    const response = await fetch('http://192.168.1.6:8080/api/v1/posts/level-2', {
 
-      method: 'POST',
+    const response = await axiosInstance.post('posts/level-2', formData, {
+
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'multipart/form-data'
       },
-      body: formData,
     });
-    return response.json();
+
+    return response.data;
   } catch (error) {
     console.log('Error Create Post:', error);
+    throw error;  // Re-throw the error if needed for further handling
   }
-}
+};
 
 export const updatePost = async (id, formData) => {
   try {
     const token = await getAuthToken();
 
-    const response = await fetch(`http://192.168.1.6:8080/api/v1/posts/${id}`, {
 
-      method: 'PUT',
+    const response = await axiosInstance.put(`posts/${id}`, formData, {
+
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'multipart/form-data'
       },
-      body: formData,
     });
-    return response;
+
+    return response.data;
   } catch (error) {
-    console.log('Error Create Post:', error);
+    console.log('Error updating post:', error);
+    throw error;  // Re-throw the error if needed for further handling
   }
-}
+};
 
 const getAuthToken = async () => {
   try {

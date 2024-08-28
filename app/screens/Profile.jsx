@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, RefreshControl } from "react-native";
 import { COLORS, SIZES } from "../constants/theme";
-import { Ionicons, FontAwesome6, Octicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome6, Octicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
 import NetworkImage from "../components/NetworkImage";
@@ -12,6 +12,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from "../context/AuthContext";
 import { getRatingByUserId } from "../api/user";
 import { useFocusEffect } from "@react-navigation/native";
+import CustomModal from '../components/CustomModal';
 
 const Profile = ({ navigation }) => {
   const { logout, user, isAuthenticated, fetchUserData } = useAuth();
@@ -20,6 +21,16 @@ const Profile = ({ navigation }) => {
 
   const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
   const bkImg = "https://d326fntlu7tb1e.cloudfront.net/uploads/ab6356de-429c-45a1-b403-d16f7c20a0bc-bkImg-min.png";
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState({
+    title: '',
+    detailText: '',
+    confirmText: '',
+    cancelText: '',
+    onConfirm: () => { },
+    onClose: () => { }
+  });
 
   useEffect(() => {
     if (user) {
@@ -69,6 +80,40 @@ const Profile = ({ navigation }) => {
       .replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Add thousand separators
   };
 
+  const handleAddFund = () => {
+    if (user?.isVerified) {
+      navigation.navigate("add-funds")
+    } else {
+      setModalContent({
+        title: "Xác Thực",
+        detailText: 'Bạn cần xác thực bằng căn cước công dân để thực hiện nạp tiền vào ví',
+        confirmText: 'Xác Thực',
+        cancelText: "Thoát",
+        onConfirm: () => {
+          setModalVisible(false);
+          navigation.navigate('GetID');
+        },
+      });
+      setModalVisible(true);
+    }
+  }
+  const handleViewTransitionHistory = () => {
+    if (user?.isVerified) {
+      navigation.navigate("transaction-history")
+    } else {
+      setModalContent({
+        title: "Xác Thực",
+        detailText: 'Bạn cần xác thực bằng căn cước công dân để xem lịch sử các giao dịch',
+        confirmText: 'Xác Thực',
+        cancelText: "Thoát",
+        onConfirm: () => {
+          setModalVisible(false);
+          navigation.navigate('GetID');
+        },
+      });
+      setModalVisible(true);
+    }
+  }
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -203,25 +248,22 @@ const Profile = ({ navigation }) => {
             <>
               {/* After login */}
               <View style={styles.options}>
-                <TouchableOpacity style={styles.option}>
-                  <FontAwesome name="camera" size={24} color="gray" />
-                  <Text>Đã đăng</Text>
-                </TouchableOpacity>
+                {!user?.isVerified &&
+                  <TouchableOpacity style={styles.tip} onPress={() => navigation.navigate("GetID")}>
+                    <View style={styles.triangle} />
+                    <View style={styles.content}>
+                      <Text style={{ fontWeight: "bold", color: "white" }}>Xác minh tài khoản</Text>
+                      <Text style={{ color: "white", fontSize: 12 }}>Theo quy định, bạn cần cung cấp thông tin cá nhân để có thể mua bán sản phẩm</Text>
+                    </View>
+                    <View style={styles.needed}>
+                      <MaterialCommunityIcons name="shield-account" size={26} color="white" />
+                      <View style={styles.quickBtn}>
+                        <Text style={{ fontSize: 10 }}>Xác minh ngay</Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                }
 
-                <TouchableOpacity style={styles.option}>
-                  <FontAwesome name="shopping-bag" size={24} color="gray" />
-                  <Text>Đã mua</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.option}>
-                  <FontAwesome name="heart" size={24} color="gray" />
-                  <Text>Yêu thích</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.option}>
-                  <FontAwesome name="hashtag" size={24} color="gray" />
-                  <Text>Theo dõi</Text>
-                </TouchableOpacity>
               </View>
               <View style={{
                 flexDirection: "column",
@@ -239,7 +281,8 @@ const Profile = ({ navigation }) => {
                   marginVertical: 20,
                   marginHorizontal: "auto"
                 }}>
-                  <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
+                  <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
+                    onPress={handleViewTransitionHistory}>
                     <Ionicons name="document-text" size={26} color="gray" />
                     <Text style={{ fontSize: 16, marginTop: 10 }}>Lịch sử</Text>
                   </TouchableOpacity>
@@ -248,27 +291,30 @@ const Profile = ({ navigation }) => {
                     borderLeftWidth: 1,
                     borderColor: 'gray',
                   }}></View>
+
                   <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
-                    onPress={() => navigation.navigate("add-funds")}
+                    onPress={handleAddFund}
                   >
                     <AntDesign name="pluscircleo" size={26} color="black" />
                     <Text style={{ fontSize: 16, marginTop: 10 }}>Nạp tiền</Text>
                   </TouchableOpacity>
+
+
                 </View>
               </View>
-              <View
+              {/* <View
                 style={{
                   backgroundColor: COLORS.lightWhite,
                   margin: 10,
                   borderRadius: 12,
                 }}
               >
-                <ProfileTile title={"Lịch sử mặt hàng đã xem"} icon={"history"} font={3} isDivider={true} onPress={() => navigation.navigate("start-rating")} />
+                <ProfileTile title={"Lịch sử mặt hàng đã xem"} icon={"history"} font={3} isDivider={true}/>
                 <ProfileTile title={"Mặt hàng đã thích"} icon={"heart"} font={3} isDivider={true} />
                 <ProfileTile title={"Mặt hàng đã mua"} icon={"shopping-bag"} font={3} isDivider={true} />
                 <ProfileTile title={"Các bài đã đăng"} icon={"camera"} font={3} isDivider={true} />
                 <ProfileTile title={"Danh sách theo dõi"} icon={"hashtag"} font={3} />
-              </View>
+              </View> */}
 
               <View
                 style={{
@@ -289,7 +335,10 @@ const Profile = ({ navigation }) => {
                 />
                 <ProfileTile title={"Địa chỉ email"} icon={"email"} font={4} isDivider={true} />
                 <ProfileTile title={"Người dùng bị chặn"} icon={"block"} font={4} isDivider={true} />
-                <ProfileTile title={"Xác minh tài khoản"} icon={"verified-user"} font={4} isDivider={true} onPress={() => navigation.navigate("GetID")} />
+                {!user?.isVerified &&
+                  <ProfileTile title={"Xác minh tài khoản"} icon={"verified-user"} font={4} isDivider={true} onPress={() => navigation.navigate("GetID")} />
+                }
+
                 <ProfileTile title={"Xác thực vân tay / Khuôn mặt"} icon={"finger-print"} font={1} />
               </View>
 
@@ -361,6 +410,17 @@ const Profile = ({ navigation }) => {
 
         </View>
       </View>
+      <CustomModal
+        visible={modalVisible}
+        onClose={() => {
+          setModalVisible(false);
+        }}
+        onConfirm={modalContent.onConfirm}
+        title={modalContent.title}
+        detailText={modalContent.detailText}
+        confirmText={modalContent.confirmText}
+        cancelText={modalContent.cancelText}
+      />
     </ScrollView>
 
   );

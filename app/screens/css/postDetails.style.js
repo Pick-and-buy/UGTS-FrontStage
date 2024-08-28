@@ -88,6 +88,12 @@ const styles = StyleSheet.create({
     keyword: {
         color: COLORS.blue,
     },
+    info: {
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        gap: 5
+    },
     verified: {
         flexDirection: "row",
         alignItems: "center",
@@ -164,8 +170,8 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
     },
     commentBtnActive: {
-        width: '50%',
-        height: 30,
+        width: '100%',
+        height: 40,
         borderRadius: 5,
         overflow: 'hidden',
         backgroundColor: COLORS.white,
@@ -360,8 +366,33 @@ const styles = StyleSheet.create({
         flexWrap: "wrap",
         alignItems: "center",
         marginHorizontal: "auto",
-        marginBottom: "20%",
     },
+    evidence: {
+        width: "96%",
+        marginHorizontal: "auto",
+    },
+    evidenceImage: {
+        width: "100%",
+        height: 250,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    imageSelect: {
+        width: "96%",
+        height: "96%",
+        objectFit: "contain"
+    },
+    evidenceVideo: {
+        width: "100%",
+        height: 250,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    videoSelect: {
+        width: "96%",
+        height: "96%",
+    }
+
 });
 
 export default styles;

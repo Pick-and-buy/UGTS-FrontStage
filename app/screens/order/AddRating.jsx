@@ -3,19 +3,37 @@ import { StyleSheet, View, Text, Image, TextInput, TouchableOpacity, Alert, Scro
 import { RatingInput } from "react-native-stock-star-rating";
 import { COLORS } from "../../constants/theme";
 import { ratingUser } from "../../api/user";
+import CustomModalPost from "../../components/CustomModalPost";
 
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
 const AddRating = ({ navigation, orderInfo }) => {
   const [rating, setRating] = useState(1);
   const [review, setReview] = useState("");
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState({
+    title: '',
+    detailText: '',
+    confirmText: '',
+    cancelText: '',
+    onConfirm: () => { },
+    onClose: () => { }
+  });
   // console.log(orderInfo.id);
   const fetchRating = async (ratingLabel) => {
     try {
-      const response = await ratingUser(ratingLabel, review, orderInfo?.buyer?.id, orderInfo?.post?.user?.id, orderInfo?.id);
-      // console.log(response);
-      alert("Cảm ơn bạn đã để lại đánh giá")
-      navigation.navigate("bottom-navigation")
+      await ratingUser(ratingLabel, review, orderInfo?.buyer?.id, orderInfo?.post?.user?.id, orderInfo?.id);
+      setModalContent({
+        title: "Thông báo",
+        detailText: "Cảm ơn bạn đã để lại đánh giá",
+        confirmText: "Ok",
+        onConfirm: () => {
+          setModalVisible(false);
+          navigation.navigate("bottom-navigation")
+        },
+      });
+      setModalVisible(true);
     } catch (error) {
       console.log('Fetching rating failed:', error.response ? error.response.data : error.message);
     }
@@ -46,43 +64,54 @@ const AddRating = ({ navigation, orderInfo }) => {
   };
 
   return (
-      <View style={styles.container}>
-        <View style={styles.imageWrapper}>
-          <Image
-            style={styles.image}
-            source={{ uri: orderInfo?.post?.user?.avatar ? orderInfo?.post?.user?.avatar : profile }}
-          />
-        </View>
-        <View style={styles.seller}>
-          <Text style={styles.sellerTitle}>
-            {orderInfo?.post?.user?.lastName} {orderInfo?.post?.user?.firstName}
-          </Text>
-        </View>
-        <View style={styles.ratingBox}>
-          <RatingInput
-            rating={rating}
-            color={COLORS.yellow}
-            setRating={setRating}
-            size={50}
-            maxStars={5}
-            bordered={false}
-          />
-          <TextInput
-            style={styles.textInput}
-            placeholder="Viết đánh giá của bạn..."
-            value={review}
-            onChangeText={setReview}
-            multiline
-          />
-        </View>
-        <View style={{ height: 50 }} />
-        <TouchableOpacity
-          style={styles.submitButton}
-          onPress={handleSubmitRating}
-        >
-          <Text style={styles.small}>Gửi đánh giá</Text>
-        </TouchableOpacity>
+    <View style={styles.container}>
+      <View style={styles.imageWrapper}>
+        <Image
+          style={styles.image}
+          source={{ uri: orderInfo?.post?.user?.avatar ? orderInfo?.post?.user?.avatar : profile }}
+        />
       </View>
+      <View style={styles.seller}>
+        <Text style={styles.sellerTitle}>
+          {orderInfo?.post?.user?.lastName} {orderInfo?.post?.user?.firstName}
+        </Text>
+      </View>
+      <View style={styles.ratingBox}>
+        <RatingInput
+          rating={rating}
+          color={COLORS.yellow}
+          setRating={setRating}
+          size={50}
+          maxStars={5}
+          bordered={false}
+        />
+        <TextInput
+          style={styles.textInput}
+          placeholder="Viết đánh giá của bạn..."
+          value={review}
+          onChangeText={setReview}
+          multiline
+        />
+      </View>
+      <View style={{ height: 50 }} />
+      <TouchableOpacity
+        style={styles.submitButton}
+        onPress={handleSubmitRating}
+      >
+        <Text style={styles.small}>Gửi đánh giá</Text>
+      </TouchableOpacity>
+
+      <CustomModalPost
+        visible={modalVisible}
+        onClose={() => {
+          setModalVisible(false);
+        }}
+        onConfirm={modalContent.onConfirm}
+        title={modalContent.title}
+        detailText={modalContent.detailText}
+        confirmText={modalContent.confirmText}
+      />
+    </View>
   );
 };
 

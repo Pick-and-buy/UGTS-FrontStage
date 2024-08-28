@@ -51,9 +51,8 @@ export const updateOrderBuyer = async (orderInfo, selectedAddress) => {
     }
 };
 
-export const cancelOrderBuyer = async (orderInfo, selectedAddress) => {
+export const cancelOrderBuyer = async (orderInfo) => {
     try {
-
         const response = await axiosInstance.put(`/orders/details?orderId=${orderInfo.id}`, {
             orderStatus: "CANCELLED",
             firstName: orderInfo?.orderDetails?.firstName,
@@ -61,11 +60,11 @@ export const cancelOrderBuyer = async (orderInfo, selectedAddress) => {
             email: orderInfo?.orderDetails?.email,
             phoneNumber: orderInfo?.orderDetails?.phoneNumber,
             address: {
-                street: selectedAddress?.street,
-                district: selectedAddress?.district,
-                province: selectedAddress?.province,
-                country: selectedAddress?.country,
-                addressLine: selectedAddress?.addressLine
+                street: orderInfo?.orderDetails?.address?.street,
+                district: orderInfo?.orderDetails?.address?.district,
+                province: orderInfo?.orderDetails?.address?.province,
+                country: orderInfo?.orderDetails?.address?.country,
+                addressLine: orderInfo?.orderDetails?.address?.addressLine
             },
             post: {
                 id: orderInfo?.post?.id
@@ -137,15 +136,15 @@ export const updateOrderSeller = async (orderId) => {
 export const uploadReceivePackageVideoByBuyer = async (orderId, formData) => {
     try {
         const token = await getAuthToken();
-        const response = await fetch(`http://192.168.1.6:8080/api/v1/orders/package-video?orderId=${orderId}`, {
-            method: 'PUT',
+
+        const response = await axiosInstance.put(`orders/package-video?orderId=${orderId}`, formData, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data'
             },
-            body: formData,
         });
-        return response;
+
+        return response.data;
     } catch (error) {
         console.log('Error Update Receive Package Video:', error);
         throw error;
@@ -155,15 +154,15 @@ export const uploadReceivePackageVideoByBuyer = async (orderId, formData) => {
 export const uploadPackageVideoBySeller = async (orderId, formData) => {
     try {
         const token = await getAuthToken();
-        const response = await fetch(`http://192.168.1.6:8080/api/v1/orders/package-video?orderId=${orderId}`, {
-            method: 'PUT',
+
+        const response = await axiosInstance.put(`orders/package-video?orderId=${orderId}`, formData, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data'
             },
-            body: formData,
         });
-        return response;
+
+        return response.data;
     } catch (error) {
         console.log('Error Update Receive Package Video:', error);
         throw error;

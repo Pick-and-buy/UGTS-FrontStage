@@ -103,26 +103,19 @@ export const sendImageToAPI = async (imageUri, userId, authToken) => {
   });
 
   try {
-    const response = await fetch(`http://10.0.2.2:8080/api/v1/users/${userId}/avatar`, {
-      method: 'PUT',
+    const response = await axiosInstance.put(`users/${userId}/avatar`, formData, {
       headers: {
         'Authorization': `Bearer ${authToken}`,
         'Accept': 'application/json',
         'Content-Type': 'multipart/form-data'
       },
-      body: formData
     });
 
-    if (!response.ok) {
-      throw new Error(`Network request failed with status ${response.status}`);
-    }
-
-    const responseData = await response.json();
-    // console.log(responseData);
-    return responseData;
+    return response.data;
   } catch (error) {
     console.log("Error uploading image: ", error);
     Alert.alert("Error", "Failed to upload image. Please try again.");
+    throw error;  // Re-throw the error if needed for further handling
   }
 };
 

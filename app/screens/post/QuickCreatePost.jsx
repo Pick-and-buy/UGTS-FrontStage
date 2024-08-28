@@ -10,6 +10,8 @@ import {
     FlatList,
     ImageBackground,
     Alert,
+    KeyboardAvoidingView,
+    Platform,
     // Button,
 } from "react-native";
 import { FontAwesome, AntDesign, MaterialCommunityIcons, FontAwesome6, Ionicons } from '@expo/vector-icons';
@@ -27,6 +29,8 @@ import { getAllBrandLinesByBrandName } from "../../api/brandLine";
 import * as ImagePicker from "expo-image-picker";
 import { Video } from 'expo-av';
 import Checkbox from 'expo-checkbox';
+import CustomModalPost from '../../components/CustomModalPost';
+import CreatePostGuideVerify from "./CreatePostGuideVerify";
 
 const QuickCreatePost = () => {
     const navigation = useNavigation();
@@ -64,6 +68,16 @@ const QuickCreatePost = () => {
 
     const [loader, setLoader] = useState(false);
     const [isDataLoaded, setIsDataLoaded] = useState(false); // Add state to track data loading
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState({
+        title: '',
+        detailText: '',
+        confirmText: '',
+        cancelText: '',
+        onConfirm: () => { },
+        onClose: () => { }
+    });
 
     const [isChecked_2, setChecked_2] = useState(false);
     const [isChecked_3, setChecked_3] = useState(false);
@@ -150,16 +164,16 @@ const QuickCreatePost = () => {
     });
 
     const dataProductCondition = [
-        { label: 'BRAND_NEW', value: 'BRAND_NEW' },
-        { label: 'EXCELLENT', value: 'EXCELLENT' },
-        { label: 'VERY_GOOD', value: 'VERY_GOOD' },
-        { label: 'GOOD', value: 'GOOD' },
-        { label: 'FAIR', value: 'FAIR' },
+        { label: 'Hàng Mới', value: 'BRAND_NEW' },
+        { label: 'Like New', value: 'EXCELLENT' },
+        { label: 'Còn Tốt', value: 'VERY_GOOD' },
+        { label: 'Dùng được', value: 'GOOD' },
+        { label: 'Hàng cũ', value: 'FAIR' },
     ];
 
     const dataSize = [
         { label: 'Small', value: 'Small' },
-        { label: 'Media', value: 'Media' },
+        { label: 'Medium', value: 'Medium' },
         { label: 'Large', value: 'Large' },
         { label: 'Extra Large', value: 'Extra Large' },
     ];
@@ -289,7 +303,7 @@ const QuickCreatePost = () => {
                 } else {
                     res = await createPost_Level_1(formData);
                 }
-                
+
                 setIsDataLoaded(false);
                 navigation.navigate('post-details', { postId: res?.result?.id })
                 setImages([
@@ -329,11 +343,15 @@ const QuickCreatePost = () => {
                     lastPriceForSeller: '',
                 })
             } else {
-                Alert.alert(
-                    "Thiếu thông tin",
-                    message,
-                    [{ text: "OK" }]
-                );
+                setModalContent({
+                    title: "Thiếu thông tin",
+                    detailText: message,
+                    confirmText: "Ok",
+                    onConfirm: () => {
+                        setModalVisible(false);
+                    },
+                });
+                setModalVisible(true);
             }
         } catch (error) {
             console.log('ERROR handle create post: ', error);
@@ -439,11 +457,11 @@ const QuickCreatePost = () => {
 
     if (isDataLoaded) {
         return (
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Loading...</Text>
-          </View>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text>Loading...</Text>
+            </View>
         );
-      }
+    }
 
     const renderImages = ({ item, index }) => {
         return (
@@ -484,204 +502,203 @@ const QuickCreatePost = () => {
     };
 
     return (
-        <View style={styles.container}>
-            {/* Header */}
-            <View style={styles.headerContainer}>
-                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-                    <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
-                </TouchableOpacity>
-                <Text style={styles.textName}>Thông tin bài đăng</Text>
-            </View>
-            <View style={styles.shadow} />
-            <Formik
-                initialValues={{
 
-                    // title: '', 
-                    productName: '', brandName: '', brandLineName: '', condition: '',
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+            <ScrollView>
 
-                    category: '', exteriorMaterial: '', interiorMaterial: '', size: '', color: '',
-                    description: '', price: '',
-                }}
-                validationSchema={validationSchema}
-                onSubmit={handleCreatePost}
-            >
-                {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue, setFieldTouched }) => {
+                <View style={styles.container}>
+                    {/* Header */}
+                    <View style={styles.headerContainer}>
+                        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                            <MaterialCommunityIcons name="keyboard-backspace" size={28} color="black" />
+                        </TouchableOpacity>
+                        <Text style={styles.textName}>Thông tin bài đăng</Text>
+                    </View>
+                    <View style={styles.shadow} />
+                    <Formik
+                        initialValues={{
 
-                    const formatFeeBoosted = formatPrice(feeBoosted);
-                    const formatFeeLegitgrails = formatPrice(feeLegitgrails);
+                            // title: '', 
+                            productName: '', brandName: '', brandLineName: '', condition: '',
 
-                    const lastPriceBoth = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted - feeLegitgrails : '';
-                    const lastPriceLegitgrails = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeLegitgrails : '';
-                    const lastPriceBoosted = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted : '';
-                    
-                    let formatlLastPriceForSeller = "";
-                    if (isChecked_3 && isBoosted) {
-                        formatlLastPriceForSeller = formatPrice(lastPriceBoth);
-                    } else if (isBoosted) {
-                        formatlLastPriceForSeller = formatPrice(lastPriceBoosted);
-                    } else if (isChecked_3) {
-                        formatlLastPriceForSeller = formatPrice(lastPriceLegitgrails);
-                    }
+                            category: '', exteriorMaterial: '', interiorMaterial: '', size: '', color: '',
+                            description: '', price: '',
+                        }}
+                        validationSchema={validationSchema}
+                        onSubmit={handleCreatePost}
+                    >
+                        {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue, setFieldTouched }) => {
 
-                    return (
-                        <ScrollView style={styles.wrapper}>
-                            {/* Image Upload */}
-                            <Text
-                                style={styles.labelText}
-                            >Tải lên ảnh sản phẩm
-                                <Text style={{ color: 'red', fontSize: 18, fontFamily: 'bold' }}> *</Text>
-                            </Text>
-                            <View style={styles.imageUploadContaniner}>
-                                <View style={styles.imageUpload}>
-                                    <FlatList
-                                        data={images}
-                                        keyExtractor={(item, index) => index.toString()}
-                                        horizontal
-                                        renderItem={renderImages}
-                                    />
-                                </View>
-                            </View>
+                            const formatFeeBoosted = formatPrice(feeBoosted);
+                            const formatFeeLegitgrails = formatPrice(feeLegitgrails);
 
-                            {/* Check box */}
-                            <View style={styles.checkboxContainer}>
-                                <View style={{ width: "100%", flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
-                                    <Text style={[styles.labelText, { marginLeft: 0 }]}>Các mức xác minh</Text>
-                                    <TouchableOpacity
-                                        onPress={() => console.warn("Quy Tắc")}
-                                    >
-                                        <FontAwesome6 name="circle-question" size={14} color="gray" />
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={styles.checkboxView}>
-                                    <Checkbox
-                                        value={isChecked_2}
-                                        onValueChange={setChecked_2}
-                                    />
-                                    <Text style={styles.textVerified}>Xác minh cấp 2</Text>
-                                </View>
+                            const lastPriceBoth = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted - feeLegitgrails : '';
+                            const lastPriceLegitgrails = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeLegitgrails : '';
+                            const lastPriceBoosted = values.price ? parseInt(values.price.replace(/\./g, ""), 10) - feeBoosted : '';
 
-                                <View style={styles.checkboxView}>
-                                    <Checkbox
-                                        value={isChecked_3}
-                                        onValueChange={setChecked_3}
-                                    />
-                                    <Text style={styles.textVerified}>Xác minh cấp 3</Text>
-                                </View>
-                            </View>
+                            let formatlLastPriceForSeller = "";
+                            if (isChecked_3 && isBoosted) {
+                                formatlLastPriceForSeller = formatPrice(lastPriceBoth);
+                            } else if (isBoosted) {
+                                formatlLastPriceForSeller = formatPrice(lastPriceBoosted);
+                            } else if (isChecked_3) {
+                                formatlLastPriceForSeller = formatPrice(lastPriceLegitgrails);
+                            }
 
-                            {isChecked_2 ?
-                                (
+                            return (
+                                <ScrollView style={styles.wrapper}>
+                                    {/* Image Upload */}
+                                    <Text
+                                        style={styles.labelText}
+                                    >Tải lên ảnh sản phẩm
+                                        <Text style={{ color: 'red', fontSize: 18, fontFamily: 'bold' }}> *</Text>
+                                    </Text>
+                                    <View style={styles.imageUploadContaniner}>
+                                        <View style={styles.imageUpload}>
+                                            <FlatList
+                                                data={images}
+                                                keyExtractor={(item, index) => index.toString()}
+                                                horizontal
+                                                renderItem={renderImages}
+                                            />
+                                        </View>
+                                    </View>
+
+                                    {/* Check box */}
                                     <View style={styles.checkboxContainer}>
-                                        <View style={{ width: "100%", flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
-                                            <Text style={styles.labelText}>Bạn cần bổ sung ở cấp 2</Text>
-                                            {/* <TouchableOpacity
+                                        {/* Pop-up guide */}
+                                        <CreatePostGuideVerify />
+                                        <View style={styles.checkboxView}>
+                                            <Checkbox
+                                                value={isChecked_2}
+                                                onValueChange={(newValue) => {
+                                                    setChecked_2(newValue);
+                                                    if (!newValue) {
+                                                        setBoosted(false);
+                                                    }
+                                                }}
+                                            />
+                                            <Text style={styles.textVerified}>Xác minh cấp 2</Text>
+                                        </View>
+
+                                        <View style={styles.checkboxView}>
+                                            <Checkbox
+                                                value={isChecked_3}
+                                                onValueChange={setChecked_3}
+                                            />
+                                            <Text style={styles.textVerified}>Xác minh cấp 3</Text>
+                                        </View>
+                                    </View>
+
+                                    {isChecked_2 ?
+                                        (
+                                            <View style={styles.checkboxContainer}>
+                                                <View style={{ width: "100%", flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
+                                                    <Text style={styles.labelText}>Bạn cần bổ sung ở cấp 2</Text>
+                                                    {/* <TouchableOpacity
                           onPress={() => console.warn("Quy Tắc")}
                         >
                           <FontAwesome6 name="circle-question" size={14} color="gray" />
                         </TouchableOpacity> */}
-                                        </View>
-                                        <View View style={styles.selectOption}>
-                                            {invoice === "" ? (
-                                                <TouchableOpacity
-                                                    onPress={onGalleryUploadInvoice}
-                                                    style={styles.uploadContainer}>
-                                                    <Image
-                                                        style={styles.imageSelect}
-                                                        source={require('../../../assets/images/gallery.png')}
-                                                    />
-                                                    <Text style={{ fontSize: 16 }}>Ảnh hóa đơn</Text>
-                                                </TouchableOpacity>
-                                            )
-                                                :
-                                                (
-                                                    <View style={styles.uploadInvoiceContainer}>
-                                                        <ImageBackground
-                                                            style={styles.uploadInvoice}
-                                                            source={{ uri: invoice }}
-                                                        >
-                                                            <TouchableOpacity onPress={() => removeInvoice()}>
-                                                                <FontAwesome6 style={[styles.xmark, { left: 15, top: 5 }]} name="xmark" size={20} color="white" />
-                                                            </TouchableOpacity>
-                                                        </ImageBackground>
-                                                    </View>
-                                                )
-                                            }
-
-                                            {videoUri === "" ? (
-                                                <TouchableOpacity
-                                                    onPress={UploadVideoScreen}
-                                                    style={styles.uploadContainer}>
-                                                    <Image
-                                                        style={styles.imageSelect}
-                                                        source={require('../../../assets/images/video-player.png')}
-                                                    />
-                                                    <Text style={{ fontSize: 16 }}>Video chi tiết</Text>
-                                                </TouchableOpacity>
-                                            )
-                                                :
-                                                (
-                                                    <View style={styles.uploadVideoContainer}>
-                                                        <Video
-                                                            source={{ uri: videoUri }}
-                                                            style={{ width: '100%', height: '100%' }}
-                                                            // style={styles.uploadVideo}
-                                                            useNativeControls
-                                                            resizeMode="cover"
-                                                            shouldPlay
-                                                            isLooping
-                                                            isMuted={isMuted} // Set initial state to mute
-                                                            onPlaybackStatusUpdate={(status) => {
-                                                                if (!status.isPlaying && status.isMuted !== isMuted) {
-                                                                    setIsMuted(true); // Ensure the video starts muted
-                                                                }
-                                                            }}
-                                                        />
-                                                        <TouchableOpacity onPress={() => removeVideo()} style={{ position: 'absolute', bottom: 10, left: 15 }}>
-                                                            <FontAwesome6 name="xmark" size={20} color="white" />
+                                                </View>
+                                                <View View style={styles.selectOption}>
+                                                    {invoice === "" ? (
+                                                        <TouchableOpacity
+                                                            onPress={onGalleryUploadInvoice}
+                                                            style={styles.uploadContainer}>
+                                                            <Image
+                                                                style={styles.imageSelect}
+                                                                source={require('../../../assets/images/gallery.png')}
+                                                            />
+                                                            <Text style={{ fontSize: 16 }}>Ảnh hóa đơn</Text>
                                                         </TouchableOpacity>
-                                                    </View>
-                                                )
-                                            }
+                                                    )
+                                                        :
+                                                        (
+                                                            <View style={styles.uploadInvoiceContainer}>
+                                                                <ImageBackground
+                                                                    style={styles.uploadInvoice}
+                                                                    source={{ uri: invoice }}
+                                                                >
+                                                                    <TouchableOpacity onPress={() => removeInvoice()}>
+                                                                        <FontAwesome6 style={[styles.xmark, { left: 15, top: 5 }]} name="xmark" size={20} color="white" />
+                                                                    </TouchableOpacity>
+                                                                </ImageBackground>
+                                                            </View>
+                                                        )
+                                                    }
+
+                                                    {videoUri === "" ? (
+                                                        <TouchableOpacity
+                                                            onPress={UploadVideoScreen}
+                                                            style={styles.uploadContainer}>
+                                                            <Image
+                                                                style={styles.imageSelect}
+                                                                source={require('../../../assets/images/video-player.png')}
+                                                            />
+                                                            <Text style={{ fontSize: 16 }}>Video chi tiết</Text>
+                                                        </TouchableOpacity>
+                                                    )
+                                                        :
+                                                        (
+                                                            <View style={styles.uploadVideoContainer}>
+                                                                <Video
+                                                                    source={{ uri: videoUri }}
+                                                                    style={{ width: '100%', height: '100%' }}
+                                                                    // style={styles.uploadVideo}
+                                                                    useNativeControls
+                                                                    resizeMode="cover"
+                                                                    shouldPlay
+                                                                    isLooping
+                                                                    isMuted={isMuted} // Set initial state to mute
+                                                                    onPlaybackStatusUpdate={(status) => {
+                                                                        if (!status.isPlaying && status.isMuted !== isMuted) {
+                                                                            setIsMuted(true); // Ensure the video starts muted
+                                                                        }
+                                                                    }}
+                                                                />
+                                                                <TouchableOpacity onPress={() => removeVideo()} style={{ position: 'absolute', bottom: 10, left: 15 }}>
+                                                                    <FontAwesome6 name="xmark" size={20} color="white" />
+                                                                </TouchableOpacity>
+                                                            </View>
+                                                        )
+                                                    }
+                                                </View>
+                                                <View style={styles.shadow}></View>
+                                            </View>
+                                        )
+                                        :
+                                        (
+                                            <View></View>
+                                        )
+                                    }
+
+                                    {isChecked_3 && (
+                                        <View style={styles.checkboxContainer}>
+                                            <View style={{ width: "100%", flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
+                                                <Text style={styles.labelText}>Bạn cần bổ sung ở cấp 3</Text>
+                                            </View>
+                                            <View View style={styles.selectOption}>
+                                                <Text style={styles.labelText}>Ở xác minh cấp 3 bạn nên bổ sung đầy đủ ảnh chi tiết cho sản phẩm.
+                                                    Chúng tôi sẽ gửi thông tin sản phẩm của bạn đến LEGITGRAILS để xác nhận đó là hàng chính hãng.
+                                                    Phí dịch vụ sẽ là <Text style={{ color: "red" }}>{formatPrice(feeLegitgrails)}đ</Text>
+                                                </Text>
+                                            </View>
+
+                                            <View style={styles.shadow}></View>
                                         </View>
-                                        <View style={styles.shadow}></View>
+                                    )
+
+                                    }
+                                    <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
+                                        <Text style={styles.labelText}>Thông tin sản phẩm</Text>
                                     </View>
-                                )
-                                :
-                                (
-                                    <View></View>
-                                )
-                            }
-
-                            {isChecked_3 && (
-                                <View style={styles.checkboxContainer}>
-                                    <View style={{ width: "100%", flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
-                                        <Text style={styles.labelText}>Bạn cần bổ sung ở cấp 3</Text>
-                                    </View>
-                                    <View View style={styles.selectOption}>
-                                        <Text style={styles.labelText}>Ở xác minh cấp 3 bạn nên bổ sung đầy đủ ảnh chi tiết cho sản phẩm.
-                                            Chúng tôi sẽ gửi thông tin sản phẩm của bạn đến LEGITGRAILS để xác nhận đó là hàng chính hãng.
-                                            Phí dịch vụ sẽ là <Text style={{ color: "red" }}>{formatPrice(feeLegitgrails)}đ</Text>
-                                        </Text>
-                                    </View>
-
-                                    <View style={styles.shadow}></View>
-                                </View>
-                            )
-
-                            }
-                            <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start', gap: 5 }}>
-                                <Text style={styles.labelText}>Thông tin sản phẩm</Text>
-                                <TouchableOpacity
-                                    onPress={() => console.warn("Quy Tắc")}
-                                >
-                                    <FontAwesome6 name="circle-question" size={14} color="gray" />
-                                </TouchableOpacity>
-
-                            </View>
-                            {/* Product Information */}
-                            <View style={styles.productContainer}>
-                                {/* Title */}
-                                {/* <View style={styles.productField}>
+                                    {/* Product Information */}
+                                    <View style={styles.productContainer}>
+                                        {/* Title */}
+                                        {/* <View style={styles.productField}>
                                     <Text style={styles.title}>Tiêu đề sản phẩm <Text style={styles.required}>*</Text></Text>
                                     <TextInput
                                         value={values.title}
@@ -701,260 +718,291 @@ const QuickCreatePost = () => {
                                     )}
                                 </View> */}
 
-                                {/* Tên sản phẩm */}
-                                <View style={styles.productField}>
-                                    <Text style={styles.title}>Tên sản phẩm <Text style={styles.required}>*</Text></Text>
-                                    <TextInput
-                                        value={values.productName}
-                                        placeholder="..."
-                                        style={styles.inputProduct}
-                                        onFocus={() => {
-                                            setFieldTouched("productName");
-                                        }}
-                                        onBlur={() => {
-                                            setFieldTouched("productName", "");
-                                        }}
-                                        onChangeText={handleChange("productName")}
-                                        autoCorrect={false}
-                                    />
-                                    {touched.productName && errors.productName && (
-                                        <Text style={styles.errorText}>{errors.productName}</Text>
-                                    )}
-                                </View>
-
-
-                                {/* Brand Name */}
-                                <View style={styles.dropdownContainer}>
-                                    <Text style={styles.label}>Nhãn Hàng <Text style={styles.required}>*</Text></Text>
-                                    <Dropdown
-                                        placeholderStyle={{ color: "#ccc" }}
-                                        iconColor={COLORS.primary}
-                                        placeholder="Bấm để chọn nhãn hàng"
-                                        style={styles.dropdown}
-                                        data={listBrandName}
-                                        labelField="label"
-                                        valueField="value"
-                                        value={values.brandName}
-                                        onChange={(item) => {
-                                            setFieldValue('brandName', item.value);
-                                            setSelectedBrand(item.value);
-                                        }}
-                                    />
-                                    {touched.brandName && errors.brandName && (
-                                        <Text style={styles.errorText}>{errors.brandName}</Text>
-                                    )}
-                                </View>
-
-
-                                {/* Brand Line */}
-                                <View style={styles.dropdownContainer}>
-                                    <Text style={styles.label}>Dòng Thương Hiệu <Text style={styles.required}>*</Text></Text>
-                                    <Dropdown
-                                        placeholderStyle={{ color: "#ccc" }}
-                                        placeholder="Bấm để chọn dòng thương hiệu"
-                                        iconColor={COLORS.primary}
-                                        style={styles.dropdown}
-                                        data={listBrandLines}
-                                        labelField="label"
-                                        valueField="value"
-                                        value={values.brandLineName}
-                                        onChange={(item) => {
-                                            setFieldValue('brandLineName', item.value);
-                                            setSelectedBrandLine(item.value);
-                                        }}
-                                    />
-                                    {touched.brandLineName && errors.brandLineName && (
-                                        <Text style={styles.errorText}>{errors.brandLineName}</Text>
-                                    )}
-                                </View>
-
-
-                                {/* Category Name */}
-                                <View style={styles.dropdownContainer}>
-                                    <Text style={styles.label}>Thể Loại <Text style={styles.required}>*</Text></Text>
-                                    <Dropdown
-                                        placeholder="Bấm để chọn thể loại"
-                                        placeholderStyle={{ color: "#ccc" }}
-                                        iconColor={COLORS.primary}
-                                        style={styles.dropdown}
-                                        data={listCategory}
-                                        labelField="label"
-                                        valueField="value"
-                                        value={values.category}
-                                        onChange={(item) => {
-                                            setFieldValue('category', item.value);
-                                        }}
-                                    />
-                                    {touched.category && errors.category && (
-                                        <Text style={styles.errorText}>{errors.category}</Text>
-                                    )}
-                                </View>
-
-
-                                {/* Trạng Thái Sản Phẩm */}
-                                <View style={styles.dropdownContainer}>
-                                    <Text style={styles.label}>Trạng Thái Sản Phẩm <Text style={styles.required}>*</Text></Text>
-                                    <Dropdown
-                                        placeholder="Bấm để chọn trạng thái sản phẩm"
-                                        placeholderStyle={{ color: "#ccc" }}
-                                        iconColor={COLORS.primary}
-                                        style={styles.dropdown}
-                                        data={dataProductCondition}
-                                        labelField="label"
-                                        valueField="value"
-                                        value={values.condition}
-                                        onChange={(item) => {
-                                            setFieldValue('condition', item.value);
-                                        }}
-                                    />
-                                    {touched.condition && errors.condition && (
-                                        <Text style={styles.errorText}>{errors.condition}</Text>
-                                    )}
-                                </View>
-                            </View>
-
-                            {/* Boosted */}
-                            <View style={{ marginTop: 10 }}>
-                                <Text style={styles.labelText}>Dịch Vụ Quảng Cáo Boosted</Text>
-                            </View>
-                            <View style={styles.checkboxBoostedContainer}>
-                                <View style={styles.checkboxBoosted}>
-                                    <Checkbox
-                                        value={isBoosted}
-                                        onValueChange={setBoosted}
-                                    />
-                                    <Text style={{ textAlign: 'center' }}>Boosted</Text>
-                                </View>
-                                {isBoosted ?
-                                    (
-                                        <View style={{ width: "100%" }}>
-                                            <Text style={styles.labelText}>
-                                                Chúng tôi sử dụng dịch vụ quảng cáo cho phép sản phẩm của bạn được hiển thị lên đầu ứng dụng.
-                                                Phí dịch vụ sẽ là <Text style={{ color: "red" }}>{formatPrice(feeBoosted)}đ</Text>
-                                            </Text>
+                                        {/* Tên sản phẩm */}
+                                        <View style={styles.productField}>
+                                            <Text style={styles.title}>Tên sản phẩm <Text style={styles.required}>*</Text></Text>
+                                            <TextInput
+                                                value={values.productName}
+                                                placeholder="..."
+                                                style={styles.inputProduct}
+                                                onFocus={() => {
+                                                    setFieldTouched("productName");
+                                                }}
+                                                onBlur={() => {
+                                                    setFieldTouched("productName", "");
+                                                }}
+                                                onChangeText={handleChange("productName")}
+                                                autoCorrect={false}
+                                            />
+                                            {touched.productName && errors.productName && (
+                                                <Text style={[styles.errorText, { marginLeft: 10 }]}>{errors.productName}</Text>
+                                            )}
                                         </View>
-                                    )
-                                    :
-                                    (
-                                        <View>
+
+
+                                        {/* Brand Name */}
+                                        <View style={styles.dropdownContainer}>
+                                            <Text style={styles.label}>Nhãn Hàng <Text style={styles.required}>*</Text></Text>
+                                            <Dropdown
+                                                placeholderStyle={{ color: "#ccc" }}
+                                                iconColor={COLORS.primary}
+                                                placeholder="Bấm để chọn nhãn hàng"
+                                                style={styles.dropdown}
+                                                data={listBrandName}
+                                                labelField="label"
+                                                valueField="value"
+                                                value={values.brandName}
+                                                onChange={(item) => {
+                                                    setFieldValue('brandName', item.value);
+                                                    setSelectedBrand(item.value);
+                                                }}
+                                            />
+                                            {touched.brandName && errors.brandName && (
+                                                <Text style={styles.errorText}>{errors.brandName}</Text>
+                                            )}
                                         </View>
-                                    )
-                                }
-
-                            </View>
 
 
-                            {/* Shipping information */}
-                            <View style={styles.shippingInformation}>
-                                <Text style={styles.labelText}>Thông Tin Thanh Toán</Text>
-                                <TouchableOpacity
-                                    onPress={() => console.warn("Quy Tắc")}
-                                >
-                                    <FontAwesome6 name="circle-question" size={14} color="gray" />
-                                </TouchableOpacity>
-                            </View>
+                                        {/* Brand Line */}
+                                        <View style={styles.dropdownContainer}>
+                                            <Text style={styles.label}>Dòng Thương Hiệu <Text style={styles.required}>*</Text></Text>
+                                            <Dropdown
+                                                placeholderStyle={{ color: "#ccc" }}
+                                                placeholder="Bấm để chọn dòng thương hiệu"
+                                                iconColor={COLORS.primary}
+                                                style={styles.dropdown}
+                                                data={listBrandLines}
+                                                labelField="label"
+                                                valueField="value"
+                                                value={values.brandLineName}
+                                                onChange={(item) => {
+                                                    setFieldValue('brandLineName', item.value);
+                                                    setSelectedBrandLine(item.value);
+                                                }}
+                                            />
+                                            {touched.brandLineName && errors.brandLineName && (
+                                                <Text style={styles.errorText}>{errors.brandLineName}</Text>
+                                            )}
+                                        </View>
 
-                            <View style={styles.summary}>
-                                {/* price */}
-                                <View style={styles.productField}>
-                                    <Text style={styles.title}>Giá Tiền (VND) <Text style={styles.required}>*</Text></Text>
-                                    <TextInput
-                                        keyboardType='number-pad'
-                                        value={values.price}
-                                        placeholder="Nhập giá tiền"
-                                        style={[styles.inputProduct, { color: "red" }]}
-                                        onFocus={() => {
-                                            setFieldTouched("price");
-                                        }}
-                                        onBlur={() => {
-                                            setFieldTouched("price", "");
-                                        }}
-                                        onChangeText={(text) => {
-                                            if (text === "") {
-                                                setFieldValue("price", "");
-                                            } else {
-                                                const numericText = text.replace(/\./g, "");
-                                                const formatted = formatPrice(numericText);
-                                                setFieldValue("price", formatted);
+
+                                        {/* Category Name */}
+                                        <View style={styles.dropdownContainer}>
+                                            <Text style={styles.label}>Thể Loại <Text style={styles.required}>*</Text></Text>
+                                            <Dropdown
+                                                placeholder="Bấm để chọn thể loại"
+                                                placeholderStyle={{ color: "#ccc" }}
+                                                iconColor={COLORS.primary}
+                                                style={styles.dropdown}
+                                                data={listCategory}
+                                                labelField="label"
+                                                valueField="value"
+                                                value={values.category}
+                                                onChange={(item) => {
+                                                    setFieldValue('category', item.value);
+                                                }}
+                                            />
+                                            {touched.category && errors.category && (
+                                                <Text style={styles.errorText}>{errors.category}</Text>
+                                            )}
+                                        </View>
+
+
+                                        {/* Trạng Thái Sản Phẩm */}
+                                        <View style={styles.dropdownContainer}>
+                                            <Text style={styles.label}>Trạng Thái Sản Phẩm <Text style={styles.required}>*</Text></Text>
+                                            <Dropdown
+                                                placeholder="Bấm để chọn trạng thái sản phẩm"
+                                                placeholderStyle={{ color: "#ccc" }}
+                                                iconColor={COLORS.primary}
+                                                style={styles.dropdown}
+                                                data={dataProductCondition}
+                                                labelField="label"
+                                                valueField="value"
+                                                value={values.condition}
+                                                onChange={(item) => {
+                                                    setFieldValue('condition', item.value);
+                                                }}
+                                            />
+                                            {touched.condition && errors.condition && (
+                                                <Text style={styles.errorText}>{errors.condition}</Text>
+                                            )}
+                                        </View>
+                                    </View>
+
+                                    {/* Boosted */}
+                                    <View style={{ marginTop: 10 }}>
+                                        <Text style={[styles.labelText, { marginLeft: 10 }]}>Dịch Vụ Quảng Cáo Boosted</Text>
+                                    </View>
+                                    <View style={styles.checkboxBoostedContainer}>
+                                        <View style={styles.checkboxBoosted}>
+                                            {isChecked_2 ?
+                                                (
+                                                    <Checkbox
+                                                        value={isBoosted}
+                                                        onValueChange={setBoosted}
+                                                    />
+                                                )
+                                                :
+                                                (
+                                                    <Checkbox
+                                                        value={false}
+                                                        onValueChange={() => {
+                                                            setBoosted(false);
+                                                            setModalContent({
+                                                                title: "Thông báo",
+                                                                detailText: "Để sử dụng dịch vụ Boosted, bạn cần chọn xác minh cấp 2.",
+                                                                confirmText: "Ok",
+                                                                onConfirm: () => {
+                                                                    setModalVisible(false);
+                                                                },
+                                                            });
+                                                            setModalVisible(true);
+                                                        }}
+                                                    />
+                                                )
                                             }
-                                        }}
-                                        autoCorrect={false}
-                                    />
-                                </View>
-                                {touched.price && errors.price && (
-                                    <Text style={[styles.errorText, { marginLeft: 5, marginTop: 5 }]}>{errors.price}</Text>
-                                )}
+                                            <Text style={{ textAlign: 'center' }}>Boosted</Text>
+                                        </View>
+                                        {isBoosted ?
+                                            (
+                                                <View style={{ width: "100%" }}>
+                                                    <Text style={styles.labelText}>
+                                                        Chúng tôi sử dụng dịch vụ quảng cáo cho phép sản phẩm của bạn được hiển thị lên đầu ứng dụng.
+                                                        Phí dịch vụ sẽ là <Text style={{ color: "red" }}>{formatPrice(feeBoosted)}đ</Text>
+                                                    </Text>
+                                                </View>
+                                            )
+                                            :
+                                            (
+                                                <View>
+                                                </View>
+                                            )
+                                        }
 
-                                {
-                                    isChecked_3 && isBoosted && (
-                                        <View View style={styles.productField}>
-                                            <View style={styles.inputProduct}>
-                                                <Text style={[styles.title, { marginLeft: -2 }]}>Phí kiểm tra cấp 3 (VND): <Text style={{ color: "red" }}>{formatFeeLegitgrails}đ</Text>
-                                                </Text>
-                                            </View>
-                                            <View style={styles.inputProduct}>
-                                                <Text style={[styles.title, { marginLeft: -2 }]}>Phí quảng cáo (VND): <Text style={{ color: "red" }}>{formatFeeBoosted}đ</Text>
-                                                </Text>
-                                            </View>
-                                            <View style={styles.inputProduct}>
-                                                <Text style={[styles.title, { marginLeft: -2 }]}>
-                                                    Số tiền thực nhận (VND): <Text style={{ color: "red" }}>{formatlLastPriceForSeller}đ</Text>
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    )
-                                }
-                                {
-                                    isChecked_3 && !isBoosted && (
-                                        <View View style={styles.productField}>
-                                            <View style={styles.inputProduct}>
-                                                <Text style={[styles.title, { marginLeft: -2 }]}>Phí kiểm tra cấp 3 (VND): <Text style={{ color: "red" }}>{formatFeeLegitgrails}đ</Text>
-                                                </Text>
-                                            </View>
-                                            <View style={styles.inputProduct}>
-                                                <Text style={[styles.title, { marginLeft: -2 }]}>
-                                                    Số tiền thực nhận (VND): <Text style={{ color: "red" }}>{formatlLastPriceForSeller}đ</Text>
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    )
-                                }
-                                {
-                                    isBoosted && !isChecked_3 && (
-                                        <View View style={styles.productField}>
-                                            <View style={styles.inputProduct}>
-                                                <Text style={[styles.title, { marginLeft: -2 }]}>Phí quảng cáo (VND): <Text style={{ color: "red" }}>{formatFeeBoosted}đ</Text>
-                                                </Text>
-                                            </View>
-                                            <View style={styles.inputProduct}>
-                                                <Text style={[styles.title, { marginLeft: -2 }]}>
-                                                    Số tiền thực nhận (VND): <Text style={{ color: "red" }}>{formatlLastPriceForSeller}đ</Text>
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    )
-                                }
-                            </View>
+                                    </View>
 
-                            {/* Thành Tiền */}
-                            {/* <View style={{ marginTop: -20 }}>
+
+                                    {/* Shipping information */}
+                                    <View style={styles.shippingInformation}>
+                                        <Text style={styles.labelText}>Thông Tin Thanh Toán</Text>
+                                    </View>
+
+                                    <View style={styles.summary}>
+                                        {/* price */}
+                                        <View style={styles.productField}>
+                                            <Text style={styles.title}>Giá Tiền (VND) <Text style={styles.required}>*</Text></Text>
+                                            <TextInput
+                                                keyboardType='number-pad'
+                                                value={values.price}
+                                                placeholder="Nhập giá tiền"
+                                                style={[styles.inputProduct, { color: "red" }]}
+                                                onFocus={() => {
+                                                    setFieldTouched("price");
+                                                }}
+                                                onBlur={() => {
+                                                    setFieldTouched("price", "");
+                                                }}
+                                                onChangeText={(text) => {
+                                                    if (text === "") {
+                                                        setFieldValue("price", "");
+                                                    } else {
+                                                        const numericText = text.replace(/\./g, "");
+                                                        const formatted = formatPrice(numericText);
+                                                        setFieldValue("price", formatted);
+                                                    }
+                                                }}
+                                                autoCorrect={false}
+                                            />
+                                        </View>
+                                        {touched.price && errors.price && (
+                                            <Text style={[styles.errorText, { marginLeft: 5, marginTop: 5 }]}>{errors.price}</Text>
+                                        )}
+
+                                        {
+                                            isChecked_3 && isBoosted && (
+                                                <View View style={styles.productField}>
+                                                    <View style={styles.inputProduct}>
+                                                        <Text style={[styles.title, { marginLeft: -2 }]}>Phí kiểm tra cấp 3 (VND): <Text style={{ color: "red" }}>{formatFeeLegitgrails}đ</Text>
+                                                        </Text>
+                                                    </View>
+                                                    <View style={styles.inputProduct}>
+                                                        <Text style={[styles.title, { marginLeft: -2 }]}>Phí quảng cáo (VND): <Text style={{ color: "red" }}>{formatFeeBoosted}đ</Text>
+                                                        </Text>
+                                                    </View>
+                                                    <View style={styles.inputProduct}>
+                                                        <Text style={[styles.title, { marginLeft: -2 }]}>
+                                                            Số tiền thực nhận (VND): <Text style={{ color: "red" }}>{formatlLastPriceForSeller}đ</Text>
+                                                        </Text>
+                                                    </View>
+                                                </View>
+                                            )
+                                        }
+                                        {
+                                            isChecked_3 && !isBoosted && (
+                                                <View View style={styles.productField}>
+                                                    <View style={styles.inputProduct}>
+                                                        <Text style={[styles.title, { marginLeft: -2 }]}>Phí kiểm tra cấp 3 (VND): <Text style={{ color: "red" }}>{formatFeeLegitgrails}đ</Text>
+                                                        </Text>
+                                                    </View>
+                                                    <View style={styles.inputProduct}>
+                                                        <Text style={[styles.title, { marginLeft: -2 }]}>
+                                                            Số tiền thực nhận (VND): <Text style={{ color: "red" }}>{formatlLastPriceForSeller}đ</Text>
+                                                        </Text>
+                                                    </View>
+                                                </View>
+                                            )
+                                        }
+                                        {
+                                            isBoosted && !isChecked_3 && (
+                                                <View View style={styles.productField}>
+                                                    <View style={styles.inputProduct}>
+                                                        <Text style={[styles.title, { marginLeft: -2 }]}>Phí quảng cáo (VND): <Text style={{ color: "red" }}>{formatFeeBoosted}đ</Text>
+                                                        </Text>
+                                                    </View>
+                                                    <View style={styles.inputProduct}>
+                                                        <Text style={[styles.title, { marginLeft: -2 }]}>
+                                                            Số tiền thực nhận (VND): <Text style={{ color: "red" }}>{formatlLastPriceForSeller}đ</Text>
+                                                        </Text>
+                                                    </View>
+                                                </View>
+                                            )
+                                        }
+                                    </View>
+
+                                    {/* Thành Tiền */}
+                                    {/* <View style={{ marginTop: -20 }}>
                   <View style={styles.productField}>
                     <Text style={{ fontSize: 16 }}>Tiền: <Text style={{ color: 'red', paddingLeft: 25 }}>{formatTotal}VND</Text></Text>
                   </View>
                 </View> */}
 
-                            <View style={styles.buttonWrapper}>
-                                <TouchableOpacity style={styles.button}
-                                    onPress={handleSubmit}
-                                >
-                                    <Text style={styles.buttonText}>Đăng Bài</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </ScrollView>
-                    )
-                }}
-            </Formik>
-        </View>
+                                    <View style={styles.buttonWrapper}>
+                                        <TouchableOpacity style={styles.button}
+                                            onPress={handleSubmit}
+                                        >
+                                            <Text style={styles.buttonText}>Đăng Bài</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </ScrollView>
+                            )
+                        }}
+                    </Formik>
+                    <CustomModalPost
+                        visible={modalVisible}
+                        onClose={() => {
+                            setModalVisible(false);
+                        }}
+                        onConfirm={modalContent.onConfirm}
+                        title={modalContent.title}
+                        detailText={modalContent.detailText}
+                        confirmText={modalContent.confirmText}
+                    />
+                </View>
+
+            </ScrollView>
+        </KeyboardAvoidingView>
+
     );
 }
 

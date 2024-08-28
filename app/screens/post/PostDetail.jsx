@@ -10,13 +10,14 @@ import {
     Alert,
     Button,
     RefreshControl,
+    ActivityIndicator,
 } from "react-native";
-import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo, FontAwesome, Octicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, Feather, AntDesign, MaterialIcons, Entypo, FontAwesome6, Octicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useCallback, useState, useEffect } from "react";
 import { useFocusEffect } from '@react-navigation/native';
 import { COLORS, SIZES, SHADOWS } from "../../constants/theme";
 import Carousel from "../../components/carousel/Carousel";
-import { getPostDetails, getComments, postComment, getLikedPostByUser } from "../../api/post";
+import { getPostDetails, getComments, postComment, getLikedPostByUser, getAllPosts } from "../../api/post";
 import styles from "../css/postDetails.style";
 import { Rating } from 'react-native-stock-star-rating';
 import { getRatingByUserId, getUserByToken, likePost, unlikePost } from "../../api/user";
@@ -24,6 +25,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Comment from "./Comment";
 import moment from "moment";
 import CustomModal from "../../components/CustomModal";
+import Post from "./Post";
+import { Video } from "expo-av";
+import CustomModalCreatePost from "../../components/CustomModalCreatePost";
+
 
 const profile = "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg";
 
@@ -53,14 +58,36 @@ const PostDetail = ({ navigation, route }) => {
         onConfirm: () => { },
         onClose: () => { }
     });
+    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [showFullStory, setShowFullStory] = useState(false);
+    const [isMuted, setIsMuted] = useState(false);  // Chỉnh âm thanh khi lần đầu tiên vào sẽ mute
+    // console.log(postDetails);
+
+
+    const [modalRulesVisible, setModalRulesVisible] = useState(false);
+    const [modalRulesContent, setModalRulesContent] = useState({
+        title: '',
+        detailText: '',
+        confirmText: '',
+        cancelText: '',
+        onConfirm: () => { },
+        onClose: () => { }
+    });
+
+    const rulesGuide = () => {
+        setModalRulesContent({
+            title: "",
+            detailText: "",
+            confirmText: "",
+            onConfirm: () => {
+                setModalRulesVisible(false);
+            },
+        });
+        setModalRulesVisible(true);
+    }
 
     console.log(postId);
-
-    // useEffect(() => {
-    //     fetchPostDetails();
-    //     checkAuthentication();
-    //     fetchComments();
-    // }, []);
 
     useFocusEffect(
         useCallback(() => {
@@ -69,6 +96,26 @@ const PostDetail = ({ navigation, route }) => {
             fetchComments();
         }, [postId])
     )
+
+    useEffect(() => {
+        fetchPosts();
+    }, []);
+
+    const fetchPosts = async () => {
+        setLoading(true);
+        try {
+            const response = await getAllPosts();
+            let posts = response.data.result;
+            //filter posts have isArchived === false
+            posts = posts.filter(post => post.isArchived === false);
+
+            setPosts(posts);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
         if (postDetails?.user?.id) {
@@ -199,7 +246,24 @@ const PostDetail = ({ navigation, route }) => {
 
     const handlePress = () => {
         if (isAuthenticated) {
-            navigation.navigate("order-details", { postDetails: postDetails });
+            if (user?.isVerified) {
+                navigation.navigate("order-details", { postDetails: postDetails });
+            } else {
+                setModalContent({
+                    title: "Xác thực",
+                    detailText: "Bạn cần xác thực bằng căn cước công dân để mua sản phẩm nào",
+                    confirmText: "Xác thực",
+                    cancelText: "Thoát",
+                    onConfirm: () => {
+                        setCustomModalVisible(false);
+                        navigation.navigate('GetID');
+                    },
+                    onClose: () => {
+                        setCustomModalVisible(false);
+                    },
+                });
+                setCustomModalVisible(true);
+            }
         } else {
             setModalContent({
                 title: "Đăng nhập",
@@ -240,7 +304,21 @@ const PostDetail = ({ navigation, route }) => {
     };
 
     const getFieldValue = (value) => {
-        return (value === "None" || value === "none" || value === null) ? "N/A" : value;
+        return (value === "None" || value === "none" || value === null || value === "") ? "N/A" : value;
+    };
+
+    const dataProductCondition = [
+        { label: 'Hàng Mới', value: 'BRAND_NEW' },
+        { label: 'Like New', value: 'EXCELLENT' },
+        { label: 'Còn Tốt', value: 'VERY_GOOD' },
+        { label: 'Dùng được', value: 'GOOD' },
+        { label: 'Hàng cũ', value: 'FAIR' },
+    ];
+
+    // Function to get the label from the condition value
+    const getConditionLabel = (value) => {
+        const condition = dataProductCondition.find(item => item.value === value);
+        return condition ? condition.label : '';
     };
 
     // Format the price using the helper function
@@ -278,19 +356,28 @@ const PostDetail = ({ navigation, route }) => {
                         <View style={styles.labelWrapper}>
                             <View style={styles.label}>
                                 {postDetails?.product?.verifiedLevel === 'LEVEL_1' && (
-                                    <View style={styles.verified}>
-                                        <Text style={styles.verifiedText}>Xác minh cấp 1</Text>
-                                    </View>
+                                    <TouchableOpacity style={styles.info} onPress={rulesGuide}>
+                                        <View style={styles.verified}>
+                                            <Text style={styles.verifiedText}>Xác minh cấp 1</Text>
+                                        </View>
+                                        <FontAwesome6 name="circle-question" size={16} color="black" />
+                                    </TouchableOpacity>
                                 )}
                                 {postDetails?.product?.verifiedLevel === 'LEVEL_2' && (
-                                    <View style={[styles.verified, { backgroundColor: '#ff8000' }]}>
-                                        <Text style={styles.verifiedText}>Xác minh cấp 2</Text>
-                                    </View>
+                                    <TouchableOpacity style={styles.info} onPress={rulesGuide}>
+                                        <View style={[styles.verified, { backgroundColor: '#ff8000' }]}>
+                                            <Text style={styles.verifiedText}>Xác minh cấp 2</Text>
+                                        </View>
+                                        <FontAwesome6 name="circle-question" size={16} color="black" />
+                                    </TouchableOpacity>
                                 )}
                                 {postDetails?.product?.verifiedLevel === 'LEVEL_3' && (
-                                    <View style={[styles.verified, { backgroundColor: '#33cc33' }]}>
-                                        <Text style={styles.verifiedText}>Xác minh cấp 3</Text>
-                                    </View>
+                                    <TouchableOpacity style={styles.info} onPress={rulesGuide}>
+                                        <View style={[styles.verified, { backgroundColor: '#33cc33' }]}>
+                                            <Text style={styles.verifiedText}>Xác minh cấp 3</Text>
+                                        </View>
+                                        <FontAwesome6 name="circle-question" size={16} color="black" />
+                                    </TouchableOpacity>
                                 )}
                             </View>
                             {postDetails?.boosted &&
@@ -324,6 +411,8 @@ const PostDetail = ({ navigation, route }) => {
                         }}>Bình luận
                             <Text> ({comments.length})</Text>
                         </Text>
+
+
                         {comments && comments.slice(0, showAllComments ? comments.length : 3).map((comment, index) => (
                             <View key={index} style={styles.commentContainer}>
                                 <Image source={{ uri: comment?.userImageUrl ? comment?.userImageUrl : profile }} style={styles.avatarComment} />
@@ -334,6 +423,8 @@ const PostDetail = ({ navigation, route }) => {
                                 </View>
                             </View>
                         ))}
+
+
                         <View style={{
                             flex: 1,
                             justifyContent: 'center',
@@ -346,9 +437,12 @@ const PostDetail = ({ navigation, route }) => {
                                 >
                                     <Text
                                         style={{
-                                            fontSize: 18,
+                                            fontSize: 20,
                                             color: COLORS.primary,
-                                        }}>Bình luận</Text>
+                                        }}>
+                                        {user ? 'Bình luận' : 'Xem thêm bình luận'}
+
+                                    </Text>
                                 </TouchableOpacity>
                             ) : (
                                 <View
@@ -361,11 +455,11 @@ const PostDetail = ({ navigation, route }) => {
                                         }}>Bình luận</Text>
                                 </View>
                             )
-
                             }
 
                             <Comment
                                 visible={modalVisible}
+                                setModalVisibleComment={setModalVisible}
                                 onClose={() => {
                                     setModalVisible(false)
                                     fetchComments()
@@ -377,7 +471,6 @@ const PostDetail = ({ navigation, route }) => {
                                 navigation={navigation}
                             />
                         </View>
-
 
                     </View>
                     <View style={styles.divider} />
@@ -419,6 +512,26 @@ const PostDetail = ({ navigation, route }) => {
                         </View>
                     </View>
                     <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
+                    {/* Brandline */}
+                    <View style={[styles.details, { marginTop: 4 }]}>
+                        <View style={styles.left}>
+                            <Text>Dòng thương hiệu</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.brandLine?.lineName)}</Text>
+                        </View>
+                    </View>
+                    <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
+                    {/* Category */}
+                    <View style={[styles.details, { marginTop: 4 }]}>
+                        <View style={styles.left}>
+                            <Text>Thể loại</Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.category?.categoryName)}</Text>
+                        </View>
+                    </View>
+                    <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
 
                     {/* Tình trạng */}
                     <View style={styles.details}>
@@ -426,7 +539,9 @@ const PostDetail = ({ navigation, route }) => {
                             <Text>Tình trạng</Text>
                         </View>
                         <View style={styles.right}>
-                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.condition)}</Text>
+                            <Text style={styles.rightText}>
+                                {getConditionLabel(postDetails?.product?.condition)}
+                            </Text>
                         </View>
                     </View>
                     <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
@@ -554,16 +669,58 @@ const PostDetail = ({ navigation, route }) => {
                     <View style={[styles.dividerLight, { width: "96%", marginHorizontal: "auto" }]} />
 
                     {/* Story */}
-                    <View style={[styles.details, { marginBottom: 6 }]}>
-                        <View style={styles.left}>
-                            <Text>Story</Text>
+                    {postDetails?.product?.story &&
+                        <View style={styles.description}>
+                            <Text style={styles.descriptionTitle}>Câu chuyện về thương hiệu</Text>
+                            <View>
+                                <Text style={styles.descriptionText}>
+                                    {showFullStory ? postDetails?.product?.story : `${postDetails?.product?.story?.slice(0, 265)}...`}
+                                </Text>
+                                {postDetails?.product?.story?.length > 100 && (
+                                    <Text style={styles.readMore} onPress={() => setShowFullStory(!showFullStory)}>
+                                        {showFullStory ? (
+                                            <Text style={styles.seeMore}>Ẩn bớt</Text>
+                                        ) : (
+                                            <Text style={styles.seeMore}>Xem thêm chi tiết</Text>
+                                        )}
+                                    </Text>
+                                )}
+                            </View>
                         </View>
-                        <View style={styles.right}>
-                            <Text style={styles.rightText}>{getFieldValue(postDetails?.product?.story)}</Text>
-                        </View>
-                    </View>
-                    <View style={styles.divider} />
 
+                    }
+
+                    {/* <View style={styles.divider} /> */}
+
+                    {postDetails?.product?.verifiedLevel === "LEVEL_2" &&
+                        <View style={styles.evidence}>
+                            <Text style={styles.descriptionTitle}>Hình ảnh hóa đơn</Text>
+                            <View style={styles.evidenceImage}>
+                                <Image
+                                    style={styles.imageSelect}
+                                    source={{ uri: postDetails?.product?.originalReceiptProof }}
+                                />
+                            </View>
+                            <Text style={styles.descriptionTitle}>Video chi tiết</Text>
+                            <View style={styles.evidenceVideo}>
+                                <Video
+                                    source={{ uri: postDetails?.product?.productVideo }}
+                                    style={styles.videoSelect}
+                                    useNativeControls
+                                    resizeMode="cover"
+                                    shouldPlay
+                                    isLooping
+                                    isMuted={isMuted} // Set initial state to mute
+                                    onPlaybackStatusUpdate={(status) => {
+                                        if (!status.isPlaying && status.isMuted !== isMuted) {
+                                            setIsMuted(true); // Ensure the video starts muted
+                                        }
+                                    }}
+                                />
+                            </View>
+                        </View>
+                    }
+                    <View style={styles.divider} />
 
                     {/* Profile seller */}
                     <TouchableOpacity
@@ -618,11 +775,19 @@ const PostDetail = ({ navigation, route }) => {
                             <MaterialIcons name="explore" size={18} color="gray" />
                             <Text style={{ color: "gray", fontSize: 16 }}> Khám phá</Text>
                         </View>
-                        <View>
-                            <Text>
-                                Products in here
-                            </Text>
-                        </View>
+                        <ScrollView style={{ width: '100%', marginHorizontal: 'auto', marginTop: 10 }}>
+                            {loading ? (
+                                <ActivityIndicator size="large" color={COLORS.primary} />
+                            ) : (
+                                <View style={styles.row}>
+                                    {posts?.length > 0 ? (
+                                        posts.slice(0, 9).map((post) => <Post key={post.id} post={post} />)
+                                    ) : (
+                                        <Text>No posts available</Text>
+                                    )}
+                                </View>
+                            )}
+                        </ScrollView>
                     </View>
                 </View>
             </ScrollView>
@@ -656,6 +821,17 @@ const PostDetail = ({ navigation, route }) => {
                 detailText={modalContent.detailText}
                 confirmText={modalContent.confirmText}
                 cancelText={modalContent.cancelText}
+            />
+
+            <CustomModalCreatePost
+                visible={modalRulesVisible}
+                onClose={() => {
+                    setModalRulesVisible(false);
+                }}
+                onConfirm={modalRulesContent.onConfirm}
+                title={modalRulesContent.title}
+                detailText={modalRulesContent.detailText}
+                confirmText={modalRulesContent.confirmText}
             />
         </View>
     );

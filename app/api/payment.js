@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const createPayment = async (amount) => {
     try {
-        const response = await axiosInstance.post(`/vnpay/create-payment?amount=${amount}&orderInfo=pay for order`);
+        const response = await axiosInstance.post(`/vnpay/create-payment?amount=${amount}&orderInfo=Nap tien vao vi`);
         return response;
     } catch (error) {
         console.log('Error create payment:', error);
@@ -17,15 +17,12 @@ export const getPaymentStatus = async (url) => {
         const token = await AsyncStorage.getItem('token');
         console.log(token);
 
-        // Define the URL with the amount parameter
-        // const url = `http://10.0.2.2:8080/api/v1/vnpay/payment-info?${url}`;
-
         // Perform the fetch request
         const response = await fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
+                'Authorization': `Bearer ${token}`, 
             },
         });
 
@@ -62,3 +59,23 @@ export const payOrder = async (walletId, orderId, amount) => {
         throw error;
     }
 }
+
+export const getTransactionHistory = async () => {
+    try {
+        // Retrieve the token from AsyncStorage
+        const token = await AsyncStorage.getItem('token');
+
+        // Perform the GET request using axiosInstance
+        const response = await axiosInstance.get('wallets/transaction-histories', {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        // Return the response data
+        return response.data;
+    } catch (error) {
+        console.log('Error getting transaction history:', error);
+        throw error;
+    }
+};
