@@ -1,1 +1,2 @@
 # UGTS-FrontStage
+The Luxury bags application interface allows users to interact with the system to buy and sell used branded bags. Search for favorite products, interact directly between buyers and sellers, provide clear product information, conduct secure transactions and provide authentic product checking services with Legit Grails. In addition, the application interface can support both IOS and Android platforms.
